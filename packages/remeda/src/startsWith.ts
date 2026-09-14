@@ -147,20 +147,23 @@ export function startsWith<T extends string, Prefix extends string>(
 ): boolean;
 
 /**
- * **IMPORTANT**: When a literal prefix doesn't match *any* of the possible
- * values of `data` the returned predicate rejects `data` itself, so the
- * composition fails to compile. If this overload signature was chosen for
- * your call most likely your prefix has a typo or `data` itself has changed
- * and it no longer satisfies the `prefix`.
+ * Determines whether a string begins with the provided prefix, and refines the
+ * output type if possible.
  *
- * If you still need to make the check on these values widen one of them to
- * `string`.
+ * This function is a wrapper around the built-in [`String.prototype.startsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith)
+ * method, but doesn't expose the `position` parameter. To check from a specific
+ * position, use `startsWith(sliceString(data, position), prefix)`.
+ *
+ * Prefixes that `data` can never start with are rejected at compile-time.
  *
  * @param prefix - The string to check for at the beginning.
+ * @signature
+ *   startsWith(prefix)(data);
  * @example
- *   pipe("cat" as ("cat" | "dog"), startsWith("bird")); //=> RemedaTypeError
- *   pipe("cat" as ("cat" | "dog"), startsWith("bird" as string)); //=> boolean
- * @hidden
+ *   pipe("hello world", startsWith("hello")); //=> true
+ *   pipe("hello world", startsWith("world")); //=> false
+ * @dataLast
+ * @category String
  */
 export function startsWith<T extends string, Prefix extends string>(
   // This signature has to come first so that TypeScript would pick it only
@@ -181,25 +184,6 @@ export function startsWith<T extends string, Prefix extends string>(
   prefix: IsNarrowingUnsound<T, Prefix> extends true ? Prefix : never,
 ): (data: T) => boolean;
 
-/**
- * Determines whether a string begins with the provided prefix, and refines the
- * output type if possible.
- *
- * This function is a wrapper around the built-in [`String.prototype.startsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith)
- * method, but doesn't expose the `position` parameter. To check from a specific
- * position, use `startsWith(sliceString(data, position), prefix)`.
- *
- * Prefixes that `data` can never start with are rejected at compile-time.
- *
- * @param prefix - The string to check for at the beginning.
- * @signature
- *   startsWith(prefix)(data);
- * @example
- *   pipe("hello world", startsWith("hello")); //=> true
- *   pipe("hello world", startsWith("world")); //=> false
- * @dataLast
- * @category String
- */
 export function startsWith<Prefix extends string>(
   // Reject primitive strings, they can't be used to narrow T. They would match
   // the non-narrowing overload.

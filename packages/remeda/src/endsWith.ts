@@ -147,20 +147,23 @@ export function endsWith<T extends string, Suffix extends string>(
 ): boolean;
 
 /**
- * **IMPORTANT**: When a literal suffix doesn't match *any* of the possible
- * values of `data` the returned predicate rejects `data` itself, so the
- * composition fails to compile. If this overload signature was chosen for
- * your call most likely your suffix has a typo or `data` itself has changed
- * and it no longer satisfies the `suffix`.
+ * Determines whether a string ends with the provided suffix, and refines the
+ * output type if possible.
  *
- * If you still need to make the check on these values widen one of them to
- * `string`.
+ * This function is a wrapper around the built-in [`String.prototype.endsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith)
+ * method, but doesn't expose the `endPosition` parameter. To check only up to a
+ * specific position, use `endsWith(sliceString(data, 0, endPosition), suffix)`.
+ *
+ * Suffixes that `data` can never end with are rejected at compile-time.
  *
  * @param suffix - The string to check for at the end.
+ * @signature
+ *   endsWith(suffix)(data);
  * @example
- *   pipe("cat" as ("cat" | "dog"), endsWith("bird")); //=> RemedaTypeError
- *   pipe("cat" as ("cat" | "dog"), endsWith("bird" as string)); //=> boolean
- * @hidden
+ *   pipe("hello world", endsWith("world")); //=> true
+ *   pipe("hello world", endsWith("hello")); //=> false
+ * @dataLast
+ * @category String
  */
 export function endsWith<T extends string, Suffix extends string>(
   // This signature has to come first so that TypeScript would pick it only
@@ -181,25 +184,6 @@ export function endsWith<T extends string, Suffix extends string>(
   suffix: IsNarrowingUnsound<T, Suffix> extends true ? Suffix : never,
 ): (data: T) => boolean;
 
-/**
- * Determines whether a string ends with the provided suffix, and refines the
- * output type if possible.
- *
- * This function is a wrapper around the built-in [`String.prototype.endsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith)
- * method, but doesn't expose the `endPosition` parameter. To check only up to a
- * specific position, use `endsWith(sliceString(data, 0, endPosition), suffix)`.
- *
- * Suffixes that `data` can never end with are rejected at compile-time.
- *
- * @param suffix - The string to check for at the end.
- * @signature
- *   endsWith(suffix)(data);
- * @example
- *   pipe("hello world", endsWith("world")); //=> true
- *   pipe("hello world", endsWith("hello")); //=> false
- * @dataLast
- * @category String
- */
 export function endsWith<Suffix extends string>(
   // Reject primitive strings, they can't be used to narrow T. They would match
   // the non-narrowing overload.
