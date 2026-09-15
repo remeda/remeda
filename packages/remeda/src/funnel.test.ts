@@ -946,6 +946,29 @@ describe("utility functions", () => {
       expect(foo.isIdle).toBe(true);
     });
   });
+
+   describe("peakPreparedData", () => {
+    test("peakPreparedData returns data after calls", () => {
+      const mockFn = vi.fn<(x: readonly string[]) => void>();
+      const foo = funnel(mockFn, {
+        reducer: ARGS_COLLECTOR,
+        triggerAt: "end",
+        minQuietPeriodMs: UT,
+      });
+
+      expect(foo.peakPreparedData()).toBeUndefined();
+
+      foo.call("a");
+      foo.call("b");
+      foo.call("c");
+
+      expect(foo.peakPreparedData()).toStrictEqual(["a", "b", "c"]);
+
+      foo.flush();
+
+      expect(foo.peakPreparedData()).toBeUndefined();
+    });
+  });
 });
 
 describe("edge-cases", () => {
