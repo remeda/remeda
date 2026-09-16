@@ -46,23 +46,22 @@ type Drop<T extends IterableContainer, N extends number> =
                 ]
               : // The drop will occur within the rest element or the suffix.
                 // Because the suffix can contain any number of elements this
-                // case adds more complexity as we need to consider all
-                // possible (relevant) lengths. We start by considering the
-                // case where there are enough elements within the rest
-                // param; this means we still maintain the rest element as it
-                // could contain even more elements, and we add the suffix
-                // untouched.
+                // case adds more complexity as we need to consider all possible
+                // (relevant) lengths. We start by considering the case where
+                // there are enough elements within the rest param; this means
+                // we still maintain the rest element as it could contain even
+                // more elements, and we add the suffix untouched.
                 | [
                     ...CoercedArray<TupleParts<T>["item"]>,
                     ...TupleParts<T>["suffix"],
                   ]
                 // Additionally, we need to consider the case where the rest
-                // element has up to the same number of elements as the
-                // suffix; this will result in removing the rest element
-                // entirely, and dropping elements from the suffix. We do this
-                // for all possible values from 0 to N where N is the
-                // remaining value after we handled the prefix. We can exclude
-                // the 0 case because it is contained in the previous case.
+                // element has up to the same number of elements as the suffix;
+                // this will result in removing the rest element entirely, and
+                // dropping elements from the suffix. We do this for all
+                // possible values from 0 to N where N is the remaining value
+                // after we handled the prefix. We can exclude the 0 case
+                // because it is contained in the previous case.
                 | Exclude<
                     DropFixedTuple<
                       TupleParts<T>["suffix"],

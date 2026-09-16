@@ -3,11 +3,13 @@ import { purry } from "./purry";
 import type { ToString } from "./internal/types/ToString";
 
 type Inverted<T extends object> = Simplify<{
-  -readonly [K in keyof T as K extends number | string
-    ? Required<T>[K] extends PropertyKey
-      ? Required<T>[K]
+  -readonly [
+    K in keyof T as K extends number | string
+      ? Required<T>[K] extends PropertyKey
+        ? Required<T>[K]
+        : never
       : never
-    : never]: ToString<K>;
+  ]: ToString<K>;
 }>;
 
 /**

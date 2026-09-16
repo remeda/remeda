@@ -8,5 +8,4 @@ import type { IntRange } from "type-fest";
  * integers are large (even when the range itself is not).
  */
 export type IntRangeInclusive<From extends number, To extends number> =
-  | IntRange<From, To>
-  | To;
+  IntRange<From, To> | To;
