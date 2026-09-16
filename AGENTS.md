@@ -63,6 +63,7 @@ Install dependencies from the repo root with `npm install`. All commands run fro
 npm run test:runtime # runtime tests
 npm run test:types   # type-level tests
 npm run test:prop    # property-based tests
+npm run bench        # benchmarks (vitest bench)
 npm run build        # build with tsdown (ESM + CJS)
 npm run check        # typecheck source files
 npm run lint         # eslint with autofix

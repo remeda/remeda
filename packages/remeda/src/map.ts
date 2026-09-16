@@ -2,6 +2,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
+import { readsDataWhen } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
 /**
@@ -59,12 +60,9 @@ const mapImplementation = <T, U>(
   callbackfn: (value: T, index: number, data: readonly T[]) => U,
 ): U[] => data.map(callbackfn);
 
-const lazyImplementation =
-  <T, U>(
-    callbackfn: (value: T, index: number, data: readonly T[]) => U,
-  ): LazyEvaluator<T, U> =>
-  (value, index, data) => ({
-    done: false,
-    hasNext: true,
-    next: callbackfn(value, index, data),
-  });
+const lazyImplementation = <T, U>(
+  callbackfn: (value: T, index: number, data: readonly T[]) => U,
+): LazyEvaluator<T, U> =>
+  readsDataWhen(callbackfn, 2, (value, index, data) =>
+    callbackfn(value, index, data),
+  );

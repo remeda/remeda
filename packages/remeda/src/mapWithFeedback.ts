@@ -3,6 +3,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
+import { readsDataWhen } from "./internal/utilityEvaluators";
 
 type LazyFeedbackCallback<T extends IterableContainer, U> = (
   previousValue: U,
@@ -80,8 +81,9 @@ const lazyImplementation = <T, U>(
   initialValue: U,
 ): LazyEvaluator<T, U> => {
   let previousValue = initialValue;
-  return (currentValue, index, data) => {
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- 3 is the position of `data` in the reducer's parameter list.
+  return readsDataWhen(reducer, 3, (currentValue, index, data) => {
     previousValue = reducer(previousValue, currentValue, index, data);
-    return { done: false, hasNext: true, next: previousValue };
-  };
+    return previousValue;
+  });
 };

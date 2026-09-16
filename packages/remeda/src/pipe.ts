@@ -4,16 +4,28 @@
 
 import type { LazyDefinition } from "./internal/types/LazyDefinition";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import type { LazyResult } from "./internal/types/LazyResult";
-import { SKIP_ITEM } from "./internal/utilityEvaluators";
+import { isLazyControl } from "./internal/utilityEvaluators";
 
 type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
   readonly isSingle: boolean;
-  // Notice the array is mutable, we will be adding items as the pipe is
-  // evaluating them.
-  readonly items: unknown[];
-};
+  // Can't be derived from `items.length`: steps that don't read `data` share
+  // one frozen empty array, so each step counts on its own.
+  index: number;
+} & (
+  | {
+      readonly requiresData: true;
+      // Notice the array is mutable, we will be adding items as the pipe is
+      // evaluating them. It is shared with every invocation of the evaluator.
+      readonly items: unknown[];
+    }
+  | { readonly requiresData: false; readonly items: readonly never[] }
+);
+
+// Handed to every step that doesn't read `data`. Frozen so a callback that
+// slips through the arity gate (default parameters, `arguments`) can't corrupt
+// a module-wide singleton.
+const NO_DATA: readonly never[] = Object.freeze([]);
 
 type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
 
@@ -34,16 +46,21 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * directly in the pipe. To disable lazy evaluation, use data-first calls via
  * arrow functions: `($) => map($, callback)` instead of `map(callback)`.
  *
- * Any function can be used in pipes, not just Remeda utilities. For creating
- * custom functions with currying and lazy evaluation support, see the `purry`
- * utility.
+ * Any function can be used in pipes, not just Remeda utilities. The `purry`
+ * utility adds currying support for custom functions; lazy evaluation is a
+ * separate, internal protocol between Remeda's own utilities and `pipe`.
  *
  * A "headless" variant `piped` is available for creating reusable pipe
  * functions without initial data.
  *
- * IMPORTANT: During lazy evaluation, callbacks using the third parameter (the
- * input array) receive only items processed up to that point, not the complete
- * array.
+ * IMPORTANT: During lazy evaluation, callbacks using the input array (the
+ * third parameter for most functions, the fourth for `mapWithFeedback` and
+ * `zipWith`) receive only items processed up to that point, not the complete
+ * array. `pipe` only tracks those items for callbacks that declare the
+ * parameter in which that function passes `data`, or whose `length` is 0
+ * because their first parameter is a rest parameter. A callback that reaches
+ * `data` through `arguments`, a default parameter, or a trailing rest
+ * parameter (`(value, index, ...rest)`) receives an empty array instead.
  *
  * @param data - The input data.
  * @param functions - A sequence of functions that take one argument and
@@ -289,14 +306,7 @@ export function pipe(
   let output = input;
 
   const lazySteps = functions.map((op) =>
-    "lazy" in op
-      ? {
-          lazyEvaluator: op.lazy(...op.lazyArgs),
-          isSingle: op.lazy.single ?? false,
-          index: 0,
-          items: [],
-        }
-      : undefined,
+    "lazy" in op ? buildLazyStep(op) : undefined,
   );
 
   let functionIndex = 0;
@@ -319,8 +329,22 @@ export function pipe(
   return output;
 }
 
+function buildLazyStep({ lazy, lazyArgs }: LazyDefinition): LazyStep {
+  const lazyEvaluator = lazy(...lazyArgs);
+  const isSingle = lazy.single ?? false;
+  return lazyEvaluator.requiresData === true
+    ? { lazyEvaluator, isSingle, index: 0, requiresData: true, items: [] }
+    : {
+        lazyEvaluator,
+        isSingle,
+        index: 0,
+        requiresData: false,
+        items: NO_DATA,
+      };
+}
+
 function extractLazySequence(
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The items array is mutable for efficiency.
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
   lazySteps: readonly (LazyStep | undefined)[],
   startIndex: number,
 ): readonly LazyStep[] {
@@ -343,13 +367,13 @@ function extractLazySequence(
 
 function processIterable(
   iterable: Iterable<unknown>,
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The items array is mutable for efficiency.
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
   lazySequence: readonly LazyStep[],
 ): unknown[] {
   const accumulator: unknown[] = [];
 
   for (const value of iterable) {
-    const shouldExitEarly = processItem(value, accumulator, lazySequence);
+    const shouldExitEarly = processItem(value, accumulator, lazySequence, 0);
     if (shouldExitEarly) {
       break;
     }
@@ -362,53 +386,66 @@ function processItem(
   item: unknown,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
   accumulator: unknown[],
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The items array is mutable for efficiency.
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
   lazySequence: readonly LazyStep[],
+  startIndex: number,
 ): boolean {
-  if (lazySequence.length === 0) {
+  if (startIndex >= lazySequence.length) {
+    // A `hasMany` fan-out from the last step has no further steps to run
+    // the sub-items through, so they go straight to the accumulator.
     accumulator.push(item);
     return false;
   }
 
   let currentItem = item;
-
-  let lazyResult: LazyResult = SKIP_ITEM;
   let isDone = false;
-  for (const [
-    functionsIndex,
-    { items, lazyEvaluator },
-  ] of lazySequence.entries()) {
-    items.push(currentItem);
-    lazyResult = lazyEvaluator(currentItem, items.length - 1, items);
+  for (
+    let stepIndex = startIndex;
+    stepIndex < lazySequence.length;
+    stepIndex++
+  ) {
+    const step = lazySequence[stepIndex]!;
+    if (step.requiresData) {
+      step.items.push(currentItem);
+    }
+    const result = step.lazyEvaluator(currentItem, step.index, step.items);
+    step.index += 1;
 
-    if (lazyResult.done) {
+    if (!isLazyControl(result)) {
+      // The common case: the evaluator emitted an item, hand it to the next
+      // step as-is.
+      currentItem = result;
+      continue;
+    }
+
+    if (result.done) {
       isDone = true;
     }
 
-    if (lazyResult.hasNext) {
-      if (lazyResult.hasMany ?? false) {
-        for (const subItem of lazyResult.next as readonly unknown[]) {
-          const shouldExitEarly = processItem(
-            subItem,
-            accumulator,
-            lazySequence.slice(functionsIndex + 1),
-          );
-          if (shouldExitEarly) {
-            return true;
-          }
-        }
-        return isDone;
-      }
-      currentItem = lazyResult.next;
-    } else {
-      break;
+    if (!result.hasNext) {
+      // Skipped, or stopped without a value; nothing reaches the next step.
+      return isDone;
     }
+
+    if (result.hasMany) {
+      for (const subItem of result.next) {
+        const shouldExitEarly = processItem(
+          subItem,
+          accumulator,
+          lazySequence,
+          stepIndex + 1,
+        );
+        if (shouldExitEarly) {
+          return true;
+        }
+      }
+      return isDone;
+    }
+
+    currentItem = result.next;
   }
 
-  if (lazyResult.hasNext) {
-    accumulator.push(currentItem);
-  }
-
+  accumulator.push(currentItem);
   return isDone;
 }
 

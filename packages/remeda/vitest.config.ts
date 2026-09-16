@@ -7,6 +7,7 @@ export default defineConfig({
     coverage: {
       include: ["src/**"],
       exclude: [
+        "src/**/*.bench.ts",
         "src/**/*.test-d.ts",
         "src/**/*.test-prop.ts",
         "src/index.ts",
@@ -40,6 +41,14 @@ export default defineConfig({
           name: "prop",
           include: ["src/**/*.test-prop.ts"],
           isolate: false,
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: "bench",
+          include: [],
+          benchmark: { include: ["src/**/*.bench.ts"] },
         },
       },
     ],

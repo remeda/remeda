@@ -9,7 +9,11 @@ import type {
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
-import { SKIP_ITEM } from "./internal/utilityEvaluators";
+import {
+  doneWith,
+  readsDataWhen,
+  SKIP_ITEM,
+} from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
 type Found<T extends IterableContainer, Condition> =
@@ -162,11 +166,9 @@ const findImplementation = <T, S extends T>(
   predicate: (value: T, index: number, data: readonly T[]) => value is S,
 ): S | undefined => data.find(predicate);
 
-const lazyImplementation =
-  <T, S extends T>(
-    predicate: (value: T, index: number, data: readonly T[]) => value is S,
-  ): LazyEvaluator<T, S> =>
-  (value, index, data) =>
-    predicate(value, index, data)
-      ? { done: true, hasNext: true, next: value }
-      : SKIP_ITEM;
+const lazyImplementation = <T, S extends T>(
+  predicate: (value: T, index: number, data: readonly T[]) => value is S,
+): LazyEvaluator<T, S> =>
+  readsDataWhen(predicate, 2, (value, index, data) =>
+    predicate(value, index, data) ? doneWith(value) : SKIP_ITEM,
+  );

@@ -38,6 +38,8 @@ const INTERNAL_SYMBOLS = [
   "BRAND_HAS_SUB_OBJECT",
   // From `RemedaTypeError`:
   "RemedaErrorSymbol",
+  // From `utilityEvaluators`:
+  "LAZY_CONTROL",
 
   // From type-fest:
   "emptyObjectSymbol",
@@ -104,6 +106,9 @@ export default defineConfig({
         `${SOURCE_DIR}/*.ts`,
         // Skip test files
         `!**/*.test{,-d,-prop}.ts`,
+        // Skip benchmarks; they import `vitest` and would pull it into the
+        // published artifacts.
+        `!**/*.bench.ts`,
       ],
 
       // We enforce target at the type-checking level via tsconfig.json. Once we

@@ -4,7 +4,7 @@ import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { SKIP_ITEM } from "./internal/utilityEvaluators";
+import { readsDataWhen, SKIP_ITEM } from "./internal/utilityEvaluators";
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -60,13 +60,13 @@ function lazyImplementation<T>(
   const brandedKeyFunction = keyFunction as BrandedReturn<typeof keyFunction>;
 
   const set = new Set<ReturnType<typeof brandedKeyFunction>>();
-  return (value, index, data) => {
+  return readsDataWhen(keyFunction, 2, (value, index, data) => {
     const key = brandedKeyFunction(value, index, data);
     if (set.has(key)) {
       return SKIP_ITEM;
     }
 
     set.add(key);
-    return { done: false, hasNext: true, next: value };
-  };
+    return value;
+  });
 }

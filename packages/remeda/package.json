@@ -49,6 +49,7 @@
     "utils"
   ],
   "scripts": {
+    "bench": "vitest bench --project bench",
     "build": "tsdown",
     "check": "tsc --project tsconfig.source.json",
     "check:dist": "tsc --project tsconfig.dist.json",

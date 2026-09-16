@@ -1,10 +1,14 @@
 import { describe, expect, test, vi } from "vitest";
 import { filter } from "./filter";
+import { first } from "./first";
 import { flat } from "./flat";
+import { flatMap } from "./flatMap";
+import { forEach } from "./forEach";
 import { identity } from "./identity";
 import { purryFromLazy } from "./internal/purryFromLazy";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import { LAZY_CONTROL } from "./internal/utilityEvaluators";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
@@ -188,6 +192,153 @@ describe("lazy", () => {
     expect(mock).toHaveNthReturnedWith(2, [1, 2]);
     expect(mock).toHaveNthReturnedWith(3, [1, 2, 3]);
   });
+
+  describe("step index", () => {
+    test("counts items the step consumed, not input positions", () => {
+      const result = pipe(
+        [1, 2, 3, 4],
+        filter((x) => x % 2 === 0),
+        map((_value, index) => index),
+      );
+
+      expect(result).toStrictEqual([0, 1]);
+    });
+
+    test("advances across fan-out", () => {
+      const result = pipe(
+        [[1, 2], [3]],
+        flat(),
+        map((_value, index) => index),
+      );
+
+      expect(result).toStrictEqual([0, 1, 2]);
+    });
+
+    test("independent per step", () => {
+      const upstreamIndices: number[] = [];
+      const result = pipe(
+        [
+          [1, 2],
+          [3, 4],
+        ],
+        map((inner, index) => {
+          upstreamIndices.push(index);
+          return inner;
+        }),
+        flat(),
+        map((_value, index) => index),
+      );
+
+      expect(upstreamIndices).toStrictEqual([0, 1]);
+      expect(result).toStrictEqual([0, 1, 2, 3]);
+    });
+  });
+
+  describe("data buffer", () => {
+    test("a rest-parameter callback buffers because `Function.length` is 0", () => {
+      const result = pipe(
+        [1, 2, 3],
+        map((...args: readonly [number, number, readonly number[]]) => [
+          ...args[2],
+        ]),
+      );
+
+      expect(result).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+    });
+
+    test("a bare `vi.fn()` mock buffers because it also reports `length` 0", () => {
+      const mock =
+        vi.fn<
+          (value: number, index: number, data: readonly number[]) => void
+        >();
+
+      pipe([1, 2, 3], forEach(mock));
+
+      expect(mock.mock.calls[0]?.[2]).toBe(mock.mock.calls[2]?.[2]);
+      expect(mock.mock.calls[2]?.[2]).toStrictEqual([1, 2, 3]);
+    });
+
+    test("a callback bound with partial application still reports the remaining arity", () => {
+      // eslint-disable-next-line unicorn/consistent-function-scoping -- The declared arity is the subject of this test, hoisting it out of the test would separate it from the assertion that explains it.
+      function collect(
+        tag: string,
+        _value: number,
+        _index: number,
+        data: readonly number[],
+      ): unknown[] {
+        return [tag, ...data];
+      }
+
+      const result = pipe([1, 2, 3], map(collect.bind(undefined, "t")));
+
+      expect(result).toStrictEqual([
+        ["t", 1],
+        ["t", 1, 2],
+        ["t", 1, 2, 3],
+      ]);
+    });
+  });
+
+  describe("fan-out", () => {
+    test("flatMap to an empty array contributes nothing for that item", () => {
+      const result = pipe(
+        [1, 2, 3],
+        flatMap(() => []),
+      );
+
+      expect(result).toStrictEqual([]);
+    });
+
+    test("a downstream single-result step stops mid fan-out", () => {
+      const count = vi.fn<() => void>();
+      const result = pipe(
+        [
+          [1, 2, 3],
+          [4, 5],
+        ],
+        map((inner) => {
+          count();
+          return inner;
+        }),
+        flat(),
+        first(),
+      );
+
+      expect(count).toHaveBeenCalledTimes(1);
+      expect(result).toBe(1);
+    });
+
+    test("`null` items pass through as items, not control signals", () => {
+      const result = pipe(
+        [null, 1, null],
+        filter((x) => x === null),
+      );
+
+      expect(result).toStrictEqual([null, null]);
+    });
+
+    test("items shaped like control objects pass through as data", () => {
+      const lookalike = { done: true, hasNext: true, hasMany: false, next: 1 };
+
+      expect(
+        pipe(
+          [0],
+          map(() => lookalike),
+        ),
+      ).toStrictEqual([lookalike]);
+    });
+
+    test("index continues across two consecutive fan-outs", () => {
+      const result = pipe(
+        [[1, 2], [3]],
+        flat(),
+        flatMap((x) => [x, x + 100]),
+        map((_, index) => index),
+      );
+
+      expect(result).toStrictEqual([0, 1, 2, 3, 4, 5]);
+    });
+  });
 });
 
 // We want to test a lazy evaluator that returns both `done === true` and
@@ -197,8 +348,73 @@ const firstTwice: () => (data: readonly number[]) => number[] = () =>
   purryFromLazy(() => firstTwiceEvaluator, []);
 
 const firstTwiceEvaluator: LazyEvaluator = (value) => ({
+  [LAZY_CONTROL]: true,
   done: true,
   hasNext: true,
   hasMany: true,
   next: [value, value],
+});
+
+describe("known issues!", () => {
+  test("default parameters hide `data` from the arity check", () => {
+    const result = pipe(
+      [1, 2, 3],
+      // eslint-disable-next-line @typescript-eslint/no-useless-default-assignment -- The defaults never fire, and that is the point: they still truncate `Function.length`, which is the known issue this test pins.
+      map((_value: number, _index = 0, data: readonly number[] = []) => data),
+    );
+
+    // `Function.length` stops counting at the first parameter with a
+    // default, so this callback reports 1 and `pipe` hands it the shared
+    // empty array instead of buffering; the default never fires because an
+    // argument is always passed.
+    expect(result).toStrictEqual([[], [], []]);
+  });
+
+  test("`arguments` access hides `data` from the arity check", () => {
+    const result = pipe(
+      [1, 2, 3],
+      map(function readsArguments(_value: number) {
+        // eslint-disable-next-line prefer-rest-params, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment -- The point of this test is that arguments-based access is invisible to the arity check, and `arguments` is untyped by construction so spreading it is unavoidably unsafe here.
+        return [...arguments[2]];
+      }),
+    );
+
+    // A `function` expression that reaches for `arguments` instead of
+    // declaring `data` also reports a `length` of 1, so `pipe` hands it the
+    // shared empty array instead of buffering.
+    expect(result).toStrictEqual([[], [], []]);
+  });
+
+  test("a trailing rest parameter hides `data` from the arity check", () => {
+    const result = pipe(
+      [1, 2, 3],
+      map(
+        (
+          _value: number,
+          _index: number,
+          ...rest: readonly [readonly number[]]
+        ) => [...rest[0]],
+      ),
+    );
+
+    // `Function.length` counts only the named parameters before a rest
+    // parameter, so this callback reports 2 and `pipe` doesn't buffer;
+    // `rest[0]` is the shared frozen empty array on every call.
+    expect(result).toStrictEqual([[], [], []]);
+  });
+
+  test("a Proxy whose `has` trap always answers true is dropped as a control object", () => {
+    const trap = new Proxy({ value: 1 }, { has: () => true });
+
+    const result = pipe(
+      [trap],
+      map((x) => x),
+    );
+
+    // The brand check is `LAZY_CONTROL in result`, and `in` consults the
+    // trap, so the item looks branded as a control object; having no
+    // `hasNext`, it's treated as skipped and dropped. The data-first form
+    // `($) => map($, fn)` bypasses the lazy engine and is the escape hatch.
+    expect(result).toStrictEqual([]);
+  });
 });

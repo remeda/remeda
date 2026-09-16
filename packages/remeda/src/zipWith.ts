@@ -2,7 +2,11 @@ import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
-import { lazyEmptyEvaluator } from "./internal/utilityEvaluators";
+import {
+  doneWith,
+  lazyEmptyEvaluator,
+  readsDataWhen,
+} from "./internal/utilityEvaluators";
 
 type ZippingFunction<
   T1 extends IterableContainer = IterableContainer,
@@ -129,8 +133,8 @@ const lazyImplementation = <T1, T2 extends IterableContainer, Value>(
 ): LazyEvaluator<T1, Value> =>
   second.length === 0
     ? lazyEmptyEvaluator
-    : (value, index, data) => ({
-        next: fn(value, second[index], index, [data, second]),
-        hasNext: true,
-        done: index >= second.length - 1,
+    : // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- 3 is the position of `data` in the zipping function's parameter list.
+      readsDataWhen(fn, 3, (value, index, data) => {
+        const zipped = fn(value, second[index], index, [data, second]);
+        return index >= second.length - 1 ? doneWith(zipped) : zipped;
       });

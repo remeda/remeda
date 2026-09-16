@@ -59,7 +59,7 @@ function lazyImplementation<T>(other: readonly T[]): LazyEvaluator<T> {
     if (copies === undefined || copies === 0) {
       // The item is either not part of the other array or we've dropped enough
       // copies of it so we return it.
-      return { done: false, hasNext: true, next: value };
+      return value;
     }
 
     // The item is equal to an item in the other array and there are still

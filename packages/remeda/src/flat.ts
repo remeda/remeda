@@ -3,7 +3,7 @@ import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { LazyResult } from "./internal/types/LazyResult";
-import { lazyIdentityEvaluator } from "./internal/utilityEvaluators";
+import { lazyIdentityEvaluator, manyItems } from "./internal/utilityEvaluators";
 
 type FlatArray<
   T,
@@ -129,19 +129,10 @@ const lazyImplementation = (depth?: number): LazyEvaluator =>
     : depth <= 0
       ? lazyIdentityEvaluator
       : (value) =>
-          Array.isArray(value)
-            ? {
-                next: value.flat(depth - 1),
-                hasNext: true,
-                hasMany: true,
-                done: false,
-              }
-            : { next: value, hasNext: true, done: false };
+          Array.isArray(value) ? manyItems(value.flat(depth - 1)) : value;
 
-// This function is pulled out so that we don't generate a new arrow function
-// each time. Because it doesn't need to run with recursion it could be pulled
-// out from the lazyImplementation and be reused for all invocations.
+// Pulled out to module scope because, unlike the deeper-than-one branch, it
+// doesn't close over `depth`, so one function serves every `flat()` /
+// `flat(1)` call instead of allocating a closure per call.
 const lazyShallow = <T>(value: T): LazyResult<T> =>
-  Array.isArray(value)
-    ? { next: value, hasNext: true, hasMany: true, done: false }
-    : { next: value, hasNext: true, done: false };
+  Array.isArray(value) ? manyItems(value) : value;
