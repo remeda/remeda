@@ -14,11 +14,13 @@ export type OptionalOptionsWithDefaults<
     // Defaults are only relevant for optional properties and need to be merged
     // with a non-optional version of the provided options to remove the
     // unreachable `undefined` parts.
-    [Key in keyof Provided as IsNever<
-      Extract<Provided[Key], undefined>
-    > extends true
-      ? Key
-      : never]: Provided[Key];
+    [
+      Key in keyof Provided as IsNever<
+        Extract<Provided[Key], undefined>
+      > extends true
+        ? Key
+        : never
+    ]: Provided[Key];
   }
 > &
   // After merging with the defaults there should be no optional properties
