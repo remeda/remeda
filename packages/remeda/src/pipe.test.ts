@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { filter } from "./filter";
+import { find } from "./find";
 import { first } from "./first";
 import { flat } from "./flat";
 import { flatMap } from "./flatMap";
@@ -357,6 +358,82 @@ describe("lazy", () => {
 
       expect(result).toStrictEqual([0, 1, 2, 3, 4, 5]);
     });
+  });
+
+  // A pipe whose only function is lazy takes a dedicated path through `pipe`,
+  // so every kind of lazy result needs to be exercised on it too.
+  describe("a lone lazy function", () => {
+    test("skipped items are dropped", () => {
+      expect(
+        pipe(
+          [1, 2, 3, 4],
+          filter((x) => x % 2 === 0),
+        ),
+      ).toStrictEqual([2, 4]);
+    });
+
+    test("done without a value emits nothing", () => {
+      expect(pipe([1, 2, 3], take(0))).toStrictEqual([]);
+    });
+
+    test("done with a value unwraps to that value", () => {
+      expect(pipe([1, 2, 3], first())).toBe(1);
+    });
+
+    test("done with a value stops the iteration", () => {
+      const mockPredicate = vi.fn<(x: number) => boolean>((x) => x === 2);
+
+      pipe([1, 2, 3], find(mockPredicate));
+
+      expect(mockPredicate).toHaveBeenCalledTimes(2);
+    });
+
+    test("nothing to emit unwraps to `undefined`", () => {
+      expect(pipe([], first())).toBeUndefined();
+    });
+
+    test("fan-out emits every sub-item", () => {
+      expect(
+        pipe(
+          [1, 2],
+          flatMap((x) => [x, x * 10]),
+        ),
+      ).toStrictEqual([1, 10, 2, 20]);
+    });
+
+    test("fan-out that is also done emits its sub-items and stops", () => {
+      expect(pipe([1, 2, 3], firstTwice())).toStrictEqual([1, 1]);
+    });
+
+    test("callbacks receive the items processed so far", () => {
+      const mock = vi.fn<LazyCallback<unknown[], unknown>>(
+        (_value, _index, data) => [...data],
+      );
+      pipe([1, 2, 3], forEach(mock));
+
+      expect(mock).toHaveNthReturnedWith(2, [1, 2]);
+    });
+
+    test("a non-lazy function alongside it opts the pipe out", () => {
+      const result = pipe(
+        [1, 2, 3],
+        map((x) => x * 10),
+        (values) => values.join(","),
+      );
+
+      expect(result).toBe("10,20,30");
+    });
+  });
+
+  test("one lazy function between two non-lazy ones", () => {
+    const result = pipe(
+      { inner: [1, 2, 3] },
+      prop("inner"),
+      map((x) => x * 10),
+      (values) => values.join(","),
+    );
+
+    expect(result).toBe("10,20,30");
   });
 });
 

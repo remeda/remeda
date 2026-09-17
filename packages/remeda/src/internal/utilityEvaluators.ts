@@ -83,6 +83,13 @@ export const isLazyControl = (result: unknown): result is LazyControl =>
   "$$remedaLazyRef" in result &&
   result.$$remedaLazyRef === LAZY_REF;
 
+/**
+ * Handed to every step that doesn't read `data`. Frozen so a callback that
+ * slips through the arity gate (default parameters, `arguments`) can't corrupt
+ * a module-wide singleton.
+ */
+export const NO_DATA: readonly never[] = Object.freeze([]);
+
 const DATA_MARKER = { requiresData: true } as const;
 
 /**

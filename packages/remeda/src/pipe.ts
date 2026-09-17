@@ -2,9 +2,10 @@
  * We document pipe's function params as a single parameter entry in the docs.
  */
 
+import { processSingleLazyStep } from "./internal/processSingleLazyStep";
 import type { LazyDefinition } from "./internal/types/LazyDefinition";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { isLazyControl } from "./internal/utilityEvaluators";
+import { isLazyControl, NO_DATA } from "./internal/utilityEvaluators";
 
 type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
@@ -21,11 +22,6 @@ type LazyStep = {
     }
   | { readonly requiresData: false; readonly items: readonly never[] }
 );
-
-// Handed to every step that doesn't read `data`. Frozen so a callback that
-// slips through the arity gate (default parameters, `arguments`) can't corrupt
-// a module-wide singleton.
-const NO_DATA: readonly never[] = Object.freeze([]);
 
 type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
 
@@ -306,6 +302,25 @@ export function pipe(
   if (functions.length === 0) {
     // We shouldn't waste effort on trivial pipes.
     return input;
+  }
+
+  if (functions.length === 1) {
+    // A pipe of one lazy function is a lazy sequence of one step, which has no
+    // cross-step bookkeeping to set up: the step array, the step object, and
+    // the hand-off through them are all overhead. The check belongs here and
+    // not inside the loop below, where the one-step case could also be spotted:
+    // a loop body holding two processing calls measured ~7% slower on
+    // multi-step pipes than one holding a single call, however the choice
+    // between them was expressed, while deciding it before the loop leaves the
+    // loop exactly as it was.
+    const func = functions[0]!;
+    if (!("lazy" in func) || !isIterable(input)) {
+      return func(input);
+    }
+
+    const { lazy, lazyArgs } = func;
+    const accumulator = processSingleLazyStep(input, lazy(...lazyArgs));
+    return lazy.single === true ? accumulator[0] : accumulator;
   }
 
   let output = input;

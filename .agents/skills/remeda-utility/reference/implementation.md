@@ -33,7 +33,7 @@ Buffering `data` costs an array push per item, so `pipe` only does it for steps 
 
 `readsDataWhen` buffers when `callback.length === 0` - this covers a callback whose first parameter is a rest parameter (a rest parameter after named parameters instead reports the named count), plus mocks and wrappers that forward `arguments`, neither of which can be inspected further, so we buffer defensively - or when `callback.length > dataParameterIndex` (the callback declares enough named parameters to reach it). Three holes are known and left unguarded: a default parameter before `data` truncates `Function.length` (`(x, i = 0, data = []) => ...` reports 1, not 3), a callback that reaches `data` through `arguments[i]` instead of a named parameter, and a trailing rest parameter such as `(value, index, ...rest)` (reports 2, not 3) - all three fall through to the non-buffering path. `bind` with partial application adjusts `length` correctly, so it isn't a hole.
 
-A step that doesn't opt in receives a shared, frozen empty array (`NO_DATA` in `pipe.ts`) as `data`. The `requiresData` marker is stamped on our own evaluator closure, never on the user's callback - the callback itself is only ever inspected via `.length`.
+A step that doesn't opt in receives a shared, frozen empty array (`NO_DATA` in `utilityEvaluators.ts`) as `data`. The `requiresData` marker is stamped on our own evaluator closure, never on the user's callback - the callback itself is only ever inspected via `.length`.
 
 ### Typing the callback's `data` parameter
 
@@ -42,7 +42,7 @@ Inside `pipe`, only evaluators marked with `readsData` or `readsDataWhen` are in
 Which overloads need it depends on the purrying helper:
 
 - `purry` with a lazy evaluator: the data-first overload runs the eager implementation and receives the complete input, so it keeps the standard `(value: T[number], index: number, data: T) => R` shape. Only the data-last overload is lazy.
-- `purryFromLazy`: both overloads route through `pipe`, so both use the lazy types.
+- `purryFromLazy`: both overloads run the lazy evaluator item by item, so both use the lazy types.
 
 How to type a lazy overload:
 

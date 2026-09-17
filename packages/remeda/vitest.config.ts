@@ -48,6 +48,10 @@ export default defineConfig({
         test: {
           name: "bench",
           include: [],
+          // Runs in the benchmark file's own module graph, so the lazy call
+          // sites are already in their realistic, generic state when the first
+          // benchmark starts. See the module for what that is worth.
+          setupFiles: ["./test/benchPollution.ts"],
           benchmark: { include: ["src/**/*.bench.ts"] },
         },
       },
