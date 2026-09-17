@@ -1,4 +1,4 @@
-import type { LAZY_CONTROL } from "../utilityEvaluators";
+import type { LAZY_REF } from "../utilityEvaluators";
 
 /**
  * A lazy evaluator returns the (possibly transformed) item itself in the
@@ -10,34 +10,38 @@ export type LazyResult<T = unknown> = T | LazyControl<T>;
 export type LazyControl<T = unknown> =
   LazySkip | LazyStop | LazyLast<T> | LazyMany<T>;
 
-// The brand is the only thing that separates a control object from a user
-// item that happens to carry the same keys.
-type Branded = { readonly [LAZY_CONTROL]: true };
-
-export type LazySkip = Branded & {
-  readonly done: false;
-  readonly hasNext: false;
-  readonly hasMany: false;
-  readonly next: undefined;
+type LazyBase = {
+  // What tells a control object apart from a user item carrying the same
+  // information is the identity of the reference object, not the shape
+  // below: every key is a plain string and `typeof LAZY_REF` is structural,
+  // so only the runtime comparison in `isLazyControl` is authoritative.
+  readonly $$remedaLazyRef: typeof LAZY_REF;
 };
 
-export type LazyStop = Branded & {
-  readonly done: true;
-  readonly hasNext: false;
+export type LazySkip = LazyBase & {
+  readonly value?: never;
   readonly hasMany: false;
-  readonly next: undefined;
+  readonly hasValue: false;
+  readonly isDone: false;
 };
 
-export type LazyLast<T> = Branded & {
-  readonly done: true;
-  readonly hasNext: true;
+export type LazyStop = LazyBase & {
+  readonly value?: never;
   readonly hasMany: false;
-  readonly next: T;
+  readonly hasValue: false;
+  readonly isDone: true;
 };
 
-export type LazyMany<T> = Branded & {
-  readonly done: boolean;
-  readonly hasNext: true;
+export type LazyLast<T> = LazyBase & {
+  readonly value: T;
+  readonly hasMany: false;
+  readonly hasValue: true;
+  readonly isDone: true;
+};
+
+export type LazyMany<T> = LazyBase & {
+  readonly value: readonly T[];
   readonly hasMany: true;
-  readonly next: readonly T[];
+  readonly hasValue: true;
+  readonly isDone: boolean;
 };

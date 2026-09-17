@@ -8,7 +8,7 @@ import { identity } from "./identity";
 import { purryFromLazy } from "./internal/purryFromLazy";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { LAZY_CONTROL } from "./internal/utilityEvaluators";
+import { LAZY_REF } from "./internal/utilityEvaluators";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
@@ -143,7 +143,7 @@ describe("lazy", () => {
     const mockMapper = vi.fn<(x: number) => number>();
 
     expect(pipe([1, 2, 3, 4, 5], map(mockMapper), take(0))).toStrictEqual([]);
-    // An element must be pulled before `take(0)` can report `done`, so the
+    // An element must be pulled before `take(0)` can report `isDone`, so the
     // callback runs exactly once even though the result is empty.
     expect(mockMapper).toHaveBeenCalledTimes(1);
   });
@@ -317,8 +317,13 @@ describe("lazy", () => {
       expect(result).toStrictEqual([null, null]);
     });
 
-    test("items shaped like control objects pass through as data", () => {
-      const lookalike = { done: true, hasNext: true, hasMany: false, next: 1 };
+    test("items with string keys named like the control props pass through as data", () => {
+      const lookalike = {
+        isDone: true,
+        hasValue: true,
+        hasMany: false,
+        value: 1,
+      };
 
       expect(
         pipe(
@@ -326,6 +331,20 @@ describe("lazy", () => {
           map(() => lookalike),
         ),
       ).toStrictEqual([lookalike]);
+    });
+
+    test("a Proxy whose `has` trap always answers true still passes through as data", () => {
+      const trap = new Proxy({ value: 1 }, { has: () => true });
+
+      const result = pipe(
+        [trap],
+        map((x) => x),
+      );
+
+      // The trap makes the `in` check pass, but control objects are told apart
+      // by the identity of the marker and the read behind the trap answers
+      // with the target's own (absent) prop, so a lying `has` can't forge one.
+      expect(result).toStrictEqual([trap]);
     });
 
     test("index continues across two consecutive fan-outs", () => {
@@ -341,18 +360,18 @@ describe("lazy", () => {
   });
 });
 
-// We want to test a lazy evaluator that returns both `done === true` and
-// `hasMany === true` at the same time but don't have any utility that does it.
+// We want to test a lazy evaluator that sets both `isDone` and `hasMany` at the
+// same time but don't have any utility that does it.
 const firstTwice: () => (data: readonly number[]) => number[] = () =>
   // @ts-expect-error [ts2322] -- Our purry functions don't infer the correct return type, we explicit casting to force it.
   purryFromLazy(() => firstTwiceEvaluator, []);
 
 const firstTwiceEvaluator: LazyEvaluator = (value) => ({
-  [LAZY_CONTROL]: true,
-  done: true,
-  hasNext: true,
+  $$remedaLazyRef: LAZY_REF,
+  isDone: true,
+  hasValue: true,
   hasMany: true,
-  next: [value, value],
+  value: [value, value],
 });
 
 describe("known issues!", () => {
@@ -401,20 +420,5 @@ describe("known issues!", () => {
     // parameter, so this callback reports 2 and `pipe` doesn't buffer;
     // `rest[0]` is the shared frozen empty array on every call.
     expect(result).toStrictEqual([[], [], []]);
-  });
-
-  test("a Proxy whose `has` trap always answers true is dropped as a control object", () => {
-    const trap = new Proxy({ value: 1 }, { has: () => true });
-
-    const result = pipe(
-      [trap],
-      map((x) => x),
-    );
-
-    // The brand check is `LAZY_CONTROL in result`, and `in` consults the
-    // trap, so the item looks branded as a control object; having no
-    // `hasNext`, it's treated as skipped and dropped. The data-first form
-    // `($) => map($, fn)` bypasses the lazy engine and is the escape hatch.
-    expect(result).toStrictEqual([]);
   });
 });

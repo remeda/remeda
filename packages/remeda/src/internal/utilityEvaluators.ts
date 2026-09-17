@@ -8,11 +8,19 @@ import type {
 } from "./types/LazyResult";
 import type { StrictFunction } from "./types/StrictFunction";
 
-// A `Symbol()` (never `Symbol.for`) that never leaves the package, so no value
-// that enters a pipe can carry the brand, whatever its origin.
-export const LAZY_CONTROL: unique symbol = Symbol("remeda.lazyControl");
+// Control objects are told apart from user items by the identity of this
+// frozen object, which never leaves the package, so no value that enters a
+// pipe can carry it whatever its origin. A plain string key is used on
+// purpose: every computed (symbol) key in an object literal costs V8 a keyed
+// store on top of the literal's boilerplate (four symbol keys measured 10%
+// slower on flatMap pipelines), prototype-identity checks cost more than the
+// lookup they replace (1.5x to 2.9x), and null-prototype objects fall into
+// dictionary mode (5x). Reference equality on a string key measured fastest
+// on every pipeline shape.
+export const LAZY_REF = Object.freeze({});
 
-// Every control literal lists the same five keys in the same order so that V8
+// Every control literal lists the same five keys (the reference plus
+// `isDone`, `hasValue`, `hasMany`, `value`) in the same order so that V8
 // gives them all a single hidden class, keeping the reads in `pipe`
 // monomorphic.
 
@@ -20,19 +28,17 @@ export const LAZY_CONTROL: unique symbol = Symbol("remeda.lazyControl");
  * A singleton value for skipping an item in a lazy evaluator.
  */
 export const SKIP_ITEM: LazySkip = {
-  [LAZY_CONTROL]: true,
-  done: false,
-  hasNext: false,
+  $$remedaLazyRef: LAZY_REF,
   hasMany: false,
-  next: undefined,
+  hasValue: false,
+  isDone: false,
 };
 
 const STOP: LazyStop = {
-  [LAZY_CONTROL]: true,
-  done: true,
-  hasNext: false,
+  $$remedaLazyRef: LAZY_REF,
   hasMany: false,
-  next: undefined,
+  hasValue: false,
+  isDone: true,
 };
 
 /**
@@ -49,35 +55,33 @@ export const lazyIdentityEvaluator = <T>(value: T): T => value;
 /**
  * Emits `next` and stops the pipe.
  */
-export const doneWith = <T>(next: T): LazyLast<T> => ({
-  [LAZY_CONTROL]: true,
-  done: true,
-  hasNext: true,
+export const doneWith = <T>(value: T): LazyLast<T> => ({
+  $$remedaLazyRef: LAZY_REF,
+  value,
   hasMany: false,
-  next,
+  hasValue: true,
+  isDone: true,
 });
 
 /**
  * Feeds every element of `next` through the rest of the pipe, one by one.
  */
-export const manyItems = <T>(next: readonly T[]): LazyMany<T> => ({
-  [LAZY_CONTROL]: true,
-  done: false,
-  hasNext: true,
+export const manyItems = <T>(value: readonly T[]): LazyMany<T> => ({
+  $$remedaLazyRef: LAZY_REF,
+  value,
   hasMany: true,
-  next,
+  hasValue: true,
+  isDone: false,
 });
 
 export const isLazyControl = (result: unknown): result is LazyControl =>
-  // The `typeof` guard is required because `in` throws a `TypeError` when the
-  // right operand is a primitive. The guard plus `in`, instead of reading the
-  // brand off the result directly (which boxes every primitive item and
-  // measured 2x-3.5x slower on number and string pipelines), is what keeps the
-  // common pass-through case free.
+  // The `typeof` guard is required because `in` throws on a primitive operand;
+  // checking the key before reading it keeps the read (and any user getter of
+  // the same name) off the path for the vast majority of items.
   typeof result === "object" &&
   result !== null &&
-  // eslint-disable-next-line unicorn/no-computed-property-existence-check -- The brand is an own symbol key so `in` is an inline-cached lookup on the per-item hot path; `Object.hasOwn` would add a builtin call for the same answer.
-  LAZY_CONTROL in result;
+  "$$remedaLazyRef" in result &&
+  result.$$remedaLazyRef === LAZY_REF;
 
 const DATA_MARKER = { requiresData: true } as const;
 

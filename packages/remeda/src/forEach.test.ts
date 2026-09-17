@@ -37,9 +37,6 @@ test("pipe", () => {
 
   const result = pipe(data, forEach(cb));
 
-  // `cb` is a bare mock, so its `length` is 0; `pipe` buffers `data` for it,
-  // and by the time these assertions run that shared array has grown to the
-  // full input.
   expect(cb).toHaveBeenNthCalledWith(1, 1, 0, data);
   expect(cb).toHaveBeenNthCalledWith(2, 2, 1, data);
   expect(cb).toHaveBeenNthCalledWith(3, 3, 2, data);

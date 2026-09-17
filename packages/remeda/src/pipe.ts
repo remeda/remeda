@@ -303,8 +303,12 @@ export function pipe(
   input: unknown,
   ...functions: readonly (LazyFunction | ((value: unknown) => unknown))[]
 ): unknown {
-  let output = input;
+  if (functions.length === 0) {
+    // We shouldn't waste effort on trivial pipes.
+    return input;
+  }
 
+  let output = input;
   const lazySteps = functions.map((op) =>
     "lazy" in op ? buildLazyStep(op) : undefined,
   );
@@ -326,6 +330,7 @@ export function pipe(
     output = isSingle ? accumulator[0] : accumulator;
     functionIndex += lazySequence.length;
   }
+
   return output;
 }
 
@@ -391,8 +396,8 @@ function processItem(
   startIndex: number,
 ): boolean {
   if (startIndex >= lazySequence.length) {
-    // A `hasMany` fan-out from the last step has no further steps to run
-    // the sub-items through, so they go straight to the accumulator.
+    // A `hasMany` fan-out from the last step has no further steps to run the
+    // sub-items through, so they go straight to the accumulator.
     accumulator.push(item);
     return false;
   }
@@ -418,17 +423,18 @@ function processItem(
       continue;
     }
 
-    if (result.done) {
+    if (result.isDone) {
       isDone = true;
     }
 
-    if (!result.hasNext) {
+    if (!result.hasValue) {
       // Skipped, or stopped without a value; nothing reaches the next step.
       return isDone;
     }
 
     if (result.hasMany) {
-      for (const subItem of result.next) {
+      const subItems = result.value;
+      for (const subItem of subItems) {
         const shouldExitEarly = processItem(
           subItem,
           accumulator,
@@ -442,7 +448,7 @@ function processItem(
       return isDone;
     }
 
-    currentItem = result.next;
+    currentItem = result.value;
   }
 
   accumulator.push(currentItem);

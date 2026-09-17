@@ -5,6 +5,11 @@
   "exports": "./src/index.ts",
   "publish": {
     "include": ["./src/**/*.ts", "./LICENSE", "./README.md"],
-    "exclude": ["**/*.test.ts", "**/*.test-d.ts", "**/*.bench.ts"]
+    "exclude": [
+      "**/*.bench.ts",
+      "**/*.test-d.ts",
+      "**/*.test-prop.ts",
+      "**/*.test.ts"
+    ]
   }
 }

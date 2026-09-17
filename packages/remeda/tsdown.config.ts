@@ -38,8 +38,6 @@ const INTERNAL_SYMBOLS = [
   "BRAND_HAS_SUB_OBJECT",
   // From `RemedaTypeError`:
   "RemedaErrorSymbol",
-  // From `utilityEvaluators`:
-  "LAZY_CONTROL",
 
   // From type-fest:
   "emptyObjectSymbol",
