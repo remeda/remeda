@@ -442,25 +442,29 @@ function processItem(
       isDone = true;
     }
 
-    if (!result.hasValue) {
-      // Skipped, or stopped without a value; nothing reaches the next step.
-      return isDone;
-    }
+    switch (result.control) {
+      case "skip":
+        // Skipped, or stopped without a value; nothing reaches the next step.
+        return isDone;
 
-    if (result.hasMany) {
-      const subItems = result.value;
-      for (const subItem of subItems) {
-        const shouldExitEarly = processItem(
-          subItem,
-          accumulator,
-          lazySequence,
-          stepIndex + 1,
-        );
-        if (shouldExitEarly) {
-          return true;
+      case "many": {
+        const subItems = result.value;
+        for (const subItem of subItems) {
+          const shouldExitEarly = processItem(
+            subItem,
+            accumulator,
+            lazySequence,
+            stepIndex + 1,
+          );
+          if (shouldExitEarly) {
+            return true;
+          }
         }
+        return isDone;
       }
-      return isDone;
+
+      case "last":
+      // do nothing
     }
 
     currentItem = result.value;

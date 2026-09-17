@@ -446,8 +446,7 @@ const firstTwice: () => (data: readonly number[]) => number[] = () =>
 const firstTwiceEvaluator: LazyEvaluator = (value) => ({
   $$remedaLazyRef: LAZY_REF,
   isDone: true,
-  hasValue: true,
-  hasMany: true,
+  type: "many",
   value: [value, value],
 });
 

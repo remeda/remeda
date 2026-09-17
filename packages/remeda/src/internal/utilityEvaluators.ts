@@ -4,7 +4,6 @@ import type {
   LazyLast,
   LazyMany,
   LazySkip,
-  LazyStop,
 } from "./types/LazyResult";
 import type { StrictFunction } from "./types/StrictFunction";
 
@@ -29,15 +28,13 @@ export const LAZY_REF = Object.freeze({});
  */
 export const SKIP_ITEM: LazySkip = {
   $$remedaLazyRef: LAZY_REF,
-  hasMany: false,
-  hasValue: false,
+  control: "skip",
   isDone: false,
 };
 
-const STOP: LazyStop = {
+const STOP: LazySkip = {
   $$remedaLazyRef: LAZY_REF,
-  hasMany: false,
-  hasValue: false,
+  control: "skip",
   isDone: true,
 };
 
@@ -45,7 +42,7 @@ const STOP: LazyStop = {
  * A helper evaluator for stopping the pipe without emitting anything. Both the
  * result and the evaluator are shared singletons.
  */
-export const lazyEmptyEvaluator = (): LazyStop => STOP;
+export const lazyEmptyEvaluator = (): LazySkip => STOP;
 
 /**
  * A helper evaluator that passes every item through unchanged.
@@ -57,10 +54,9 @@ export const lazyIdentityEvaluator = <T>(value: T): T => value;
  */
 export const doneWith = <T>(value: T): LazyLast<T> => ({
   $$remedaLazyRef: LAZY_REF,
-  value,
-  hasMany: false,
-  hasValue: true,
+  control: "last",
   isDone: true,
+  value,
 });
 
 /**
@@ -68,10 +64,9 @@ export const doneWith = <T>(value: T): LazyLast<T> => ({
  */
 export const manyItems = <T>(value: readonly T[]): LazyMany<T> => ({
   $$remedaLazyRef: LAZY_REF,
-  value,
-  hasMany: true,
-  hasValue: true,
+  control: "many",
   isDone: false,
+  value,
 });
 
 export const isLazyControl = (result: unknown): result is LazyControl =>

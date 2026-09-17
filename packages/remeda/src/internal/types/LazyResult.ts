@@ -7,10 +7,9 @@ import type { LAZY_REF } from "../utilityEvaluators";
  */
 export type LazyResult<T = unknown> = T | LazyControl<T>;
 
-export type LazyControl<T = unknown> =
-  LazySkip | LazyStop | LazyLast<T> | LazyMany<T>;
+export type LazyControl<T = unknown> = LazySkip | LazyLast<T> | LazyMany<T>;
 
-type LazyBase = {
+type LazyControlBase = {
   // What tells a control object apart from a user item carrying the same
   // information is the identity of the reference object, not the shape
   // below: every key is a plain string and `typeof LAZY_REF` is structural,
@@ -18,30 +17,20 @@ type LazyBase = {
   readonly $$remedaLazyRef: typeof LAZY_REF;
 };
 
-export type LazySkip = LazyBase & {
-  readonly value?: never;
-  readonly hasMany: false;
-  readonly hasValue: false;
-  readonly isDone: false;
-};
-
-export type LazyStop = LazyBase & {
-  readonly value?: never;
-  readonly hasMany: false;
-  readonly hasValue: false;
-  readonly isDone: true;
-};
-
-export type LazyLast<T> = LazyBase & {
-  readonly value: T;
-  readonly hasMany: false;
-  readonly hasValue: true;
-  readonly isDone: true;
-};
-
-export type LazyMany<T> = LazyBase & {
-  readonly value: readonly T[];
-  readonly hasMany: true;
-  readonly hasValue: true;
+export type LazySkip = LazyControlBase & {
+  readonly control: "skip";
   readonly isDone: boolean;
+  readonly value?: never;
+};
+
+export type LazyLast<T> = LazyControlBase & {
+  readonly control: "last";
+  readonly isDone: true;
+  readonly value: T;
+};
+
+export type LazyMany<T> = LazyControlBase & {
+  readonly control: "many";
+  readonly isDone: boolean;
+  readonly value: readonly T[];
 };

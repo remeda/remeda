@@ -1,3 +1,8 @@
+/* eslint-disable unicorn/no-break-in-nested-loop --
+ * This allows us a cleaner structure for handling the lazy control construct's
+ * `control` values.
+ */
+
 import type { LazyEvaluator } from "./types/LazyEvaluator";
 import { isLazyControl, NO_DATA } from "./utilityEvaluators";
 
@@ -40,16 +45,21 @@ export function processSingleLazyStep(
       continue;
     }
 
-    if (result.hasValue) {
-      if (result.hasMany) {
-        // Pushed one by one rather than spread, so a large fan-out can't hit
-        // the argument-count limit.
+    switch (result.control) {
+      case "many":
         for (const subItem of result.value) {
+          // Pushed one by one rather than spread, so a large fan-out can't hit
+          // the argument-count limit.
           accumulator.push(subItem);
         }
-      } else {
+        break;
+
+      case "last":
         accumulator.push(result.value);
-      }
+        break;
+
+      case "skip":
+      // do nothing
     }
 
     if (result.isDone) {
