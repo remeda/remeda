@@ -1,3 +1,5 @@
+import type { LAZY_REF } from "../utilityEvaluators";
+
 /**
  * A lazy evaluator returns the (possibly transformed) item itself in the
  * common case. Anything else it needs to tell `pipe` (skip, stop, expand) is
@@ -12,7 +14,7 @@ type LazyControlBase = {
   // information is the identity of the reference object, not the shape
   // below: every key is a plain string and `typeof LAZY_REF` is structural,
   // so only the runtime comparison in `isLazyControl` is authoritative.
-  readonly $$remedaLazyRef: unknown;
+  readonly $$remedaLazyRef: typeof LAZY_REF;
 };
 
 export type LazySkip = LazyControlBase & {

@@ -1,3 +1,4 @@
+import type { EmptyObject, Tagged } from "type-fest";
 import type { LazyEvaluator } from "./types/LazyEvaluator";
 import type {
   LazyControl,
@@ -16,7 +17,7 @@ import type { StrictFunction } from "./types/StrictFunction";
 // lookup they replace (1.5x to 2.9x), and null-prototype objects fall into
 // dictionary mode (5x). Reference equality on a string key measured fastest
 // on every pipeline shape.
-export const LAZY_REF = Object.freeze({});
+export const LAZY_REF = {} as Tagged<EmptyObject, "RemedaLazyRef">;
 
 // Every control literal lists the same five keys (the reference plus
 // `isDone`, `hasValue`, `hasMany`, `value`) in the same order so that V8
