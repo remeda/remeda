@@ -51,7 +51,7 @@ export const lazyEmptyEvaluator = (): LazySkip => STOP;
 export const lazyIdentityEvaluator = <T>(value: T): T => value;
 
 /**
- * Emits `next` and stops the pipe.
+ * Emits `value` and stops the pipe.
  */
 export const doneWith = <T>(value: T): LazyLast<T> => ({
   $$remedaLazyRef: LAZY_REF,
@@ -61,7 +61,7 @@ export const doneWith = <T>(value: T): LazyLast<T> => ({
 });
 
 /**
- * Feeds every element of `next` through the rest of the pipe, one by one.
+ * Feeds every element of `value` through the rest of the pipe, one by one.
  */
 export const manyItems = <T>(value: readonly T[]): LazyMany<T> => ({
   $$remedaLazyRef: LAZY_REF,

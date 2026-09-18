@@ -9,6 +9,7 @@ import { identity } from "./identity";
 import { purryFromLazy } from "./internal/purryFromLazy";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { LazyLast } from "./internal/types/LazyResult";
 import { LAZY_REF } from "./internal/utilityEvaluators";
 import { map } from "./map";
 import { pipe } from "./pipe";
@@ -160,7 +161,7 @@ describe("lazy", () => {
     expect(downstream).not.toHaveBeenCalled();
   });
 
-  test("lazy early exit with hasMany", () => {
+  test("lazy early exit with a many control", () => {
     const result = pipe(
       [
         [1, 2],
@@ -320,11 +321,10 @@ describe("lazy", () => {
 
     test("items with string keys named like the control props pass through as data", () => {
       const lookalike = {
+        control: "last",
         isDone: true,
-        hasValue: true,
-        hasMany: false,
         value: 1,
-      };
+      } satisfies Omit<LazyLast<number>, "$$remedaLazyRef">;
 
       expect(
         pipe(
@@ -437,16 +437,16 @@ describe("lazy", () => {
   });
 });
 
-// We want to test a lazy evaluator that sets both `isDone` and `hasMany` at the
-// same time but don't have any utility that does it.
+// We want to test a lazy evaluator that is both `isDone` and a "many" control
+// at the same time but don't have any utility that does it.
 const firstTwice: () => (data: readonly number[]) => number[] = () =>
   // @ts-expect-error [ts2322] -- Our purry functions don't infer the correct return type, we explicit casting to force it.
   purryFromLazy(() => firstTwiceEvaluator, []);
 
 const firstTwiceEvaluator: LazyEvaluator = (value) => ({
   $$remedaLazyRef: LAZY_REF,
+  control: "many",
   isDone: true,
-  type: "many",
   value: [value, value],
 });
 

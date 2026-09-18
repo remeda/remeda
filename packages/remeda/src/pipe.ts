@@ -411,7 +411,7 @@ function processItem(
   startIndex: number,
 ): boolean {
   if (startIndex >= lazySequence.length) {
-    // A `hasMany` fan-out from the last step has no further steps to run the
+    // A "many" fan-out from the last step has no further steps to run the
     // sub-items through, so they go straight to the accumulator.
     accumulator.push(item);
     return false;
