@@ -6,7 +6,7 @@ import type {
 } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
-import { SKIP_ITEM } from "./internal/utilityEvaluators";
+import { readsDataWhen, SKIP_ITEM } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
 /**
@@ -85,11 +85,9 @@ const filterImplementation = <T>(
   predicate: (value: T, index: number, array: readonly T[]) => boolean,
 ): T[] => data.filter(predicate);
 
-const lazyImplementation =
-  <T>(
-    predicate: (value: T, index: number, data: readonly T[]) => boolean,
-  ): LazyEvaluator<T> =>
-  (value, index, data) =>
-    predicate(value, index, data)
-      ? { done: false, hasNext: true, next: value }
-      : SKIP_ITEM;
+const lazyImplementation = <T>(
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+): LazyEvaluator<T> =>
+  readsDataWhen(predicate, 2, (value, index, data) =>
+    predicate(value, index, data) ? value : SKIP_ITEM,
+  );

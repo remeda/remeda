@@ -29,7 +29,7 @@ export default defineConfig(
     // We only need JSDocs in our actual library code, and we can skip config
     // files and tests.
     files: ["src/**/*.ts"],
-    ignores: ["*.test.ts", "*.test-d.ts"],
+    ignores: ["*.bench.ts", "*.test.ts", "*.test-d.ts"],
 
     // Start with the recommended config
     ...jsdoc.configs["flat/recommended-typescript"],
@@ -464,6 +464,7 @@ export default defineConfig(
   {
     // All Tests
     files: [
+      "src/**/*.bench.ts",
       "src/**/*.test.ts",
       "src/**/*.test-d.ts",
       "src/**/*.test-prop.ts",

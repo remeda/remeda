@@ -157,6 +157,6 @@ function lazyImplementation<T>(n: number): LazyEvaluator<T> {
       left -= 1;
       return SKIP_ITEM;
     }
-    return { done: false, hasNext: true, next: value };
+    return value;
   };
 }

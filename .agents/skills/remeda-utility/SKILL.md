@@ -24,6 +24,7 @@ Each function has up to three test files, one per kind:
 - **Runtime tests** (`functionName.test.ts`) — Vitest. Cover happy path, edge cases, empty inputs, and both calling styles (data-first and data-last inside `pipe`, `map` or `filter`). When editing, read `reference/testing-runtime.md`.
 - **Type tests** (`functionName.test-d.ts`) — `expectTypeOf` from Vitest. Verify inferred return types, narrowing, and that invalid inputs are compile errors. When editing, read `reference/testing-types.md`.
 - **Property-based tests** (`functionName.test-prop.ts`) — `@fast-check/vitest`. Optional but encouraged for functions with well-defined algebraic properties (idempotence, involutions, round-trips). When adding, read `reference/testing-properties.md`.
+- **Benchmarks** (`functionName.bench.ts`) — vitest bench. Only where a performance claim needs backing. When adding, running, or reading one, read `reference/benchmarking.md`: how to structure the file, how to compare implementations, and which statistic to trust.
 
 Conventions that apply across all three kinds:
 

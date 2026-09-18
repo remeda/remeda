@@ -1,6 +1,10 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { SKIP_ITEM, lazyEmptyEvaluator } from "./internal/utilityEvaluators";
+import {
+  SKIP_ITEM,
+  doneWith,
+  lazyEmptyEvaluator,
+} from "./internal/utilityEvaluators";
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the
@@ -78,13 +82,11 @@ function lazyImplementation<T, S>(
       remaining.set(value, copies - 1);
     }
 
-    return {
-      hasNext: true,
-      // We can safely cast here because if value was in the `remaining` map, it
-      // has to be of type S (that's just how we built it).
-      next: value as S & T,
-      // We can stop the iteration if the remaining map is empty.
-      done: remaining.size === 0,
-    };
+    // We can safely cast here because if value was in the `remaining` map, it
+    // has to be of type S (that's just how we built it).
+    const matched = value as S & T;
+
+    // We can stop the iteration if the remaining map is empty.
+    return remaining.size === 0 ? doneWith(matched) : matched;
   };
 }

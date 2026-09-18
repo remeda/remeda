@@ -104,6 +104,9 @@ export default defineConfig({
         `${SOURCE_DIR}/*.ts`,
         // Skip test files
         `!**/*.test{,-d,-prop}.ts`,
+        // Skip benchmarks; they import `vitest` and would pull it into the
+        // published artifacts.
+        `!**/*.bench.ts`,
       ],
 
       // We enforce target at the type-checking level via tsconfig.json. Once we

@@ -37,6 +37,7 @@ cd packages/remeda
 npm test           # runtime tests, watch mode
 npm run test:types # type-level tests
 npm run test:prop  # property-based tests
+npm run bench      # benchmarks (vitest bench)
 npm run format     # format (also runs on commit)
 npm run lint       # lint with auto-fix
 ```

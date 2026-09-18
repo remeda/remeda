@@ -62,5 +62,5 @@ const lazyImplementation =
   ): LazyEvaluator<T> =>
   (value) =>
     other.every((otherValue) => !isEqual(value, otherValue))
-      ? { done: false, hasNext: true, next: value }
+      ? value
       : SKIP_ITEM;

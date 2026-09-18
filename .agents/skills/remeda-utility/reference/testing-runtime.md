@@ -4,3 +4,4 @@
 - Tests must be self-contained — no shared utilities or helpers; inline everything
 - Use Remeda's own utilities in tests when applicable (`prop`, `constant`, etc.)
 - Lazy callbacks: verify the callback receives the items processed so far with a `vi.fn<LazyCallback<unknown[], unknown>>` mock that returns `[...data]`, asserted per call with `toHaveNthReturnedWith`. The spread is load-bearing: `pipe` reuses one accumulator array, so asserting on the reference after the pipe finishes compares the mutated, complete array and passes for the wrong reason. Template: `callbacks receive the items processed so far` in `pipe.test.ts`
+- A mock used to assert on the lazy `data` argument must either implement all three parameters (`(value, index, data) => ...`) or be a bare `vi.fn()`. An implementation that declares only two parameters reports `length` 2, so `pipe` skips buffering `data` for it and the assertion tests nothing.

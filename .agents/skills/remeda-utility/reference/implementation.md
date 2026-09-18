@@ -14,22 +14,35 @@ Use `purryFromLazy` (`src/internal/purryFromLazy.ts`) when there is no meaningfu
 
 A function should support lazy evaluation when it operates on arrays item-by-item inside a `pipe` and would benefit from either short-circuiting (e.g., `take(3)` stops after three items) or skip-filtering without materializing an intermediate array. Existing examples to study: `map`, `filter`, `take`, `first`, `flatMap`.
 
-The lazy evaluator has the shape `(item, index, data) => LazyResult<T>`:
+The lazy evaluator has the shape `(item, index, data) => LazyResult<T>`. The common case is to return the (possibly transformed) item itself; anything else the evaluator needs to tell `pipe` is a control object built by one of these helpers from `src/internal/utilityEvaluators.ts` (build control objects only through these helpers; they carry a package-private reference object under `$$remedaLazyRef`, compared by identity, which never leaves the package, and the one hand-built control object lives in `pipe.test.ts` to exercise a done-and-many combination no utility needs):
 
-- **Emit one value** — `{ hasNext: true, next: value, done }` (`LazyNext`).
-- **Skip the current item, keep going** — use `SKIP_ITEM` from `src/internal/utilityEvaluators.ts` (it expands to `{ done: false, hasNext: false }`).
-- **Expand into multiple values** — `{ hasNext: true, hasMany: true, next: values[], done }` (`LazyMany`).
+- **Emit one value, keep going** - return the value itself.
+- **Skip the current item, keep going** - return `SKIP_ITEM`.
+- **Emit one value and stop** - return `doneWith(value)`.
+- **Stop without emitting anything** - use `lazyEmptyEvaluator` as the evaluator itself; it's a complete evaluator, not something called from inside another one.
+- **Expand into multiple values** - return `manyItems(values)`; each element is fed through the rest of the pipe individually.
 
-Set `done: true` to short-circuit the pipe — no further items will be requested. For functions that return a single scalar (e.g., `first()`), wrap the evaluator with `toSingle(lazyImpl)` so `pipe` knows to stop after one result.
+For functions that return a single scalar (e.g., `first()`), wrap the evaluator with `toSingle(lazyImpl)` so `pipe` knows to stop after one result.
+
+### Opting into the `data` buffer
+
+Buffering `data` costs an array push per item, so `pipe` only does it for steps that ask for it, via a `requiresData: true` marker on the evaluator. Set it with one of two helpers from `src/internal/utilityEvaluators.ts`:
+
+- `readsData(evaluator)` - the evaluator itself reads `data` (currently only `uniqueWith`, whose comparator scans every item seen so far).
+- `readsDataWhen(callback, dataParameterIndex, evaluator)` - the evaluator only forwards `data` to a user-supplied `callback`. `dataParameterIndex` is where `data` sits in that callback's own parameter list: 2 for `map`, `filter`, `flatMap`, `forEach`, `find`, `uniqueBy`; 3 for `mapWithFeedback`, `zipWith`.
+
+`readsDataWhen` buffers when `callback.length === 0` - this covers a callback whose first parameter is a rest parameter (a rest parameter after named parameters instead reports the named count), plus mocks and wrappers that forward `arguments`, neither of which can be inspected further, so we buffer defensively - or when `callback.length > dataParameterIndex` (the callback declares enough named parameters to reach it). Three holes are known and left unguarded: a default parameter before `data` truncates `Function.length` (`(x, i = 0, data = []) => ...` reports 1, not 3), a callback that reaches `data` through `arguments[i]` instead of a named parameter, and a trailing rest parameter such as `(value, index, ...rest)` (reports 2, not 3) - all three fall through to the non-buffering path. `bind` with partial application adjusts `length` correctly, so it isn't a hole.
+
+A step that doesn't opt in receives a shared, frozen empty array (`NO_DATA` in `utilityEvaluators.ts`) as `data`. The `requiresData` marker is stamped on our own evaluator closure, never on the user's callback - the callback itself is only ever inspected via `.length`.
 
 ### Typing the callback's `data` parameter
 
-Inside `pipe`, the lazy evaluator is invoked once per item with the accumulator of items processed so far as its `data` argument, not the complete input. Any user callback the evaluator forwards `data` to sees that same growing prefix, so its type has to say so. `NonEmptyPrefix<T>` (`src/internal/types/NonEmptyPrefix.ts`) computes that type from the input: the first element is required (the callback never runs on an empty accumulator), every later element is optional, and the tuple shape is preserved as far as TypeScript allows.
+Inside `pipe`, only evaluators marked with `readsData` or `readsDataWhen` are invoked with the accumulator of items processed so far as their `data` argument; other steps receive an empty array. The callback type still has to describe that growing prefix, because those are exactly the callbacks `readsDataWhen` identifies as being able to see it. `NonEmptyPrefix<T>` (`src/internal/types/NonEmptyPrefix.ts`) computes that type from the input: the first element is required (the callback never runs on an empty accumulator), every later element is optional, and the tuple shape is preserved as far as TypeScript allows.
 
 Which overloads need it depends on the purrying helper:
 
 - `purry` with a lazy evaluator: the data-first overload runs the eager implementation and receives the complete input, so it keeps the standard `(value: T[number], index: number, data: T) => R` shape. Only the data-last overload is lazy.
-- `purryFromLazy`: both overloads route through `pipe`, so both use the lazy types.
+- `purryFromLazy`: both overloads run the lazy evaluator item by item, so both use the lazy types.
 
 How to type a lazy overload:
 

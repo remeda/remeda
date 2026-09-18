@@ -71,6 +71,4 @@ const lazyImplementation =
     isEqual: IsEqual<TFirst, TSecond>,
   ): LazyEvaluator<TFirst> =>
   (value) =>
-    other.some((otherValue) => isEqual(value, otherValue))
-      ? { done: false, hasNext: true, next: value }
-      : SKIP_ITEM;
+    other.some((otherValue) => isEqual(value, otherValue)) ? value : SKIP_ITEM;

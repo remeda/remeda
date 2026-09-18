@@ -48,6 +48,6 @@ function lazyImplementation<T>(): LazyEvaluator<T> {
       return SKIP_ITEM;
     }
     set.add(value);
-    return { done: false, hasNext: true, next: value };
+    return value;
   };
 }

@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { filter } from "./filter";
 import { pipe } from "./pipe";
 import { zipWith } from "./zipWith";
 
@@ -110,5 +111,15 @@ describe("data second with initial arg", () => {
         zipWith(["a", "b"], (a, b) => `${a}${b}`),
       ),
     ).toStrictEqual([]);
+  });
+
+  test("pairs by the step's own count after an upstream filter", () => {
+    expect(
+      pipe(
+        [1, 2, 3, 4, 5, 6],
+        filter((x) => x % 2 === 0),
+        zipWith(["a", "b", "c"], (n, s) => `${n}${s}`),
+      ),
+    ).toStrictEqual(["2a", "4b", "6c"]);
   });
 });

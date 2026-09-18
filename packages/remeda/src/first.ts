@@ -2,6 +2,7 @@ import { toSingle } from "./internal/toSingle";
 import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import { doneWith } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
 /**
@@ -45,7 +46,4 @@ export function first(...args: readonly unknown[]): unknown {
 
 const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;
 
-const lazyImplementation = (): LazyEvaluator => firstLazy;
-
-const firstLazy = <T>(value: T) =>
-  ({ hasNext: true, next: value, done: true }) as const;
+const lazyImplementation = (): LazyEvaluator => doneWith;
