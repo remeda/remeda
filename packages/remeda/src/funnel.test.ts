@@ -947,8 +947,8 @@ describe("utility functions", () => {
     });
   });
 
-   describe("peakPreparedData", () => {
-    test("peakPreparedData returns data after calls", () => {
+   describe("pendingData", () => {
+    test("pendingData reflects preparedData when reducer passed", () => {
       const mockFn = vi.fn<(x: readonly string[]) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
@@ -956,17 +956,33 @@ describe("utility functions", () => {
         minQuietPeriodMs: UT,
       });
 
-      expect(foo.peakPreparedData()).toBeUndefined();
+      expect(foo.pendingData).toBeUndefined();
 
       foo.call("a");
       foo.call("b");
       foo.call("c");
 
-      expect(foo.peakPreparedData()).toStrictEqual(["a", "b", "c"]);
+      expect(foo.pendingData).toStrictEqual(["a", "b", "c"]);
 
       foo.flush();
 
-      expect(foo.peakPreparedData()).toBeUndefined();
+      expect(foo.pendingData).toBeUndefined();
+    });
+
+    test("pendingData is undefined when reducer omitted", () => {
+      const mockFn = vi.fn<(x: readonly string[]) => void>();
+      const foo = funnel(mockFn, {
+        triggerAt: "end",
+        minQuietPeriodMs: UT,
+      });
+
+      expect(foo.pendingData).toBeUndefined();
+
+      foo.call("a");
+      foo.call("b");
+      foo.call("c");
+
+      expect(foo.pendingData).toBeUndefined();
     });
   });
 });

@@ -68,9 +68,12 @@ type Funnel<Args extends RestArguments = [], R = never> = {
   readonly isIdle: boolean;
 
   /**
-   * Returns a snapshot of the prepared data in the current state. 
+   * The data from the current state as prepared by the `reducer` function.
+   * Will be `undefined` if `reducer` is not passed. Marked as `readonly` as
+   * it's a direct reference - copy/clone the value if you need to modify it
+   * for use outside of the funnel.
    */
-  readonly peakPreparedData: () => R | undefined;
+  readonly pendingData: R | undefined;
 };
 
 /**
@@ -327,6 +330,8 @@ export function funnel<Args extends RestArguments = [], R = never>(
       return burstTimeoutId === undefined && intervalTimeoutId === undefined;
     },
 
-    peakPreparedData: () => structuredClone(preparedData)
+    get pendingData() {
+      return preparedData === VOID_REDUCER_SYMBOL ? undefined : preparedData;
+    },
   };
 }
