@@ -1,4 +1,5 @@
 - Use `expectTypeOf(...).toEqualTypeOf<...>()` (not `assertType`)
+- When a call's inferred return type is a deferred union of a non-primitive type and `undefined`, assign the result to a `const` first; asserting inline on the unresolved type makes the assertion fail even when the types match (suspected expect-type limitation).
 - Before writing, open a similar function's `.test-d.ts` to see which variation axes were covered (literal vs primitive, single vs union vs template-literal, exact-position vs spread vs optional tuple slots, bounded vs unbounded record, readonly vs mutable). The relevant subset varies per function.
 - `interface` tests are NOT redundant with `type` tests of the same shape — they exercise different TS-level paths through `Record`-extending constraints.
 - Cast empty arrays for type data: `[] as Array<{ name: string }>`
@@ -12,3 +13,4 @@
 - When `@typescript-eslint/no-unnecessary-type-assertion` flags an inference-controlling cast, replace `value as T` with `$typed<T>()` from `test/$typed` rather than autofixing
   - Safe when the rule's reason is "This assertion is unnecessary since the receiver accepts the original type of the expression"
   - Proceed cautiously for other reasons; for `interface` types, suppress per-site with a reason comment instead — see `$typed` JSDoc
+- Lazy callbacks (any overload typed with `LazyCallback`, `LazyTypePredicate`, or `NonEmptyPrefix`): assert the exact `data` type inside the callback body, on an `as const` tuple (`readonly [1, 2?, 3?]`) and on a plain array (`readonly [number, ...number[]]`). For `purry`-based functions also assert that the data-first overload still receives the complete input. Data-last assertions must run inside `pipe` to hit the lazy overload. Template: the `callback data param` block in `map.test-d.ts`

@@ -112,3 +112,21 @@ test("readonly tuple with last", () => {
 
   expectTypeOf(result).toEqualTypeOf<number | string>();
 });
+
+test("union of a tuple and an array", () => {
+  expectTypeOf(first([] as [number] | string[])).toEqualTypeOf<
+    number | string | undefined
+  >();
+});
+
+test("union of optional and fixed tuples", () => {
+  expectTypeOf(first([] as [number?] | [string])).toEqualTypeOf<
+    number | string | undefined
+  >();
+});
+
+test("union of non-empty arrays", () => {
+  expectTypeOf(first(["a"] as [...number[], string] | [boolean])).toEqualTypeOf<
+    number | string | boolean
+  >();
+});

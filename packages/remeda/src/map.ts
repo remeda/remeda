@@ -1,4 +1,5 @@
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
 import { purry } from "./purry";
@@ -46,7 +47,7 @@ export function map<T extends IterableContainer, U>(
  * @category Array
  */
 export function map<T extends IterableContainer, U>(
-  callbackfn: (value: T[number], index: number, data: T) => U,
+  callbackfn: LazyCallback<T, U>,
 ): (data: T) => Mapped<T, U>;
 
 export function map(...args: readonly unknown[]): unknown {

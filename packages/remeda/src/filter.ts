@@ -1,30 +1,13 @@
-import type { Writable } from "type-fest";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type {
+  LazyCallback,
+  LazyTypePredicate,
+} from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
-
-// When the predicate used for filter isn't refining (like a type-predicate) we
-// can narrow the result slightly if it's also trivial (it returns the same
-// result for all items). This is uncommon, but can be useful to "short-circuit"
-// the filter.
-type NonRefinedFilteredArray<
-  T extends IterableContainer,
-  IsItemIncluded extends boolean,
-> = boolean extends IsItemIncluded
-  ? // We don't know which items of the array the predicate would allow in the
-    // output so we can only safely say that the result is an array with items
-    // from the input array.
-    // TODO: Theoretically we could build an output shape that would take into account the **order** of elements in the input array by reconstructing it with every single element in it either included or not, but this type can grow to a union of as much as 2^n options which might not be usable in practice.
-    T[number][]
-  : IsItemIncluded extends true
-    ? // If the predicate is always true we return a shallow copy of the array.
-      // If it was originally readonly we need to strip that away.
-      Writable<T>
-    : // If the predicate is always false we will always return an empty
-      // array.
-      [];
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just
@@ -48,13 +31,11 @@ type NonRefinedFilteredArray<
  * @lazy
  * @category Array
  */
-export function filter<
-  T extends IterableContainer,
-  Condition extends T[number],
->(
+export function filter<T extends IterableContainer, Condition>(
   data: T,
   predicate: (value: T[number], index: number, data: T) => value is Condition,
 ): FilteredArray<T, Condition>;
+
 export function filter<
   T extends IterableContainer,
   IsItemIncluded extends boolean,
@@ -73,7 +54,7 @@ export function filter<
  *
  * @param predicate - A function to execute for each element in the array. It
  * should return `true` to keep the element in the resulting array, and `false`
- * otherwise.
+ * otherwise. A type-predicate can also be used to narrow the result.
  * @returns A shallow copy of the given array containing just the elements that
  * pass the test. If no elements pass the test, an empty array is returned.
  * @signature
@@ -84,17 +65,15 @@ export function filter<
  * @lazy
  * @category Array
  */
-export function filter<
-  T extends IterableContainer,
-  Condition extends T[number],
->(
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+export function filter<T extends IterableContainer, Condition>(
+  predicate: LazyTypePredicate<T, Condition>,
 ): (data: T) => FilteredArray<T, Condition>;
+
 export function filter<
   T extends IterableContainer,
   IsItemIncluded extends boolean,
 >(
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function filter(...args: readonly unknown[]): unknown {

@@ -33,6 +33,7 @@ Conventions that apply across all three kinds:
 - Test names do not need to read as prose!
 - Tests for a specific bug must reference the issue number, either in the test name or a comment so that the reporting issue can always be traced back.
 - Input data needs enough variation to produce distinct outputs — `[1, 1, 1]` hides bugs that `[1, 2, 3]` catches.
+- Known issues and limitations (an accepted wrong result, an upstream TypeScript bug, a case the types can't express) are pinned in a `describe("known issues!", ...)` block at the end of the file, in every test kind where the issue is observable. Each test asserts the **current** behavior so it turns red when the limitation lifts: assert the actual value, or put the desired assertion under `// @ts-expect-error [tsNNNN] -- <why, linking the upstream issue when one exists>` followed by an `// Actual` assertion. The test name states the limitation; why it exists goes in a comment inside the test body.
 
 # 3. JSDoc
 

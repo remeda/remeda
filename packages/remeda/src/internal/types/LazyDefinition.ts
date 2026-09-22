@@ -1,16 +1,10 @@
-import type { LazyResult } from "./LazyResult";
+import type { LazyEvaluator } from "./LazyEvaluator";
 
 export type LazyDefinition = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- This allows typescript the most flexibility in inferring function types, `unknown` doesn't always work!
-  readonly lazy: LazyMeta & ((...args: any) => LazyFn);
+  readonly lazy: LazyMeta & ((...args: any) => LazyEvaluator);
   readonly lazyArgs: readonly unknown[];
 };
-
-type LazyFn = (
-  value: unknown,
-  index: number,
-  items: readonly unknown[],
-) => LazyResult<unknown>;
 
 type LazyMeta = {
   readonly single?: boolean;

@@ -1,22 +1,28 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../test/$typed";
+import {
+  isCat,
+  isNamed,
+  type Cat,
+  type Kitten,
+  type Named,
+} from "../test/interfaces";
 import { constant } from "./constant";
 import { filter } from "./filter";
 import { isDefined } from "./isDefined";
 import { isNonNull } from "./isNonNull";
 import { isNonNullish } from "./isNonNullish";
+import { isNullish } from "./isNullish";
+import { isNumber } from "./isNumber";
 import { isStrictEqual } from "./isStrictEqual";
+import { isString } from "./isString";
 import { pipe } from "./pipe";
-
-// TODO [>2]: Our type-narrowing utilities aren't narrowing our types correctly in these tests due to them inferring the types "too soon" (because they are invoked "headless"ly). This is also a problem with TypeScript before version 5.5 because we can't use a simple arrow function too without being explicit about it's return type, which makes the whole code messy. In Remeda v3 we plan to bump the minimum TypeScript version so this wouldn't be an issue any way, but we also plan to deprecate headless type predicates.
-declare function isNumber<T>(x: T): x is Extract<T, number>;
-declare function isString<T>(x: T): x is Extract<T, string>;
 
 describe("primitives arrays", () => {
   test("predicate", () => {
-    expectTypeOf(filter([] as string[], constant(true))).toEqualTypeOf<
-      string[]
-    >();
+    expectTypeOf(
+      filter([] as string[], constant($typed<boolean>())),
+    ).toEqualTypeOf<string[]>();
   });
 
   test("trivial acceptor", () => {
@@ -126,6 +132,12 @@ describe("special tuple shapes", () => {
     >();
   });
 
+  test("all-optional tuple with a trivial acceptor", () => {
+    expectTypeOf(
+      filter([] as readonly [string?, number?], constant(true)),
+    ).toEqualTypeOf<[string?, number?]>();
+  });
+
   test("non-empty array", () => {
     const data = ["hello"] as [string, ...string[]];
 
@@ -172,8 +184,7 @@ describe("special tuple shapes", () => {
 
 test("discriminated union filtering", () => {
   const data = [] as (
-    | { type: "cat"; hates: string }
-    | { type: "dog"; numFriends: number }
+    { type: "cat"; hates: string } | { type: "dog"; numFriends: number }
   )[];
 
   expectTypeOf(
@@ -198,15 +209,27 @@ describe("accepts readonly arrays, returns mutable ones", () => {
   // too
 
   test("predicate", () => {
-    expectTypeOf(filter([] as readonly string[], constant(true))).toEqualTypeOf<
-      string[]
-    >();
+    expectTypeOf(
+      filter([] as readonly string[], constant($typed<boolean>())),
+    ).toEqualTypeOf<string[]>();
   });
 
   test("trivial acceptor", () => {
     expectTypeOf(filter([] as readonly string[], constant(true))).toEqualTypeOf<
       string[]
     >();
+  });
+
+  test("trivial acceptor on a tuple with a rest item", () => {
+    expectTypeOf(
+      filter($typed<readonly [number, ...string[], boolean]>(), constant(true)),
+    ).toEqualTypeOf<[number, ...string[], boolean]>();
+  });
+
+  test("trivial acceptor on a union of arrays", () => {
+    expectTypeOf(
+      filter($typed<readonly string[] | readonly [number]>(), constant(true)),
+    ).toEqualTypeOf<string[] | [number]>();
   });
 
   test("trivial rejector", () => {
@@ -259,6 +282,12 @@ describe("data last", () => {
 
     expectTypeOf(result).toEqualTypeOf<[1, 2, 3]>();
   });
+
+  test("partially overlapping", () => {
+    expectTypeOf(
+      pipe([] as (string | null)[], filter(isNullish)),
+    ).toEqualTypeOf<null[]>();
+  });
 });
 
 describe("union of array types", () => {
@@ -281,5 +310,133 @@ describe("union of array types", () => {
         isNumber,
       ),
     ).toEqualTypeOf<[0] | [1, 2, 3, 4]>();
+  });
+});
+
+describe("condition isn't a subtype of the item", () => {
+  test("partially overlapping", () => {
+    expectTypeOf(filter([] as (string | null)[], isNullish)).toEqualTypeOf<
+      null[]
+    >();
+  });
+
+  test("disjoint", () => {
+    expectTypeOf(filter([] as string[], isNullish)).toEqualTypeOf<[]>();
+  });
+
+  test("object guard sharing no keys with the item", () => {
+    expectTypeOf(filter([] as Cat[], isNamed)).toEqualTypeOf<(Cat & Named)[]>();
+  });
+
+  test("object guard sharing no keys with a tuple item", () => {
+    expectTypeOf(filter($typed<[Cat]>(), isNamed)).toEqualTypeOf<
+      [] | [Cat & Named]
+    >();
+  });
+
+  describe("supertype", () => {
+    test("empty tuple", () => {
+      expectTypeOf(filter($typed<[]>(), isCat)).toEqualTypeOf<[]>();
+    });
+
+    test("fixed tuple", () => {
+      expectTypeOf(filter($typed<[Kitten, Kitten]>(), isCat)).toEqualTypeOf<
+        [Kitten, Kitten]
+      >();
+    });
+
+    test("readonly fixed tuple", () => {
+      expectTypeOf(
+        filter($typed<readonly [Kitten, Kitten]>(), isCat),
+      ).toEqualTypeOf<[Kitten, Kitten]>();
+    });
+
+    test("optional tuple", () => {
+      expectTypeOf(filter($typed<[Kitten?]>(), isCat)).toEqualTypeOf<
+        [Kitten?]
+      >();
+    });
+
+    test("mixed tuple", () => {
+      expectTypeOf(filter($typed<[Kitten, Kitten?]>(), isCat)).toEqualTypeOf<
+        [Kitten, Kitten?]
+      >();
+    });
+
+    test("array", () => {
+      expectTypeOf(filter([] as Kitten[], isCat)).toEqualTypeOf<Kitten[]>();
+    });
+
+    test("fixed-prefix array", () => {
+      expectTypeOf(
+        filter($typed<[Kitten, ...Kitten[]]>(), isCat),
+      ).toEqualTypeOf<[Kitten, ...Kitten[]]>();
+    });
+
+    test("optional-prefix array", () => {
+      expectTypeOf(
+        filter($typed<[Kitten?, ...Kitten[]]>(), isCat),
+      ).toEqualTypeOf<[Kitten?, ...Kitten[]]>();
+    });
+
+    test("mixed-prefix array", () => {
+      expectTypeOf(
+        filter($typed<[Kitten, Kitten?, ...Kitten[]]>(), isCat),
+      ).toEqualTypeOf<[Kitten, Kitten?, ...Kitten[]]>();
+    });
+
+    test("fixed-suffix array", () => {
+      expectTypeOf(
+        filter($typed<[...Kitten[], Kitten]>(), isCat),
+      ).toEqualTypeOf<[...Kitten[], Kitten]>();
+    });
+
+    test("fixed-elements array", () => {
+      expectTypeOf(
+        filter($typed<[Kitten, ...Kitten[], Kitten]>(), isCat),
+      ).toEqualTypeOf<[Kitten, ...Kitten[], Kitten]>();
+    });
+
+    test("union of arrays", () => {
+      expectTypeOf(filter($typed<Kitten[] | string[]>(), isCat)).toEqualTypeOf<
+        [] | Kitten[]
+      >();
+    });
+  });
+});
+
+test("`unknown` data", () => {
+  expectTypeOf(filter([] as unknown[], isString)).toEqualTypeOf<string[]>();
+});
+
+describe("callback data param", () => {
+  test("complete in data-first", () => {
+    filter([1, 2, 3] as const, (_value, _index, data) => {
+      expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
+
+      return true;
+    });
+  });
+
+  test("lazily reconstructed in data-last", () => {
+    pipe(
+      [1, 2, 3] as const,
+      filter((_value, _index, data) => {
+        expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+
+        return true;
+      }),
+    );
+  });
+
+  test("lazily reconstructed in data-last with a type predicate", () => {
+    pipe(
+      [1, 2, 3] as const,
+      filter((value, _index, data): value is 2 => {
+        expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+
+        return value === 2;
+      }),
+    );
   });
 });

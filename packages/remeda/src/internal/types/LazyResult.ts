@@ -1,4 +1,4 @@
-export type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
+export type LazyResult<T = unknown> = LazyEmpty | LazyMany<T> | LazyNext<T>;
 
 type LazyEmpty = {
   done: boolean;

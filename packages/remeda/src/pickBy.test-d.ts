@@ -197,8 +197,7 @@ describe("unbounded records and narrowing predicates (Issue #1075)", () => {
       expectTypeOf(
         pickBy(
           {} as
-            | Record<string, string | null>
-            | Record<string, number | boolean>,
+            Record<string, string | null> | Record<string, number | boolean>,
           isString,
         ),
       ).toEqualTypeOf<Record<string, string> | Record<string, never>>();

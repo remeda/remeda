@@ -43,14 +43,25 @@ test("should correctly infer type with a non-literal array type", () => {
   expectTypeOf(result).toEqualTypeOf<number[]>();
 });
 
-test("the items array passed to the callback should be an array type containing the union type of all of the members in the original array", () => {
+test("data param is lazily reconstructed in data-first", () => {
   mapWithFeedback(
-    [1, 2, 3, 4, 5] as const,
-    (acc, x, _index, items) => {
-      expectTypeOf(items).toEqualTypeOf<readonly [1, 2, 3, 4, 5]>();
+    [1, 2, 3] as const,
+    (_previousValue, _currentValue, _currentIndex, data) => {
+      expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
 
-      return acc + x;
+      return 0;
     },
-    100,
+    0,
+  );
+});
+
+test("data param is lazily reconstructed in data-last", () => {
+  pipe(
+    [1, 2, 3] as const,
+    mapWithFeedback((_previousValue, _currentValue, _currentIndex, data) => {
+      expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+
+      return 0;
+    }, 0),
   );
 });

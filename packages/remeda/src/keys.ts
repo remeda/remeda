@@ -45,9 +45,8 @@ type IndicesAfterSpread<
     : T extends readonly [unknown, ...infer Tail]
       ? IndicesAfterSpread<Tail, [unknown, ...Iterations]>
       : T extends readonly [...infer Head, unknown]
-        ?
-            | IndicesAfterSpread<Head, [unknown, ...Iterations]>
-            | Iterations["length"]
+        ? | IndicesAfterSpread<Head, [unknown, ...Iterations]>
+          | Iterations["length"]
         : Iterations["length"];
 
 type ObjectKeys<T> =

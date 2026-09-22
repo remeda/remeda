@@ -1,5 +1,5 @@
-import type { Configuration } from "lint-staged";
+import { defineConfig } from "lint-staged/config";
 
-export default {
+export default defineConfig({
   "*": "prettier --write --ignore-unknown",
-} satisfies Configuration;
+});

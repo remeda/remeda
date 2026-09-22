@@ -23,9 +23,9 @@ type PartialEnumerableKeys<T extends object> =
     ? Simplify<
         IsBoundedRecord<T> extends true
           ? PickSymbolKeys<T> & {
-              -readonly [P in keyof T as P extends symbol
-                ? never
-                : P]?: Required<T>[P];
+              -readonly [
+                P in keyof T as P extends symbol ? never : P
+              ]?: Required<T>[P];
             }
           : // This is the type you'd get from doing:
             // `Object.fromEntries(Object.entries(x))`.
@@ -49,17 +49,17 @@ type PartialEnumerableKeysNarrowed<T extends object, S> = Simplify<
 
 // The exact case, props here would always be part of the output object
 type ExactProps<T, S> = {
-  -readonly [P in keyof T as IsExactProp<T, P, S> extends true
-    ? P
-    : never]: Exclude<T[P], S>;
+  -readonly [
+    P in keyof T as IsExactProp<T, P, S> extends true ? P : never
+  ]: Exclude<T[P], S>;
 };
 
 // The partial case, props here might be part of the output object, but might
 // not be, hence they are optional.
 type PartialProps<T, S> = {
-  -readonly [P in keyof T as IsPartialProp<T, P, S> extends true
-    ? P
-    : never]?: Exclude<T[P], S>;
+  -readonly [
+    P in keyof T as IsPartialProp<T, P, S> extends true ? P : never
+  ]?: Exclude<T[P], S>;
 };
 
 // If the input object's value type extends itself when the type-guard is

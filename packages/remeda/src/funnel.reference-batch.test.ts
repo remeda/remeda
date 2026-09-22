@@ -5,7 +5,11 @@
 import { describe, expect, test, vi } from "vitest";
 import { doNothing } from "./doNothing";
 import { fromKeys } from "./fromKeys";
-import { funnel } from "./funnel";
+
+// Copy everything between the REFERENCE START and REFERENCE END markers into
+// your project.
+// --- REFERENCE START -------------------------------------------------------
+import { funnel } from "remeda";
 
 type BatchRequest<Params extends any[], Result> = {
   readonly params: Params;
@@ -25,9 +29,8 @@ type BatchRequest<Params extends any[], Result> = {
  * This allows synchronizing multiple async calls while keeping each call site
  * isolated from the rest (for example, as react components).
  *
- * This reference implementation can be copied into your project as-is, or you
- * can use it as the basis for a more complex implementation with additional
- * features.
+ * You can use this implementation as-is, or as the basis for a more complex
+ * implementation with additional features.
  *
  * @param callback - The main function that takes a batch and returns an
  * aggregated response. The typing for the it's parameters will derive the
@@ -43,6 +46,7 @@ type BatchRequest<Params extends any[], Result> = {
  * default value.
  * @returns A Funnel object with the `call` method augmented to support async
  * response.
+ * @see https://remedajs.com/docs#funnel
  */
 function batch<Params extends any[], BatchResponse, Result>(
   callback: (requests: readonly Params[]) => Promise<BatchResponse>,
@@ -94,12 +98,17 @@ function batch<Params extends any[], BatchResponse, Result>(
   return {
     ...batchFunnel,
 
+    get isIdle() {
+      return batchFunnel.isIdle;
+    },
+
     call: async (...params: Params) =>
       new Promise<Result>((...promiseCallbacks) => {
         batchFunnel.call({ promiseCallbacks, params });
       }),
   };
 }
+// --- REFERENCE END ---------------------------------------------------------
 
 describe("showcase", () => {
   test("results as object", async () => {

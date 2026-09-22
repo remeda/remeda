@@ -1,0 +1,5 @@
+/.astro/
+/.tmp/
+/dist/
+/node_modules/
+/public/dist/

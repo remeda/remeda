@@ -53,18 +53,18 @@ type EnumeratedPartialNarrowed<T, S> = T extends unknown
 // The exact case, props here would always be part of the output object
 type ExactProps<T, S> = {
   // Object.entries returns keys as strings.
-  -readonly [P in keyof T as ToString<
-    IsExactProp<T, P, S> extends true ? P : never
-  >]: Extract<Required<T>[P], S>;
+  -readonly [
+    P in keyof T as ToString<IsExactProp<T, P, S> extends true ? P : never>
+  ]: Extract<Required<T>[P], S>;
 };
 
 // The partial case, props here might be part of the output object, but might
 // not be, hence they are optional.
 type PartialProps<T, S> = {
   // Object.entries returns keys as strings.
-  -readonly [P in keyof T as ToString<
-    IsPartialProp<T, P, S> extends true ? P : never
-  >]?: IsNever<Extract<T[P], S>> extends true
+  -readonly [
+    P in keyof T as ToString<IsPartialProp<T, P, S> extends true ? P : never>
+  ]?: IsNever<Extract<T[P], S>> extends true
     ? // If the result of extracting S from T[P] is never but S still extends
       // it, it means that T[P] is too wide and S can't be extracted from it:
       // e.g. if T[P] is `number` S is `1` then `Extract<number, 1> === never`.

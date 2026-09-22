@@ -1,17 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable jsdoc/check-param-names -- we don't document the op params, it'd be redundant */
+/* eslint-disable jsdoc/check-param-names --
+ * We document pipe's function params as a single parameter entry in the docs.
+ */
 
 import type { LazyDefinition } from "./internal/types/LazyDefinition";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { LazyResult } from "./internal/types/LazyResult";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 
-type PreparedLazyFunction = LazyEvaluator & {
+type LazyStep = {
+  readonly lazyEvaluator: LazyEvaluator;
   readonly isSingle: boolean;
-
-  // These are intentionally mutable, they maintain the lazy piped state.
-  index: number;
-  items: unknown[];
+  // Notice the array is mutable, we will be adding items as the pipe is
+  // evaluating them.
+  readonly items: unknown[];
 };
 
 type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
@@ -283,25 +284,32 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
 
 export function pipe(
   input: unknown,
-  ...functions: readonly (LazyFunction | ((value: any) => unknown))[]
-): any {
+  ...functions: readonly (LazyFunction | ((value: unknown) => unknown))[]
+): unknown {
   let output = input;
 
-  const lazyFunctions = functions.map((op) =>
-    "lazy" in op ? prepareLazyFunction(op) : undefined,
+  const lazySteps = functions.map((op) =>
+    "lazy" in op
+      ? {
+          lazyEvaluator: op.lazy(...op.lazyArgs),
+          isSingle: op.lazy.single ?? false,
+          index: 0,
+          items: [],
+        }
+      : undefined,
   );
 
   let functionIndex = 0;
   while (functionIndex < functions.length) {
-    const lazyFunction = lazyFunctions[functionIndex];
-    if (lazyFunction === undefined || !isIterable(output)) {
+    const lazyStep = lazySteps[functionIndex];
+    if (lazyStep === undefined || !isIterable(output)) {
       const func = functions[functionIndex]!;
       output = func(output);
       functionIndex += 1;
       continue;
     }
 
-    const lazySequence = extractLazySequence(lazyFunctions, functionIndex);
+    const lazySequence = extractLazySequence(lazySteps, functionIndex);
     const accumulator = processIterable(output, lazySequence);
 
     const { isSingle } = lazySequence.at(-1)!;
@@ -312,20 +320,20 @@ export function pipe(
 }
 
 function extractLazySequence(
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The lazy functions are stateful and contain the state needed to compute the next value lazily.
-  lazyFunctions: readonly (PreparedLazyFunction | undefined)[],
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The items array is mutable for efficiency.
+  lazySteps: readonly (LazyStep | undefined)[],
   startIndex: number,
-): readonly PreparedLazyFunction[] {
-  const lazySequence: PreparedLazyFunction[] = [];
+): readonly LazyStep[] {
+  const lazySequence: LazyStep[] = [];
 
-  for (let index = startIndex; index < lazyFunctions.length; index++) {
-    const lazyFunction = lazyFunctions[index];
-    if (lazyFunction === undefined) {
+  for (let index = startIndex; index < lazySteps.length; index++) {
+    const lazyStep = lazySteps[index];
+    if (lazyStep === undefined) {
       break;
     }
 
-    lazySequence.push(lazyFunction);
-    if (lazyFunction.isSingle) {
+    lazySequence.push(lazyStep);
+    if (lazyStep.isSingle) {
       break;
     }
   }
@@ -335,8 +343,8 @@ function extractLazySequence(
 
 function processIterable(
   iterable: Iterable<unknown>,
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The lazy sequence is stateful and contains the state needed to compute the next value lazily.
-  lazySequence: readonly PreparedLazyFunction[],
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The items array is mutable for efficiency.
+  lazySequence: readonly LazyStep[],
 ): unknown[] {
   const accumulator: unknown[] = [];
 
@@ -354,8 +362,8 @@ function processItem(
   item: unknown,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
   accumulator: unknown[],
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, the lazy sequence is stateful and contains the state needed to compute the next value lazily.
-  lazySequence: readonly PreparedLazyFunction[],
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The items array is mutable for efficiency.
+  lazySequence: readonly LazyStep[],
 ): boolean {
   if (lazySequence.length === 0) {
     accumulator.push(item);
@@ -364,13 +372,19 @@ function processItem(
 
   let currentItem = item;
 
-  let lazyResult: LazyResult<any> = SKIP_ITEM;
+  let lazyResult: LazyResult = SKIP_ITEM;
   let isDone = false;
-  for (const [functionsIndex, lazyFn] of lazySequence.entries()) {
-    const { index, items } = lazyFn;
+  for (const [
+    functionsIndex,
+    { items, lazyEvaluator },
+  ] of lazySequence.entries()) {
     items.push(currentItem);
-    lazyResult = lazyFn(currentItem, index, items);
-    lazyFn.index += 1;
+    lazyResult = lazyEvaluator(currentItem, items.length - 1, items);
+
+    if (lazyResult.done) {
+      isDone = true;
+    }
+
     if (lazyResult.hasNext) {
       if (lazyResult.hasMany ?? false) {
         for (const subItem of lazyResult.next as readonly unknown[]) {
@@ -389,26 +403,13 @@ function processItem(
     } else {
       break;
     }
-    // process remaining functions in the pipe
-    // but don't process remaining elements in the input array
-    if (lazyResult.done) {
-      isDone = true;
-    }
   }
+
   if (lazyResult.hasNext) {
     accumulator.push(currentItem);
   }
-  return isDone;
-}
 
-function prepareLazyFunction(func: LazyFunction): PreparedLazyFunction {
-  const { lazy, lazyArgs } = func;
-  const fn = lazy(...lazyArgs);
-  return Object.assign(fn, {
-    isSingle: lazy.single ?? false,
-    index: 0,
-    items: [] as unknown[],
-  });
+  return isDone;
 }
 
 function isIterable(something: unknown): something is Iterable<unknown> {

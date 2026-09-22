@@ -58,8 +58,7 @@ describe("readonly inputs", () => {
 
   test("mixed literals and generics", () => {
     const result = fromEntries([["a", 1]] as readonly (
-      | readonly ["a", 1]
-      | readonly [`testing_${string}`, boolean]
+      readonly ["a", 1] | readonly [`testing_${string}`, boolean]
     )[]);
 
     expectTypeOf(result).toEqualTypeOf<{
@@ -151,8 +150,7 @@ describe("non-readonly inputs", () => {
 
   test("mixed literals and generics", () => {
     const result = fromEntries([["a", 1]] as (
-      | ["a", 1]
-      | [`testing_${string}`, boolean]
+      ["a", 1] | [`testing_${string}`, boolean]
     )[]);
 
     expectTypeOf(result).toEqualTypeOf<{

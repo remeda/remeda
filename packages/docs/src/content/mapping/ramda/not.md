@@ -1,27 +1,29 @@
 ---
 category: Logic
-remeda: isNot
 ---
 
-The function only accepts boolean values, to support arbitrary values compose
-it with [`isTruthy`](/docs#isTruthy).
+_Not provided by Remeda._
 
-#### Booleans
+- Use the native [logical NOT operator `!`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT).
+- Ramda's `not` is a function, so it can be passed around point-free. The native
+  operator can't; wrap it in an arrow function.
+
+#### Values
 
 ```ts
 // Ramda
-not(val);
+not(value);
 
-// Remeda
-isNot(val);
+// Native
+!value;
 ```
 
-#### Arbitrary
+#### Point-free
 
 ```ts
 // Ramda
-not(val);
+map(not, DATA);
 
 // Remeda
-isNot(isTruthy(val));
+map(DATA, (value) => !value);
 ```

@@ -45,8 +45,7 @@ export function isEmpty<T extends string>(
 export function isEmpty<T extends string | undefined>(
   data: T,
 ): data is
-  | ("" extends T ? "" : never)
-  | (undefined extends T ? undefined : never);
+  ("" extends T ? "" : never) | (undefined extends T ? undefined : never);
 
 export function isEmpty(data: object | string | undefined): boolean {
   if (

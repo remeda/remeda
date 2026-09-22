@@ -45,6 +45,13 @@ const zSignature = z
         .readonly(),
       z
         .object({
+          type: z.literal("literal"),
+          value: z.union([z.string(), z.number(), z.boolean(), z.null()]),
+        })
+        .strict()
+        .readonly(),
+      z
+        .object({
           type: z.enum([
             "array",
             "indexedAccess",
