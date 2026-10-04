@@ -87,8 +87,9 @@ type TuplePartsWithoutFixed<
   // safe once we know the head is an optional tuple element.
   // @see `$missingPropertyType`
   T extends readonly [unknown?, ...infer Tail]
-    ? // When the tail can be computed directly from the original T's items it
-      // means the tuple has no optional elements.
+    ? // Arrays match with themselves as the tail, and the empty tuple matches
+      // with `unknown[]`; either way all of T's items fit in the tail, which
+      // means there are no optional elements left to extract.
       T[number][] extends Tail
       ? {
           /**
