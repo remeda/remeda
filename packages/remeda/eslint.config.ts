@@ -517,7 +517,7 @@ export default defineConfig(
   },
   {
     // Type Tests
-    files: ["src/**/*.test-d.ts"],
+    files: ["src/**/*.test-d.ts", "test/**/*.test-d.ts"],
     settings: {
       vitest: {
         typecheck: true,

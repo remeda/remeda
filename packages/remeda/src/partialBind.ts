@@ -25,7 +25,7 @@ type RemovePrefix<
     : // T has an optional or rest parameter last. If T is a parameter list,
       // this can only happen if we have optional arguments or a rest param;
       // both cases are similar.
-      T extends readonly [(infer _THead)?, ...infer TRest]
+      T extends readonly [unknown?, ...infer TRest]
       ? Prefix extends readonly [infer _PrefixHead, ...infer PrefixRest]
         ? // PrefixHead extends THead.
           RemovePrefix<TRest, PrefixRest>
