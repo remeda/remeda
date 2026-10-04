@@ -1,16 +1,16 @@
 /**
- * Under `exactOptionalPropertyTypes`, reading an optional property yields
- * TypeScript's internal `missing` type instead of the regular `undefined`.
- * To the end-user they both print as `undefined`, so hovers and error messages
- * show the result as `(T | undefined)[]`, but the compiler treats them
- * differently in some type relations (e.g., matching against tuples with
- * optional elements).
+ * Under `exactOptionalPropertyTypes`, reading an optional property (e.g., via
+ * property access, destructuring, or a generic `T[K]`) yields TypeScript's
+ * internal `missing` type instead of the regular `undefined`. Both print as
+ * `undefined`, so hovers and error messages show this helper's result as
+ * `(string | undefined)[]`, but the compiler doesn't always treat them the same
+ * (e.g., when inferring an optional tuple element from an array's items).
  *
- * The `missing` type can't be written in a type annotation, it only survives
- * inference.
+ * The `missing` type has no syntax of its own: spelling out the type it
+ * displays yields a regular `undefined`.
  *
  *! IMPORTANT: **Never replace a call to this helper with the type it displays**
- * (e.g., `[] as (number | undefined)[]`): the test would still compile and pass
+ * (e.g., `[] as (string | undefined)[]`): the test would still compile and pass
  * while no longer exercising the "missing" type at all. For the same reason
  * this function has no explicit return type.
  *
