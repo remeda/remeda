@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { $missingPropertyType } from "../test/$missingPropertyType";
 import { $typed } from "../test/$typed";
 import {
   isCat,
@@ -265,6 +266,20 @@ test("null filtering", () => {
   expectTypeOf(
     filter([] as (string | null | undefined)[], isNonNullish),
   ).toEqualTypeOf<string[]>();
+});
+
+describe("items typed with TypeScript's internal `missing` type", () => {
+  test("data-first", () => {
+    expectTypeOf(filter($missingPropertyType(), isDefined)).toEqualTypeOf<
+      string[]
+    >();
+  });
+
+  test("data-last", () => {
+    expectTypeOf(pipe($missingPropertyType(), filter(isDefined))).toEqualTypeOf<
+      string[]
+    >();
+  });
 });
 
 describe("data last", () => {
