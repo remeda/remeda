@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import type { StrictFunction } from "./internal/types/StrictFunction";
 
 /**

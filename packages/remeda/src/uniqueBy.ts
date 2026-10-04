@@ -1,9 +1,9 @@
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryFromLazy } from "./internal/purryFromLazy";
 import type { BrandedReturn } from "./internal/types/BrandedReturn";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { readsDataWhen, SKIP_ITEM } from "./internal/utilityEvaluators";
 
 /**
@@ -60,7 +60,7 @@ function lazyImplementation<T>(
   const brandedKeyFunction = keyFunction as BrandedReturn<typeof keyFunction>;
 
   const set = new Set<ReturnType<typeof brandedKeyFunction>>();
-  return readsDataWhen(keyFunction, 2, (value, index, data) => {
+  return readsDataWhen(keyFunction, (value, index, data) => {
     const key = brandedKeyFunction(value, index, data);
     if (set.has(key)) {
       return SKIP_ITEM;

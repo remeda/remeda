@@ -2,10 +2,10 @@
  * We document pipe's function params as a single parameter entry in the docs.
  */
 
+import { isLazyControl } from "./internal/lazyControl";
+import { NO_DATA, type LazyEvaluator } from "./internal/lazyEvaluator";
 import { processSingleLazyStep } from "./internal/processSingleLazyStep";
 import type { LazyDefinition } from "./internal/types/LazyDefinition";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { isLazyControl, NO_DATA } from "./internal/utilityEvaluators";
 
 type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
@@ -20,7 +20,10 @@ type LazyStep = {
       // evaluating them. It is shared with every invocation of the evaluator.
       readonly items: unknown[];
     }
-  | { readonly requiresData: false; readonly items: readonly never[] }
+  | {
+      readonly requiresData: false;
+      readonly items: readonly never[];
+    }
 );
 
 type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
@@ -352,8 +355,14 @@ export function pipe(
 function buildLazyStep({ lazy, lazyArgs }: LazyDefinition): LazyStep {
   const lazyEvaluator = lazy(...lazyArgs);
   const isSingle = lazy.single ?? false;
-  return lazyEvaluator.requiresData === true
-    ? { lazyEvaluator, isSingle, index: 0, requiresData: true, items: [] }
+  return lazyEvaluator.requiresData
+    ? {
+        lazyEvaluator,
+        isSingle,
+        index: 0,
+        requiresData: true,
+        items: [],
+      }
     : {
         lazyEvaluator,
         isSingle,

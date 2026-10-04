@@ -1,28 +1,11 @@
-import type { EmptyObject, Tagged } from "type-fest";
-import type { LazyEvaluator } from "./types/LazyEvaluator";
-import type {
-  LazyControl,
-  LazyLast,
-  LazyMany,
-  LazySkip,
-} from "./types/LazyResult";
+import {
+  LAZY_REF,
+  type LazyLast,
+  type LazyMany,
+  type LazySkip,
+} from "./lazyControl";
+import type { LazyControlMetadata, LazyEvaluator } from "./lazyEvaluator";
 import type { StrictFunction } from "./types/StrictFunction";
-
-// Control objects are told apart from user items by the identity of this
-// frozen object, which never leaves the package, so no value that enters a
-// pipe can carry it whatever its origin. A plain string key is used on
-// purpose: every computed (symbol) key in an object literal costs V8 a keyed
-// store on top of the literal's boilerplate (four symbol keys measured 10%
-// slower on flatMap pipelines), prototype-identity checks cost more than the
-// lookup they replace (1.5x to 2.9x), and null-prototype objects fall into
-// dictionary mode (5x). Reference equality on a string key measured fastest
-// on every pipeline shape.
-export const LAZY_REF = {} as Tagged<EmptyObject, "RemedaLazyRef">;
-
-// Every control literal lists the same five keys (the reference plus
-// `isDone`, `hasValue`, `hasMany`, `value`) in the same order so that V8
-// gives them all a single hidden class, keeping the reads in `pipe`
-// monomorphic.
 
 /**
  * A singleton value for skipping an item in a lazy evaluator.
@@ -34,10 +17,17 @@ export const SKIP_ITEM: LazySkip = {
 };
 
 const STOP: LazySkip = {
+  // The order of props is kept in sync with `SKIP_ITEM` so that v8 can build a
+  // single hidden class for both; keeping the reads inside `pipe` monomorphic.
   $$remedaLazyRef: LAZY_REF,
   control: "skip",
   isDone: true,
 };
+
+/**
+ * A helper evaluator that passes every item through unchanged.
+ */
+export const lazyIdentityEvaluator = <T>(value: T): T => value;
 
 /**
  * A helper evaluator for stopping the pipe without emitting anything. Both the
@@ -46,14 +36,12 @@ const STOP: LazySkip = {
 export const lazyEmptyEvaluator = (): LazySkip => STOP;
 
 /**
- * A helper evaluator that passes every item through unchanged.
- */
-export const lazyIdentityEvaluator = <T>(value: T): T => value;
-
-/**
  * Emits `value` and stops the pipe.
  */
 export const doneWith = <T>(value: T): LazyLast<T> => ({
+  // The order of props is kept in sync with `SKIP_ITEM` and `STOP` so that v8
+  // can build a single hidden class for both; keeping the reads inside `pipe`
+  // monomorphic.
   $$remedaLazyRef: LAZY_REF,
   control: "last",
   isDone: true,
@@ -64,29 +52,14 @@ export const doneWith = <T>(value: T): LazyLast<T> => ({
  * Feeds every element of `value` through the rest of the pipe, one by one.
  */
 export const manyItems = <T>(value: readonly T[]): LazyMany<T> => ({
+  // The order of props is kept in sync with `SKIP_ITEM`, `STOP`, and
+  // `doneWith`, so that v8 can build a single hidden class for both; keeping
+  // the reads inside `pipe` monomorphic.
   $$remedaLazyRef: LAZY_REF,
   control: "many",
   isDone: false,
   value,
 });
-
-export const isLazyControl = (result: unknown): result is LazyControl =>
-  // The `typeof` guard is required because `in` throws on a primitive operand;
-  // checking the key before reading it keeps the read (and any user getter of
-  // the same name) off the path for the vast majority of items.
-  typeof result === "object" &&
-  result !== null &&
-  "$$remedaLazyRef" in result &&
-  result.$$remedaLazyRef === LAZY_REF;
-
-/**
- * Handed to every step that doesn't read `data`. Frozen so a callback that
- * slips through the arity gate (default parameters, `arguments`) can't corrupt
- * a module-wide singleton.
- */
-export const NO_DATA: readonly never[] = Object.freeze([]);
-
-const DATA_MARKER = { requiresData: true } as const;
 
 /**
  * Marks an evaluator that reads `data` itself, so `pipe` must always buffer.
@@ -96,7 +69,16 @@ const DATA_MARKER = { requiresData: true } as const;
  */
 export const readsData = <T, R>(
   evaluator: LazyEvaluator<T, R>,
-): LazyEvaluator<T, R> => Object.assign(evaluator, DATA_MARKER);
+): LazyEvaluator<T, R> =>
+  Object.assign(evaluator, {
+    requiresData: true,
+  } satisfies LazyControlMetadata);
+
+type ReadDataWhenOptions = {
+  readonly dataParameterIndex?: number;
+};
+
+const DEFAULT_DATA_PARAMETER_INDEX = 2;
 
 /**
  * Marks an evaluator as needing `data` only when the user's `callback` can
@@ -110,8 +92,10 @@ export const readsData = <T, R>(
  */
 export const readsDataWhen = <T, R>(
   callback: StrictFunction,
-  dataParameterIndex: number,
   evaluator: NoInfer<LazyEvaluator<T, R>>,
+  {
+    dataParameterIndex = DEFAULT_DATA_PARAMETER_INDEX,
+  }: ReadDataWhenOptions = {},
 ): LazyEvaluator<T, R> =>
   callback.length === 0 || callback.length > dataParameterIndex
     ? readsData(evaluator)

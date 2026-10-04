@@ -1,7 +1,7 @@
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { toSingle } from "./internal/toSingle";
 import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { doneWith } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 

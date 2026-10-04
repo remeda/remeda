@@ -1,3 +1,4 @@
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { toSingle } from "./internal/toSingle";
 import type { Assignability } from "./internal/types/Assignability";
 import type { First } from "./internal/types/First";
@@ -6,7 +7,6 @@ import type {
   LazyCallback,
   LazyTypePredicate,
 } from "./internal/types/LazyCallback";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
 import {
@@ -169,6 +169,6 @@ const findImplementation = <T, S extends T>(
 const lazyImplementation = <T, S extends T>(
   predicate: (value: T, index: number, data: readonly T[]) => value is S,
 ): LazyEvaluator<T, S> =>
-  readsDataWhen(predicate, 2, (value, index, data) =>
+  readsDataWhen(predicate, (value, index, data) =>
     predicate(value, index, data) ? doneWith(value) : SKIP_ITEM,
   );

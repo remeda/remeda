@@ -4,9 +4,9 @@
  */
 
 import { describe, expect, test } from "vitest";
+import type { LazyEvaluator } from "./lazyEvaluator";
 import { purryFromLazy } from "./purryFromLazy";
 import { toSingle } from "./toSingle";
-import type { LazyEvaluator } from "./types/LazyEvaluator";
 import { doneWith } from "./utilityEvaluators";
 
 test("throws on wrong number of arguments", () => {

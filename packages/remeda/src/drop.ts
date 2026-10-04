@@ -1,8 +1,8 @@
 import type { IsInteger, IsNegative, Writable } from "type-fest";
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
 import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { PartialArray } from "./internal/types/PartialArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";

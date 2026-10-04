@@ -3,8 +3,8 @@
  * `control` values.
  */
 
-import type { LazyEvaluator } from "./types/LazyEvaluator";
-import { isLazyControl, NO_DATA } from "./utilityEvaluators";
+import { isLazyControl } from "./lazyControl";
+import { NO_DATA, type LazyEvaluator } from "./lazyEvaluator";
 
 /**
  * Runs an iterable through a lazy sequence of exactly one step. With no step
@@ -26,8 +26,9 @@ export function processSingleLazyStep(
   // Only a step that reads `data` gets a buffer of its own; everyone else
   // shares the frozen empty array, which also makes the buffer the flag for
   // whether there is anything to fill.
-  const dataBuffer: unknown[] | undefined =
-    lazyEvaluator.requiresData === true ? [] : undefined;
+  const dataBuffer: unknown[] | undefined = lazyEvaluator.requiresData
+    ? []
+    : undefined;
   const items = dataBuffer ?? NO_DATA;
 
   const accumulator: unknown[] = [];
