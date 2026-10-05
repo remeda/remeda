@@ -4,10 +4,10 @@
  */
 
 import { describe, expect, test } from "vitest";
+import { lastLazyValue } from "./lazyControl";
 import type { LazyEvaluator } from "./lazyEvaluator";
 import { purryFromLazy } from "./purryFromLazy";
 import { toSingle } from "./toSingle";
-import { doneWith } from "./utilityEvaluators";
 
 test("throws on wrong number of arguments", () => {
   expect(() =>
@@ -45,7 +45,7 @@ const firstPurried: {
   (): (data: readonly number[]) => number | undefined;
 } = (...args: readonly unknown[]) => purryFromLazy(firstLazyImpl, args);
 
-const firstLazyImpl = toSingle(() => doneWith);
+const firstLazyImpl = toSingle(() => lastLazyValue);
 
 const zeroArgsPurried = (...args: readonly unknown[]) =>
   purryFromLazy(zeroArgsLazyImpl, args);

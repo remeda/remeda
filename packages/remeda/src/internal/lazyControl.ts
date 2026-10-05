@@ -9,7 +9,7 @@ import type { EmptyObject, Tagged } from "type-fest";
 // lookup they replace (1.5x to 2.9x), and null-prototype objects fall into
 // dictionary mode (5x). Reference equality on a string key measured fastest
 // on every pipeline shape.
-export const LAZY_REF = {} as Tagged<EmptyObject, "RemedaLazyRef">;
+const LAZY_REF = {} as Tagged<EmptyObject, "RemedaLazyRef">;
 
 /**
  * A lazy evaluator returns the (possibly transformed) item itself in the
@@ -34,7 +34,7 @@ type LazySkip = LazyControlBase & {
   readonly value?: never;
 };
 
-export type LazyLast<T> = LazyControlBase & {
+type LazyLast<T> = LazyControlBase & {
   readonly control: "last";
   readonly isDone: true;
   readonly value: T;
@@ -45,15 +45,6 @@ type LazyMany<T> = LazyControlBase & {
   readonly isDone: boolean;
   readonly value: readonly T[];
 };
-
-export const isLazyControl = (result: unknown): result is LazyControl =>
-  // The `typeof` guard is required because `in` throws on a primitive operand;
-  // checking the key before reading it keeps the read (and any user getter of
-  // the same name) off the path for the vast majority of items.
-  typeof result === "object" &&
-  result !== null &&
-  "$$remedaLazyRef" in result &&
-  result.$$remedaLazyRef === LAZY_REF;
 
 /**
  * A singleton value for skipping an item in a lazy evaluator.
@@ -108,3 +99,12 @@ export const manyLazyValues = <T>(value: readonly T[]): LazyMany<T> => ({
   isDone: false,
   value,
 });
+
+export const isLazyControl = (result: unknown): result is LazyControl =>
+  // The `typeof` guard is required because `in` throws on a primitive operand;
+  // checking the key before reading it keeps the read (and any user getter of
+  // the same name) off the path for the vast majority of items.
+  typeof result === "object" &&
+  result !== null &&
+  "$$remedaLazyRef" in result &&
+  result.$$remedaLazyRef === LAZY_REF;

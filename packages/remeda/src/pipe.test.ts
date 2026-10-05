@@ -6,7 +6,7 @@ import { flat } from "./flat";
 import { flatMap } from "./flatMap";
 import { forEach } from "./forEach";
 import { identity } from "./identity";
-import { LAZY_REF, type LazyLast } from "./internal/lazyControl";
+import { manyLazyValues } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryFromLazy } from "./internal/purryFromLazy";
 import type { LazyCallback } from "./internal/types/LazyCallback";
@@ -323,7 +323,7 @@ describe("lazy", () => {
         control: "last",
         isDone: true,
         value: 1,
-      } satisfies Omit<LazyLast<number>, "$$remedaLazyRef">;
+      };
 
       expect(
         pipe(
@@ -443,10 +443,8 @@ const firstTwice: () => (data: readonly number[]) => number[] = () =>
   purryFromLazy(() => firstTwiceEvaluator, []);
 
 const firstTwiceEvaluator: LazyEvaluator = (value) => ({
-  $$remedaLazyRef: LAZY_REF,
-  control: "many",
+  ...manyLazyValues([value, value]),
   isDone: true,
-  value: [value, value],
 });
 
 describe("known issues!", () => {
