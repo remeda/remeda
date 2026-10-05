@@ -1,11 +1,10 @@
 import type { IsNumericLiteral } from "type-fest";
+import { manyLazyValues, type LazyResult } from "./internal/lazyControl";
+import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 import {
   lazyIdentityEvaluator,
-  manyLazyValues,
-  type LazyResult,
-} from "./internal/lazyControl";
-import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
-import type { LazyEvaluator } from "./internal/lazyEvaluator";
+  type LazyEvaluator,
+} from "./internal/lazyEvaluator";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 type FlatArray<

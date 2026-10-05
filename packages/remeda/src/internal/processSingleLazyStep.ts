@@ -4,10 +4,8 @@
  */
 
 import { isLazyControl } from "./lazyControl";
-import {
-  UNEXPECTED_ACCESS_SENTINEL,
-  type LazyEvaluator,
-} from "./lazyEvaluator";
+import type { LazyEvaluator } from "./lazyEvaluator";
+import { UNEXPECTED_ACCESS_SENTINEL } from "./requireData";
 
 /**
  * Runs an iterable through a lazy sequence of exactly one step. With no step

@@ -3,11 +3,9 @@
  */
 
 import { isLazyControl } from "./internal/lazyControl";
-import {
-  UNEXPECTED_ACCESS_SENTINEL,
-  type LazyEvaluator,
-} from "./internal/lazyEvaluator";
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { processSingleLazyStep } from "./internal/processSingleLazyStep";
+import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/requireData";
 import type { LazyDefinition } from "./internal/types/LazyDefinition";
 
 type LazyStep = {

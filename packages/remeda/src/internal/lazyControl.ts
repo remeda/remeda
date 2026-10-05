@@ -64,11 +64,6 @@ const STOP: LazySkip = {
 };
 
 /**
- * A helper evaluator that passes every item through unchanged.
- */
-export const lazyIdentityEvaluator = <T>(value: T): T => value;
-
-/**
  * A helper evaluator for stopping the pipe without emitting anything. Both the
  * result and the evaluator are shared singletons.
  */

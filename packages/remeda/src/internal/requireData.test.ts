@@ -1,6 +1,6 @@
 import { inspect } from "node:util";
 import { describe, expect, test } from "vitest";
-import { UNEXPECTED_ACCESS_SENTINEL } from "./lazyEvaluator";
+import { UNEXPECTED_ACCESS_SENTINEL } from "./requireData";
 
 describe("unexpected access sentinel", () => {
   // Typed the way the callbacks that receive it see it.
