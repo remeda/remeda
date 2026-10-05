@@ -3,8 +3,8 @@ import {
   lazyEmptyEvaluator,
   SKIP_ITEM,
 } from "./internal/lazyControl";
-import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryFromLazy } from "./internal/purryFromLazy";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the

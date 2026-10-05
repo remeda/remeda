@@ -1,9 +1,9 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryFromLazy } from "./internal/purryFromLazy";
 import { requireData } from "./internal/requireData";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 type IsEquals<T> = (a: T, b: T) => boolean;
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { LazyEvaluator } from "./lazyEvaluator";
+import type { LazyEvaluator } from "./types/LazyEvaluator";
 import type { StrictFunction } from "./types/StrictFunction";
 
 /**

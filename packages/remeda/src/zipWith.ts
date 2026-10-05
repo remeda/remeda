@@ -1,8 +1,8 @@
 import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
-import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
 
 type ZippingFunction<

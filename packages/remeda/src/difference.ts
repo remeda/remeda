@@ -1,9 +1,6 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import {
-  lazyIdentityEvaluator,
-  type LazyEvaluator,
-} from "./internal/lazyEvaluator";
 import { purryFromLazy } from "./internal/purryFromLazy";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Excludes the values from `other` array. The output maintains the same order
@@ -46,7 +43,7 @@ export function difference(...args: readonly unknown[]): unknown {
 
 function lazyImplementation<T>(other: readonly T[]): LazyEvaluator<T> {
   if (other.length === 0) {
-    return lazyIdentityEvaluator;
+    return (value) => value;
   }
 
   // We need to build a more efficient data structure that would allow us to

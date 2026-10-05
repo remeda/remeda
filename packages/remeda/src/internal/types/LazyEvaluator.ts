@@ -1,4 +1,4 @@
-import type { LazyResult } from "./lazyControl";
+import type { LazyResult } from "../lazyControl";
 
 /**
  * Providing an evaluator additional levers to control how `pipe` handles the
@@ -22,8 +22,3 @@ export type LazyEvaluator<T = unknown, R = T> = ((
   data: readonly T[],
 ) => LazyResult<R>) &
   LazyEvaluatorMetadata;
-
-/**
- * A helper evaluator that passes every item through unchanged.
- */
-export const lazyIdentityEvaluator = <T>(value: T): T => value;

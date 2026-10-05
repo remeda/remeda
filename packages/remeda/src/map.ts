@@ -1,7 +1,7 @@
-import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
 import { purry } from "./purry";
 

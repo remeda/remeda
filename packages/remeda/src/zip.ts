@@ -1,6 +1,6 @@
 import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
-import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { purry } from "./purry";
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer> =

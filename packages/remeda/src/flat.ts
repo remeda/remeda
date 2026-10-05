@@ -1,11 +1,8 @@
 import type { IsNumericLiteral } from "type-fest";
 import { manyLazyValues, type LazyResult } from "./internal/lazyControl";
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
-import {
-  lazyIdentityEvaluator,
-  type LazyEvaluator,
-} from "./internal/lazyEvaluator";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 type FlatArray<
   T,
@@ -129,7 +126,7 @@ const lazyImplementation = (depth?: number): LazyEvaluator =>
   depth === undefined || depth === 1
     ? lazyShallow
     : depth <= 0
-      ? lazyIdentityEvaluator
+      ? (value) => value
       : (value) =>
           Array.isArray(value) ? manyLazyValues(value.flat(depth - 1)) : value;
 

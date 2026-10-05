@@ -14,42 +14,33 @@ import type { LazyDefinition } from "./types/LazyDefinition";
  *
  * @param lazy - The main lazy implementation, it assumes that data is an
  * iterable (array-like).
- * @param args - The arguments passed to the overloaded invocation.
+ * @param lazyArgs - The arguments passed to the overloaded invocation.
  * @see purry
  * @see pipe
  */
 export function purryFromLazy(
   lazy: LazyDefinition["lazy"],
-  args: readonly unknown[],
+  lazyArgs: readonly unknown[],
 ): unknown {
-  const diff = args.length - lazy.length;
-
-  if (diff === 1) {
-    // dataFirst
-    const [data, ...rest] = args;
-    return runLazy(lazy, rest, data);
+  if (lazyArgs.length === lazy.length) {
+    const dataLast = (data: unknown): unknown => runLazy(data, lazy, lazyArgs);
+    return Object.assign(dataLast, { lazy, lazyArgs } satisfies LazyDefinition);
   }
 
-  if (diff === 0) {
-    const dataLast = (data: unknown): unknown => runLazy(lazy, args, data);
-    return Object.assign(dataLast, {
-      lazy,
-      lazyArgs: args,
-    } satisfies LazyDefinition);
-  }
-
-  throw new Error("Wrong number of arguments");
+  // dataFirst
+  const [data, ...rest] = lazyArgs;
+  return runLazy(data, lazy, rest);
 }
 
 function runLazy(
+  data: unknown,
   lazy: LazyDefinition["lazy"],
   lazyArgs: readonly unknown[],
-  data: unknown,
 ): unknown {
   const accumulator = processSingleLazyStep(
     // @ts-expect-error [ts2345] -- Lazy implementations assume their data is an iterable, and the overloads of the functions built on top of this one are what enforce it; a single generic helper can't see them.
     data,
     lazy(...lazyArgs),
   );
-  return lazy.single === true ? accumulator[0] : accumulator;
+  return lazy.single ? accumulator[0] : accumulator;
 }

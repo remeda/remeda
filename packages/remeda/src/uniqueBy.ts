@@ -1,11 +1,11 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryFromLazy } from "./internal/purryFromLazy";
 import { requireDataByArity } from "./internal/requireData";
 import type { BrandedReturn } from "./internal/types/BrandedReturn";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -61,7 +61,7 @@ function lazyImplementation<T>(
   const brandedKeyFunction = keyFunction as BrandedReturn<typeof keyFunction>;
 
   const set = new Set<ReturnType<typeof brandedKeyFunction>>();
-  return requireDataByArity(keyFunction, (value, index, data) => {
+  return requireDataByArity(brandedKeyFunction, (value, index, data) => {
     const key = brandedKeyFunction(value, index, data);
     if (set.has(key)) {
       return SKIP_ITEM;

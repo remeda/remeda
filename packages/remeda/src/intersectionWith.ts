@@ -1,6 +1,6 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryFromLazy } from "./internal/purryFromLazy";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 type IsEqual<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 

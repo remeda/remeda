@@ -1,5 +1,4 @@
 import { lastLazyValue, SKIP_ITEM } from "./internal/lazyControl";
-import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { requireDataByArity } from "./internal/requireData";
 import { toSingle } from "./internal/toSingle";
 import type { Assignability } from "./internal/types/Assignability";
@@ -9,6 +8,7 @@ import type {
   LazyCallback,
   LazyTypePredicate,
 } from "./internal/types/LazyCallback";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
