@@ -1,7 +1,7 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryFromLazy } from "./internal/purryFromLazy";
-import { readsData } from "./internal/readsData";
+import { requireData } from "./internal/requireData";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
@@ -57,7 +57,7 @@ export function uniqueWith(...args: readonly unknown[]): unknown {
 }
 
 const lazyImplementation = <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>
-  readsData((value, index, data) => {
+  requireData((value, index, data) => {
     const firstEqualIndex = data.findIndex(
       (otherValue, otherIndex) =>
         index === otherIndex || isEquals(value, otherValue),

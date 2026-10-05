@@ -1,6 +1,6 @@
 import type { Writable } from "type-fest";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
-import { readsDataWhen } from "./internal/readsData";
+import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import { purry } from "./purry";
@@ -75,7 +75,7 @@ function forEachImplementation<T>(
 const lazyImplementation = <T>(
   callbackfn: (value: T, index: number, data: readonly T[]) => void,
 ): LazyEvaluator<T> =>
-  readsDataWhen(callbackfn, (value, index, data) => {
+  requireDataByArity(callbackfn, (value, index, data) => {
     callbackfn(value, index, data);
     return value;
   });

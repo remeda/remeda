@@ -1,5 +1,5 @@
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
-import { readsDataWhen } from "./internal/readsData";
+import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { Mapped } from "./internal/types/Mapped";
@@ -63,6 +63,6 @@ const mapImplementation = <T, U>(
 const lazyImplementation = <T, U>(
   callbackfn: (value: T, index: number, data: readonly T[]) => U,
 ): LazyEvaluator<T, U> =>
-  readsDataWhen(callbackfn, (value, index, data) =>
+  requireDataByArity(callbackfn, (value, index, data) =>
     callbackfn(value, index, data),
   );

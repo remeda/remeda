@@ -1,6 +1,6 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
-import { readsDataWhen } from "./internal/readsData";
+import { requireDataByArity } from "./internal/requireData";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type {
@@ -89,6 +89,6 @@ const filterImplementation = <T>(
 const lazyImplementation = <T>(
   predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): LazyEvaluator<T> =>
-  readsDataWhen(predicate, (value, index, data) =>
+  requireDataByArity(predicate, (value, index, data) =>
     predicate(value, index, data) ? value : SKIP_ITEM,
   );

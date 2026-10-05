@@ -1,6 +1,6 @@
 import { manyLazyValues } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
-import { readsDataWhen } from "./internal/readsData";
+import { requireDataByArity } from "./internal/requireData";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import { purry } from "./purry";
 
@@ -66,7 +66,7 @@ const flatMapImplementation = <T, U>(
 const lazyImplementation = <T, K>(
   callbackfn: (input: T, index: number, data: readonly T[]) => K | readonly K[],
 ): LazyEvaluator<T, K> =>
-  readsDataWhen(
+  requireDataByArity(
     callbackfn,
     // @ts-expect-error [ts2345] -- Array.isArray doesn't narrow readonly arrays (https://github.com/microsoft/TypeScript/issues/17002), so the non-array branch is still typed as K | readonly K[] even though it only ever sees non-arrays at runtime.
     (value, index, data) => {

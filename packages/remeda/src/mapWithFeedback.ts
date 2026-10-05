@@ -1,6 +1,6 @@
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryFromLazy } from "./internal/purryFromLazy";
-import { readsDataWhen } from "./internal/readsData";
+import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { Mapped } from "./internal/types/Mapped";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
@@ -81,7 +81,7 @@ const lazyImplementation = <T, U>(
   initialValue: U,
 ): LazyEvaluator<T, U> => {
   let previousValue = initialValue;
-  return readsDataWhen(
+  return requireDataByArity(
     reducer,
     (currentValue, index, data) => {
       previousValue = reducer(previousValue, currentValue, index, data);

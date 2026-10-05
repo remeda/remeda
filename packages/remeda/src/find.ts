@@ -1,6 +1,6 @@
 import { lastLazyValue, SKIP_ITEM } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
-import { readsDataWhen } from "./internal/readsData";
+import { requireDataByArity } from "./internal/requireData";
 import { toSingle } from "./internal/toSingle";
 import type { Assignability } from "./internal/types/Assignability";
 import type { First } from "./internal/types/First";
@@ -166,6 +166,6 @@ const findImplementation = <T, S extends T>(
 const lazyImplementation = <T, S extends T>(
   predicate: (value: T, index: number, data: readonly T[]) => value is S,
 ): LazyEvaluator<T, S> =>
-  readsDataWhen(predicate, (value, index, data) =>
+  requireDataByArity(predicate, (value, index, data) =>
     predicate(value, index, data) ? lastLazyValue(value) : SKIP_ITEM,
   );

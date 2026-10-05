@@ -1,7 +1,7 @@
 import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
-import { readsDataWhen } from "./internal/readsData";
+import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
 
@@ -130,7 +130,7 @@ const lazyImplementation = <T1, T2 extends IterableContainer, Value>(
 ): LazyEvaluator<T1, Value> =>
   second.length === 0
     ? lazyEmptyEvaluator
-    : readsDataWhen(
+    : requireDataByArity(
         fn,
         (value, index, data) => {
           const zipped = fn(value, second[index], index, [data, second]);

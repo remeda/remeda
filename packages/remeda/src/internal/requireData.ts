@@ -1,7 +1,7 @@
 import type { LazyControlMetadata, LazyEvaluator } from "./lazyEvaluator";
 import type { StrictFunction } from "./types/StrictFunction";
 
-type ReadDataWhenOptions = {
+type RequireDataByArityOptions = {
   readonly dataParameterIndex?: number;
 };
 
@@ -11,9 +11,9 @@ const DEFAULT_DATA_PARAMETER_INDEX = 2;
  * Marks an evaluator that reads `data` itself, so `pipe` must always buffer.
  * The marker is applied by mutating `evaluator`, so callers must pass a freshly
  * created closure, never a shared singleton such as `lazyIdentityEvaluator` or
- * `doneWith`.
+ * `lazyEmptyEvaluator`.
  */
-export const readsData = <T, R>(
+export const requireData = <T, R>(
   evaluator: LazyEvaluator<T, R>,
 ): LazyEvaluator<T, R> =>
   Object.assign(evaluator, {
@@ -31,13 +31,13 @@ export const readsData = <T, R>(
  * (`(value, index, ...rest) => ...` reports 2). A callback that falls through
  * one of them receives `UNEXPECTED_ACCESS_SENTINEL`, which throws when read.
  */
-export const readsDataWhen = <T, R>(
+export const requireDataByArity = <T, R>(
   callback: StrictFunction,
   evaluator: NoInfer<LazyEvaluator<T, R>>,
   {
     dataParameterIndex = DEFAULT_DATA_PARAMETER_INDEX,
-  }: ReadDataWhenOptions = {},
+  }: RequireDataByArityOptions = {},
 ): LazyEvaluator<T, R> =>
   callback.length === 0 || callback.length > dataParameterIndex
-    ? readsData(evaluator)
+    ? requireData(evaluator)
     : evaluator;

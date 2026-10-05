@@ -9,7 +9,7 @@ const throwUnexpectedAccessError = (): never => {
 
 /**
  * Handed as `data` to every step that doesn't read it. A callback only receives
- * it by slipping through the arity gate (see `readsDataWhen`), and no stand-in
+ * it by slipping through the arity gate (see `requireDataByArity`), and no stand-in
  * value would be correct there: an empty array contradicts the callback's own
  * type (`NonEmptyPrefix` guarantees a first item) and lets the mistake through
  * silently. Instead, every operation that can be trapped (property access,
