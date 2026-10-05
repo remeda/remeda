@@ -1,4 +1,6 @@
+import { doneWith, SKIP_ITEM } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
+import { readsDataWhen } from "./internal/readsData";
 import { toSingle } from "./internal/toSingle";
 import type { Assignability } from "./internal/types/Assignability";
 import type { First } from "./internal/types/First";
@@ -9,11 +11,6 @@ import type {
 } from "./internal/types/LazyCallback";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
-import {
-  doneWith,
-  readsDataWhen,
-  SKIP_ITEM,
-} from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
 type Found<T extends IterableContainer, Condition> =

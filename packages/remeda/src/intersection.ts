@@ -1,10 +1,10 @@
-import type { LazyEvaluator } from "./internal/lazyEvaluator";
-import { purryFromLazy } from "./internal/purryFromLazy";
 import {
-  SKIP_ITEM,
   doneWith,
   lazyEmptyEvaluator,
-} from "./internal/utilityEvaluators";
+  SKIP_ITEM,
+} from "./internal/lazyControl";
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
+import { purryFromLazy } from "./internal/purryFromLazy";
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the

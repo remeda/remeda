@@ -3,15 +3,18 @@
  */
 
 import { isLazyControl } from "./internal/lazyControl";
-import { NO_DATA, type LazyEvaluator } from "./internal/lazyEvaluator";
+import {
+  UNEXPECTED_ACCESS_SENTINEL,
+  type LazyEvaluator,
+} from "./internal/lazyEvaluator";
 import { processSingleLazyStep } from "./internal/processSingleLazyStep";
 import type { LazyDefinition } from "./internal/types/LazyDefinition";
 
 type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
   readonly isSingle: boolean;
-  // Can't be derived from `items.length`: steps that don't read `data` share
-  // one frozen empty array, so each step counts on its own.
+  // Can't be derived from `items.length`: steps that don't read `data` have no
+  // buffer, only `UNEXPECTED_ACCESS_SENTINEL`, so each step counts on its own.
   index: number;
 } & (
   | {
@@ -59,7 +62,8 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * parameter in which that function passes `data`, or whose `length` is 0
  * because their first parameter is a rest parameter. A callback that reaches
  * `data` through `arguments`, a default parameter, or a trailing rest
- * parameter (`(value, index, ...rest)`) receives an empty array instead.
+ * parameter (`(value, index, ...rest)`) receives a placeholder instead, which
+ * throws as soon as it is read.
  *
  * @param data - The input data.
  * @param functions - A sequence of functions that take one argument and
@@ -368,7 +372,7 @@ function buildLazyStep({ lazy, lazyArgs }: LazyDefinition): LazyStep {
         isSingle,
         index: 0,
         requiresData: false,
-        items: NO_DATA,
+        items: UNEXPECTED_ACCESS_SENTINEL,
       };
 }
 

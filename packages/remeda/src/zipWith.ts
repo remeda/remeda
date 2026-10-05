@@ -1,12 +1,9 @@
+import { doneWith, lazyEmptyEvaluator } from "./internal/lazyControl";
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
+import { readsDataWhen } from "./internal/readsData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
-import {
-  doneWith,
-  lazyEmptyEvaluator,
-  readsDataWhen,
-} from "./internal/utilityEvaluators";
 
 type ZippingFunction<
   T1 extends IterableContainer = IterableContainer,

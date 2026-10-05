@@ -4,7 +4,10 @@
  */
 
 import { isLazyControl } from "./lazyControl";
-import { NO_DATA, type LazyEvaluator } from "./lazyEvaluator";
+import {
+  UNEXPECTED_ACCESS_SENTINEL,
+  type LazyEvaluator,
+} from "./lazyEvaluator";
 
 /**
  * Runs an iterable through a lazy sequence of exactly one step. With no step
@@ -23,13 +26,13 @@ export function processSingleLazyStep(
   iterable: Iterable<unknown>,
   lazyEvaluator: LazyEvaluator,
 ): unknown[] {
-  // Only a step that reads `data` gets a buffer of its own; everyone else
-  // shares the frozen empty array, which also makes the buffer the flag for
+  // Only a step that reads `data` gets a buffer of its own; everyone else gets
+  // `UNEXPECTED_ACCESS_SENTINEL`, which also makes the buffer the flag for
   // whether there is anything to fill.
   const dataBuffer: unknown[] | undefined = lazyEvaluator.requiresData
     ? []
     : undefined;
-  const items = dataBuffer ?? NO_DATA;
+  const items = dataBuffer ?? UNEXPECTED_ACCESS_SENTINEL;
 
   const accumulator: unknown[] = [];
   let index = 0;

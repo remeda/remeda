@@ -451,49 +451,51 @@ const firstTwiceEvaluator: LazyEvaluator = (value) => ({
 
 describe("known issues!", () => {
   test("default parameters hide `data` from the arity check", () => {
-    const result = pipe(
-      [1, 2, 3],
-      // eslint-disable-next-line @typescript-eslint/no-useless-default-assignment -- The defaults never fire, and that is the point: they still truncate `Function.length`, which is the known issue this test pins.
-      map((_value: number, _index = 0, data: readonly number[] = []) => data),
-    );
-
     // `Function.length` stops counting at the first parameter with a
-    // default, so this callback reports 1 and `pipe` hands it the shared
-    // empty array instead of buffering; the default never fires because an
-    // argument is always passed.
-    expect(result).toStrictEqual([[], [], []]);
+    // default, so this callback reports 1 and `pipe` hands it
+    // `UNEXPECTED_ACCESS_SENTINEL` instead of buffering; the default never
+    // fires because an argument is always passed.
+    expect(() =>
+      pipe(
+        [1, 2, 3],
+        // eslint-disable-next-line @typescript-eslint/no-useless-default-assignment -- The defaults never fire, and that is the point: they still truncate `Function.length`, which is the known issue this test pins.
+        map((_value: number, _index = 0, data: readonly number[] = []) =>
+          data.at(0),
+        ),
+      ),
+    ).toThrow(/^Remeda: /u);
   });
 
   test("`arguments` access hides `data` from the arity check", () => {
-    const result = pipe(
-      [1, 2, 3],
-      map(function readsArguments(_value: number) {
-        // eslint-disable-next-line prefer-rest-params, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment -- The point of this test is that arguments-based access is invisible to the arity check, and `arguments` is untyped by construction so spreading it is unavoidably unsafe here.
-        return [...arguments[2]];
-      }),
-    );
-
     // A `function` expression that reaches for `arguments` instead of
-    // declaring `data` also reports a `length` of 1, so `pipe` hands it the
-    // shared empty array instead of buffering.
-    expect(result).toStrictEqual([[], [], []]);
+    // declaring `data` also reports a `length` of 1, so `pipe` hands it
+    // `UNEXPECTED_ACCESS_SENTINEL` instead of buffering.
+    expect(() =>
+      pipe(
+        [1, 2, 3],
+        map(function readsArguments(_value: number) {
+          // eslint-disable-next-line prefer-rest-params, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment -- The point of this test is that arguments-based access is invisible to the arity check, and `arguments` is untyped by construction so spreading it is unavoidably unsafe here.
+          return [...arguments[2]];
+        }),
+      ),
+    ).toThrow(/^Remeda: /u);
   });
 
   test("a trailing rest parameter hides `data` from the arity check", () => {
-    const result = pipe(
-      [1, 2, 3],
-      map(
-        (
-          _value: number,
-          _index: number,
-          ...rest: readonly [readonly number[]]
-        ) => [...rest[0]],
-      ),
-    );
-
     // `Function.length` counts only the named parameters before a rest
-    // parameter, so this callback reports 2 and `pipe` doesn't buffer;
-    // `rest[0]` is the shared frozen empty array on every call.
-    expect(result).toStrictEqual([[], [], []]);
+    // parameter, so this callback reports 2 and `pipe` hands `rest[0]`
+    // `UNEXPECTED_ACCESS_SENTINEL` instead of buffering.
+    expect(() =>
+      pipe(
+        [1, 2, 3],
+        map(
+          (
+            _value: number,
+            _index: number,
+            ...rest: readonly [readonly number[]]
+          ) => [...rest[0]],
+        ),
+      ),
+    ).toThrow(/^Remeda: /u);
   });
 });

@@ -1,4 +1,6 @@
+import { SKIP_ITEM } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
+import { readsDataWhen } from "./internal/readsData";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type {
@@ -6,7 +8,6 @@ import type {
   LazyTypePredicate,
 } from "./internal/types/LazyCallback";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
-import { readsDataWhen, SKIP_ITEM } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
 /**

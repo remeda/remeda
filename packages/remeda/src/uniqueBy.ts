@@ -1,10 +1,11 @@
+import { SKIP_ITEM } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryFromLazy } from "./internal/purryFromLazy";
+import { readsDataWhen } from "./internal/readsData";
 import type { BrandedReturn } from "./internal/types/BrandedReturn";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
-import { readsDataWhen, SKIP_ITEM } from "./internal/utilityEvaluators";
 
 /**
  * Returns a new array containing only one copy of each element in the original

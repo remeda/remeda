@@ -1,6 +1,6 @@
+import { lazyIdentityEvaluator, SKIP_ITEM } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryFromLazy } from "./internal/purryFromLazy";
-import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 
 /**
  * Excludes the values from `other` array. The output maintains the same order

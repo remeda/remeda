@@ -54,3 +54,57 @@ export const isLazyControl = (result: unknown): result is LazyControl =>
   result !== null &&
   "$$remedaLazyRef" in result &&
   result.$$remedaLazyRef === LAZY_REF;
+
+/**
+ * A singleton value for skipping an item in a lazy evaluator.
+ */
+export const SKIP_ITEM: LazySkip = {
+  $$remedaLazyRef: LAZY_REF,
+  control: "skip",
+  isDone: false,
+};
+
+const STOP: LazySkip = {
+  // The order of props is kept in sync with `SKIP_ITEM` so that v8 can build a
+  // single hidden class for both; keeping the reads inside `pipe` monomorphic.
+  $$remedaLazyRef: LAZY_REF,
+  control: "skip",
+  isDone: true,
+};
+
+/**
+ * A helper evaluator that passes every item through unchanged.
+ */
+export const lazyIdentityEvaluator = <T>(value: T): T => value;
+
+/**
+ * A helper evaluator for stopping the pipe without emitting anything. Both the
+ * result and the evaluator are shared singletons.
+ */
+export const lazyEmptyEvaluator = (): LazySkip => STOP;
+
+/**
+ * Emits `value` and stops the pipe.
+ */
+export const doneWith = <T>(value: T): LazyLast<T> => ({
+  // The order of props is kept in sync with `SKIP_ITEM` and `STOP` so that v8
+  // can build a single hidden class for both; keeping the reads inside `pipe`
+  // monomorphic.
+  $$remedaLazyRef: LAZY_REF,
+  control: "last",
+  isDone: true,
+  value,
+});
+
+/**
+ * Feeds every element of `value` through the rest of the pipe, one by one.
+ */
+export const manyItems = <T>(value: readonly T[]): LazyMany<T> => ({
+  // The order of props is kept in sync with `SKIP_ITEM`, `STOP`, and
+  // `doneWith`, so that v8 can build a single hidden class for both; keeping
+  // the reads inside `pipe` monomorphic.
+  $$remedaLazyRef: LAZY_REF,
+  control: "many",
+  isDone: false,
+  value,
+});

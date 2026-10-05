@@ -1,6 +1,6 @@
+import { doneWith, lazyEmptyEvaluator } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { doneWith, lazyEmptyEvaluator } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
 /**

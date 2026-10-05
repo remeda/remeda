@@ -1,8 +1,8 @@
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
+import { readsDataWhen } from "./internal/readsData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { Mapped } from "./internal/types/Mapped";
-import { readsDataWhen } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
 /**

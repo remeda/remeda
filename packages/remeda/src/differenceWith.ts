@@ -1,6 +1,6 @@
+import { SKIP_ITEM } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryFromLazy } from "./internal/purryFromLazy";
-import { SKIP_ITEM } from "./internal/utilityEvaluators";
 
 type IsEqual<T, Other> = (data: T, other: Other) => boolean;
 

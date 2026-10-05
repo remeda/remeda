@@ -1,9 +1,9 @@
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryFromLazy } from "./internal/purryFromLazy";
+import { readsDataWhen } from "./internal/readsData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { Mapped } from "./internal/types/Mapped";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
-import { readsDataWhen } from "./internal/utilityEvaluators";
 
 type LazyFeedbackCallback<T extends IterableContainer, U> = (
   previousValue: U,
