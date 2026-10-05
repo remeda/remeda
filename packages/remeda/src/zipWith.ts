@@ -1,4 +1,4 @@
-import { doneWith, lazyEmptyEvaluator } from "./internal/lazyControl";
+import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { readsDataWhen } from "./internal/readsData";
@@ -134,7 +134,7 @@ const lazyImplementation = <T1, T2 extends IterableContainer, Value>(
         fn,
         (value, index, data) => {
           const zipped = fn(value, second[index], index, [data, second]);
-          return index >= second.length - 1 ? doneWith(zipped) : zipped;
+          return index >= second.length - 1 ? lastLazyValue(zipped) : zipped;
         },
         { dataParameterIndex: 3 },
       );

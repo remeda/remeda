@@ -1,7 +1,7 @@
 import type { IsNumericLiteral } from "type-fest";
 import {
   lazyIdentityEvaluator,
-  manyItems,
+  manyLazyValues,
   type LazyResult,
 } from "./internal/lazyControl";
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
@@ -132,10 +132,10 @@ const lazyImplementation = (depth?: number): LazyEvaluator =>
     : depth <= 0
       ? lazyIdentityEvaluator
       : (value) =>
-          Array.isArray(value) ? manyItems(value.flat(depth - 1)) : value;
+          Array.isArray(value) ? manyLazyValues(value.flat(depth - 1)) : value;
 
 // Pulled out to module scope because, unlike the deeper-than-one branch, it
 // doesn't close over `depth`, so one function serves every `flat()` /
 // `flat(1)` call instead of allocating a closure per call.
 const lazyShallow = <T>(value: T): LazyResult<T> =>
-  Array.isArray(value) ? manyItems(value) : value;
+  Array.isArray(value) ? manyLazyValues(value) : value;

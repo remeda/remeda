@@ -1,5 +1,5 @@
 import {
-  doneWith,
+  lastLazyValue,
   lazyEmptyEvaluator,
   SKIP_ITEM,
 } from "./internal/lazyControl";
@@ -87,6 +87,6 @@ function lazyImplementation<T, S>(
     const matched = value as S & T;
 
     // We can stop the iteration if the remaining map is empty.
-    return remaining.size === 0 ? doneWith(matched) : matched;
+    return remaining.size === 0 ? lastLazyValue(matched) : matched;
   };
 }

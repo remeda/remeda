@@ -1,4 +1,4 @@
-import { doneWith, lazyEmptyEvaluator } from "./internal/lazyControl";
+import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
@@ -86,5 +86,5 @@ const lazyImplementation = <
     ? lazyEmptyEvaluator
     : (value, index) => {
         const pair: [F[number], S[number]] = [value, second[index]];
-        return index >= second.length - 1 ? doneWith(pair) : pair;
+        return index >= second.length - 1 ? lastLazyValue(pair) : pair;
       };

@@ -18,7 +18,7 @@ export const LAZY_REF = {} as Tagged<EmptyObject, "RemedaLazyRef">;
  */
 export type LazyResult<T = unknown> = T | LazyControl<T>;
 
-export type LazyControl<T = unknown> = LazySkip | LazyLast<T> | LazyMany<T>;
+type LazyControl<T = unknown> = LazySkip | LazyLast<T> | LazyMany<T>;
 
 type LazyControlBase = {
   // What tells a control object apart from a user item carrying the same
@@ -28,7 +28,7 @@ type LazyControlBase = {
   readonly $$remedaLazyRef: typeof LAZY_REF;
 };
 
-export type LazySkip = LazyControlBase & {
+type LazySkip = LazyControlBase & {
   readonly control: "skip";
   readonly isDone: boolean;
   readonly value?: never;
@@ -40,7 +40,7 @@ export type LazyLast<T> = LazyControlBase & {
   readonly value: T;
 };
 
-export type LazyMany<T> = LazyControlBase & {
+type LazyMany<T> = LazyControlBase & {
   readonly control: "many";
   readonly isDone: boolean;
   readonly value: readonly T[];
@@ -86,7 +86,7 @@ export const lazyEmptyEvaluator = (): LazySkip => STOP;
 /**
  * Emits `value` and stops the pipe.
  */
-export const doneWith = <T>(value: T): LazyLast<T> => ({
+export const lastLazyValue = <T>(value: T): LazyLast<T> => ({
   // The order of props is kept in sync with `SKIP_ITEM` and `STOP` so that v8
   // can build a single hidden class for both; keeping the reads inside `pipe`
   // monomorphic.
@@ -99,10 +99,10 @@ export const doneWith = <T>(value: T): LazyLast<T> => ({
 /**
  * Feeds every element of `value` through the rest of the pipe, one by one.
  */
-export const manyItems = <T>(value: readonly T[]): LazyMany<T> => ({
+export const manyLazyValues = <T>(value: readonly T[]): LazyMany<T> => ({
   // The order of props is kept in sync with `SKIP_ITEM`, `STOP`, and
-  // `doneWith`, so that v8 can build a single hidden class for both; keeping
-  // the reads inside `pipe` monomorphic.
+  // `lastLazyValue`, so that v8 can build a single hidden class for both;
+  // keeping the reads inside `pipe` monomorphic.
   $$remedaLazyRef: LAZY_REF,
   control: "many",
   isDone: false,

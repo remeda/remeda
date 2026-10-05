@@ -1,4 +1,4 @@
-import { doneWith } from "./internal/lazyControl";
+import { lastLazyValue } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { toSingle } from "./internal/toSingle";
 import type { First } from "./internal/types/First";
@@ -46,4 +46,4 @@ export function first(...args: readonly unknown[]): unknown {
 
 const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;
 
-const lazyImplementation = (): LazyEvaluator => doneWith;
+const lazyImplementation = (): LazyEvaluator => lastLazyValue;

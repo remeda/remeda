@@ -1,4 +1,4 @@
-import { doneWith, lazyEmptyEvaluator } from "./internal/lazyControl";
+import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
@@ -64,6 +64,6 @@ function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   let remaining = n;
   return (value) => {
     remaining -= 1;
-    return remaining <= 0 ? doneWith(value) : value;
+    return remaining <= 0 ? lastLazyValue(value) : value;
   };
 }
