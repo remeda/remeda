@@ -23,7 +23,7 @@ type LazyStep = {
     }
   | {
       readonly requiresData: false;
-      readonly items: readonly never[];
+      readonly items: typeof UNEXPECTED_ACCESS_SENTINEL;
     }
 );
 
@@ -321,9 +321,7 @@ export function pipe(
       return func(input);
     }
 
-    const { lazy, lazyArgs } = func;
-    const accumulator = processSingleLazyStep(input, lazy(...lazyArgs));
-    return lazy.single === true ? accumulator[0] : accumulator;
+    return processSingleLazyStep(input, func.lazy, func.lazyArgs);
   }
 
   let output = input;
@@ -419,13 +417,6 @@ function processItem(
   lazySequence: readonly LazyStep[],
   startIndex: number,
 ): boolean {
-  if (startIndex >= lazySequence.length) {
-    // A "many" fan-out from the last step has no further steps to run the
-    // sub-items through, so they go straight to the accumulator.
-    accumulator.push(item);
-    return false;
-  }
-
   let currentItem = item;
   let isDone = false;
   for (

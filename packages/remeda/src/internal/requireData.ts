@@ -1,3 +1,4 @@
+import type { Tagged } from "type-fest";
 import type {
   LazyEvaluator,
   LazyEvaluatorMetadata,
@@ -21,8 +22,11 @@ const DEFAULT_DATA_PARAMETER_INDEX = 2;
  *
  * @see requireDataByArity
  */
-// @ts-expect-error [ts2322] -- No correct code ever observes this value, which is what `never` describes; it also lets the sentinel stand in for any `data` type without a cast at each use site.
-export const UNEXPECTED_ACCESS_SENTINEL: never = new Proxy(
+// @ts-expect-error [ts2322] -- The proxy isn't an array, but any attempt to use it as one throws, so no code that relies on its type can run past the first touch.
+export const UNEXPECTED_ACCESS_SENTINEL: Tagged<
+  readonly never[],
+  "RemedaUnexpectedAccessSentinel"
+> = new Proxy(
   {
     // `console.log` and devtools print a proxy's target without running its
     // traps, so the message lives on the target too and a logged `data` still
@@ -67,7 +71,10 @@ type RequireDataByArityOptions = {
  * created closure, never a shared singleton.
  */
 export const requireData = <T, R>(
-  evaluator: LazyEvaluator<T, R>,
+  // In both helpers, `T` and `R` come only from the caller's declared
+  // `LazyEvaluator<T, R>` return type, so a wrong evaluator is reported at its
+  // own return expression instead of widening `R` and failing at the call.
+  evaluator: NoInfer<LazyEvaluator<T, R>>,
 ): LazyEvaluator<T, R> =>
   Object.assign(evaluator, {
     requiresData: true,
