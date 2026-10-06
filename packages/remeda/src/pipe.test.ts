@@ -220,6 +220,16 @@ describe("lazy", () => {
       expect(result).toStrictEqual([0, 1, 2]);
     });
 
+    test("advances for the step that fans out", () => {
+      expect(
+        pipe(
+          ["a", "b"],
+          map((x) => x),
+          flatMap((value, index) => [value, index]),
+        ),
+      ).toStrictEqual(["a", 0, "b", 1]);
+    });
+
     test("independent per step", () => {
       const upstreamIndices: number[] = [];
       const result = pipe(
@@ -340,6 +350,8 @@ describe("lazy", () => {
 
     test("items with string keys named like the control props pass through as data", () => {
       const lookalike = {
+        // Same description as the real marker, but not the registered symbol.
+        $$remedaLazyRef: Symbol("$$remedaLazyRef"),
         control: "last",
         isDone: true,
         value: 1,
@@ -413,6 +425,15 @@ describe("lazy", () => {
           filter((_value, index) => index % 2 === 0),
         ),
       ).toStrictEqual([1, 3, 5]);
+    });
+
+    test("index advances past fan-outs", () => {
+      expect(
+        pipe(
+          ["a", "b"],
+          flatMap((value, index) => [value, index]),
+        ),
+      ).toStrictEqual(["a", 0, "b", 1]);
     });
 
     test("done without a value emits nothing", () => {
