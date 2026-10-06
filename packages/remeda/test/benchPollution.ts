@@ -348,10 +348,6 @@ function polluteIterableKinds(pipeImplementation: typeof pipe): void {
   );
 }
 
-/**
- * The data-first form of a `purryFromLazy` utility runs its lazy evaluator too,
- * so it reaches the same machinery from a different entry point.
- */
 function polluteObjectShapes(pipeImplementation: typeof pipe): void {
   for (const shape of SHAPES) {
     sink.value = pipeImplementation(
@@ -372,6 +368,10 @@ function polluteObjectShapes(pipeImplementation: typeof pipe): void {
   );
 }
 
+/**
+ * The data-first form of a `purryFromLazy` utility runs its lazy evaluator too,
+ * so it reaches the same machinery from a different entry point.
+ */
 function polluteDataFirst(): void {
   sink.value = unique(INTEGERS);
   sink.value = unique(STRINGS);

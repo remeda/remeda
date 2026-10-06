@@ -26,9 +26,9 @@ const DEFAULT_DATA_PARAMETER_INDEX = 2;
 // @ts-expect-error [ts2322] -- No correct code ever observes this value, which is what `never` describes; it also lets the sentinel stand in for any `data` type without a cast at each use site.
 export const UNEXPECTED_ACCESS_SENTINEL: never = new Proxy(
   {
-    // We set our error message as a prop too so that even if the data
-    // parameter is only logged via `console` or serialized via `JSON` the user
-    // still gets a visible error message.
+    // `console.log` and devtools print a proxy's target without running its
+    // traps, so the message lives on the target too and a logged `data` still
+    // explains itself.
     error: UNEXPECTED_ACCESS_MESSAGE,
   },
   {

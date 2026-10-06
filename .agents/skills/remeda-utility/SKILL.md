@@ -24,17 +24,18 @@ Each function has up to three test files, one per kind:
 - **Runtime tests** (`functionName.test.ts`) — Vitest. Cover happy path, edge cases, empty inputs, and both calling styles (data-first and data-last inside `pipe`, `map` or `filter`). When editing, read `reference/testing-runtime.md`.
 - **Type tests** (`functionName.test-d.ts`) — `expectTypeOf` from Vitest. Verify inferred return types, narrowing, and that invalid inputs are compile errors. When editing, read `reference/testing-types.md`.
 - **Property-based tests** (`functionName.test-prop.ts`) — `@fast-check/vitest`. Optional but encouraged for functions with well-defined algebraic properties (idempotence, involutions, round-trips). When adding, read `reference/testing-properties.md`.
-- **Benchmarks** (`functionName.bench.ts`) — vitest bench. Only where a performance claim needs backing. When adding, running, or reading one, read `reference/benchmarking.md`: how to structure the file, how to compare implementations, and which statistic to trust.
 
 Conventions that apply across all three kinds:
 
 - Runtime and type assertions are **strictly separated** — `expect()` lives in `.test.ts`, `expectTypeOf()` lives in `.test-d.ts`. Never mix them in the same test block, and never put one kind in the other file.
-- Test names describe **what** is being tested in the function's own vocabulary — "lazy early exit with hasMany", not "take and flat".
+- Test names describe **what** is being tested in the function's own vocabulary — "lazy early exit with a many control", not "take and flat".
 - Test names should be terse and concise, and should rely on context from parent `describe()` blocks and not repeat them.
 - Test names do not need to read as prose!
 - Tests for a specific bug must reference the issue number, either in the test name or a comment so that the reporting issue can always be traced back.
 - Input data needs enough variation to produce distinct outputs — `[1, 1, 1]` hides bugs that `[1, 2, 3]` catches.
 - Known issues and limitations (an accepted wrong result, an upstream TypeScript bug, a case the types can't express) are pinned in a `describe("known issues!", ...)` block at the end of the file, in every test kind where the issue is observable. Each test asserts the **current** behavior so it turns red when the limitation lifts: assert the actual value, or put the desired assertion under `// @ts-expect-error [tsNNNN] -- <why, linking the upstream issue when one exists>` followed by an `// Actual` assertion. The test name states the limitation; why it exists goes in a comment inside the test body.
+
+**Benchmarks** (`functionName.bench.ts`) — vitest bench. Only where a performance claim needs backing. When adding, running, or reading one, read `reference/benchmarking.md`: how to structure the file, how to compare implementations, and which statistic to trust.
 
 # 3. JSDoc
 

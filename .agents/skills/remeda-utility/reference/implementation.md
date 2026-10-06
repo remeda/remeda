@@ -22,7 +22,7 @@ The lazy evaluator has the shape `(item, index, data) => LazyResult<T>`. The com
 - **Stop without emitting anything** - use `lazyEmptyEvaluator` as the evaluator itself; it's a complete evaluator, not something called from inside another one.
 - **Expand into multiple values** - return `manyLazyValues(values)`; each element is fed through the rest of the pipe individually.
 
-For functions that return a single scalar (e.g., `first()`), wrap the evaluator with `toSingle(lazyImpl)` so `pipe` knows to stop after one result.
+For functions that return a single scalar (e.g., `first()`), wrap the lazy implementation with `toSingle(lazyImplementation)` so `pipe` unwraps the result to its first element. `toSingle` doesn't stop the pipe; the evaluator still has to return `lastLazyValue(value)` for that.
 
 ### Opting into the `data` buffer
 
@@ -33,7 +33,7 @@ Buffering `data` costs an array push per item, so `pipe` only does it for steps 
 
 `requireDataByArity` buffers when `callback.length === 0` - this covers a callback whose first parameter is a rest parameter (a rest parameter after named parameters instead reports the named count), plus mocks and wrappers that forward `arguments`, neither of which can be inspected further, so we buffer defensively - or when `callback.length > dataParameterIndex` (the callback declares enough named parameters to reach it). Three holes are known and left unguarded: a default parameter before `data` truncates `Function.length` (`(x, i = 0, data = []) => ...` reports 1, not 3), a callback that reaches `data` through `arguments[i]` instead of a named parameter, and a trailing rest parameter such as `(value, index, ...rest)` (reports 2, not 3) - all three fall through to the non-buffering path. `bind` with partial application adjusts `length` correctly, so it isn't a hole.
 
-A step that doesn't opt in receives `UNEXPECTED_ACCESS_SENTINEL` (`src/internal/lazyEvaluator.ts`) as `data`: a non-array `Proxy` that throws a descriptive error on any read, so a callback that slips through one of the holes above fails at the line that reads it instead of silently seeing an empty array its type says can't exist. The `requiresData` marker is stamped on our own evaluator closure, never on the user's callback - the callback itself is only ever inspected via `.length`.
+A step that doesn't opt in receives `UNEXPECTED_ACCESS_SENTINEL` (`src/internal/requireData.ts`) as `data`: a non-array `Proxy` that throws a descriptive error on any read, so a callback that slips through one of the holes above fails at the line that reads it instead of silently seeing an empty array its type says can't exist. The `requiresData` marker is stamped on our own evaluator closure, never on the user's callback - the callback itself is only ever inspected via `.length`.
 
 ### Typing the callback's `data` parameter
 

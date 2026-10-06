@@ -24,11 +24,11 @@ const users: readonly User[] = Array.from(
 const sink: { value: unknown } = { value: undefined };
 
 describe("data-first: uniqueWith", () => {
-  bench("remeda pipe", () => {
+  bench("remeda", () => {
     sink.value = uniqueWith(users, (a, b) => a.email === b.email);
   });
 
-  bench("native chain", () => {
+  bench("native", () => {
     const result: User[] = [];
     for (const user of users) {
       const existingIndex = result.findIndex(

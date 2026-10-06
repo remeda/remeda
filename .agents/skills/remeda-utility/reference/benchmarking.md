@@ -1,6 +1,6 @@
 # Benchmarking Conventions
 
-Benchmarks live next to the function as `functionName.bench.ts` and run with `npm run bench` (vitest bench, the `bench` project). Append a name filter to run one file: `npm run bench -- unique`.
+Benchmarks live next to the function as `functionName.bench.ts` and run with `npm run bench` (vitest bench, the `bench` project). Append a name filter to run one file: `npm run bench -- unique.bench`.
 
 ## When to benchmark
 

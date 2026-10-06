@@ -16,11 +16,11 @@ const emails: readonly string[] = Array.from(
 const sink: { value: unknown } = { value: undefined };
 
 describe("data-first: unique", () => {
-  bench("remeda pipe", () => {
+  bench("remeda", () => {
     sink.value = unique(emails);
   });
 
-  bench("native chain", () => {
+  bench("native", () => {
     sink.value = [...new Set(emails)];
   });
 });

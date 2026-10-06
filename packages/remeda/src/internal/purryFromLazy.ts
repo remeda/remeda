@@ -14,21 +14,24 @@ import type { LazyDefinition } from "./types/LazyDefinition";
  *
  * @param lazy - The main lazy implementation, it assumes that data is an
  * iterable (array-like).
- * @param lazyArgs - The arguments passed to the overloaded invocation.
+ * @param args - The arguments passed to the overloaded invocation.
  * @see purry
  * @see pipe
  */
 export function purryFromLazy(
   lazy: LazyDefinition["lazy"],
-  lazyArgs: readonly unknown[],
+  args: readonly unknown[],
 ): unknown {
-  if (lazyArgs.length === lazy.length) {
-    const dataLast = (data: unknown): unknown => runLazy(data, lazy, lazyArgs);
-    return Object.assign(dataLast, { lazy, lazyArgs } satisfies LazyDefinition);
+  if (args.length === lazy.length) {
+    const dataLast = (data: unknown): unknown => runLazy(data, lazy, args);
+    return Object.assign(dataLast, {
+      lazy,
+      lazyArgs: args,
+    } satisfies LazyDefinition);
   }
 
   // dataFirst
-  const [data, ...rest] = lazyArgs;
+  const [data, ...rest] = args;
   return runLazy(data, lazy, rest);
 }
 
