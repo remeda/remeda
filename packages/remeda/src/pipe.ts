@@ -45,10 +45,6 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * directly in the pipe. To disable lazy evaluation, use data-first calls via
  * arrow functions: `($) => map($, callback)` instead of `map(callback)`.
  *
- * Any function can be used in pipes, not just Remeda utilities. The `purry`
- * utility adds currying support for custom functions; lazy evaluation is a
- * separate, internal protocol between Remeda's own utilities and `pipe`.
- *
  * A "headless" variant `piped` is available for creating reusable pipe
  * functions without initial data.
  *
