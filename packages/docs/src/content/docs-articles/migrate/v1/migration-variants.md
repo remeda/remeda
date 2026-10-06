@@ -156,6 +156,6 @@ evaluation of functions. This abstraction has been completely removed.
 If you exported a `lazy` property from your **internal** functions to make them
 lazy within Remeda's `pipe`, remove it; lazy implementations for your own
 functions are no longer supported. Functions built with `purry` run eagerly
-inside `pipe`, with the same results.
+inside `pipe`.
 
 If you need lazy evaluation for your own functions, please [open an issue on GitHub](https://github.com/remeda/remeda/issues).

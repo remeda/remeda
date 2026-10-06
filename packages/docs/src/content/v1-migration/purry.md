@@ -3,7 +3,7 @@
 Lazy implementations are no longer supported: the function doesn't look for a
 `lazy` prop on the dataFirst function implementation, and doesn't take a lazy
 implementation as a third argument. Functions built with `purry` run eagerly
-inside `pipe`, with the same results.
+inside `pipe`.
 
 ##### Examples
 
