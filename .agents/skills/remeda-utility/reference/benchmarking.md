@@ -12,7 +12,7 @@ A benchmark backs a performance claim: a rewrite of an existing implementation, 
 - Include a native baseline (`[...new Set(data)]` next to `unique(data)`) whenever one exists. It anchors the numbers to something that stays fixed while the implementation changes.
 - The bench body performs the measured call and assigns the result to a module-level `sink` object (see `unique.bench.ts`). The escaping write keeps V8 from eliminating the work.
 - Build fixtures once at module level, sized so there is real work to measure (`unique.bench.ts` uses 1000 items with 30% duplicates). Scenarios that scale differently (short-circuiting, hash-based vs. quadratic) get a `describe` per input size or hit position.
-- Reuse one fixture object shape across the file. Each new hidden class costs the first benchmark that reads it a `wrong map` re-optimization.
+- Prefer one fixture object shape across the file. A shape the pollution pass never used triggers a `wrong map` re-optimization on the first benchmark that reads it; it lands in the warmup and hasn't been measurable, so this is hygiene rather than a requirement.
 - Data-first calls and `pipe` usage are separate scenarios; the `pipe` form adds the step machinery on top of the utility itself, and users call data-first far more often, so each gets its own `describe`.
 - Allocation-heavy bodies (a fan-out `flatMap`, anything building large intermediate arrays) need `{ time: 2000 }` for their samples to settle.
 

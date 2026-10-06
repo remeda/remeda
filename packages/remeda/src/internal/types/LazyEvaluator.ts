@@ -1,17 +1,15 @@
 import type { LazyResult } from "../lazyControl";
 
 /**
- * Providing an evaluator additional levers to control how `pipe` handles the
- * step.
+ * Extra levers an evaluator gives `pipe` over how it runs the step.
  */
 export type LazyEvaluatorMetadata = {
   /**
-   * Some evaluators expect a `data` parameter which they provide to their
-   * callback functions (e.g., `map`'s 3rd parameter); but managing this buffer
-   * lazily requires extra work and memory, so it is only computed when
-   * required, and otherwise replaced by `UNEXPECTED_ACCESS_SENTINEL`.
-   *
-   * @default false
+   * Some evaluators provide `data` to their callbacks (e.g., `map`'s 3rd
+   * parameter). Collecting it lazily costs a buffer that grows with every
+   * item, so `pipe` only collects it for evaluators marked with this flag and
+   * hands every other evaluator `UNEXPECTED_ACCESS_SENTINEL` instead. Set it
+   * via `requireData` or `requireDataByArity`, never directly.
    */
   readonly requiresData?: true;
 };

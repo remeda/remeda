@@ -53,15 +53,17 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * A "headless" variant `piped` is available for creating reusable pipe
  * functions without initial data.
  *
- * IMPORTANT: During lazy evaluation, callbacks using the input array (the
- * third parameter for most functions, the fourth for `mapWithFeedback` and
- * `zipWith`) receive only items processed up to that point, not the complete
- * array. `pipe` only tracks those items for callbacks that declare the
- * parameter in which that function passes `data`, or whose `length` is 0
- * because their first parameter is a rest parameter. A callback that reaches
- * `data` through `arguments`, a default parameter, or a trailing rest
- * parameter (`(value, index, ...rest)`) receives a placeholder instead, which
- * throws as soon as it is read.
+ * IMPORTANT: During lazy evaluation, a callback's `data` parameter (the input
+ * array: the third parameter for most functions, the fourth for
+ * `mapWithFeedback` and `zipWith`) holds only the items processed up to that
+ * point, not the complete array. `pipe` collects those items only for
+ * callbacks that declare `data` as a plain parameter, or that declare no plain
+ * parameters at all (e.g., `(...args) => ...`). A callback that reaches `data`
+ * another way (through `arguments`, a default value on `data` or on an earlier
+ * parameter, or a rest parameter after other parameters, such as
+ * `(value, index, ...rest)`), and a test mock whose implementation declares
+ * fewer parameters, receives a placeholder instead, which throws as soon as it
+ * is used.
  *
  * @param data - The input data.
  * @param functions - A sequence of functions that take one argument and
@@ -305,19 +307,15 @@ export function pipe(
   ...functions: readonly (LazyFunction | ((value: unknown) => unknown))[]
 ): unknown {
   if (functions.length === 0) {
-    // We shouldn't waste effort on trivial pipes.
     return input;
   }
 
   if (functions.length === 1) {
     // A pipe of one lazy function is a lazy sequence of one step, which has no
     // cross-step bookkeeping to set up: the step array, the step object, and
-    // the hand-off through them are all overhead. The check belongs here and
-    // not inside the loop below, where the one-step case could also be spotted:
-    // a loop body holding two processing calls measured ~7% slower on
-    // multi-step pipes than one holding a single call, however the choice
-    // between them was expressed, while deciding it before the loop leaves the
-    // loop exactly as it was.
+    // the hand-off through them are all overhead. It is decided here rather
+    // than inside the loop below because a second processing call in the loop
+    // body measured ~7% slower on multi-step pipes.
     const func = functions[0]!;
     if (!("lazy" in func) || !isIterable(input)) {
       return func(input);
@@ -475,10 +473,8 @@ function processItem(
       }
 
       case "last":
-      // do nothing
+        currentItem = result.value;
     }
-
-    currentItem = result.value;
   }
 
   accumulator.push(currentItem);

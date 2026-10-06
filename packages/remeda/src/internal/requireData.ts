@@ -5,7 +5,7 @@ import type {
 import type { StrictFunction } from "./types/StrictFunction";
 
 const UNEXPECTED_ACCESS_MESSAGE =
-  "Remeda: a callback tried to access its `data` argument, but which was not provided to it. Remeda only provides `data` to callbacks that declare it as a regular parameter, and detects that via `Function.length`, which can't see parameters with default values, rest parameters, or `arguments` access. Declare `data` as a regular parameter, e.g. `(value, index, data) => ...`. If it already is, please report this at https://github.com/remeda/remeda/issues";
+  "Remeda: a callback's `data` argument was read, but Remeda didn't provide it. Remeda only provides `data` to callbacks that declare it as a plain parameter, detected via `Function.length`, which misses a default value on `data` or an earlier parameter, a rest parameter after other parameters, `arguments` access, and mocks whose implementation declares fewer parameters. Declare `data` in the callback (or the mock's implementation), e.g. `(value, index, data) => ...`. If it already is, please report this at https://github.com/remeda/remeda/issues";
 
 // Most callbacks have the input `data` as their 3rd parameter, as in all the
 // standard library functions.
@@ -15,11 +15,9 @@ const DEFAULT_DATA_PARAMETER_INDEX = 2;
  * Provided to a callback's `data` parameter whenever we believe it would not
  * be used. A callback only receives it by slipping through the arity gate.
  *
- * The goal of the object is to throw as early as possible for any kind of
- * usage of the parameter, so we can signal as early as possible to the user
- * that the `data` object they are relying on hasn't been computed for them, and
- * that this is most likely a bug in **our** detection code. This allows them to
- * work around it and report it so we can build more robust detections.
+ * Every operation on it throws, so the first touch signals that `data` wasn't
+ * collected for this callback: usually one of the holes documented on
+ * `requireDataByArity`, otherwise a detection bug worth reporting.
  *
  * @see requireDataByArity
  */
@@ -83,9 +81,10 @@ export const requireData = <T, R>(
  * defaulted one. It is 0 for wrappers that forward `arguments` (memoize,
  * debounce), which we can't see through, so those buffer too.
  *
- * Three holes are documented rather than guarded: a default parameter before
- * `data` (`(x, i = 0, data = []) => ...` reports 1), `arguments[i]` access,
- * and a trailing rest parameter (`(value, index, ...rest) => ...` reports 2).
+ * Three holes are documented rather than guarded: a default value on `data` or
+ * any parameter before it (`(value, index, data = []) => ...` reports 2),
+ * `arguments[i]` access, and a trailing rest parameter
+ * (`(value, index, ...rest) => ...` reports 2).
  * A callback that falls through one of them receives
  * `UNEXPECTED_ACCESS_SENTINEL`, which throws when read.
  */

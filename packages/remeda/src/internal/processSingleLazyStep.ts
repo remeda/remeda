@@ -1,6 +1,5 @@
 /* eslint-disable unicorn/no-break-in-nested-loop --
- * This allows us a cleaner structure for handling the lazy control construct's
- * `control` values.
+ * Every `break` here ends a `switch` case; the loop is only left via `return`.
  */
 
 import { isLazyControl } from "./lazyControl";
@@ -8,9 +7,8 @@ import { UNEXPECTED_ACCESS_SENTINEL } from "./requireData";
 import type { LazyEvaluator } from "./types/LazyEvaluator";
 
 /**
- * A stripped down version of the general `pipe` for cases where there is only
- * one consecutive lazy step; where all items reach the output immediately, and
- * thus don't need extra boilerplate to hold them in temporary buffers.
+ * Runs an iterable through a single lazy step, skipping the step objects and
+ * the fan-out recursion that the general path in `pipe` needs.
  *
  * @param iterable - The data to run through the step.
  * @param lazyEvaluator - The step, already built from its lazy arguments.
@@ -20,9 +18,9 @@ export function processSingleLazyStep(
   iterable: Iterable<unknown>,
   lazyEvaluator: LazyEvaluator,
 ): unknown[] {
-  // Only a step that reads `data` gets a buffer of its own; everyone else gets
-  // `UNEXPECTED_ACCESS_SENTINEL`, which also makes the buffer the flag for
-  // whether there is anything to fill.
+  // `dataBuffer` exists only when the evaluator requires `data`, so it doubles
+  // as the flag for filling it; every other evaluator sees
+  // `UNEXPECTED_ACCESS_SENTINEL`.
   const dataBuffer: unknown[] | undefined = lazyEvaluator.requiresData
     ? []
     : undefined;
