@@ -141,9 +141,12 @@ export function when<
 
 export function when(...args: readonly unknown[]): unknown {
   return args.length === 2
-    ? (data: unknown, ...extraArgs: readonly unknown[]) =>
+    ? (...dataAndExtraArgs: readonly unknown[]) => {
+        // We intentionally pulled out the destructuring instead of inlining it within the function signature so that this function's `length` is 0 and `requireDataByArity` is short-circuited to *always* provide the data argument which would otherwise *never* provide it.
+        const [data, ...extraArgs] = dataAndExtraArgs;
         // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
-        whenImplementation(data, ...args, ...extraArgs)
+        return whenImplementation(data, ...args, ...extraArgs);
+      }
     : // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
       whenImplementation(...args);
 }

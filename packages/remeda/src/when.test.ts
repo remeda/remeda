@@ -127,6 +127,22 @@ describe("dataLast", () => {
       ),
     ).toStrictEqual(["10", 3, "32", 7]);
   });
+
+  test("provides `data` to the functions in a lazy pipe step", () => {
+    expect(
+      pipe(
+        [3, 1, 4, 1, 5],
+        map(
+          when(
+            // In a lazy step `data` is the items processed so far, so this
+            // matches each new running maximum.
+            (x, _index, data) => x === Math.max(...data),
+            (x) => x * 100,
+          ),
+        ),
+      ),
+    ).toStrictEqual([300, 1, 400, 1, 500]);
+  });
 });
 
 test("can return other types", () => {
