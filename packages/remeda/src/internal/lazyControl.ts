@@ -1,14 +1,12 @@
-import type { EmptyObject, Tagged } from "type-fest";
-
 // Control objects are told apart from user items by the identity of this
-// module-private object, which no ordinary value carries. A plain string key
+// module-private symbol, which no ordinary value carries. A plain string key
 // is used on purpose: every computed (symbol) key in an object literal costs
 // V8 a keyed store on top of the literal's boilerplate (four symbol keys
 // measured 10% slower on flatMap pipelines), prototype-identity checks cost
 // more than the lookup they replace (1.5x to 2.9x), and null-prototype objects
 // fall into dictionary mode (5x). Reference equality on a string key measured
 // fastest on every pipeline shape.
-const LAZY_REF = {} as Tagged<EmptyObject, "RemedaLazyRef">;
+const LAZY_REF = Symbol("$$remedaLazyRef");
 
 /**
  * A lazy evaluator returns the (possibly transformed) item itself in the
