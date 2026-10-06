@@ -283,6 +283,20 @@ describe("lazy", () => {
         ["t", 1, 2, 3],
       ]);
     });
+
+    test("a fused evaluator that doesn't require `data` gets the sentinel", () => {
+      const evaluator = vi.fn<LazyEvaluator>((value) => value);
+      pipe(
+        [1, 2, 3],
+        map((x) => x),
+        // @ts-expect-error [ts2345] -- `purryFromLazy` returns `unknown`; the step only exists to expose what `pipe` hands its evaluator.
+        purryFromLazy(() => evaluator, []),
+      );
+
+      // Asserting identity with `toBe` would make the matcher format the
+      // sentinel on failure, which throws and hides the real mismatch.
+      expect(() => evaluator.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
+    });
   });
 
   describe("fan-out", () => {
@@ -462,6 +476,19 @@ describe("lazy", () => {
       pipe([1, 2, 3], forEach(mock));
 
       expect(mock).toHaveNthReturnedWith(2, [1, 2]);
+    });
+
+    test("an evaluator that doesn't require `data` gets the sentinel", () => {
+      const evaluator = vi.fn<LazyEvaluator>((value) => value);
+      pipe(
+        [1, 2, 3],
+        // @ts-expect-error [ts2345] -- `purryFromLazy` returns `unknown`; the step only exists to expose what `pipe` hands its evaluator.
+        purryFromLazy(() => evaluator, []),
+      );
+
+      const data = evaluator.mock.calls[0]?.[2];
+
+      expect(() => data?.at(0)).toThrow(/^Remeda: /u);
     });
 
     test("a non-lazy function alongside it opts the pipe out", () => {

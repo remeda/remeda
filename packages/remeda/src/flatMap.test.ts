@@ -69,3 +69,18 @@ describe("dataLast", () => {
     });
   });
 });
+
+describe("known issues!", () => {
+  test("a trailing rest parameter hides `data` from the arity check", () => {
+    expect(() =>
+      pipe(
+        [1, 2, 3],
+        flatMap((_value, _index, ...rest) => [
+          // this callback reports a `length` of 2 and `rest[0]` is
+          // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so far.
+          rest[0].length,
+        ]),
+      ),
+    ).toThrow(/^Remeda: /u);
+  });
+});
