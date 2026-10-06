@@ -431,9 +431,8 @@ function processItem(
           // Skipped, or stopped without a value; nothing reaches the next step.
           return isDone;
 
-        case "many": {
-          const subItems = result.value;
-          for (const subItem of subItems) {
+        case "many":
+          for (const subItem of result.value) {
             const shouldExitEarly = processItem(
               subItem,
               accumulator,
@@ -445,7 +444,6 @@ function processItem(
             }
           }
           return isDone;
-        }
 
         case "last":
           currentItem = result.value;

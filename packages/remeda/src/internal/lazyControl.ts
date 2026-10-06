@@ -30,7 +30,6 @@ type LazyControlBase = {
 type LazySkip = LazyControlBase & {
   readonly control: "skip";
   readonly isDone: boolean;
-  readonly value?: never;
 };
 
 type LazyLast<T> = LazyControlBase & {
