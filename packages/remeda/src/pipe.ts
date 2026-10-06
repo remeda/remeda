@@ -11,8 +11,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
   readonly isSingle: boolean;
-  // Can't be derived from `items.length`: steps that don't read `data` have no
-  // buffer, only `UNEXPECTED_ACCESS_SENTINEL`, so each step counts on its own.
+  // Notice the index is mutable, it will be incremented as the pipe is evaluating items. It is shared with every invocation of the evaluator.
   index: number;
 } & (
   | {
