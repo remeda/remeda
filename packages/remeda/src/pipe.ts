@@ -48,17 +48,9 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * A "headless" variant `piped` is available for creating reusable pipe
  * functions without initial data.
  *
- * IMPORTANT: During lazy evaluation, a callback's `data` parameter (the input
- * array: the third parameter for most functions, the fourth for
- * `mapWithFeedback` and `zipWith`) holds only the items processed up to that
- * point, not the complete array. `pipe` collects those items only for
- * callbacks that declare `data` as a plain parameter, or that declare no plain
- * parameters at all (e.g., `(...args) => ...`). A callback that reaches `data`
- * another way (through `arguments`, a default value on `data` or on an earlier
- * parameter, or a rest parameter after other parameters, such as
- * `(value, index, ...rest)`), and a test mock whose implementation declares
- * fewer parameters, receives a placeholder instead, which throws as soon as it
- * is used.
+ * IMPORTANT: During lazy evaluation, callbacks using the third parameter (the
+ * input array) receive only items processed up to that point, not the complete
+ * array.
  *
  * @param data - The input data.
  * @param functions - A sequence of functions that take one argument and
