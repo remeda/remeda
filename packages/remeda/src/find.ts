@@ -155,7 +155,7 @@ export function find<
 ): (data: T) => FoundNonRefined<T, IsItemIncluded>;
 
 export function find(...args: readonly unknown[]): unknown {
-  return purryWithLazy(findImplementation, args, toSingle(lazyImplementation));
+  return purryWithLazy(findImplementation, args, lazyImplementation);
 }
 
 const findImplementation = <T, S extends T>(
@@ -163,9 +163,11 @@ const findImplementation = <T, S extends T>(
   predicate: (value: T, index: number, data: readonly T[]) => value is S,
 ): S | undefined => data.find(predicate);
 
-const lazyImplementation = <T, S extends T>(
-  predicate: (value: T, index: number, data: readonly T[]) => value is S,
-): LazyEvaluator<T, S> =>
-  requireDataByArity(predicate, (value, index, data) =>
-    predicate(value, index, data) ? lastLazyValue(value) : SKIP_ITEM,
-  );
+const lazyImplementation = toSingle(
+  <T, S extends T>(
+    predicate: (value: T, index: number, data: readonly T[]) => value is S,
+  ): LazyEvaluator<T, S> =>
+    requireDataByArity(predicate, (value, index, data) =>
+      predicate(value, index, data) ? lastLazyValue(value) : SKIP_ITEM,
+    ),
+);

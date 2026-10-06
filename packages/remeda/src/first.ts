@@ -41,9 +41,9 @@ export function first<T extends IterableContainer>(data: T): First<T>;
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
 export function first(...args: readonly unknown[]): unknown {
-  return purryWithLazy(firstImplementation, args, toSingle(lazyImplementation));
+  return purryWithLazy(firstImplementation, args, lazyImplementation);
 }
 
 const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;
 
-const lazyImplementation = (): LazyEvaluator => lastLazyValue;
+const lazyImplementation = toSingle((): LazyEvaluator => lastLazyValue);
