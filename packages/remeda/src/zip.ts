@@ -1,7 +1,7 @@
 import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { purry } from "./purry";
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
   // If the array is empty the output is empty, no surprises
@@ -62,7 +62,7 @@ export function zip<S extends IterableContainer>(
 ): <F extends IterableContainer>(first: F) => Zipped<F, S>;
 
 export function zip(...args: readonly unknown[]): unknown {
-  return purry(zipImplementation, args, lazyImplementation);
+  return purryWithLazy(zipImplementation, args, lazyImplementation);
 }
 
 const zipImplementation = <

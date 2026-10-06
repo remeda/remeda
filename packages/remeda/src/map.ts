@@ -1,9 +1,9 @@
+import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
-import { purry } from "./purry";
 
 /**
  * Creates a new array populated with the results of calling a provided function
@@ -52,7 +52,7 @@ export function map<T extends IterableContainer, U>(
 ): (data: T) => Mapped<T, U>;
 
 export function map(...args: readonly unknown[]): unknown {
-  return purry(mapImplementation, args, lazyImplementation);
+  return purryWithLazy(mapImplementation, args, lazyImplementation);
 }
 
 const mapImplementation = <T, U>(

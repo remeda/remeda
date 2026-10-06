@@ -1,4 +1,5 @@
 import { lastLazyValue, SKIP_ITEM } from "./internal/lazyControl";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
 import { toSingle } from "./internal/toSingle";
 import type { Assignability } from "./internal/types/Assignability";
@@ -11,7 +12,6 @@ import type {
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
-import { purry } from "./purry";
 
 type Found<T extends IterableContainer, Condition> =
   // We distribute the array type to support unions of arrays/tuples.
@@ -155,7 +155,7 @@ export function find<
 ): (data: T) => FoundNonRefined<T, IsItemIncluded>;
 
 export function find(...args: readonly unknown[]): unknown {
-  return purry(findImplementation, args, toSingle(lazyImplementation));
+  return purryWithLazy(findImplementation, args, toSingle(lazyImplementation));
 }
 
 const findImplementation = <T, S extends T>(

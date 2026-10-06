@@ -1,9 +1,9 @@
 import type { Writable } from "type-fest";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { purry } from "./purry";
 
 /**
  * Executes a provided function once for each array element. Equivalent to
@@ -59,7 +59,7 @@ export function forEach<T extends IterableContainer>(
 ): (data: T) => Writable<T>;
 
 export function forEach(...args: readonly unknown[]): unknown {
-  return purry(forEachImplementation, args, lazyImplementation);
+  return purryWithLazy(forEachImplementation, args, lazyImplementation);
 }
 
 function forEachImplementation<T>(

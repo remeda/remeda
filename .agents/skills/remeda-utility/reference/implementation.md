@@ -6,7 +6,7 @@ Every function with a data-first / data-last API uses `purry` (`src/purry.ts`). 
 
 - Two overload signatures: data-first **and** data-last, each with its own JSDoc block.
 - One implementation signature — no JSDoc, returns `unknown`. `purry` dispatches by argument count at runtime, not by the typed overloads.
-- The body calls `purry(impl, args, lazyImpl?)`. The third arg is the optional lazy evaluator (see below).
+- The body calls `purry(impl, args)`, or `purryWithLazy(impl, args, lazyImpl)` (`src/internal/purryWithLazy.ts`) when the function also has a lazy evaluator (see below). The lazy protocol is private to the package, so the public `purry` has no lazy parameter.
 
 Use `purryFromLazy` (`src/internal/purryFromLazy.ts`) when there is no meaningful eager implementation — i.e., the eager path would just iterate and delegate to the lazy one. This avoids writing the eager loop twice.
 
@@ -41,7 +41,7 @@ Inside `pipe`, only evaluators marked with `requireData` or `requireDataByArity`
 
 Which overloads need it depends on the purrying helper:
 
-- `purry` with a lazy evaluator: the data-first overload runs the eager implementation and receives the complete input, so it keeps the standard `(value: T[number], index: number, data: T) => R` shape. Only the data-last overload is lazy.
+- `purryWithLazy`: the data-first overload runs the eager implementation and receives the complete input, so it keeps the standard `(value: T[number], index: number, data: T) => R` shape. Only the data-last overload is lazy.
 - `purryFromLazy`: both overloads run the lazy evaluator item by item, so both use the lazy types.
 
 How to type a lazy overload:

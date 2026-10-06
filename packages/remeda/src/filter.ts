@@ -1,4 +1,5 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -8,7 +9,6 @@ import type {
 } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
-import { purry } from "./purry";
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just
@@ -78,7 +78,7 @@ export function filter<
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function filter(...args: readonly unknown[]): unknown {
-  return purry(filterImplementation, args, lazyImplementation);
+  return purryWithLazy(filterImplementation, args, lazyImplementation);
 }
 
 const filterImplementation = <T>(

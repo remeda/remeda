@@ -1,8 +1,8 @@
 import { manyLazyValues } from "./internal/lazyControl";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { purry } from "./purry";
 
 /**
  * Returns a new array formed by applying a given callback function to each
@@ -55,7 +55,7 @@ export function flatMap<T, U>(
 ): (data: readonly T[]) => U[];
 
 export function flatMap(...args: readonly unknown[]): unknown {
-  return purry(flatMapImplementation, args, lazyImplementation);
+  return purryWithLazy(flatMapImplementation, args, lazyImplementation);
 }
 
 const flatMapImplementation = <T, U>(
