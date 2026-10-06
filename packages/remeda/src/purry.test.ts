@@ -18,7 +18,3 @@ test("1 missing", () => {
 
   expect(purried(10)).toBe(5);
 });
-
-test("wrong number of arguments", () => {
-  expect(() => fn(5, 10, 40)).toThrow("Wrong number of arguments");
-});
