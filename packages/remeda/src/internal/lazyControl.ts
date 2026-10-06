@@ -1,12 +1,18 @@
 // Control objects are told apart from user items by the identity of this
-// module-private symbol, which no ordinary value carries. A plain string key
-// is used on purpose: every computed (symbol) key in an object literal costs
+// symbol, which no ordinary value carries: JSON can't produce one, and code has
+// to ask the registry for this exact key. It is registered rather than
+// module-private so that separate copies of Remeda in one program (two
+// installed versions, or the ESM and CJS builds side by side) recognize each
+// other's control objects. Change the key if the shape of the control objects
+// ever changes, so that copies on different shapes ignore each other's control
+// objects instead of misreading them. A plain string key is used on purpose:
+// every computed (symbol) key in an object literal costs
 // V8 a keyed store on top of the literal's boilerplate (four symbol keys
 // measured 10% slower on flatMap pipelines), prototype-identity checks cost
 // more than the lookup they replace (1.5x to 2.9x), and null-prototype objects
 // fall into dictionary mode (5x). Reference equality on a string key measured
 // fastest on every pipeline shape.
-const LAZY_REF = Symbol("$$remedaLazyRef");
+const LAZY_REF = Symbol.for("$$remedaLazyRef");
 
 /**
  * A lazy evaluator returns the (possibly transformed) item itself in the

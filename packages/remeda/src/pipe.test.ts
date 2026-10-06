@@ -367,6 +367,21 @@ describe("lazy", () => {
       expect(result).toStrictEqual([trap]);
     });
 
+    test("control objects from another copy of the library are recognized", async () => {
+      // Re-evaluating the modules gives `otherFilter` its own `lazyControl`,
+      // the way a second installed version, or the CJS build next to the ESM
+      // one, would.
+      vi.resetModules();
+      const { filter: otherFilter } = await import("./filter");
+
+      expect(
+        pipe(
+          [1, 2, 3, 4],
+          otherFilter((x) => x % 2 === 0),
+        ),
+      ).toStrictEqual([2, 4]);
+    });
+
     test("index continues across two consecutive fan-outs", () => {
       const result = pipe(
         [[1, 2], [3]],

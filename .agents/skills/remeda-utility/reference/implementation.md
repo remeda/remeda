@@ -14,7 +14,7 @@ Use `purryFromLazy` (`src/internal/purryFromLazy.ts`) when there is no meaningfu
 
 A function should support lazy evaluation when it operates on arrays item-by-item inside a `pipe` and would benefit from either short-circuiting (e.g., `take(3)` stops after three items) or skip-filtering without materializing an intermediate array. Existing examples to study: `map`, `filter`, `take`, `first`, `flatMap`.
 
-The lazy evaluator has the shape `(item, index, data) => LazyResult<T>`. The common case is to return the (possibly transformed) item itself; anything else the evaluator needs to tell `pipe` is a control object built by one of these helpers from `src/internal/lazyControl.ts` (build control objects only through these helpers; they carry a module-private symbol under `$$remedaLazyRef`, and `pipe` recognizes them by its identity):
+The lazy evaluator has the shape `(item, index, data) => LazyResult<T>`. The common case is to return the (possibly transformed) item itself; anything else the evaluator needs to tell `pipe` is a control object built by one of these helpers from `src/internal/lazyControl.ts` (build control objects only through these helpers; they carry a registered symbol (`Symbol.for`) under `$$remedaLazyRef`, and `pipe` recognizes them by its identity):
 
 - **Emit one value, keep going** - return the value itself.
 - **Skip the current item, keep going** - return `SKIP_ITEM`.
