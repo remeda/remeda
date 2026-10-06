@@ -21,6 +21,10 @@ describe("data_first", () => {
     expect(uniqueWith(source, isDeepEqual)).toStrictEqual(expected);
   });
 
+  test("consecutive duplicates", () => {
+    expect(uniqueWith([1, 1, 2, 2], (a, b) => a === b)).toStrictEqual([1, 2]);
+  });
+
   test("should return items that are not equal to themselves", () => {
     // test case based on https://github.com/remeda/remeda/issues/999
     const data = [

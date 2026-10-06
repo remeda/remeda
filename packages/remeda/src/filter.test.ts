@@ -60,6 +60,19 @@ describe("data_last", () => {
     expect(counter).toHaveBeenCalledTimes(2);
     expect(result).toStrictEqual([1, 3]);
   });
+
+  test("provides the items processed so far to the predicate", () => {
+    const dataSnapshots: number[][] = [];
+    pipe(
+      [1, 2, 3],
+      filter((_value, _index, data) => {
+        dataSnapshots.push([...data]);
+        return true;
+      }),
+    );
+
+    expect(dataSnapshots).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+  });
 });
 
 // TODO: The Remeda `isNumber` utility isn't narrowing our types correctly for our tests here.

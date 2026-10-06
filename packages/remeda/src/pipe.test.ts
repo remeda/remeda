@@ -6,12 +6,13 @@ import { flat } from "./flat";
 import { flatMap } from "./flatMap";
 import { forEach } from "./forEach";
 import { identity } from "./identity";
-import { manyLazyValues } from "./internal/lazyControl";
+import { lazyEmptyEvaluator, manyLazyValues } from "./internal/lazyControl";
 import { purryFromLazy } from "./internal/purryFromLazy";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { map } from "./map";
 import { pipe } from "./pipe";
+import { piped } from "./piped";
 import { prop } from "./prop";
 import { take } from "./take";
 
@@ -184,14 +185,18 @@ describe("lazy", () => {
   });
 
   test("callbacks receive the items processed so far", () => {
-    const mock = vi.fn<LazyCallback<unknown[], unknown>>(
+    const mapper = vi.fn<LazyCallback<unknown[], unknown>>(
       (_value, _index, data) => [...data],
     );
-    pipe([1, 2, 3], map(mock));
+    pipe(
+      [1, 2, 3],
+      map((x) => x * 10),
+      map(mapper),
+    );
 
-    expect(mock).toHaveNthReturnedWith(1, [1]);
-    expect(mock).toHaveNthReturnedWith(2, [1, 2]);
-    expect(mock).toHaveNthReturnedWith(3, [1, 2, 3]);
+    expect(mapper).toHaveNthReturnedWith(1, [10]);
+    expect(mapper).toHaveNthReturnedWith(2, [10, 20]);
+    expect(mapper).toHaveNthReturnedWith(3, [10, 20, 30]);
   });
 
   describe("step index", () => {
@@ -247,16 +252,16 @@ describe("lazy", () => {
       expect(result).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
     });
 
-    test("a bare `vi.fn()` mock buffers because it also reports `length` 0", () => {
-      const mock =
-        vi.fn<
-          (value: number, index: number, data: readonly number[]) => void
-        >();
+    test("a mock created without an implementation buffers because it reports `length` 0", () => {
+      const callback = vi.fn<LazyCallback<unknown[], unknown>>();
+      // Implemented after creation so `length` stays 0.
+      callback.mockImplementation((_value, _index, data) => [...data]);
 
-      pipe([1, 2, 3], forEach(mock));
+      pipe([1, 2, 3], forEach(callback));
 
-      expect(mock.mock.calls[0]?.[2]).toBe(mock.mock.calls[2]?.[2]);
-      expect(mock.mock.calls[2]?.[2]).toStrictEqual([1, 2, 3]);
+      expect(callback).toHaveNthReturnedWith(1, [1]);
+      expect(callback).toHaveNthReturnedWith(2, [1, 2]);
+      expect(callback).toHaveNthReturnedWith(3, [1, 2, 3]);
     });
 
     test("a callback bound with partial application still reports the remaining arity", () => {
@@ -284,10 +289,11 @@ describe("lazy", () => {
     test("flatMap to an empty array contributes nothing for that item", () => {
       const result = pipe(
         [1, 2, 3],
-        flatMap(() => []),
+        flatMap((x) => (x === 2 ? [] : [x])),
+        map((x) => x * 10),
       );
 
-      expect(result).toStrictEqual([]);
+      expect(result).toStrictEqual([10, 30]);
     });
 
     test("a downstream single-result step stops mid fan-out", () => {
@@ -371,8 +377,29 @@ describe("lazy", () => {
       ).toStrictEqual([2, 4]);
     });
 
+    test("index advances past skipped items", () => {
+      expect(
+        pipe(
+          [1, 2, 3, 4, 5],
+          filter((_value, index) => index % 2 === 0),
+        ),
+      ).toStrictEqual([1, 3, 5]);
+    });
+
     test("done without a value emits nothing", () => {
       expect(pipe([1, 2, 3], take(0))).toStrictEqual([]);
+    });
+
+    test("done without a value stops the iteration", () => {
+      const evaluator = vi.fn<LazyEvaluator>(lazyEmptyEvaluator);
+
+      pipe(
+        [1, 2, 3],
+        // @ts-expect-error [ts2345] -- `purryFromLazy` returns `unknown`; the overloads of the utilities built on it are what make the result a function.
+        purryFromLazy(() => evaluator, []),
+      );
+
+      expect(evaluator).toHaveBeenCalledTimes(1);
     });
 
     test("done with a value unwraps to that value", () => {
@@ -400,6 +427,30 @@ describe("lazy", () => {
       ).toStrictEqual([1, 10, 2, 20]);
     });
 
+    test("an empty fan-out contributes nothing for that item", () => {
+      expect(
+        pipe(
+          [1, 2, 3],
+          flatMap((x) => (x === 2 ? [] : [x])),
+        ),
+      ).toStrictEqual([1, 3]);
+    });
+
+    test("reused as the only lazy step, starts fresh on every run", () => {
+      expect(
+        map(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+          ],
+          piped(take(2)),
+        ),
+      ).toStrictEqual([
+        [1, 2],
+        [4, 5],
+      ]);
+    });
+
     test("fan-out that is also done emits its sub-items and stops", () => {
       expect(pipe([1, 2, 3], firstTwice())).toStrictEqual([1, 1]);
     });
@@ -422,6 +473,24 @@ describe("lazy", () => {
 
       expect(result).toBe("10,20,30");
     });
+  });
+
+  test("reused among several fused lazy steps, starts fresh on every run", () => {
+    expect(
+      map(
+        [
+          [1, 2, 3],
+          [4, 5, 6],
+        ],
+        piped(
+          map((x) => x * 10),
+          take(2),
+        ),
+      ),
+    ).toStrictEqual([
+      [10, 20],
+      [40, 50],
+    ]);
   });
 
   test("one lazy function between two non-lazy ones", () => {

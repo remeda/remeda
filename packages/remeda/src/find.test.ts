@@ -76,4 +76,17 @@ describe("data last", () => {
     expect(counter).toHaveBeenCalledTimes(2);
     expect(actual).toStrictEqual({ a: 1, b: 2 });
   });
+
+  test("provides the items processed so far to the predicate", () => {
+    const dataSnapshots: number[][] = [];
+    pipe(
+      [1, 2, 3],
+      find((_value, _index, data) => {
+        dataSnapshots.push([...data]);
+        return false;
+      }),
+    );
+
+    expect(dataSnapshots).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+  });
 });

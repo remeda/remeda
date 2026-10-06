@@ -1,8 +1,9 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { add } from "./add";
 import { find } from "./find";
 import { flatMap } from "./flatMap";
+import type { LazyCallback } from "./internal/types/LazyCallback";
 import { pipe } from "./pipe";
 
 describe("dataFirst", () => {
@@ -54,6 +55,17 @@ describe("dataLast", () => {
       expect(counter1.count).toHaveBeenCalledTimes(2);
       expect(counter2.count).toHaveBeenCalledTimes(7);
       expect(result).toBe(22);
+    });
+
+    test("provides the items processed so far to the callback", () => {
+      const mapper = vi.fn<LazyCallback<unknown[], unknown>>(
+        (_value, _index, data) => [...data],
+      );
+      pipe([1, 2, 3], flatMap(mapper));
+
+      expect(mapper).toHaveNthReturnedWith(1, [1]);
+      expect(mapper).toHaveNthReturnedWith(2, [1, 2]);
+      expect(mapper).toHaveNthReturnedWith(3, [1, 2, 3]);
     });
   });
 });

@@ -102,3 +102,22 @@ describe("data last", () => {
     ]);
   });
 });
+
+describe("known issues!", () => {
+  test("a trailing rest parameter hides `data` from the arity check, data-first too", () => {
+    expect(() =>
+      mapWithFeedback(
+        [1, 2, 3],
+        (
+          accumulator: number,
+          _value: number,
+          _index: number,
+          // this callback reports a `length` of 3 and `rest[0]` is
+          // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so far.
+          ...rest: readonly [readonly unknown[]]
+        ) => accumulator + rest[0].length,
+        0,
+      ),
+    ).toThrow(/^Remeda: /u);
+  });
+});
