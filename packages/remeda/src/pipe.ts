@@ -317,11 +317,9 @@ export function pipe(
     // than inside the loop below because a second processing call in the loop
     // body measured ~7% slower on multi-step pipes.
     const func = functions[0]!;
-    if (!("lazy" in func) || !isIterable(input)) {
-      return func(input);
-    }
-
-    return processSingleLazyStep(input, func.lazy, func.lazyArgs);
+    return "lazy" in func && isIterable(input)
+      ? processSingleLazyStep(input, func.lazy, func.lazyArgs)
+      : func(input);
   }
 
   let output = input;
@@ -431,40 +429,39 @@ function processItem(
     const result = step.lazyEvaluator(currentItem, step.index, step.items);
     step.index += 1;
 
-    if (!isLazyControl(result)) {
+    if (isLazyControl(result)) {
+      if (result.isDone) {
+        isDone = true;
+      }
+
+      switch (result.control) {
+        case "skip":
+          // Skipped, or stopped without a value; nothing reaches the next step.
+          return isDone;
+
+        case "many": {
+          const subItems = result.value;
+          for (const subItem of subItems) {
+            const shouldExitEarly = processItem(
+              subItem,
+              accumulator,
+              lazySequence,
+              stepIndex + 1,
+            );
+            if (shouldExitEarly) {
+              return true;
+            }
+          }
+          return isDone;
+        }
+
+        case "last":
+          currentItem = result.value;
+      }
+    } else {
       // The common case: the evaluator emitted an item, hand it to the next
       // step as-is.
       currentItem = result;
-      continue;
-    }
-
-    if (result.isDone) {
-      isDone = true;
-    }
-
-    switch (result.control) {
-      case "skip":
-        // Skipped, or stopped without a value; nothing reaches the next step.
-        return isDone;
-
-      case "many": {
-        const subItems = result.value;
-        for (const subItem of subItems) {
-          const shouldExitEarly = processItem(
-            subItem,
-            accumulator,
-            lazySequence,
-            stepIndex + 1,
-          );
-          if (shouldExitEarly) {
-            return true;
-          }
-        }
-        return isDone;
-      }
-
-      case "last":
-        currentItem = result.value;
     }
   }
 
