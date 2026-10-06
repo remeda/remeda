@@ -97,13 +97,10 @@ describe("known issues!", () => {
     expect(() =>
       uniqueBy(
         [1, 2, 3],
-        (
-          _item: number,
-          _index: number,
+        (_item, _index, ...rest) =>
           // this callback reports a `length` of 2 and `rest[0]` is
           // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so far.
-          ...rest: readonly [readonly unknown[]]
-        ) => rest[0].length,
+          rest[0].length,
       ),
     ).toThrow(/^Remeda: /u);
   });

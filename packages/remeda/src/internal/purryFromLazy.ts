@@ -23,19 +23,14 @@ export function purryFromLazy(
   args: readonly unknown[],
 ): unknown {
   if (args.length === lazy.length) {
+    // data-last
     return Object.assign(
-      (data: unknown) =>
-        processSingleLazyStep(
-          // @ts-expect-error [ts2345] -- Lazy implementations assume their data is an iterable, and the overloads of the functions built on top of this one are what enforce it; a single generic helper can't see them.
-          data,
-          lazy,
-          args,
-        ),
+      (data: Iterable<unknown>) => processSingleLazyStep(data, lazy, args),
       { lazy, lazyArgs: args } satisfies LazyDefinition,
     );
   }
 
-  // dataFirst
+  // data-first
   const [data, ...rest] = args;
   return processSingleLazyStep(
     // @ts-expect-error [ts2345] -- Lazy implementations assume their data is an iterable, and the overloads of the functions built on top of this one are what enforce it; a single generic helper can't see them.

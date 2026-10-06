@@ -68,7 +68,7 @@ type RequireDataByArityOptions = {
 /**
  * Marks an evaluator that reads `data` itself, so `pipe` must always buffer.
  * The marker is applied by mutating `evaluator`, so callers must pass a freshly
- * created closure, never a shared singleton.
+ * created closure, never a shared singleton or the user's callback itself.
  */
 export const requireData = <T, R>(
   // In both helpers, `T` and `R` come only from the caller's declared
