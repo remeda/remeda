@@ -385,7 +385,12 @@ function processIterable(
   const accumulator: unknown[] = [];
 
   for (const value of iterable) {
-    const shouldExitEarly = processItem(value, accumulator, lazySequence, 0);
+    const shouldExitEarly = processItem(
+      value,
+      accumulator,
+      lazySequence,
+      0 /* startIndex */,
+    );
     if (shouldExitEarly) {
       break;
     }
