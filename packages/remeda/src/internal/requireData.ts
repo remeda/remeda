@@ -77,11 +77,11 @@ export const requireData = <T, R>(
 
 /**
  * Marks an evaluator as needing `data` only when the user's `callback` is
- * likely to read it, based on it's signature.
+ * likely to read it, based on its signature.
  *
- * `Function.length` is 0 only when the *first* parameter is a rest parameter,
- * which is what wrappers that forward `arguments` (mocks, memoize, debounce)
- * look like, and we can't see through them, so those buffer too.
+ * `Function.length` counts only the plain parameters before the first rest or
+ * defaulted one. It is 0 for wrappers that forward `arguments` (memoize,
+ * debounce), which we can't see through, so those buffer too.
  *
  * Three holes are documented rather than guarded: a default parameter before
  * `data` (`(x, i = 0, data = []) => ...` reports 1), `arguments[i]` access,
