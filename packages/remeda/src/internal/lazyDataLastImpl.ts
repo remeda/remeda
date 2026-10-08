@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import type { LazyEvaluator } from "./types/LazyEvaluator";
+import type { LazyDefinition } from "./types/LazyDefinition";
 import type { StrictFunction } from "./types/StrictFunction";
 
 /**
@@ -13,7 +11,7 @@ import type { StrictFunction } from "./types/StrictFunction";
 export function lazyDataLastImpl(
   fn: StrictFunction,
   args: readonly unknown[],
-  lazy?: (...args: any) => LazyEvaluator,
+  lazy?: LazyDefinition["lazy"],
   // TODO: We can probably provide better typing to the return type...
 ): unknown {
   const dataLast = createDataLast(
@@ -34,7 +32,7 @@ export function lazyDataLastImpl(
 }
 
 type DataLast = ((data: unknown) => unknown) & {
-  lazy?: (...args: any) => LazyEvaluator;
+  lazy?: LazyDefinition["lazy"];
   lazyArgs?: readonly unknown[];
 };
 

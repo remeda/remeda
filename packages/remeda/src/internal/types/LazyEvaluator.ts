@@ -3,7 +3,7 @@ import type { LazyResult, LazySlot } from "../lazyControl";
 /**
  * Extra levers an evaluator gives `pipe` over how it runs the step.
  */
-export type LazyEvaluatorMetadata = {
+type LazyEvaluatorMetadata = {
   /**
    * Some evaluators provide `data` to their callbacks (e.g., `map`'s 3rd
    * parameter). Collecting it lazily costs a buffer that grows with every

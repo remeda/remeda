@@ -17,7 +17,7 @@ import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/unexpectedAccessSentinel"
 
 type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
-  readonly isSingle: boolean;
+  readonly isSingle: true | undefined;
   // Notice the index is mutable, it will be incremented as the pipe is evaluating items. It is shared with every invocation of the evaluator.
   index: number;
 } & (
@@ -324,11 +324,7 @@ export function pipe(
     }
 
     const nextFunc = functions[functionIndex + 1];
-    if (
-      nextFunc === undefined ||
-      !("lazy" in nextFunc) ||
-      func.lazy.single === true
-    ) {
+    if (nextFunc === undefined || !("lazy" in nextFunc) || func.lazy.single) {
       // A run of one lazy function is a lazy sequence of one step, which has
       // no cross-step bookkeeping to set up: the step array, the step object,
       // and the hand-off through them are all overhead.
@@ -353,7 +349,7 @@ export function pipe(
 
 function buildLazyStep({ lazy, lazyArgs }: LazyDefinition): LazyStep {
   const lazyEvaluator = lazy(...lazyArgs);
-  const isSingle = lazy.single ?? false;
+  const isSingle = lazy.single;
   return lazyEvaluator.requiresData
     ? {
         lazyEvaluator,

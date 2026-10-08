@@ -34,9 +34,12 @@ export const requireData = <T, R>(
 
 /**
  * Marks an evaluator as needing `data` only when the user's `callback` is
- * likely to read it, based on its signature.
+ * likely to read it, based on its signature. It marks `evaluator` the way
+ * `requireData` does, by mutating it, so callers must pass a freshly created
+ * closure, never a module-level evaluator such as `lazyEmptyEvaluator`.
  *
  * @see canReadData
+ * @see requireData
  */
 export const requireDataByArity = <T, R>(
   callback: StrictFunction,

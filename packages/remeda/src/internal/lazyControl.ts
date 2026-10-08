@@ -1,4 +1,4 @@
-import type { Writable } from "type-fest";
+import type { Tagged, Writable } from "type-fest";
 
 // Controls are told apart from user items by identity alone, so `pipe` never
 // touches an item to classify it, and items that are proxies (e.g. reactive
@@ -35,13 +35,19 @@ export const LAST: unique symbol = Symbol.for("$$remedaLazyLast");
  */
 export const MANY: unique symbol = Symbol.for("$$remedaLazyMany");
 
+// The payload travels in the slot, so the tag is what ties its type to the
+// control: `LAST` and `MANY` only typecheck as the result of the helpers that
+// write a payload of the evaluator's declared result type.
+type LazyLast<T> = Tagged<typeof LAST, "RemedaLazyLast", T>;
+type LazyMany<T> = Tagged<typeof MANY, "RemedaLazyMany", readonly T[]>;
+
 /**
  * A lazy evaluator returns the (possibly transformed) item itself in the
  * common case, and one of the controls above for anything else it needs to
  * tell `pipe` (skip, stop, expand).
  */
-export type LazyResult<T = unknown> =
-  T | typeof LAST | typeof MANY | typeof SKIP_ITEM | typeof STOP;
+export type LazyResult<T> =
+  T | LazyLast<T> | LazyMany<T> | typeof SKIP_ITEM | typeof STOP;
 
 /**
  * Where an evaluator leaves the payload of a `LAST` or `MANY` result. The pipe
@@ -70,23 +76,25 @@ export const lazyEmptyEvaluator = (): typeof STOP => STOP;
 /**
  * Emits `value` and stops the pipe.
  */
-export function lastLazyValue(
-  value: unknown,
+export function lastLazyValue<T>(
+  value: T,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The slot exists to carry the payload back to the pipe; this is one of the two helpers that write it.
   slot: Writable<LazySlot>,
-): typeof LAST {
+): LazyLast<T> {
   slot.value = value;
+  // @ts-expect-error [ts2322] -- The tag exists only at compile time; at runtime the control is the bare symbol, and its payload is the `value` just written to the slot.
   return LAST;
 }
 
 /**
  * Feeds every element of `values` through the rest of the pipe, one by one.
  */
-export function manyLazyValues(
-  values: readonly unknown[],
+export function manyLazyValues<T>(
+  values: readonly T[],
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The slot exists to carry the payload back to the pipe; this is one of the two helpers that write it.
   slot: Writable<LazySlot>,
-): typeof MANY {
+): LazyMany<T> {
   slot.values = values;
+  // @ts-expect-error [ts2322] -- The tag exists only at compile time; at runtime the control is the bare symbol, and its payload is the `values` just written to the slot.
   return MANY;
 }
