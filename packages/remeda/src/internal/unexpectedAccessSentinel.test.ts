@@ -15,6 +15,7 @@ describe("unexpected access sentinel", () => {
     ["string coercion", () => String(data)],
     ["serialization", () => JSON.stringify(data)],
     ["`in` with an index", () => 0 in data],
+    ["`in` with an array method", () => "map" in data],
     ["key enumeration", () => Object.keys(data)],
     ["own index lookup", () => Object.hasOwn(data, 0)],
     ["assignment", () => Reflect.set(data, 0, 1)],
@@ -23,6 +24,11 @@ describe("unexpected access sentinel", () => {
       () => Reflect.defineProperty(data, "key", { value: 1 }),
     ],
     ["deletion", () => Reflect.deleteProperty(data, "key")],
+    ["preventing extensions", () => Reflect.preventExtensions(data)],
+    [
+      "prototype replacement",
+      () => Reflect.setPrototypeOf(data, Array.prototype),
+    ],
   ])("throws on %s", (_name, operation) => {
     expect(operation).toThrow(/^Remeda: /u);
   });

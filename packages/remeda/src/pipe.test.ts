@@ -15,6 +15,7 @@ import { pipe } from "./pipe";
 import { piped } from "./piped";
 import { prop } from "./prop";
 import { take } from "./take";
+import { uniqueWith } from "./uniqueWith";
 
 test("should pass through data with 0 functions", () => {
   const data = { a: "hello", b: 123 };
@@ -175,6 +176,29 @@ describe("lazy", () => {
     expect(result).toStrictEqual([1, 2]);
   });
 
+  describe("a single-result step followed by a lazy step", () => {
+    test("at the start of a run", () => {
+      expect(
+        pipe(
+          [[1, 2], [3]] as const,
+          first(),
+          map((x) => x * 10),
+        ),
+      ).toStrictEqual([10, 20]);
+    });
+
+    test("ending a fused run", () => {
+      expect(
+        pipe(
+          [[1, 2], [3]] as const,
+          map((x) => x),
+          first(),
+          map((x) => x * 10),
+        ),
+      ).toStrictEqual([10, 20]);
+    });
+  });
+
   test("callbacks receive the items processed so far", () => {
     const mapper = vi.fn<LazyCallback<unknown[], unknown>>(
       (_value, _index, data) => [...data],
@@ -298,6 +322,29 @@ describe("lazy", () => {
       // sentinel on failure, which throws and hides the real mismatch.
       expect(() => evaluator.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
     });
+
+    test("includes the items a fan-out emitted", () => {
+      expect(
+        pipe(
+          [[1, 2], [3]],
+          flat(),
+          map((_value, _index, data) => [...data]),
+        ),
+      ).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+    });
+
+    test("an evaluator that reads it sees the items a fan-out emitted", () => {
+      expect(
+        pipe(
+          [
+            [1, 1],
+            [2, 1],
+          ],
+          flat(),
+          uniqueWith((a, b) => a === b),
+        ),
+      ).toStrictEqual([1, 2]);
+    });
   });
 
   describe("fan-out", () => {
@@ -382,6 +429,42 @@ describe("lazy", () => {
       expect(fused[0]).toBe(item);
     });
 
+    test.each([
+      [
+        "a lone step",
+        (data: readonly number[]) =>
+          pipe(
+            data,
+            map((x) => x),
+          ),
+      ],
+      [
+        "fused steps",
+        (data: readonly number[]) =>
+          pipe(
+            data,
+            map((x) => x),
+            filter(() => true),
+          ),
+      ],
+    ])("an array input is iterated, not indexed, by %s", (_name, run) => {
+      const keys: (string | symbol)[] = [];
+      const data = new Proxy([1, 2, 3], {
+        get: (target, key, receiver): unknown => {
+          keys.push(key);
+          // The target's own iterator reads the target directly, so only the
+          // reads `pipe` makes go through this trap.
+          return key === Symbol.iterator
+            ? () => target[Symbol.iterator]()
+            : Reflect.get(target, key, receiver);
+        },
+      });
+
+      run(data);
+
+      expect(keys).toStrictEqual([Symbol.iterator]);
+    });
+
     test("controls from another copy of the library are recognized", async () => {
       // Re-evaluating the modules gives the utilities below their own
       // `lazyControl`, the way a second installed version, or the CJS build
@@ -391,6 +474,7 @@ describe("lazy", () => {
       const { filter: otherFilter } = await import("./filter");
       const { find: otherFind } = await import("./find");
       const { flatMap: otherFlatMap } = await import("./flatMap");
+      const { take: otherTake } = await import("./take");
 
       expect(
         pipe(
@@ -418,6 +502,14 @@ describe("lazy", () => {
           otherFind((x) => x > 20),
         ),
       ).toBe(21);
+      expect(pipe([1, 2, 3], otherTake(0))).toStrictEqual([]);
+      expect(
+        pipe(
+          [1, 2, 3],
+          map((x) => x),
+          otherTake(0),
+        ),
+      ).toStrictEqual([]);
     });
 
     test("index continues across two consecutive fan-outs", () => {
@@ -522,6 +614,13 @@ describe("lazy", () => {
       ).toStrictEqual([1, 3]);
     });
 
+    test("a large fan-out emits every sub-item", () => {
+      // Too many sub-items to pass as the arguments of a single call.
+      const large = Array.from({ length: 500_000 }, (_item, index) => index);
+
+      expect(pipe([large], flat())).toHaveLength(500_000);
+    });
+
     test("reused as the only lazy step, starts fresh on every run", () => {
       expect(
         map(
@@ -609,12 +708,142 @@ describe("lazy", () => {
       ),
     ).toStrictEqual([0, 10, 20]);
   });
+
+  // Arrays and every other iterable run through separate loops, in both the
+  // lone-step path and the fused one.
+  describe.each([
+    ["an array", (): readonly number[] => [1, 2, 3, 4]],
+    // @ts-expect-error [ts2740] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what these tests exercise.
+    ["a Set", (): readonly number[] => new Set([1, 2, 3, 4])],
+    // @ts-expect-error [ts2740] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what these tests exercise.
+    ["a generator", (): readonly number[] => upTo(4)],
+  ])("%s as input", (_name, input) => {
+    test("a lone step gets each item's index and the items so far", () => {
+      expect(
+        pipe(
+          input(),
+          map((x, index, data) => [x, index, [...data]]),
+        ),
+      ).toStrictEqual([
+        [1, 0, [1]],
+        [2, 1, [1, 2]],
+        [3, 2, [1, 2, 3]],
+        [4, 3, [1, 2, 3, 4]],
+      ]);
+    });
+
+    test("a lone step skips items", () => {
+      expect(
+        pipe(
+          input(),
+          filter((x) => x % 2 === 0),
+        ),
+      ).toStrictEqual([2, 4]);
+    });
+
+    test("a lone step fans out", () => {
+      expect(
+        pipe(
+          input(),
+          flatMap((x) => [x, -x]),
+        ),
+      ).toStrictEqual([1, -1, 2, -2, 3, -3, 4, -4]);
+    });
+
+    test("a lone step stops with a last value", () => {
+      expect(pipe(input(), take(2))).toStrictEqual([1, 2]);
+    });
+
+    test("a lone single-result step unwraps to its value", () => {
+      expect(pipe(input(), first())).toBe(1);
+    });
+
+    test("fused steps", () => {
+      expect(
+        pipe(
+          input(),
+          filter((x) => x !== 2),
+          flatMap((x) => [x, x * 10]),
+          map((x, index, data) => [x, index, data.length]),
+          take(4),
+        ),
+      ).toStrictEqual([
+        [1, 0, 1],
+        [10, 1, 2],
+        [3, 2, 3],
+        [30, 3, 4],
+      ]);
+    });
+  });
+
+  describe("a generator input is closed when the pipe stops early", () => {
+    test("by a lone step", () => {
+      const onClose = vi.fn<() => void>();
+      pipe(
+        closesWith(onClose),
+        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
+        take(1),
+      );
+
+      expect(onClose).toHaveBeenCalledTimes(1);
+    });
+
+    test("by fused steps", () => {
+      const onClose = vi.fn<() => void>();
+      pipe(
+        closesWith(onClose),
+        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
+        map((x: number) => x),
+        take(1),
+      );
+
+      expect(onClose).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("a string input is iterated by character", () => {
+    test("by a lone step", () => {
+      expect(
+        pipe(
+          "abc",
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
+          map((x: string) => x.toUpperCase()),
+        ),
+      ).toStrictEqual(["A", "B", "C"]);
+    });
+
+    test("by fused steps", () => {
+      expect(
+        pipe(
+          "abc",
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
+          map((x: string) => x.toUpperCase()),
+          take(2),
+        ),
+      ).toStrictEqual(["A", "B"]);
+    });
+  });
 });
 
 // Never finishes on its own, so only a pipe that stops pulling can consume it.
 function* naturals(): Generator<number> {
   for (let value = 0; ; value++) {
     yield value;
+  }
+}
+
+function* upTo(last: number): Generator<number> {
+  for (let value = 1; value <= last; value++) {
+    yield value;
+  }
+}
+
+// A `for...of` that exits early closes the generator, which runs its `finally`.
+function* closesWith(onClose: () => void): Generator<number> {
+  try {
+    yield* [1, 2, 3];
+  } finally {
+    onClose();
   }
 }
 
