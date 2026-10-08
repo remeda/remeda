@@ -21,17 +21,19 @@ const ARRAY_INDEX = /^(?:0|[1-9]\d*)$/u;
  *
  * @see canReadData
  */
-// @ts-expect-error [ts2322] -- The proxy isn't an array, but any attempt to use it as one throws, so no code that relies on its type can run past the first touch.
+// @ts-expect-error [ts2322] -- The target's only item is the message, not a `never`, but any attempt to use the proxy as an array throws, so no code that relies on its type can run past the first touch.
 export const UNEXPECTED_ACCESS_SENTINEL: Tagged<
   readonly never[],
   "RemedaUnexpectedAccessSentinel"
 > = new Proxy(
-  {
-    // `console.log` and devtools print a proxy's target without running its
-    // traps, so the message lives on the target too and a logged `data` still
-    // explains itself.
-    error: UNEXPECTED_ACCESS_MESSAGE,
-  },
+  // An array, so type checks (`Array.isArray`, `instanceof Array`,
+  // `Object.prototype.toString`) treat a misused `data` as the array its type
+  // claims, and built-ins that consume arrays (`concat`, `flat`, deep
+  // equality) reach the throwing traps instead of treating it as a single
+  // object. `console.log` and devtools print a proxy's target without running
+  // its traps, so the message lives on the target's only element and a logged
+  // `data` still explains itself.
+  [{ error: UNEXPECTED_ACCESS_MESSAGE }],
   {
     // Reads: using it as an array throws, anything else finds nothing.
     get: (_target, key) => {
@@ -46,11 +48,9 @@ export const UNEXPECTED_ACCESS_SENTINEL: Tagged<
     },
     ownKeys: alwaysThrow,
 
-    // `getPrototypeOf` and `isExtensible` are left to the target, an ordinary
-    // object, so the sentinel reports `Object.prototype` like any object
-    // literal: `instanceof Array` is false, while plain-object checks pass.
-    // Every key it could inherit from there is also on `Array.prototype`, so
-    // reading one throws above.
+    // `getPrototypeOf` and `isExtensible` are left to the target, so the
+    // sentinel reports `Array.prototype` like any array literal. Every key it
+    // inherits is on `Array.prototype`, so reading one throws above.
 
     // Writes: would otherwise reach the target, which every pipe shares.
     defineProperty: alwaysThrow,

@@ -1,5 +1,6 @@
 import { inspect } from "node:util";
 import { describe, expect, test } from "vitest";
+import { isDeepEqual } from "../isDeepEqual";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
 
 describe("unexpected access sentinel", () => {
@@ -14,6 +15,10 @@ describe("unexpected access sentinel", () => {
     ["iteration", () => [...data]],
     ["string coercion", () => String(data)],
     ["serialization", () => JSON.stringify(data)],
+    // eslint-disable-next-line unicorn/prefer-spread -- `concat` is the subject: unlike a spread, it only spreads arguments that are arrays.
+    ["`concat` spreading it", () => [1].concat(data)],
+    ["`flat` spreading it", () => [data].flat()],
+    ["deep equality", () => isDeepEqual(data, [])],
     ["`in` with an index", () => 0 in data],
     ["`in` with an array method", () => "map" in data],
     ["key enumeration", () => Object.keys(data)],
@@ -47,12 +52,16 @@ describe("unexpected access sentinel", () => {
     expect(Object.hasOwn(data, "@@functional/placeholder")).toBe(false);
   });
 
-  test("is an ordinary object", () => {
-    expect(Object.getPrototypeOf(data)).toBe(Object.prototype);
+  test("inherits from `Array.prototype`", () => {
+    expect(Object.getPrototypeOf(data)).toBe(Array.prototype);
   });
 
-  test("is not an array", () => {
-    expect(Array.isArray(data)).toBe(false);
+  test("is an array", () => {
+    expect(Array.isArray(data)).toBe(true);
+  });
+
+  test("is tagged as an array", () => {
+    expect(Object.prototype.toString.call(data)).toBe("[object Array]");
   });
 
   test("explains itself when logged", () => {
