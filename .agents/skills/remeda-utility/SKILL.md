@@ -28,7 +28,7 @@ Each function has up to three test files, one per kind:
 Conventions that apply across all three kinds:
 
 - Runtime and type assertions are **strictly separated** — `expect()` lives in `.test.ts`, `expectTypeOf()` lives in `.test-d.ts`. Never mix them in the same test block, and never put one kind in the other file.
-- Test names describe **what** is being tested in the function's own vocabulary — "lazy early exit with a many control", not "take and flat".
+- Test names describe **what** is being tested in the function's own vocabulary - "lazy early exit with a many control", not "take and flat".
 - Test names should be terse and concise, and should rely on context from parent `describe()` blocks and not repeat them.
 - Test names do not need to read as prose!
 - Tests for a specific bug must reference the issue number, either in the test name or a comment so that the reporting issue can always be traced back.

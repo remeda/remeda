@@ -18,7 +18,8 @@ import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/unexpectedAccessSentinel"
 type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
   readonly isSingle: true | undefined;
-  // Notice the index is mutable, it will be incremented as the pipe is evaluating items. It is shared with every invocation of the evaluator.
+  // Counted here rather than derived from `items`, which only fills for steps
+  // that require `data`.
   index: number;
 } & (
   | {
@@ -398,11 +399,11 @@ function processIterable(
   const slot = createLazySlot();
 
   if (Array.isArray(iterable)) {
-    // A `for...of` that has only ever seen arrays is compiled without the
-    // iterator protocol, which the generic loop below can't be, as it also
-    // sees sets, strings and generators. Both loops still iterate, so an array
-    // that is a proxy (e.g. a reactive store) observes one iteration instead of
-    // a read per index.
+    // In V8, a `for...of` that has only ever seen arrays skips the iterator
+    // protocol; the generic loop below also sees sets, strings and generators,
+    // so it can't. Both loops iterate rather than index, so a reactive array
+    // that instruments iteration tracks one dependency instead of one per
+    // index.
     for (const value of iterable) {
       const shouldExitEarly = processItem(
         value,
@@ -464,7 +465,6 @@ function processItem(
     // comparisons below with this one check.
     if (typeof result === "symbol") {
       if (result === SKIP_ITEM) {
-        // Nothing reaches the next step.
         return isDone;
       }
 
@@ -494,7 +494,6 @@ function processItem(
       }
 
       if (result === STOP) {
-        // Stopped without a value; nothing reaches the next step.
         return true;
       }
     }
@@ -509,13 +508,13 @@ function processItem(
 }
 
 function isIterable(something: unknown): something is Iterable<unknown> {
-  // Check for null and undefined to avoid errors when accessing Symbol.iterator
   return (
     // Arrays are by far the most common input, and the compiler reduces this
     // check to a type test, where the `in` check below is a property lookup.
     Array.isArray(something) ||
     typeof something === "string" ||
     (typeof something === "object" &&
+      // `typeof` reports `null` as an object, and `in` throws on it.
       something !== null &&
       // eslint-disable-next-line unicorn/no-computed-property-existence-check -- The prototype-chain check is intentional: iterables inherit `Symbol.iterator` from their prototype (e.g. `Array.prototype`), and `Object.hasOwn` would reject them all.
       Symbol.iterator in something)

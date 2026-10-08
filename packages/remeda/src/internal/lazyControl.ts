@@ -6,9 +6,10 @@ import type { Tagged, Writable } from "type-fest";
 // value is: JSON can't produce one, and code has to ask the registry for these
 // exact keys. They are registered rather than module-private so that separate
 // copies of Remeda in one program (two installed versions, or the ESM and CJS
-// builds side by side) recognize each other's controls. Change the keys if the
-// protocol ever changes, so that copies on different protocols ignore each
-// other's controls instead of misreading them.
+// builds side by side) interoperate while they share this protocol. Mixing
+// copies on different protocols in one pipe is unsupported; changing the keys
+// along with the protocol keeps a future shape change from being read as this
+// one.
 
 /**
  * Skip the current item: nothing reaches the next step.

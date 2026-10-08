@@ -23,7 +23,7 @@ function dataFirstImpl(...) {
 }
 
 // These can be removed now:
-function withLazy = Object.assign(dataFirstImpl, { lazy: lazyImpl });
+const withLazy = Object.assign(dataFirstImpl, { lazy: lazyImpl });
 
 function lazyImpl(...): LazyEvaluator {
   // ...

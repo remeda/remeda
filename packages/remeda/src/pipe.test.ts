@@ -141,7 +141,7 @@ describe("lazy", () => {
     expect(result).toStrictEqual([100, 200]);
   });
 
-  test("early exit when done without a next value", () => {
+  test("stops without a value", () => {
     const mockMapper = vi.fn<(x: number) => number>();
 
     expect(pipe([1, 2, 3, 4, 5], map(mockMapper), take(0))).toStrictEqual([]);
@@ -150,7 +150,7 @@ describe("lazy", () => {
     expect(mockMapper).toHaveBeenCalledTimes(1);
   });
 
-  test("early exit when done without a next value mid-pipe", () => {
+  test("stops without a value mid-pipe", () => {
     const mockMapper = vi.fn<(x: number) => number>();
     const downstream = vi.fn<(x: number) => number>();
 
@@ -462,7 +462,7 @@ describe("lazy", () => {
       ).toStrictEqual(["a", 0, "b", 1]);
     });
 
-    test("done without a value emits nothing", () => {
+    test("stopping without a value emits nothing", () => {
       expect(pipe([1, 2, 3], take(0))).toStrictEqual([]);
     });
 
@@ -476,7 +476,7 @@ describe("lazy", () => {
       ).toStrictEqual([0, 1, 2]);
     });
 
-    test("done without a value stops the iteration", () => {
+    test("stopping without a value ends the iteration", () => {
       const evaluator = vi.fn<LazyEvaluator>(lazyEmptyEvaluator);
 
       pipe(
@@ -488,11 +488,11 @@ describe("lazy", () => {
       expect(evaluator).toHaveBeenCalledTimes(1);
     });
 
-    test("done with a value unwraps to that value", () => {
+    test("stopping with a last value unwraps to that value", () => {
       expect(pipe([1, 2, 3], first())).toBe(1);
     });
 
-    test("done with a value stops the iteration", () => {
+    test("stopping with a last value ends the iteration", () => {
       const mockPredicate = vi.fn<(x: number) => boolean>((x) => x === 2);
 
       pipe([1, 2, 3], find(mockPredicate));

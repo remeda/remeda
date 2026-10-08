@@ -9,17 +9,17 @@ const ARRAY_INDEX = /^(?:0|[1-9]\d*)$/u;
 
 /**
  * Provided to a callback's `data` parameter whenever we believe it would not
- * be used. A callback only receives it by slipping through the arity gate.
+ * be used. A callback only gets to read it by slipping through the arity gate.
  *
- * Using it as an array throws (an index, `length`, an array method, iterating
- * it, listing its keys), and so does writing to it, so the first such use
- * signals that `data` wasn't collected for this callback: usually one of the
- * holes documented on `requireDataByArity`, otherwise a detection bug worth
- * reporting. Every other read finds nothing, as on an empty object, so code
- * that only probes its arguments (e.g. a curried wrapper looking for a
+ * Using it as an array throws (an index, any `Array.prototype` key such as
+ * `length` or a method, iterating it, listing its keys), and so does writing
+ * to it, so the first such use signals that `data` wasn't collected for this
+ * callback: usually one of the holes documented on `canReadData`, otherwise a
+ * detection bug worth reporting. Reads of any other key return `undefined`,
+ * so code that only probes its arguments (e.g. a curried wrapper looking for a
  * placeholder) isn't broken by an argument it was never going to use.
  *
- * @see requireDataByArity
+ * @see canReadData
  */
 // @ts-expect-error [ts2322] -- The proxy isn't an array, but any attempt to use it as one throws, so no code that relies on its type can run past the first touch.
 export const UNEXPECTED_ACCESS_SENTINEL: Tagged<

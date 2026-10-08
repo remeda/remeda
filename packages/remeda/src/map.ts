@@ -68,6 +68,7 @@ const lazyImplementation = <T, U>(
     : // A callback that doesn't read `data` already is a complete evaluator,
       // and using it directly saves a call per item. It is never marked:
       // `requireData` only marks the wrapper above. It also receives the
-      // pipe's slot as a 4th argument, which it doesn't declare, so only
-      // `arguments` could see it.
+      // pipe's slot as a 4th argument, which it doesn't declare, so it is
+      // visible only through the arity holes (`arguments`, or a trailing rest
+      // parameter such as `(value, index, ...rest)`).
       callbackfn;

@@ -38,11 +38,11 @@ export function processSingleLazyStep(
   let index = 0;
 
   if (Array.isArray(iterable)) {
-    // A `for...of` that has only ever seen arrays is compiled without the
-    // iterator protocol, which the generic loop below can't be, as it also
-    // sees sets, strings and generators. Both loops still iterate, so an array
-    // that is a proxy (e.g. a reactive store) observes one iteration instead of
-    // a read per index.
+    // In V8, a `for...of` that has only ever seen arrays skips the iterator
+    // protocol; the generic loop below also sees sets, strings and generators,
+    // so it can't. Both loops iterate rather than index, so a reactive array
+    // that instruments iteration tracks one dependency instead of one per
+    // index.
     for (const value of iterable) {
       dataBuffer?.push(value);
 

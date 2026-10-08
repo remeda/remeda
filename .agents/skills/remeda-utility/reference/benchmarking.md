@@ -94,7 +94,7 @@ Run the bundle and CJS modes as extras on a headline subset.
 Before timing anything, prove that every copy computes the same thing:
 
 - **Output equality.** Every copy's output deep-equals the baseline's and the native one's.
-- **Callback-trace equality.** Wrap every callback to record each call (step, call number, arguments up to `data`, values by identity) and diff the traces between copies. A candidate that calls a callback more often, in another order, or with other indices changes behavior even when its outputs match. The wrapper leaves `data` unread (it may be the throwing sentinel) and keeps the callback's `length`, which `pipe` reads.
+- **Callback-trace equality.** Wrap every callback to record each call (step, call number, arguments up to `data`, values by identity) and diff the traces between copies. A candidate that calls a callback more often, in another order, or with other indices changes behavior even when its outputs match. The wrapper leaves `data` unread (it may be the throwing sentinel) and keeps the callback's `length`, which the arity gate (`canReadData`) reads.
 - **Cross-copy.** Run pipes of one copy over steps built by another (the ESM and CJS builds, the baseline and each variant), to prove they recognize each other's controls.
 - **A red self-test** of the trace diff, so a validator that passes everything gets caught.
 
@@ -122,7 +122,7 @@ Screen first (two rotations, short budgets, dropping only clear losers), then co
 
 ## The deopt lottery
 
-In PR #1444's main run, every multi-function non-lazy pipe of the branch read either 1.24-1.36x main or 0.88-0.95x, nothing in between, and all of them switched together. Which copies landed in the slow mode changed with the rotation, independently of their code: a variant that never touched the code path looked about 30% faster than the branch whenever its position put it in the fast mode. The slow mode showed on Node 24 too, and never on Node 22, Bun, the bundle, CJS, the vitest-free runner, `--jitless` or `--max-opt`; one copy per process read 1.045x.
+In PR #1444's main run, every multi-function non-lazy pipe of the branch read either slow or fast, nothing in between, and all of them switched together: the slow mode read 1.24-1.36x main on scalar pipes of arrow functions and 1.10-1.16x on scalar pipes of data-last utilities, the fast mode 0.88-0.95x. Which copies landed in the slow mode changed with the rotation, independently of their code: a variant that never touched the code path looked about 30% faster than the branch whenever its position put it in the fast mode. The slow mode showed on Node 24 too, and never on Node 22, Bun, the bundle, CJS, the vitest-free runner, `--jitless` or `--max-opt`; one copy per process read 1.045x.
 
 Signs of a lottery:
 

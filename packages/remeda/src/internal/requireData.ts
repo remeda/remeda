@@ -1,14 +1,15 @@
 import type { LazyEvaluator } from "./types/LazyEvaluator";
 import type { StrictFunction } from "./types/StrictFunction";
 
-// Most callbacks have the input `data` as their 3rd parameter, as in all the
-// standard library functions.
+// Most callbacks have the input `data` as their 3rd parameter, as in the
+// standard library's array iteration methods (`map`, `filter`, `find`, ...).
 const DEFAULT_DATA_PARAMETER_INDEX = 2;
 
 type RequireDataByArityOptions = {
   /**
-   * Some special functions have their `data` parameter in a different
-   * position, mostly when they process more than a single input array.
+   * Callbacks with an extra parameter before the index have `data` one
+   * position later: an accumulator (`mapWithFeedback`) or the second input's
+   * item (`zipWith`).
    *
    * @see zipWith
    * @default 2
