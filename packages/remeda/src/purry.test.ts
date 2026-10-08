@@ -13,6 +13,10 @@ test("all arguments", () => {
   expect(fn(10, 5)).toBe(5);
 });
 
+test("1 extra", () => {
+  expect(fn(10, 5, 1)).toBe(5);
+});
+
 test("1 missing", () => {
   const purried = fn(5) as (...args: readonly unknown[]) => unknown;
 

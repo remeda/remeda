@@ -15,7 +15,7 @@ export const purryWithLazy = (
   args: readonly unknown[],
   lazy: LazyDefinition["lazy"],
 ): unknown =>
-  fn.length === args.length
+  args.length >= fn.length
     ? fn(
         // @ts-expect-error [ts2345] -- This error is accurate because we don't
         // know anything about `fn` so can't ensure that we are passing the

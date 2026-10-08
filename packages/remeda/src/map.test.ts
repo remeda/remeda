@@ -16,6 +16,13 @@ describe("data_first", () => {
   test("map indexed", () => {
     expect(map([0, 0, 0], (_, i) => i)).toStrictEqual([0, 1, 2]);
   });
+
+  test("ignores extra arguments", () => {
+    expect(
+      // @ts-expect-error [ts2554] -- The types reject the extra argument; this checks that the runtime ignores it the way native functions do.
+      map([1, 2, 3], (x) => x * 2, "extra"),
+    ).toStrictEqual([2, 4, 6]);
+  });
 });
 
 describe("data-last", () => {
