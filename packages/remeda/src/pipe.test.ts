@@ -466,6 +466,16 @@ describe("lazy", () => {
       expect(pipe([1, 2, 3], take(0))).toStrictEqual([]);
     });
 
+    test("pulls from a non-array iterable only until done", () => {
+      expect(
+        pipe(
+          naturals(),
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
+          take(3),
+        ),
+      ).toStrictEqual([0, 1, 2]);
+    });
+
     test("done without a value stops the iteration", () => {
       const evaluator = vi.fn<LazyEvaluator>(lazyEmptyEvaluator);
 
@@ -589,6 +599,13 @@ describe("lazy", () => {
     expect(result).toBe("10,20,30");
   });
 });
+
+// Never finishes on its own, so only a pipe that stops pulling can consume it.
+function* naturals(): Generator<number> {
+  for (let value = 0; ; value++) {
+    yield value;
+  }
+}
 
 describe("known issues!", () => {
   test("default parameters hide `data` from the arity check", () => {

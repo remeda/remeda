@@ -496,6 +496,9 @@ function processItem(
 function isIterable(something: unknown): something is Iterable<unknown> {
   // Check for null and undefined to avoid errors when accessing Symbol.iterator
   return (
+    // Arrays are by far the most common input, and the compiler reduces this
+    // check to a type test, where the `in` check below is a property lookup.
+    Array.isArray(something) ||
     typeof something === "string" ||
     (typeof something === "object" &&
       something !== null &&
