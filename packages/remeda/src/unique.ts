@@ -44,10 +44,10 @@ export function unique(...args: readonly unknown[]): unknown {
 function lazyImplementation<T>(): LazyEvaluator<T> {
   const set = new Set<T>();
   return (value) => {
-    if (set.has(value)) {
-      return SKIP_ITEM;
-    }
+    // `add` leaves the set unchanged for a value it already holds, so the size
+    // tells duplicates apart with a single hash lookup per item.
+    const sizeBefore = set.size;
     set.add(value);
-    return value;
+    return set.size === sizeBefore ? SKIP_ITEM : value;
   };
 }

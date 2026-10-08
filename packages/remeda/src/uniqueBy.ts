@@ -63,11 +63,10 @@ function lazyImplementation<T>(
   const set = new Set<ReturnType<typeof brandedKeyFunction>>();
   return requireDataByArity(brandedKeyFunction, (value, index, data) => {
     const key = brandedKeyFunction(value, index, data);
-    if (set.has(key)) {
-      return SKIP_ITEM;
-    }
-
+    // `add` leaves the set unchanged for a key it already holds, so the size
+    // tells duplicates apart with a single hash lookup per item.
+    const sizeBefore = set.size;
     set.add(key);
-    return value;
+    return set.size === sizeBefore ? SKIP_ITEM : value;
   });
 }
