@@ -62,7 +62,8 @@ export const requireDataByArity = <T, R>(
  * `arguments[i]` access, and a trailing rest parameter
  * (`(value, index, ...rest) => ...` reports 2).
  * A callback that falls through one of them receives
- * `UNEXPECTED_ACCESS_SENTINEL`, which throws when read.
+ * `UNEXPECTED_ACCESS_SENTINEL`, which throws when used as an array or written
+ * to.
  */
 export const canReadData = (
   callback: StrictFunction,
