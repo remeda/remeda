@@ -1,0 +1,95 @@
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/callWithArguments.test.ts b/src/internal/callWithArguments.test.ts
+--- a/src/internal/callWithArguments.test.ts	1970-01-01 02:00:00
++++ b/src/internal/callWithArguments.test.ts	2026-10-07 10:04:48
+@@ -0,0 +1,16 @@
++import { expect, test } from "vitest";
++import { callWithArguments } from "./callWithArguments";
++
++test.each([
++  [[]],
++  [[1]],
++  [[1, 2]],
++  [[1, 2, 3]],
++  [[1, 2, 3, 4]],
++  [[1, 2, 3, 4, 5]],
++])("passes every argument of %j through", (args) => {
++  expect(callWithArguments(collectArguments, args)).toStrictEqual(args);
++});
++
++const collectArguments = (...args: readonly unknown[]): readonly unknown[] =>
++  args;
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/callWithArguments.ts b/src/internal/callWithArguments.ts
+--- a/src/internal/callWithArguments.ts	1970-01-01 02:00:00
++++ b/src/internal/callWithArguments.ts	2026-10-07 10:04:48
+@@ -0,0 +1,31 @@
++/**
++ * Calls `fn` with the elements of `args` as its arguments, the same as
++ * `fn(...args)`.
++ *
++ * Spreading an array whose length the compiler can't see goes through a
++ * generic builtin that copies it onto the stack on every call; the arities
++ * below cover almost every implementation called this way, and pass their
++ * arguments directly.
++ */
++export function callWithArguments<Return>(
++  fn: (...args: readonly unknown[]) => Return,
++  args: readonly unknown[],
++): Return {
++  switch (args.length) {
++    case 0:
++      return fn();
++
++    case 1:
++      return fn(args[0]);
++
++    case 2:
++      return fn(args[0], args[1]);
++
++    // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- An argument count, spelled out by the call below it.
++    case 3:
++      return fn(args[0], args[1], args[2]);
++
++    default:
++      return fn(...args);
++  }
++}
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/processSingleLazyStep.ts b/src/internal/processSingleLazyStep.ts
+--- a/src/internal/processSingleLazyStep.ts	2026-10-06 23:12:55
++++ b/src/internal/processSingleLazyStep.ts	2026-10-07 10:04:48
+@@ -3,6 +3,7 @@
+  * left by the `isDone` check, which sits outside the `switch`.
+  */
+ 
++import { callWithArguments } from "./callWithArguments";
+ import { isLazyControl } from "./lazyControl";
+ import { UNEXPECTED_ACCESS_SENTINEL } from "./requireData";
+ import type { LazyDefinition } from "./types/LazyDefinition";
+@@ -21,7 +22,7 @@
+   lazy: LazyDefinition["lazy"],
+   lazyArgs: LazyDefinition["lazyArgs"],
+ ): unknown {
+-  const lazyEvaluator = lazy(...lazyArgs);
++  const lazyEvaluator = callWithArguments(lazy, lazyArgs);
+ 
+   // `dataBuffer` exists only when the evaluator requires `data`, so it doubles
+   // as the flag for filling it; every other evaluator sees
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/pipe.ts b/src/pipe.ts
+--- a/src/pipe.ts	2026-10-06 23:12:55
++++ b/src/pipe.ts	2026-10-07 10:04:48
+@@ -2,6 +2,7 @@
+  * We document pipe's function params as a single parameter entry in the docs.
+  */
+ 
++import { callWithArguments } from "./internal/callWithArguments";
+ import { isLazyControl } from "./internal/lazyControl";
+ import { processSingleLazyStep } from "./internal/processSingleLazyStep";
+ import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/requireData";
+@@ -336,7 +337,7 @@
+ }
+ 
+ function buildLazyStep({ lazy, lazyArgs }: LazyDefinition): LazyStep {
+-  const lazyEvaluator = lazy(...lazyArgs);
++  const lazyEvaluator = callWithArguments(lazy, lazyArgs);
+   const isSingle = lazy.single ?? false;
+   return lazyEvaluator.requiresData
+     ? {

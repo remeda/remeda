@@ -1,0 +1,36 @@
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/lazyDataLastImpl.ts b/src/internal/lazyDataLastImpl.ts
+--- a/src/internal/lazyDataLastImpl.ts	2026-10-06 23:12:55
++++ b/src/internal/lazyDataLastImpl.ts	2026-10-07 10:05:24
+@@ -22,7 +22,10 @@
+   // doing.
+   const dataLast = (data: unknown): unknown => fn(data, ...args);
+ 
+-  return lazy === undefined
+-    ? dataLast
+-    : Object.assign(dataLast, { lazy, lazyArgs: args });
++  if (lazy !== undefined) {
++    dataLast.lazy = lazy;
++    dataLast.lazyArgs = args;
++  }
++
++  return dataLast;
+ }
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/purryFromLazy.ts b/src/internal/purryFromLazy.ts
+--- a/src/internal/purryFromLazy.ts	2026-10-06 23:12:55
++++ b/src/internal/purryFromLazy.ts	2026-10-07 10:05:24
+@@ -24,10 +24,11 @@
+ ): unknown {
+   if (args.length === lazy.length) {
+     // data-last
+-    return Object.assign(
+-      (data: Iterable<unknown>) => processSingleLazyStep(data, lazy, args),
+-      { lazy, lazyArgs: args } satisfies LazyDefinition,
+-    );
++    const dataLast = (data: Iterable<unknown>): unknown =>
++      processSingleLazyStep(data, lazy, args);
++    dataLast.lazy = lazy;
++    dataLast.lazyArgs = args;
++    return dataLast;
+   }
+ 
+   // data-first

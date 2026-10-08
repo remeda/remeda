@@ -1,0 +1,1066 @@
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/first.ts b/src/first.ts
+--- a/src/first.ts	2026-10-06 23:12:55
++++ b/src/first.ts	2026-10-07 12:35:23
+@@ -44,6 +44,6 @@
+   return purryWithLazy(firstImplementation, args, lazyImplementation);
+ }
+ 
+-const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;
++const firstImplementation = <T>(data: readonly T[]): T | undefined => data[0];
+ 
+ const lazyImplementation = toSingle((): LazyEvaluator => lastLazyValue);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/callWithArguments.test.ts b/src/internal/callWithArguments.test.ts
+--- a/src/internal/callWithArguments.test.ts	1970-01-01 02:00:00
++++ b/src/internal/callWithArguments.test.ts	2026-10-07 12:37:29
+@@ -0,0 +1,16 @@
++import { expect, test } from "vitest";
++import { callWithArguments } from "./callWithArguments";
++
++test.each([
++  [[]],
++  [[1]],
++  [[1, 2]],
++  [[1, 2, 3]],
++  [[1, 2, 3, 4]],
++  [[1, 2, 3, 4, 5]],
++])("passes every argument of %j through", (args) => {
++  expect(callWithArguments(collectArguments, args)).toStrictEqual(args);
++});
++
++const collectArguments = (...args: readonly unknown[]): readonly unknown[] =>
++  args;
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/callWithArguments.ts b/src/internal/callWithArguments.ts
+--- a/src/internal/callWithArguments.ts	1970-01-01 02:00:00
++++ b/src/internal/callWithArguments.ts	2026-10-07 12:37:29
+@@ -0,0 +1,31 @@
++/**
++ * Calls `fn` with the elements of `args` as its arguments, the same as
++ * `fn(...args)`.
++ *
++ * Spreading an array whose length the compiler can't see goes through a
++ * generic builtin that copies it onto the stack on every call; the arities
++ * below cover almost every implementation called this way, and pass their
++ * arguments directly.
++ */
++export function callWithArguments<Return>(
++  fn: (...args: readonly unknown[]) => Return,
++  args: readonly unknown[],
++): Return {
++  switch (args.length) {
++    case 0:
++      return fn();
++
++    case 1:
++      return fn(args[0]);
++
++    case 2:
++      return fn(args[0], args[1]);
++
++    // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- An argument count, spelled out by the call below it.
++    case 3:
++      return fn(args[0], args[1], args[2]);
++
++    default:
++      return fn(...args);
++  }
++}
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/lazyDataLastImpl.test.ts b/src/internal/lazyDataLastImpl.test.ts
+--- a/src/internal/lazyDataLastImpl.test.ts	1970-01-01 02:00:00
++++ b/src/internal/lazyDataLastImpl.test.ts	2026-10-07 12:35:23
+@@ -0,0 +1,18 @@
++import { expect, test } from "vitest";
++import { lazyDataLastImpl } from "./lazyDataLastImpl";
++
++test.each([[[]], [[1]], [[1, 2]], [[1, 2, 3]], [[1, 2, 3, 4]]])(
++  "passes the data and every argument of %j through",
++  (args) => {
++    // @ts-expect-error [ts2322] -- `lazyDataLastImpl` returns `unknown`; the overloads of the utilities built on it are what type the data-last function.
++    const dataLast: (data: unknown) => unknown = lazyDataLastImpl(
++      collectArguments,
++      args,
++    );
++
++    expect(dataLast("data")).toStrictEqual(["data", ...args]);
++  },
++);
++
++const collectArguments = (...args: readonly unknown[]): readonly unknown[] =>
++  args;
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/lazyDataLastImpl.ts b/src/internal/lazyDataLastImpl.ts
+--- a/src/internal/lazyDataLastImpl.ts	2026-10-06 23:12:55
++++ b/src/internal/lazyDataLastImpl.ts	2026-10-07 12:36:58
+@@ -16,13 +16,46 @@
+   lazy?: (...args: any) => LazyEvaluator,
+   // TODO: We can probably provide better typing to the return type...
+ ): unknown {
+-  // @ts-expect-error [ts2345] -- This error is accurate because we don't know
+-  // anything about `fn` so can't ensure that we are passing the correct
+-  // arguments to it, we just have to trust that the caller knows what they are
+-  // doing.
+-  const dataLast = (data: unknown): unknown => fn(data, ...args);
++  const dataLast = createDataLast(
++    // @ts-expect-error [ts2345] -- This error is accurate because we don't
++    // know anything about `fn` so can't ensure that we are passing the correct
++    // arguments to it, we just have to trust that the caller knows what they
++    // are doing.
++    fn,
++    args,
++  );
+ 
+-  return lazy === undefined
+-    ? dataLast
+-    : Object.assign(dataLast, { lazy, lazyArgs: args });
++  if (lazy !== undefined) {
++    dataLast.lazy = lazy;
++    dataLast.lazyArgs = args;
++  }
++
++  return dataLast;
++}
++
++type DataLast = ((data: unknown) => unknown) & {
++  lazy?: (...args: any) => LazyEvaluator;
++  lazyArgs?: readonly unknown[];
++};
++
++// Spreading `args` into the call would go through a generic builtin on every
++// invocation of the data-last function; the arities that cover almost every
++// data-last call get a function that passes them directly.
++function createDataLast(
++  fn: (...args: readonly unknown[]) => unknown,
++  args: readonly unknown[],
++): DataLast {
++  switch (args.length) {
++    case 0:
++      return (data) => fn(data);
++
++    case 1:
++      return (data) => fn(data, args[0]);
++
++    case 2:
++      return (data) => fn(data, args[0], args[1]);
++
++    default:
++      return (data) => fn(data, ...args);
++  }
+ }
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/processSingleLazyStep.ts b/src/internal/processSingleLazyStep.ts
+--- a/src/internal/processSingleLazyStep.ts	2026-10-06 23:12:55
++++ b/src/internal/processSingleLazyStep.ts	2026-10-07 12:36:29
+@@ -1,11 +1,7 @@
+-/* eslint-disable unicorn/no-break-in-nested-loop --
+- * The `break`s inside the `switch` only end their case; the loop itself is
+- * left by the `isDone` check, which sits outside the `switch`.
+- */
+-
+-import { isLazyControl } from "./lazyControl";
+-import { UNEXPECTED_ACCESS_SENTINEL } from "./requireData";
++import { callWithArguments } from "./callWithArguments";
++import { isLazyControl, SKIP_ITEM } from "./lazyControl";
+ import type { LazyDefinition } from "./types/LazyDefinition";
++import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
+ 
+ /**
+  * Runs an iterable through a single lazy step, skipping the step objects and
+@@ -21,7 +17,7 @@
+   lazy: LazyDefinition["lazy"],
+   lazyArgs: LazyDefinition["lazyArgs"],
+ ): unknown {
+-  const lazyEvaluator = lazy(...lazyArgs);
++  const lazyEvaluator = callWithArguments(lazy, lazyArgs);
+ 
+   // `dataBuffer` exists only when the evaluator requires `data`, so it doubles
+   // as the flag for filling it; every other evaluator sees
+@@ -32,41 +28,77 @@
+   const items = dataBuffer ?? UNEXPECTED_ACCESS_SENTINEL;
+ 
+   const accumulator: unknown[] = [];
+-  let index = 0;
+ 
+-  for (const value of iterable) {
+-    dataBuffer?.push(value);
++  if (Array.isArray(iterable)) {
++    // eslint-disable-next-line unicorn/no-for-loop -- The optimizing compiler only removes the iterator protocol from a `for...of` that has seen nothing but arrays, and the one below also sees sets, strings and generators; indexing skips the protocol for the common case.
++    for (let index = 0; index < iterable.length; index++) {
++      const value: unknown = iterable[index];
++      dataBuffer?.push(value);
+ 
+-    const result = lazyEvaluator(value, index, items);
+-    index += 1;
+-
+-    if (isLazyControl(result)) {
+-      switch (result.control) {
+-        case "many":
+-          for (const subItem of result.value) {
+-            // Pushed one by one rather than spread, so a large fan-out can't
+-            // hit the argument-count limit.
+-            accumulator.push(subItem);
+-          }
+-          break;
+-
+-        case "last":
+-          accumulator.push(result.value);
+-          break;
+-
+-        case "skip":
+-          // do nothing
+-          break;
++      const isDone = collect(lazyEvaluator(value, index, items), accumulator);
++      if (isDone) {
++        break;
+       }
++    }
++  } else {
++    let index = 0;
++    for (const value of iterable) {
++      dataBuffer?.push(value);
+ 
+-      if (result.isDone) {
++      const isDone = collect(lazyEvaluator(value, index, items), accumulator);
++      index += 1;
++      if (isDone) {
+         break;
+       }
+-    } else {
+-      // The common case: the evaluator emitted an item.
+-      accumulator.push(result);
+     }
+   }
+ 
+   return lazy.single ? accumulator[0] : accumulator;
++}
++
++/**
++ * Adds whatever the evaluator emitted for one item to `accumulator`.
++ *
++ * @returns Whether the evaluator is done.
++ */
++function collect(
++  result: unknown,
++  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, the results are accumulated into it directly.
++  accumulator: unknown[],
++): boolean {
++  if (result === SKIP_ITEM) {
++    // Skipping is the most frequent control (every item a `filter` drops),
++    // and this copy's singleton is recognized by identity alone; another
++    // copy's singleton still takes the general check below.
++    return false;
++  }
++
++  if (!isLazyControl(result)) {
++    // The common case: the evaluator emitted an item.
++    accumulator.push(result);
++    return false;
++  }
++
++  // Ordered by frequency: the cases are compared in turn, skipping happens
++  // on every item a filtering step drops, fanning out on every item of a
++  // flattening step, and stopping with a value at most once.
++  switch (result.control) {
++    case "skip":
++      // do nothing
++      break;
++
++    case "many":
++      for (const subItem of result.value) {
++        // Pushed one by one rather than spread, so a large fan-out can't hit
++        // the argument-count limit.
++        accumulator.push(subItem);
++      }
++      break;
++
++    case "last":
++      accumulator.push(result.value);
++      break;
++  }
++
++  return result.isDone;
+ }
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/purryFromLazy.ts b/src/internal/purryFromLazy.ts
+--- a/src/internal/purryFromLazy.ts	2026-10-06 23:12:55
++++ b/src/internal/purryFromLazy.ts	2026-10-07 12:35:23
+@@ -24,10 +24,11 @@
+ ): unknown {
+   if (args.length === lazy.length) {
+     // data-last
+-    return Object.assign(
+-      (data: Iterable<unknown>) => processSingleLazyStep(data, lazy, args),
+-      { lazy, lazyArgs: args } satisfies LazyDefinition,
+-    );
++    const dataLast = (data: Iterable<unknown>): unknown =>
++      processSingleLazyStep(data, lazy, args);
++    dataLast.lazy = lazy;
++    dataLast.lazyArgs = args;
++    return dataLast;
+   }
+ 
+   // data-first
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/purryWithLazy.ts b/src/internal/purryWithLazy.ts
+--- a/src/internal/purryWithLazy.ts	2026-10-06 23:12:55
++++ b/src/internal/purryWithLazy.ts	2026-10-07 12:35:23
+@@ -1,3 +1,4 @@
++import { callWithArguments } from "./callWithArguments";
+ import { lazyDataLastImpl } from "./lazyDataLastImpl";
+ import type { LazyDefinition } from "./types/LazyDefinition";
+ import type { StrictFunction } from "./types/StrictFunction";
+@@ -16,11 +17,12 @@
+   lazy: LazyDefinition["lazy"],
+ ): unknown =>
+   fn.length === args.length
+-    ? fn(
++    ? callWithArguments(
+         // @ts-expect-error [ts2345] -- This error is accurate because we don't
+         // know anything about `fn` so can't ensure that we are passing the
+         // correct arguments to it, we just have to trust that the caller knows
+         // what they are doing.
+-        ...args,
++        fn,
++        args,
+       )
+     : lazyDataLastImpl(fn, args, lazy);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/requireData.test.ts b/src/internal/requireData.test.ts
+--- a/src/internal/requireData.test.ts	2026-10-06 23:12:55
++++ b/src/internal/requireData.test.ts	2026-10-07 12:35:23
+@@ -1,36 +1,26 @@
+-import { inspect } from "node:util";
+-import { describe, expect, test } from "vitest";
+-import { UNEXPECTED_ACCESS_SENTINEL } from "./requireData";
++import { expect, test } from "vitest";
++import { requireData, requireDataByArity } from "./requireData";
+ 
+-describe("unexpected access sentinel", () => {
+-  // Typed the way the callbacks that receive it see it.
+-  const data: readonly number[] = UNEXPECTED_ACCESS_SENTINEL;
++test("`requireData` marks the evaluator", () => {
++  expect(requireData((value) => value).requiresData).toBe(true);
++});
+ 
+-  test.each([
+-    ["index access", () => data[0]],
+-    ["length", () => data.length],
+-    ["method call", () => data.at(0)],
+-    ["iteration", () => [...data]],
+-    ["string coercion", () => String(data)],
+-    ["serialization", () => JSON.stringify(data)],
+-    ["`in`", () => 0 in data],
+-    ["key enumeration", () => Object.keys(data)],
+-    [
+-      "prototype lookup",
+-      () => {
+-        Object.getPrototypeOf(data);
+-      },
+-    ],
+-    ["assignment", () => Reflect.set(data, 0, 1)],
+-  ])("throws on %s", (_name, operation) => {
+-    expect(operation).toThrow(/^Remeda: /u);
+-  });
++test("`requireDataByArity` marks the evaluator when the callback declares `data`", () => {
++  expect(requireDataByArity(declaresData, (value) => value).requiresData).toBe(
++    true,
++  );
++});
+ 
+-  test("is not an array", () => {
+-    expect(Array.isArray(data)).toBe(false);
+-  });
+-
+-  test("explains itself when logged", () => {
+-    expect(inspect(data)).toContain("Remeda: ");
+-  });
++test("`requireDataByArity` leaves the evaluator unmarked when the callback doesn't declare `data`", () => {
++  expect(
++    requireDataByArity(ignoresData, (value) => value).requiresData,
++  ).toBeUndefined();
+ });
++
++const declaresData = (
++  value: number,
++  _index: number,
++  data: readonly number[],
++): number => value + data.length;
++
++const ignoresData = (value: number, index: number): number => value + index;
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/requireData.ts b/src/internal/requireData.ts
+--- a/src/internal/requireData.ts	2026-10-06 23:12:55
++++ b/src/internal/requireData.ts	2026-10-07 12:36:14
+@@ -1,71 +1,11 @@
+-import type { Tagged } from "type-fest";
+-import type {
+-  LazyEvaluator,
+-  LazyEvaluatorMetadata,
+-} from "./types/LazyEvaluator";
++import type { LazyEvaluator } from "./types/LazyEvaluator";
+ import type { StrictFunction } from "./types/StrictFunction";
+ 
+-const UNEXPECTED_ACCESS_MESSAGE =
+-  "Remeda: a callback's `data` argument was read, but Remeda didn't provide it. Remeda only provides `data` to callbacks that declare it as a plain parameter, detected via `Function.length`, which misses a default value on `data` or an earlier parameter, a rest parameter after other parameters, `arguments` access, and mocks whose implementation declares fewer parameters. Declare `data` in the callback (or the mock's implementation), e.g. `(value, index, data) => ...`. If it already is, please report this at https://github.com/remeda/remeda/issues";
+-
+ // Most callbacks have the input `data` as their 3rd parameter, as in all the
+ // standard library functions.
+ const DEFAULT_DATA_PARAMETER_INDEX = 2;
+ 
+ /**
+- * Provided to a callback's `data` parameter whenever we believe it would not
+- * be used. A callback only receives it by slipping through the arity gate.
+- *
+- * Every operation on it throws, so the first touch signals that `data` wasn't
+- * collected for this callback: usually one of the holes documented on
+- * `requireDataByArity`, otherwise a detection bug worth reporting.
+- *
+- * @see requireDataByArity
+- */
+-// @ts-expect-error [ts2322] -- The proxy isn't an array, but any attempt to use it as one throws, so no code that relies on its type can run past the first touch.
+-export const UNEXPECTED_ACCESS_SENTINEL: Tagged<
+-  readonly never[],
+-  "RemedaUnexpectedAccessSentinel"
+-> = new Proxy(
+-  {
+-    // `console.log` and devtools print a proxy's target without running its
+-    // traps, so the message lives on the target too and a logged `data` still
+-    // explains itself.
+-    error: UNEXPECTED_ACCESS_MESSAGE,
+-  },
+-  {
+-    // Reads: what a callback that slipped through the arity gate does with it.
+-    get: alwaysThrow,
+-    getOwnPropertyDescriptor: alwaysThrow,
+-    getPrototypeOf: alwaysThrow,
+-    has: alwaysThrow,
+-    isExtensible: alwaysThrow,
+-    ownKeys: alwaysThrow,
+-
+-    // Writes: would otherwise reach the target, which every pipe shares.
+-    defineProperty: alwaysThrow,
+-    deleteProperty: alwaysThrow,
+-    preventExtensions: alwaysThrow,
+-    set: alwaysThrow,
+-    setPrototypeOf: alwaysThrow,
+-
+-    // `apply` and `construct` are left out: they only fire for callable
+-    // targets.
+-  },
+-);
+-
+-type RequireDataByArityOptions = {
+-  /**
+-   * Some special functions have their `data` parameter in a different
+-   * position, mostly when they process more than a single input array.
+-   *
+-   * @see zipWith
+-   * @default 2
+-   */
+-  readonly dataParameterIndex?: number;
+-};
+-
+-/**
+  * Marks an evaluator that reads `data` itself, so `pipe` must always buffer.
+  * The marker is applied by mutating `evaluator`, so callers must pass a freshly
+  * created closure, never a shared singleton or the user's callback itself.
+@@ -75,18 +15,38 @@
+   // `LazyEvaluator<T, R>` return type, so a wrong evaluator is reported at its
+   // own return expression instead of widening `R` and failing at the call.
+   evaluator: NoInfer<LazyEvaluator<T, R>>,
+-): LazyEvaluator<T, R> =>
+-  Object.assign(evaluator, {
+-    requiresData: true,
+-  } satisfies LazyEvaluatorMetadata);
++): LazyEvaluator<T, R> => {
++  // @ts-expect-error [ts2540] -- The marker is read-only so that evaluators can't set it on themselves; this helper is the one place that does.
++  evaluator.requiresData = true;
++  return evaluator;
++};
+ 
+ /**
+  * Marks an evaluator as needing `data` only when the user's `callback` is
+  * likely to read it, based on its signature.
+  *
++ * `dataParameterIndex` is where `data` sits in `callback`'s own parameter
++ * list; some special functions have it in a different position, mostly when
++ * they process more than a single input array (e.g. `zipWith`).
++ *
++ * @see canReadData
++ */
++export const requireDataByArity = <T, R>(
++  callback: StrictFunction,
++  evaluator: NoInfer<LazyEvaluator<T, R>>,
++  dataParameterIndex = DEFAULT_DATA_PARAMETER_INDEX,
++): LazyEvaluator<T, R> =>
++  canReadData(callback, dataParameterIndex)
++    ? requireData(evaluator)
++    : evaluator;
++
++/**
++ * Whether the user's `callback` is likely to read its `data` parameter, based
++ * on its signature.
++ *
+  * `Function.length` counts only the plain parameters before the first rest or
+  * defaulted one. It is 0 for wrappers that forward `arguments` (memoize,
+- * debounce), which we can't see through, so those buffer too.
++ * debounce), which we can't see through, so those count as reading it too.
+  *
+  * Three holes are documented rather than guarded: a default value on `data` or
+  * any parameter before it (`(value, index, data = []) => ...` reports 2),
+@@ -95,17 +55,7 @@
+  * A callback that falls through one of them receives
+  * `UNEXPECTED_ACCESS_SENTINEL`, which throws when read.
+  */
+-export const requireDataByArity = <T, R>(
++export const canReadData = (
+   callback: StrictFunction,
+-  evaluator: NoInfer<LazyEvaluator<T, R>>,
+-  {
+-    dataParameterIndex = DEFAULT_DATA_PARAMETER_INDEX,
+-  }: RequireDataByArityOptions = {},
+-): LazyEvaluator<T, R> =>
+-  callback.length === 0 || callback.length > dataParameterIndex
+-    ? requireData(evaluator)
+-    : evaluator;
+-
+-function alwaysThrow(): never {
+-  throw new Error(UNEXPECTED_ACCESS_MESSAGE);
+-}
++  dataParameterIndex = DEFAULT_DATA_PARAMETER_INDEX,
++): boolean => callback.length === 0 || callback.length > dataParameterIndex;
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/unexpectedAccessSentinel.test.ts b/src/internal/unexpectedAccessSentinel.test.ts
+--- a/src/internal/unexpectedAccessSentinel.test.ts	1970-01-01 02:00:00
++++ b/src/internal/unexpectedAccessSentinel.test.ts	2026-10-07 12:35:23
+@@ -0,0 +1,55 @@
++import { inspect } from "node:util";
++import { describe, expect, test } from "vitest";
++import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
++
++describe("unexpected access sentinel", () => {
++  // Typed the way the callbacks that receive it see it.
++  const data: readonly number[] = UNEXPECTED_ACCESS_SENTINEL;
++
++  test.each([
++    ["index access", () => data[0]],
++    ["length", () => data.length],
++    ["`map`", () => data.map((value) => value)],
++    ["`at`", () => data.at(0)],
++    ["iteration", () => [...data]],
++    ["string coercion", () => String(data)],
++    ["serialization", () => JSON.stringify(data)],
++    ["`in` with an index", () => 0 in data],
++    ["key enumeration", () => Object.keys(data)],
++    ["own index lookup", () => Object.hasOwn(data, 0)],
++    ["assignment", () => Reflect.set(data, 0, 1)],
++    [
++      "property definition",
++      () => Reflect.defineProperty(data, "key", { value: 1 }),
++    ],
++    ["deletion", () => Reflect.deleteProperty(data, "key")],
++  ])("throws on %s", (_name, operation) => {
++    expect(operation).toThrow(/^Remeda: /u);
++  });
++
++  // Curried functions (e.g. Ramda's) probe every argument they receive for a
++  // placeholder marker, so one used as a callback probes `data` too.
++  test("a placeholder probe reads nothing", () => {
++    expect(Reflect.get(data, "@@functional/placeholder")).toBeUndefined();
++  });
++
++  test("a placeholder probe finds nothing", () => {
++    expect("@@functional/placeholder" in data).toBe(false);
++  });
++
++  test("an own placeholder probe finds nothing", () => {
++    expect(Object.hasOwn(data, "@@functional/placeholder")).toBe(false);
++  });
++
++  test("is an ordinary object", () => {
++    expect(Object.getPrototypeOf(data)).toBe(Object.prototype);
++  });
++
++  test("is not an array", () => {
++    expect(Array.isArray(data)).toBe(false);
++  });
++
++  test("explains itself when logged", () => {
++    expect(inspect(data)).toContain("Remeda: ");
++  });
++});
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/unexpectedAccessSentinel.ts b/src/internal/unexpectedAccessSentinel.ts
+--- a/src/internal/unexpectedAccessSentinel.ts	1970-01-01 02:00:00
++++ b/src/internal/unexpectedAccessSentinel.ts	2026-10-07 12:35:23
+@@ -0,0 +1,80 @@
++import type { Tagged } from "type-fest";
++
++const UNEXPECTED_ACCESS_MESSAGE =
++  "Remeda: a callback used its `data` argument as an array, but didn't declare it as a parameter, so Remeda didn't provide it. Declare it, e.g. `(value, index, data) => ...`.";
++
++// The canonical array indices, which every indexed read and write uses as its
++// key.
++const ARRAY_INDEX = /^(?:0|[1-9]\d*)$/u;
++
++/**
++ * Provided to a callback's `data` parameter whenever we believe it would not
++ * be used. A callback only receives it by slipping through the arity gate.
++ *
++ * Using it as an array throws (an index, `length`, an array method, iterating
++ * it, listing its keys), and so does writing to it, so the first such use
++ * signals that `data` wasn't collected for this callback: usually one of the
++ * holes documented on `requireDataByArity`, otherwise a detection bug worth
++ * reporting. Every other read finds nothing, as on an empty object, so code
++ * that only probes its arguments (e.g. a curried wrapper looking for a
++ * placeholder) isn't broken by an argument it was never going to use.
++ *
++ * @see requireDataByArity
++ */
++// @ts-expect-error [ts2322] -- The proxy isn't an array, but any attempt to use it as one throws, so no code that relies on its type can run past the first touch.
++export const UNEXPECTED_ACCESS_SENTINEL: Tagged<
++  readonly never[],
++  "RemedaUnexpectedAccessSentinel"
++> = new Proxy(
++  {
++    // `console.log` and devtools print a proxy's target without running its
++    // traps, so the message lives on the target too and a logged `data` still
++    // explains itself.
++    error: UNEXPECTED_ACCESS_MESSAGE,
++  },
++  {
++    // Reads: using it as an array throws, anything else finds nothing.
++    get: (_target, key) => {
++      throwOnArrayKey(key);
++    },
++    getOwnPropertyDescriptor: (_target, key) => {
++      throwOnArrayKey(key);
++    },
++    has: (_target, key) => {
++      throwOnArrayKey(key);
++      return false;
++    },
++    ownKeys: alwaysThrow,
++
++    // `getPrototypeOf` and `isExtensible` are left to the target, an ordinary
++    // object, so the sentinel reports `Object.prototype` like any object
++    // literal: `instanceof Array` is false, while plain-object checks pass.
++    // Every key it could inherit from there is also on `Array.prototype`, so
++    // reading one throws above.
++
++    // Writes: would otherwise reach the target, which every pipe shares.
++    defineProperty: alwaysThrow,
++    deleteProperty: alwaysThrow,
++    preventExtensions: alwaysThrow,
++    set: alwaysThrow,
++    setPrototypeOf: alwaysThrow,
++
++    // `apply` and `construct` are left out: they only fire for callable
++    // targets.
++  },
++);
++
++function throwOnArrayKey(key: string | symbol): void {
++  // `Array.prototype` is itself an array, so its keys include `length`, and it
++  // inherits every key of `Object.prototype`.
++  if (
++    Reflect.has(Array.prototype, key) ||
++    (typeof key === "string" && ARRAY_INDEX.test(key))
++  ) {
++    alwaysThrow();
++  }
++}
++
++function alwaysThrow(): never {
++  throw new Error(UNEXPECTED_ACCESS_MESSAGE);
++}
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/map.test.ts b/src/map.test.ts
+--- a/src/map.test.ts	2026-10-06 23:12:55
++++ b/src/map.test.ts	2026-10-07 12:35:23
+@@ -87,6 +87,28 @@
+     ]);
+     expect(anyItems2).toStrictEqual([[1], [1, 3], [1, 3, 5]]);
+   });
++
++  test("never marks the callback itself", () => {
++    pipe([1, 2, 3], map(double), map(addDataLength));
++
++    expect(double).not.toHaveProperty("requiresData");
++    expect(addDataLength).not.toHaveProperty("requiresData");
++  });
++
++  test("calls the callback without a receiver", () => {
++    const receivers: unknown[] = [];
++
++    pipe(
++      [1, 2],
++      map(function recordReceiver(this: unknown, x: number) {
++        receivers.push(this);
++        return x;
++      }),
++      map((x) => x),
++    );
++
++    expect(receivers).toStrictEqual([undefined, undefined]);
++  });
+ });
+ 
+ test("number array", () => {
+@@ -121,3 +143,11 @@
+     expect(map([1, "2", true], (_, index) => index)).toStrictEqual([0, 1, 2]);
+   });
+ });
++
++const double = (x: number): number => x * 2;
++
++const addDataLength = (
++  x: number,
++  _index: number,
++  data: readonly number[],
++): number => x + data.length;
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/map.ts b/src/map.ts
+--- a/src/map.ts	2026-10-06 23:12:55
++++ b/src/map.ts	2026-10-07 12:35:23
+@@ -1,5 +1,5 @@
+ import { purryWithLazy } from "./internal/purryWithLazy";
+-import { requireDataByArity } from "./internal/requireData";
++import { canReadData, requireData } from "./internal/requireData";
+ import type { IterableContainer } from "./internal/types/IterableContainer";
+ import type { LazyCallback } from "./internal/types/LazyCallback";
+ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+@@ -63,6 +63,9 @@
+ const lazyImplementation = <T, U>(
+   callbackfn: (value: T, index: number, data: readonly T[]) => U,
+ ): LazyEvaluator<T, U> =>
+-  requireDataByArity(callbackfn, (value, index, data) =>
+-    callbackfn(value, index, data),
+-  );
++  canReadData(callbackfn)
++    ? requireData((value, index, data) => callbackfn(value, index, data))
++    : // A callback that doesn't read `data` already is a complete evaluator,
++      // and using it directly saves a call per item. It is never marked:
++      // `requireData` only marks the wrapper above.
++      callbackfn;
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/mapWithFeedback.ts b/src/mapWithFeedback.ts
+--- a/src/mapWithFeedback.ts	2026-10-06 23:12:55
++++ b/src/mapWithFeedback.ts	2026-10-07 12:35:23
+@@ -71,6 +71,9 @@
+   return purryFromLazy(lazyImplementation, args);
+ }
+ 
++// The reducer's `previousValue` comes first, so `data` is its 4th parameter.
++const DATA_PARAMETER_INDEX = 3;
++
+ const lazyImplementation = <T, U>(
+   reducer: (
+     previousValue: U,
+@@ -87,6 +90,6 @@
+       previousValue = reducer(previousValue, currentValue, index, data);
+       return previousValue;
+     },
+-    { dataParameterIndex: 3 },
++    DATA_PARAMETER_INDEX,
+   );
+ };
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/pipe.test.ts b/src/pipe.test.ts
+--- a/src/pipe.test.ts	2026-10-06 23:12:55
++++ b/src/pipe.test.ts	2026-10-07 12:38:12
+@@ -440,6 +440,16 @@
+       expect(pipe([1, 2, 3], take(0))).toStrictEqual([]);
+     });
+ 
++    test("pulls from a non-array iterable only until done", () => {
++      expect(
++        pipe(
++          naturals(),
++          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
++          take(3),
++        ),
++      ).toStrictEqual([0, 1, 2]);
++    });
++
+     test("done without a value stops the iteration", () => {
+       const evaluator = vi.fn<LazyEvaluator>(lazyEmptyEvaluator);
+ 
+@@ -566,7 +576,25 @@
+ 
+     expect(result).toBe("10,20,30");
+   });
++
++  test("fused steps pull from a non-array iterable only until done", () => {
++    expect(
++      pipe(
++        naturals(),
++        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
++        map((x: number) => x * 10),
++        take(3),
++      ),
++    ).toStrictEqual([0, 10, 20]);
++  });
+ });
++
++// Never finishes on its own, so only a pipe that stops pulling can consume it.
++function* naturals(): Generator<number> {
++  for (let value = 0; ; value++) {
++    yield value;
++  }
++}
+ 
+ // We want to test a lazy evaluator that is both `isDone` and a "many" control
+ // at the same time but don't have any utility that does it.
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/pipe.ts b/src/pipe.ts
+--- a/src/pipe.ts	2026-10-06 23:12:55
++++ b/src/pipe.ts	2026-10-07 12:37:14
+@@ -2,11 +2,12 @@
+  * We document pipe's function params as a single parameter entry in the docs.
+  */
+ 
+-import { isLazyControl } from "./internal/lazyControl";
++import { callWithArguments } from "./internal/callWithArguments";
++import { isLazyControl, SKIP_ITEM } from "./internal/lazyControl";
+ import { processSingleLazyStep } from "./internal/processSingleLazyStep";
+-import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/requireData";
+ import type { LazyDefinition } from "./internal/types/LazyDefinition";
+ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
++import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/unexpectedAccessSentinel";
+ 
+ type LazyStep = {
+   readonly lazyEvaluator: LazyEvaluator;
+@@ -298,11 +299,7 @@
+   }
+ 
+   if (functions.length === 1) {
+-    // A pipe of one lazy function is a lazy sequence of one step, which has no
+-    // cross-step bookkeeping to set up: the step array, the step object, and
+-    // the hand-off through them are all overhead. It is decided here rather
+-    // than inside the loop below because a second processing call in the loop
+-    // body measured ~7% slower on multi-step pipes.
++    // The most common pipe, a single function, skips the loop below.
+     const func = functions[0]!;
+     return "lazy" in func && isIterable(input)
+       ? processSingleLazyStep(input, func.lazy, func.lazyArgs)
+@@ -310,24 +307,37 @@
+   }
+ 
+   let output = input;
+-  const lazySteps = functions.map((op) =>
+-    "lazy" in op ? buildLazyStep(op) : undefined,
+-  );
+-
+   let functionIndex = 0;
+   while (functionIndex < functions.length) {
+-    const lazyStep = lazySteps[functionIndex];
+-    if (lazyStep === undefined || !isIterable(output)) {
+-      const func = functions[functionIndex]!;
++    const func = functions[functionIndex]!;
++    if (!("lazy" in func) || !isIterable(output)) {
+       output = func(output);
+       functionIndex += 1;
+       continue;
+     }
+ 
+-    const lazySequence = extractLazySequence(lazySteps, functionIndex);
++    const nextFunc = functions[functionIndex + 1];
++    if (
++      nextFunc === undefined ||
++      !("lazy" in nextFunc) ||
++      func.lazy.single === true
++    ) {
++      // A run of one lazy function is a lazy sequence of one step, which has
++      // no cross-step bookkeeping to set up: the step array, the step object,
++      // and the hand-off through them are all overhead.
++      output = processSingleLazyStep(output, func.lazy, func.lazyArgs);
++      functionIndex += 1;
++      continue;
++    }
++
++    // Steps are built when the loop reaches their run with iterable data, so
++    // a pipe without lazy functions, or whose lazy functions get non-iterable
++    // data, builds none.
++    const lazySequence = buildLazySequence(functions, functionIndex);
+     const accumulator = processIterable(output, lazySequence);
+ 
+-    const { isSingle } = lazySequence.at(-1)!;
++    // eslint-disable-next-line unicorn/prefer-at -- `.at` is a builtin call until the optimizing tier inlines it, while an index is a plain element load; the sequence is never empty, so the two read the same step.
++    const { isSingle } = lazySequence[lazySequence.length - 1]!;
+     output = isSingle ? accumulator[0] : accumulator;
+     functionIndex += lazySequence.length;
+   }
+@@ -336,7 +346,7 @@
+ }
+ 
+ function buildLazyStep({ lazy, lazyArgs }: LazyDefinition): LazyStep {
+-  const lazyEvaluator = lazy(...lazyArgs);
++  const lazyEvaluator = callWithArguments(lazy, lazyArgs);
+   const isSingle = lazy.single ?? false;
+   return lazyEvaluator.requiresData
+     ? {
+@@ -355,19 +365,19 @@
+       };
+ }
+ 
+-function extractLazySequence(
+-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
+-  lazySteps: readonly (LazyStep | undefined)[],
++function buildLazySequence(
++  functions: readonly (LazyFunction | ((value: unknown) => unknown))[],
+   startIndex: number,
+ ): readonly LazyStep[] {
+   const lazySequence: LazyStep[] = [];
+ 
+-  for (let index = startIndex; index < lazySteps.length; index++) {
+-    const lazyStep = lazySteps[index];
+-    if (lazyStep === undefined) {
++  for (let index = startIndex; index < functions.length; index++) {
++    const func = functions[index]!;
++    if (!("lazy" in func)) {
+       break;
+     }
+ 
++    const lazyStep = buildLazyStep(func);
+     lazySequence.push(lazyStep);
+     if (lazyStep.isSingle) {
+       break;
+@@ -384,16 +394,31 @@
+ ): unknown[] {
+   const accumulator: unknown[] = [];
+ 
+-  for (const value of iterable) {
+-    const shouldExitEarly = processItem(
+-      value,
+-      accumulator,
+-      lazySequence,
+-      0 /* startIndex */,
+-    );
+-    if (shouldExitEarly) {
+-      break;
++  if (Array.isArray(iterable)) {
++    // eslint-disable-next-line @typescript-eslint/prefer-for-of, unicorn/no-for-loop -- The optimizing compiler only removes the iterator protocol from a `for...of` that has seen nothing but arrays, and the one below also sees sets, strings and generators; indexing skips the protocol for the common case.
++    for (let index = 0; index < iterable.length; index++) {
++      const shouldExitEarly = processItem(
++        iterable[index],
++        accumulator,
++        lazySequence,
++        0 /* startIndex */,
++      );
++      if (shouldExitEarly) {
++        break;
++      }
+     }
++  } else {
++    for (const value of iterable) {
++      const shouldExitEarly = processItem(
++        value,
++        accumulator,
++        lazySequence,
++        0 /* startIndex */,
++      );
++      if (shouldExitEarly) {
++        break;
++      }
++    }
+   }
+ 
+   return accumulator;
+@@ -418,9 +443,19 @@
+     if (step.requiresData) {
+       step.items.push(currentItem);
+     }
+-    const result = step.lazyEvaluator(currentItem, step.index, step.items);
++    // Called without a receiver: the evaluator can be the user's own callback,
++    // which mustn't see the step as `this`.
++    const { lazyEvaluator } = step;
++    const result = lazyEvaluator(currentItem, step.index, step.items);
+     step.index += 1;
+ 
++    if (result === SKIP_ITEM) {
++      // Skipping is the most frequent control (every item a `filter` drops),
++      // and this copy's singleton is recognized by identity alone; another
++      // copy's singleton still takes the general check below.
++      return isDone;
++    }
++
+     if (isLazyControl(result)) {
+       if (result.isDone) {
+         isDone = true;
+@@ -462,6 +497,9 @@
+ function isIterable(something: unknown): something is Iterable<unknown> {
+   // Check for null and undefined to avoid errors when accessing Symbol.iterator
+   return (
++    // Arrays are by far the most common input, and the compiler reduces this
++    // check to a type test, where the `in` check below is a property lookup.
++    Array.isArray(something) ||
+     typeof something === "string" ||
+     (typeof something === "object" &&
+       something !== null &&
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/purry.ts b/src/purry.ts
+--- a/src/purry.ts	2026-10-06 23:12:55
++++ b/src/purry.ts	2026-10-07 12:35:23
+@@ -1,3 +1,4 @@
++import { callWithArguments } from "./internal/callWithArguments";
+ import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
+ import type { StrictFunction } from "./internal/types/StrictFunction";
+ 
+@@ -41,11 +42,12 @@
+  */
+ export const purry = (fn: StrictFunction, args: readonly unknown[]): unknown =>
+   fn.length === args.length
+-    ? fn(
++    ? callWithArguments(
+         // @ts-expect-error [ts2345] -- This error is accurate because we don't
+         // know anything about `fn` so can't ensure that we are passing the
+         // correct arguments to it, we just have to trust that the caller knows
+         // what they are doing.
+-        ...args,
++        fn,
++        args,
+       )
+     : lazyDataLastImpl(fn, args);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/unique.ts b/src/unique.ts
+--- a/src/unique.ts	2026-10-06 23:12:55
++++ b/src/unique.ts	2026-10-07 12:35:23
+@@ -44,10 +44,10 @@
+ function lazyImplementation<T>(): LazyEvaluator<T> {
+   const set = new Set<T>();
+   return (value) => {
+-    if (set.has(value)) {
+-      return SKIP_ITEM;
+-    }
++    // `add` leaves the set unchanged for a value it already holds, so the size
++    // tells duplicates apart with a single hash lookup per item.
++    const sizeBefore = set.size;
+     set.add(value);
+-    return value;
++    return set.size === sizeBefore ? SKIP_ITEM : value;
+   };
+ }
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/uniqueBy.ts b/src/uniqueBy.ts
+--- a/src/uniqueBy.ts	2026-10-06 23:12:55
++++ b/src/uniqueBy.ts	2026-10-07 12:35:23
+@@ -63,11 +63,10 @@
+   const set = new Set<ReturnType<typeof brandedKeyFunction>>();
+   return requireDataByArity(brandedKeyFunction, (value, index, data) => {
+     const key = brandedKeyFunction(value, index, data);
+-    if (set.has(key)) {
+-      return SKIP_ITEM;
+-    }
+-
++    // `add` leaves the set unchanged for a key it already holds, so the size
++    // tells duplicates apart with a single hash lookup per item.
++    const sizeBefore = set.size;
+     set.add(key);
+-    return value;
++    return set.size === sizeBefore ? SKIP_ITEM : value;
+   });
+ }
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/zipWith.ts b/src/zipWith.ts
+--- a/src/zipWith.ts	2026-10-06 23:12:55
++++ b/src/zipWith.ts	2026-10-07 12:35:23
+@@ -124,6 +124,10 @@
+     : second.map((item, index) => fn(first[index], item, index, datum));
+ }
+ 
++// The zipping function takes an item from each array, so `data` is its 4th
++// parameter.
++const DATA_PARAMETER_INDEX = 3;
++
+ const lazyImplementation = <T1, T2 extends IterableContainer, Value>(
+   second: T2,
+   fn: ZippingFunction<readonly T1[], T2, Value>,
+@@ -136,5 +140,5 @@
+           const zipped = fn(value, second[index], index, [data, second]);
+           return index >= second.length - 1 ? lastLazyValue(zipped) : zipped;
+         },
+-        { dataParameterIndex: 3 },
++        DATA_PARAMETER_INDEX,
+       );

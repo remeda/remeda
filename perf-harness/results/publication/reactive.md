@@ -1,0 +1,12 @@
+# Reactive-store probes (node v26.9.0, 5 runs, medians)
+
+`pipe(items, filter(active), map(value * 2), take(10))` over 1,000 observable items, inside a Vue `computed` and a MobX `autorun`. Re-evaluation: mutate an item the pipe read, then read the result (Vue) / let the autorun rerun (MobX), 1,000 times after 200 warmup. Dependencies: the reaction's tracked dependencies after a re-evaluation (Vue: the computed's dependency links; MobX: `getDependencyTree`), how many are on the branch's control key `$$remedaLazyRef` (Vue: the link's key; MobX: dev-build names), and MobX dependencies on keys observed while absent (`in` misses, named `...?`). onTrack: Vue's dev-build events in one re-evaluation. Footprint: heap held after `gc()` by the store and reaction after the first evaluation. Growth: heap change over the 1,200 re-evaluations that follow (a leak check).
+
+| framework | copy    | re-eval median us | p75 us | mean us | dependencies | on $$remedaLazyRef | on absent keys | onTrack events | onTrack on $$remedaLazyRef | footprint KiB | growth over 1,200 re-evals KiB |
+| --------- | ------- | ----------------- | ------ | ------- | ------------ | ------------------ | -------------- | -------------- | -------------------------- | ------------- | ------------------------------ |
+| vue       | main    | 5.71              | 6.83   | 6.08    | 31           | 0                  | -              | 31             | 0                          | 31.4          | 27.6                           |
+| vue       | branch  | 5.42              | 6.67   | 5.80    | 31           | 0                  | -              | 31             | 0                          | 35.1          | 24.6                           |
+| vue       | main-aa | 5.50              | 6.83   | 5.94    | 31           | 0                  | -              | 31             | 0                          | 30.8          | 25.8                           |
+| mobx      | main    | 5.21              | 6.08   | 5.79    | 31           | 0                  | 0              | -              | -                          | 844.7         | 68.6                           |
+| mobx      | branch  | 4.87              | 5.58   | 5.37    | 31           | 0                  | 0              | -              | -                          | 844.5         | 70.5                           |
+| mobx      | main-aa | 5.21              | 6.04   | 5.95    | 31           | 0                  | 0              | -              | -                          | 844.5         | 69.6                           |

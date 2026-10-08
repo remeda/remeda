@@ -1,0 +1,10 @@
+| copy | pipe(items, filter, map, take(10)) | pipe(items, find(id === 20)) | pipe(items, take(10)) | find(items, id === 20) data-first | filter(items, active) data-first |
+| --- | --- | --- | --- | --- | --- |
+| main | 31 | 23 | 2 | 23 | 1002 |
+| branch | 41 | 23 | 11 | 23 | 1002 |
+| branch-v-identity-controls-v2 | 31 | 23 | 2 | 23 | 1002 |
+| branch-v-pipe-array-index-loop | 60 | 23 | 11 | 23 | 1002 |
+| branch-v-single-array-index-loop | 41 | 44 | 21 | 23 | 1002 |
+| branch-v-pipe-isarray-first | 41 | 23 | 11 | 23 | 1002 |
+| branch-v-combo-a | 60 | 44 | 21 | 23 | 1002 |
+| branch-v-combo-b | 50 | 44 | 12 | 23 | 1002 |

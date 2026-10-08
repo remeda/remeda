@@ -1,0 +1,13 @@
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/pipe.ts b/src/pipe.ts
+--- a/src/pipe.ts	2026-10-06 23:12:55
++++ b/src/pipe.ts	2026-10-07 09:47:54
+@@ -327,7 +327,8 @@
+     const lazySequence = extractLazySequence(lazySteps, functionIndex);
+     const accumulator = processIterable(output, lazySequence);
+ 
+-    const { isSingle } = lazySequence.at(-1)!;
++    // eslint-disable-next-line unicorn/prefer-at -- `.at` is a builtin call until the optimizing tier inlines it, while an index is a plain element load; the sequence is never empty, so the two read the same step.
++    const { isSingle } = lazySequence[lazySequence.length - 1]!;
+     output = isSingle ? accumulator[0] : accumulator;
+     functionIndex += lazySequence.length;
+   }

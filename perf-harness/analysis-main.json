@@ -1,0 +1,4991 @@
+{
+  "generatedBy": "a8/build-json.mjs",
+  "branch": "144fdc8b6208b40b7fc1f0690ecc99dd17c2a5a6",
+  "main": "8e6e78f6eaf66eaf0b4797d72cc3691823c91335",
+  "notes": [
+    "Ratios are copy/reference (< 1 = faster); weighted geomean = popularity-weighted geomean of per-scenario medians (high 4, mid 2, low 1).",
+    "Variant verdicts charge a variant with its own losses vs branch (tier rules) and with bar violations vs main that the branch does not share in the same batch, except the G3 deopt cluster; read literally, only pipe-single-step-runs passes (results/main/survivors.json).",
+    "Part 2 numbers come from the agent sandbox: relative only."
+  ],
+  "part1": {
+    "dataQuality": {
+      "floors": {
+        "full": {
+          "T1": 0.0307,
+          "T2": 0.0311,
+          "T3": 0.0332
+        },
+        "combo": {
+          "T1": 0.0988,
+          "T2": 0.1046
+        },
+        "variantsPooled": {
+          "T1": 0.0445,
+          "T2": 0.0563,
+          "T3": 0.0515
+        },
+        "perBatch": {
+          "b1": {
+            "T1": 0.0363,
+            "T2": 0.0294,
+            "T3": 0.0364
+          },
+          "b2": {
+            "T1": 0.0959,
+            "T2": 0.0998,
+            "T3": 0.0844
+          },
+          "b3": {
+            "T1": 0.0913,
+            "T2": 0.1034,
+            "T3": 0.1065
+          },
+          "b4": {
+            "T1": 0.0303,
+            "T2": 0.0321,
+            "T3": 0.0287
+          },
+          "b5": {
+            "T1": 0.0369,
+            "T2": 0.0339,
+            "T3": 0.0303
+          },
+          "b6": {
+            "T1": 0.0308,
+            "T2": 0.028,
+            "T3": 0.0314
+          },
+          "b7": {
+            "T1": 0.0366,
+            "T2": 0.0434,
+            "T3": 0.0409
+          }
+        },
+        "extras": {
+          "x-jitless": {
+            "T3": 0.0145
+          },
+          "x-maxopt1": {
+            "T3": 0.0256
+          },
+          "x-maxopt2": {
+            "T3": 0.0483
+          },
+          "x-p0": {
+            "T1": 0.0132,
+            "T2": 0.1297,
+            "T3": 0.225
+          },
+          "x-p1": {
+            "T1": 0.0223,
+            "T2": 0.0219,
+            "T3": 0.0237
+          },
+          "x-node22": {
+            "T1": 0.0389,
+            "T2": 0.0102
+          },
+          "x-node24": {
+            "T1": 0.0456,
+            "T2": 0.0121
+          },
+          "x-bundle": {
+            "T1": 0.0452,
+            "T2": 0.0134
+          },
+          "x-cjs": {
+            "T1": 0.1579,
+            "T2": 0.1684
+          },
+          "x-bun": {
+            "T1": 0.0642,
+            "T2": 0.0253
+          },
+          "x-portable-node": {
+            "T1": 0.0485,
+            "T2": 0.0154
+          },
+          "x-isolated": {
+            "T1": 0.0402,
+            "T2": 0.0318
+          }
+        }
+      },
+      "aaFalseCalls": {
+        "full": {
+          "T1": {
+            "calls": 1,
+            "scenarios": 153,
+            "bar": 0,
+            "keys": ["G3 | pipe(x, add(1)) | x64 | headline (faster 0.939)"]
+          },
+          "T2": {
+            "calls": 1,
+            "scenarios": 173,
+            "bar": 1,
+            "keys": ["G3 | array sortBy+groupBy | M (regression 1.065)"]
+          },
+          "T3": {
+            "calls": 0,
+            "scenarios": 200,
+            "bar": 0,
+            "keys": []
+          }
+        },
+        "combo": {
+          "T1": {
+            "calls": 0,
+            "scenarios": 153,
+            "bar": 0,
+            "keys": []
+          },
+          "T2": {
+            "calls": 5,
+            "scenarios": 173,
+            "bar": 3,
+            "keys": [
+              "G5 | data-first zip | S | data-first-guard (regression 1.571)",
+              "G5 | data-first zip | C | data-first-guard (regression 1.734)",
+              "G7 | mergeDeep data-first | C | data-first-guard (faster 0.851)",
+              "G7 | mergeDeep data-last | C | data-first-guard (faster 0.878)",
+              "G7 | sumBy data-last | S | data-first-guard (regression 1.234)"
+            ]
+          },
+          "T3": {
+            "calls": 0,
+            "scenarios": 0,
+            "bar": 0,
+            "keys": []
+          }
+        },
+        "variantsPooled": {
+          "T1": {
+            "calls": 1,
+            "scenarios": 151,
+            "bar": 0,
+            "keys": [
+              "G7 | mapValues data-first | C | data-first-guard (faster 0.865)"
+            ]
+          },
+          "T2": {
+            "calls": 0,
+            "scenarios": 132,
+            "bar": 0,
+            "keys": []
+          },
+          "T3": {
+            "calls": 0,
+            "scenarios": 105,
+            "bar": 0,
+            "keys": []
+          }
+        }
+      },
+      "positionInteraction": "b2/b3 rotations 1-2 and combo-r1: systematic A/A offset (geomean 1.033-1.050, T1 p95 0.13-0.15) when main-aa runs before and main after those copies",
+      "userInputDuringSteps": [
+        "full-r0-c1",
+        "combo-r1",
+        "vb-b1-r0",
+        "vb-b1-r4",
+        "vb-b4-r0",
+        "vb-b6-r2",
+        "vb-b7-r5"
+      ],
+      "highLoadAtStart": {
+        "vb-b1-r0": 3.68,
+        "vb-b7-r3": 4.86,
+        "vb-b7-r4": 3.52
+      },
+      "g3Deopt": {
+        "fullMatrix": "branch in the deopt mode in both rotations (1.354 main first, 1.347 branch first)",
+        "variantBatches": "branch deopted in 39/42 runs; other step-array copies 90 deopt / 18 fast; on-demand pipes 0 / 12",
+        "extras": "deopt on Node 24 (vitest, dist); none on Node 22, Bun, bundle, cjs, portable runner, jitless, max-opt; one copy per process 1.045"
+      }
+    },
+    "branchVsMain": {
+      "full": {
+        "T1": {
+          "n": 153,
+          "weightedGeomean": 0.8544,
+          "verdicts": {
+            "faster": 79,
+            "neutral": 64,
+            "regression": 10
+          },
+          "barViolations": 10,
+          "groups": {
+            "G1": {
+              "n": 21,
+              "weightedGeomean": 0.7018,
+              "bar": 1
+            },
+            "G1b": {
+              "n": 24,
+              "weightedGeomean": 0.7406,
+              "bar": 0
+            },
+            "G2": {
+              "n": 1,
+              "weightedGeomean": 0.8751,
+              "bar": 0
+            },
+            "G3": {
+              "n": 19,
+              "weightedGeomean": 0.9761,
+              "bar": 9
+            },
+            "G5": {
+              "n": 23,
+              "weightedGeomean": 0.8088,
+              "bar": 0
+            },
+            "G6": {
+              "n": 9,
+              "weightedGeomean": 0.8615,
+              "bar": 0
+            },
+            "G7": {
+              "n": 41,
+              "weightedGeomean": 1.0002,
+              "bar": 0
+            },
+            "G10": {
+              "n": 15,
+              "weightedGeomean": 0.8406,
+              "bar": 0
+            }
+          }
+        },
+        "T2": {
+          "n": 173,
+          "weightedGeomean": 0.7895,
+          "verdicts": {
+            "faster": 105,
+            "neutral": 64,
+            "regression": 4
+          },
+          "barViolations": 4,
+          "groups": {
+            "G1": {
+              "n": 20,
+              "weightedGeomean": 0.6274,
+              "bar": 0
+            },
+            "G1b": {
+              "n": 50,
+              "weightedGeomean": 0.7335,
+              "bar": 1
+            },
+            "G2": {
+              "n": 2,
+              "weightedGeomean": 0.8707,
+              "bar": 0
+            },
+            "G3": {
+              "n": 1,
+              "weightedGeomean": 1.0198,
+              "bar": 0
+            },
+            "G4": {
+              "n": 12,
+              "weightedGeomean": 0.6136,
+              "bar": 0
+            },
+            "G5": {
+              "n": 23,
+              "weightedGeomean": 0.8783,
+              "bar": 0
+            },
+            "G6": {
+              "n": 7,
+              "weightedGeomean": 0.8061,
+              "bar": 0
+            },
+            "G7": {
+              "n": 41,
+              "weightedGeomean": 1.0057,
+              "bar": 2
+            },
+            "G9": {
+              "n": 12,
+              "weightedGeomean": 0.8515,
+              "bar": 1
+            },
+            "G10": {
+              "n": 5,
+              "weightedGeomean": 0.8376,
+              "bar": 0
+            }
+          }
+        },
+        "T3": {
+          "n": 200,
+          "weightedGeomean": 0.7376,
+          "verdicts": {
+            "faster": 148,
+            "neutral": 50,
+            "slower": 2
+          },
+          "barViolations": 0,
+          "groups": {
+            "G1": {
+              "n": 26,
+              "weightedGeomean": 0.6246,
+              "bar": 0
+            },
+            "G1b": {
+              "n": 78,
+              "weightedGeomean": 0.7427,
+              "bar": 0
+            },
+            "G2": {
+              "n": 13,
+              "weightedGeomean": 0.5635,
+              "bar": 0
+            },
+            "G5": {
+              "n": 49,
+              "weightedGeomean": 0.8317,
+              "bar": 0
+            },
+            "G6": {
+              "n": 8,
+              "weightedGeomean": 0.7568,
+              "bar": 0
+            },
+            "G7": {
+              "n": 8,
+              "weightedGeomean": 1.0111,
+              "bar": 0
+            },
+            "G8": {
+              "n": 14,
+              "weightedGeomean": 0.9338,
+              "bar": 0
+            },
+            "G9": {
+              "n": 4,
+              "weightedGeomean": 0.8128,
+              "bar": 0
+            }
+          }
+        }
+      },
+      "withoutG3Cluster": {
+        "T1": 0.8312,
+        "T2": 0.7877,
+        "T3": 0.7376
+      },
+      "violations": [
+        {
+          "key": "G1 | 3-step middle reads data | XS",
+          "tier": 1,
+          "median": 1.0747,
+          "candidateFirst": 1.0813,
+          "referenceFirst": 1.0681
+        },
+        {
+          "key": "G1b | pipe zip+map | S",
+          "tier": 2,
+          "median": 1.0699,
+          "candidateFirst": 1.0985,
+          "referenceFirst": 1.0413
+        },
+        {
+          "key": "G3 | scalar purry depth-3 | x64",
+          "tier": 1,
+          "median": 1.1482,
+          "candidateFirst": 1.1482,
+          "referenceFirst": 1.1482
+        },
+        {
+          "key": "G3 | scalar purry depth-3 | x1",
+          "tier": 1,
+          "median": 1.1383,
+          "candidateFirst": 1.1186,
+          "referenceFirst": 1.1579
+        },
+        {
+          "key": "G3 | scalar purry depth-10 | x64",
+          "tier": 1,
+          "median": 1.1047,
+          "candidateFirst": 1.1155,
+          "referenceFirst": 1.0939
+        },
+        {
+          "key": "G3 | scalar purry depth-10 | x1",
+          "tier": 1,
+          "median": 1.1085,
+          "candidateFirst": 1.1171,
+          "referenceFirst": 1.0998
+        },
+        {
+          "key": "G3 | scalar arrows depth-3 | x64 | headline",
+          "tier": 1,
+          "median": 1.3504,
+          "candidateFirst": 1.3467,
+          "referenceFirst": 1.354
+        },
+        {
+          "key": "G3 | scalar arrows depth-3 | x1 | headline",
+          "tier": 1,
+          "median": 1.243,
+          "candidateFirst": 1.2243,
+          "referenceFirst": 1.2617
+        },
+        {
+          "key": "G3 | scalar arrows depth-10 | x64",
+          "tier": 1,
+          "median": 1.3505,
+          "candidateFirst": 1.3556,
+          "referenceFirst": 1.3455
+        },
+        {
+          "key": "G3 | scalar arrows depth-10 | x1",
+          "tier": 1,
+          "median": 1.2811,
+          "candidateFirst": 1.2882,
+          "referenceFirst": 1.274
+        },
+        {
+          "key": "G3 | object pick+omit+set+merge | x64",
+          "tier": 1,
+          "median": 1.0553,
+          "candidateFirst": 1.0483,
+          "referenceFirst": 1.0624
+        },
+        {
+          "key": "G7 | clamp data-last | C | data-first-guard",
+          "tier": 2,
+          "median": 1.0507,
+          "candidateFirst": 1.0328,
+          "referenceFirst": 1.0687
+        },
+        {
+          "key": "G7 | mergeDeep data-last | C | data-first-guard",
+          "tier": 2,
+          "median": 1.2303,
+          "candidateFirst": 1.4231,
+          "referenceFirst": 1.0374
+        },
+        {
+          "key": "G9 | map((...args) => args[0])+filter | XS",
+          "tier": 2,
+          "median": 1.1267,
+          "candidateFirst": 1.1206,
+          "referenceFirst": 1.1328
+        }
+      ]
+    },
+    "comboPatch": {
+      "vsMain": {
+        "T1": {
+          "n": 153,
+          "weightedGeomean": 0.6941,
+          "verdicts": {
+            "faster": 105,
+            "neutral": 47,
+            "regression": 1
+          },
+          "barViolations": 1,
+          "groups": {
+            "G1": {
+              "n": 21,
+              "weightedGeomean": 0.4917,
+              "bar": 0
+            },
+            "G1b": {
+              "n": 24,
+              "weightedGeomean": 0.519,
+              "bar": 0
+            },
+            "G2": {
+              "n": 1,
+              "weightedGeomean": 0.6999,
+              "bar": 0
+            },
+            "G3": {
+              "n": 19,
+              "weightedGeomean": 0.7623,
+              "bar": 0
+            },
+            "G5": {
+              "n": 23,
+              "weightedGeomean": 0.6966,
+              "bar": 0
+            },
+            "G6": {
+              "n": 9,
+              "weightedGeomean": 0.6476,
+              "bar": 0
+            },
+            "G7": {
+              "n": 41,
+              "weightedGeomean": 0.9839,
+              "bar": 1
+            },
+            "G10": {
+              "n": 15,
+              "weightedGeomean": 0.658,
+              "bar": 0
+            }
+          }
+        },
+        "T2": {
+          "n": 173,
+          "weightedGeomean": 0.64,
+          "verdicts": {
+            "faster": 126,
+            "neutral": 47
+          },
+          "barViolations": 0,
+          "groups": {
+            "G1": {
+              "n": 20,
+              "weightedGeomean": 0.4506,
+              "bar": 0
+            },
+            "G1b": {
+              "n": 50,
+              "weightedGeomean": 0.5201,
+              "bar": 0
+            },
+            "G2": {
+              "n": 2,
+              "weightedGeomean": 0.8023,
+              "bar": 0
+            },
+            "G3": {
+              "n": 1,
+              "weightedGeomean": 1.0006,
+              "bar": 0
+            },
+            "G4": {
+              "n": 12,
+              "weightedGeomean": 0.5415,
+              "bar": 0
+            },
+            "G5": {
+              "n": 23,
+              "weightedGeomean": 0.7605,
+              "bar": 0
+            },
+            "G6": {
+              "n": 7,
+              "weightedGeomean": 0.6441,
+              "bar": 0
+            },
+            "G7": {
+              "n": 41,
+              "weightedGeomean": 0.9573,
+              "bar": 0
+            },
+            "G9": {
+              "n": 12,
+              "weightedGeomean": 0.6679,
+              "bar": 0
+            },
+            "G10": {
+              "n": 5,
+              "weightedGeomean": 0.7262,
+              "bar": 0
+            }
+          }
+        }
+      },
+      "vsBranch": {
+        "T1": {
+          "n": 153,
+          "weightedGeomean": 0.7997,
+          "verdicts": {
+            "faster": 105,
+            "neutral": 48
+          },
+          "barViolations": 0,
+          "groups": {
+            "G1": {
+              "n": 21,
+              "weightedGeomean": 0.6865,
+              "bar": 0
+            },
+            "G1b": {
+              "n": 24,
+              "weightedGeomean": 0.682,
+              "bar": 0
+            },
+            "G2": {
+              "n": 1,
+              "weightedGeomean": 0.7994,
+              "bar": 0
+            },
+            "G3": {
+              "n": 19,
+              "weightedGeomean": 0.7845,
+              "bar": 0
+            },
+            "G5": {
+              "n": 23,
+              "weightedGeomean": 0.8295,
+              "bar": 0
+            },
+            "G6": {
+              "n": 9,
+              "weightedGeomean": 0.7166,
+              "bar": 0
+            },
+            "G7": {
+              "n": 41,
+              "weightedGeomean": 0.9789,
+              "bar": 0
+            },
+            "G10": {
+              "n": 15,
+              "weightedGeomean": 0.7837,
+              "bar": 0
+            }
+          }
+        },
+        "T2": {
+          "n": 173,
+          "weightedGeomean": 0.7977,
+          "verdicts": {
+            "faster": 111,
+            "neutral": 62
+          },
+          "barViolations": 0,
+          "groups": {
+            "G1": {
+              "n": 20,
+              "weightedGeomean": 0.713,
+              "bar": 0
+            },
+            "G1b": {
+              "n": 50,
+              "weightedGeomean": 0.6906,
+              "bar": 0
+            },
+            "G2": {
+              "n": 2,
+              "weightedGeomean": 0.9161,
+              "bar": 0
+            },
+            "G3": {
+              "n": 1,
+              "weightedGeomean": 1.0079,
+              "bar": 0
+            },
+            "G4": {
+              "n": 12,
+              "weightedGeomean": 0.8873,
+              "bar": 0
+            },
+            "G5": {
+              "n": 23,
+              "weightedGeomean": 0.8278,
+              "bar": 0
+            },
+            "G6": {
+              "n": 7,
+              "weightedGeomean": 0.7752,
+              "bar": 0
+            },
+            "G7": {
+              "n": 41,
+              "weightedGeomean": 0.9465,
+              "bar": 0
+            },
+            "G9": {
+              "n": 12,
+              "weightedGeomean": 0.772,
+              "bar": 0
+            },
+            "G10": {
+              "n": 5,
+              "weightedGeomean": 0.8777,
+              "bar": 0
+            }
+          }
+        }
+      },
+      "violationsVsMain": [
+        {
+          "key": "G7 | mapValues data-first | C | data-first-guard",
+          "tier": 1,
+          "median": 1.2413,
+          "candidateFirst": 1.3546,
+          "referenceFirst": 1.128
+        }
+      ],
+      "branchViolationFate": [
+        {
+          "key": "G3 | scalar purry depth-3 | x64",
+          "tier": 1,
+          "branch": 1.1573,
+          "combo": 0.7917,
+          "comboVerdict": "faster"
+        },
+        {
+          "key": "G3 | scalar purry depth-3 | x1",
+          "tier": 1,
+          "branch": 1.1268,
+          "combo": 0.8166,
+          "comboVerdict": "faster"
+        },
+        {
+          "key": "G3 | scalar purry depth-10 | x1",
+          "tier": 1,
+          "branch": 1.1032,
+          "combo": 0.8198,
+          "comboVerdict": "faster"
+        },
+        {
+          "key": "G3 | scalar arrows depth-3 | x64 | headline",
+          "tier": 1,
+          "branch": 1.3647,
+          "combo": 0.5832,
+          "comboVerdict": "faster"
+        },
+        {
+          "key": "G3 | scalar arrows depth-3 | x1 | headline",
+          "tier": 1,
+          "branch": 1.2359,
+          "combo": 0.7368,
+          "comboVerdict": "faster"
+        },
+        {
+          "key": "G3 | scalar arrows depth-10 | x64",
+          "tier": 1,
+          "branch": 1.3419,
+          "combo": 0.7242,
+          "comboVerdict": "faster"
+        },
+        {
+          "key": "G3 | scalar arrows depth-10 | x1",
+          "tier": 1,
+          "branch": 1.2716,
+          "combo": 0.7385,
+          "comboVerdict": "faster"
+        },
+        {
+          "key": "G7 | mapValues data-first | C | data-first-guard",
+          "tier": 1,
+          "branch": 1.1759,
+          "combo": 1.2413,
+          "comboVerdict": "regression"
+        },
+        {
+          "key": "G7 | sumBy data-first | S | data-first-guard",
+          "tier": 2,
+          "branch": 1.2334,
+          "combo": 0.8303,
+          "comboVerdict": "faster"
+        },
+        {
+          "key": "G9 | map((...args) => args[0])+filter | XS",
+          "tier": 2,
+          "branch": 1.1698,
+          "combo": 0.7401,
+          "comboVerdict": "faster"
+        }
+      ]
+    },
+    "variants": [
+      {
+        "name": "datalast-arity-closures",
+        "batch": "b5",
+        "flowSize": 88,
+        "flowGeomeanPerRun": [0.9887, 0.9911, 0.9942, 0.9907, 0.9915, 0.9904],
+        "flowGeomean": 0.9911,
+        "fasterRuns": "6/6",
+        "signFires": false,
+        "vsBranchNoG3": {
+          "T1": 0.9967,
+          "T2": 0.9969,
+          "T3": 0.9993
+        },
+        "officialViolationsVsMain": 8,
+        "inherited": 8,
+        "newVsMain": [],
+        "lossesVsBranch": [],
+        "aaFireRate": 0,
+        "verdict": "REJECT",
+        "reason": "6/6 but 0.9911, short of the 1% bar"
+      },
+      {
+        "name": "datalast-direct-props",
+        "batch": "b4",
+        "flowSize": 138,
+        "flowGeomeanPerRun": [0.8844, 0.8842, 0.8878, 0.8819, 0.8883, 0.8868],
+        "flowGeomean": 0.8856,
+        "fasterRuns": "6/6",
+        "signFires": true,
+        "vsBranchNoG3": {
+          "T1": 0.9392,
+          "T2": 0.9076,
+          "T3": 0.9252
+        },
+        "officialViolationsVsMain": 9,
+        "inherited": 8,
+        "newVsMain": [
+          {
+            "key": "G3 | object pick+omit+set+merge | x1",
+            "tier": 1,
+            "variant": 1.048,
+            "branch": 1.0329,
+            "variantOverBranch": 1.0058
+          }
+        ],
+        "lossesVsBranch": [],
+        "aaFireRate": 0,
+        "verdict": "ADOPT",
+        "reason": "6/6, 0.886; no loss vs branch"
+      },
+      {
+        "name": "first-index-access",
+        "batch": "b7",
+        "flowSize": 3,
+        "flowGeomeanPerRun": [0.9968, 0.9988, 0.9988, 1.0045, 1.003, 1.0005],
+        "flowGeomean": 1.0004,
+        "fasterRuns": "3/6",
+        "signFires": false,
+        "vsBranchNoG3": {
+          "T1": 1.0005,
+          "T2": 0.9983,
+          "T3": 0.9991
+        },
+        "officialViolationsVsMain": 8,
+        "inherited": 8,
+        "newVsMain": [],
+        "lossesVsBranch": [],
+        "aaFireRate": 0.0015,
+        "verdict": "REJECT",
+        "reason": "3/6, 1.0004"
+      },
+      {
+        "name": "identity-controls-v2",
+        "batch": "b1",
+        "flowSize": 279,
+        "flowGeomeanPerRun": [0.8494, 0.8493, 0.8476, 0.8497, 0.8486, 0.8498],
+        "flowGeomean": 0.8491,
+        "fasterRuns": "6/6",
+        "signFires": true,
+        "vsBranchNoG3": {
+          "T1": 0.9113,
+          "T2": 0.8316,
+          "T3": 0.7873
+        },
+        "officialViolationsVsMain": 8,
+        "inherited": 0,
+        "newVsMain": [
+          {
+            "key": "G3 | scalar purry depth-3 | x64",
+            "tier": 1,
+            "variant": 1.09,
+            "branch": 1.0043,
+            "variantOverBranch": 1.1383
+          },
+          {
+            "key": "G3 | scalar purry depth-3 | x1",
+            "tier": 1,
+            "variant": 1.0641,
+            "branch": 1.0117,
+            "variantOverBranch": 1.0946
+          },
+          {
+            "key": "G3 | scalar purry depth-10 | x64",
+            "tier": 1,
+            "variant": 1.0934,
+            "branch": 1.0177,
+            "variantOverBranch": 1.0896
+          },
+          {
+            "key": "G3 | scalar purry depth-10 | x1",
+            "tier": 1,
+            "variant": 1.0832,
+            "branch": 1.018,
+            "variantOverBranch": 1.074
+          },
+          {
+            "key": "G3 | scalar arrows depth-3 | x64 | headline",
+            "tier": 1,
+            "variant": 1.3545,
+            "branch": 1.1424,
+            "variantOverBranch": 1.2224
+          },
+          {
+            "key": "G3 | scalar arrows depth-3 | x1 | headline",
+            "tier": 1,
+            "variant": 1.2303,
+            "branch": 1.0727,
+            "variantOverBranch": 1.1775
+          },
+          {
+            "key": "G3 | scalar arrows depth-10 | x64",
+            "tier": 1,
+            "variant": 1.3421,
+            "branch": 1.1194,
+            "variantOverBranch": 1.2521
+          },
+          {
+            "key": "G3 | scalar arrows depth-10 | x1",
+            "tier": 1,
+            "variant": 1.2884,
+            "branch": 1.1011,
+            "variantOverBranch": 1.2016
+          }
+        ],
+        "lossesVsBranch": [],
+        "aaFireRate": 0,
+        "verdict": "DESIGN",
+        "reason": "6/6, 0.849; T1/T2/T3 vs branch 0.911/0.832/0.787 (no G3 cluster); no loss"
+      },
+      {
+        "name": "lazy-args-arity",
+        "batch": "b5",
+        "flowSize": 174,
+        "flowGeomeanPerRun": [0.9936, 0.9968, 0.9931, 0.9931, 0.9969, 0.996],
+        "flowGeomean": 0.9949,
+        "fasterRuns": "6/6",
+        "signFires": false,
+        "vsBranchNoG3": {
+          "T1": 0.9969,
+          "T2": 0.9961,
+          "T3": 0.997
+        },
+        "officialViolationsVsMain": 9,
+        "inherited": 8,
+        "newVsMain": [
+          {
+            "key": "G3 | object pick+omit+set+merge | x64",
+            "tier": 1,
+            "variant": 1.0504,
+            "branch": 1.0427,
+            "variantOverBranch": 1.0075
+          }
+        ],
+        "lossesVsBranch": [
+          {
+            "key": "G7 | mapValues data-first | C | data-first-guard",
+            "tier": 1,
+            "median": 1.1057,
+            "perRun": [1.438, 1.105, 0.967, 1.11, 1.106, 1.028]
+          }
+        ],
+        "aaFireRate": 0,
+        "verdict": "REJECT",
+        "reason": "6/6 but 0.9949, short of the 1% bar"
+      },
+      {
+        "name": "map-callback-as-evaluator",
+        "batch": "b3",
+        "flowSize": 71,
+        "flowGeomeanPerRun": [0.943, 0.9399, 0.9431, 0.9436, 0.9412, 0.9417],
+        "flowGeomean": 0.9421,
+        "fasterRuns": "6/6",
+        "signFires": true,
+        "vsBranchNoG3": {
+          "T1": 0.9781,
+          "T2": 0.9796,
+          "T3": 0.9871
+        },
+        "officialViolationsVsMain": 14,
+        "inherited": 14,
+        "newVsMain": [],
+        "lossesVsBranch": [],
+        "aaFireRate": 0.0075,
+        "verdict": "ADOPT",
+        "reason": "6/6, 0.942; no loss vs branch; incompatible with identity-controls-v2"
+      },
+      {
+        "name": "pipe-array-index-loop",
+        "batch": "b2",
+        "flowSize": 122,
+        "flowGeomeanPerRun": [0.9268, 0.9402, 0.9438, 0.9426, 0.9428, 0.9403],
+        "flowGeomean": 0.9394,
+        "fasterRuns": "6/6",
+        "signFires": true,
+        "vsBranchNoG3": {
+          "T1": 0.9475,
+          "T2": 0.9597,
+          "T3": 0.9452
+        },
+        "officialViolationsVsMain": 5,
+        "inherited": 5,
+        "newVsMain": [],
+        "lossesVsBranch": [],
+        "aaFireRate": 0,
+        "verdict": "ADOPT",
+        "reason": "6/6, 0.939; no loss vs branch"
+      },
+      {
+        "name": "pipe-isarray-first",
+        "batch": "b2",
+        "flowSize": 118,
+        "flowGeomeanPerRun": [0.9492, 0.944, 0.9492, 0.9519, 0.9503, 0.9487],
+        "flowGeomean": 0.9489,
+        "fasterRuns": "6/6",
+        "signFires": true,
+        "vsBranchNoG3": {
+          "T1": 0.9744,
+          "T2": 0.9615,
+          "T3": 0.9694
+        },
+        "officialViolationsVsMain": 9,
+        "inherited": 8,
+        "newVsMain": [
+          {
+            "key": "G3 | object pick+omit+set+merge | x1",
+            "tier": 1,
+            "variant": 1.0536,
+            "branch": 1.0465,
+            "variantOverBranch": 1.0067
+          }
+        ],
+        "lossesVsBranch": [],
+        "aaFireRate": 0,
+        "verdict": "ADOPT",
+        "reason": "6/6, 0.949; no loss vs branch"
+      },
+      {
+        "name": "pipe-last-index",
+        "batch": "b6",
+        "flowSize": 36,
+        "flowGeomeanPerRun": [0.9929, 0.9982, 0.9938, 0.9953, 0.9951, 0.9988],
+        "flowGeomean": 0.9957,
+        "fasterRuns": "6/6",
+        "signFires": false,
+        "vsBranchNoG3": {
+          "T1": 0.9993,
+          "T2": 0.9972,
+          "T3": 1.0009
+        },
+        "officialViolationsVsMain": 4,
+        "inherited": 4,
+        "newVsMain": [],
+        "lossesVsBranch": [],
+        "aaFireRate": 0,
+        "verdict": "REJECT",
+        "reason": "6/6 but 0.9957, short of the 1% bar"
+      },
+      {
+        "name": "pipe-on-demand-segments",
+        "batch": "b1",
+        "flowSize": 59,
+        "flowGeomeanPerRun": [0.9845, 0.9843, 0.9819, 0.9805, 0.9891, 0.9867],
+        "flowGeomean": 0.9845,
+        "fasterRuns": "6/6",
+        "signFires": true,
+        "vsBranchNoG3": {
+          "T1": 0.9925,
+          "T2": 0.9938,
+          "T3": 0.9946
+        },
+        "officialViolationsVsMain": 1,
+        "inherited": 1,
+        "newVsMain": [],
+        "lossesVsBranch": [],
+        "aaFireRate": 0,
+        "verdict": "ADOPT",
+        "reason": "6/6, 0.984, its one violation inherited; contained in pipe-single-step-runs"
+      },
+      {
+        "name": "pipe-single-step-runs",
+        "batch": "b2",
+        "flowSize": 59,
+        "flowGeomeanPerRun": [0.9595, 0.9803, 0.9811, 0.982, 0.9532, 0.9818],
+        "flowGeomean": 0.9729,
+        "fasterRuns": "6/6",
+        "signFires": true,
+        "vsBranchNoG3": {
+          "T1": 0.9901,
+          "T2": 0.9925,
+          "T3": 0.9909
+        },
+        "officialViolationsVsMain": 0,
+        "inherited": 0,
+        "newVsMain": [],
+        "lossesVsBranch": [],
+        "aaFireRate": 0,
+        "verdict": "ADOPT",
+        "reason": "6/6, 0.973; no violation at all: removes the G3 deopt cluster"
+      },
+      {
+        "name": "pipe-skip-identity",
+        "batch": "b6",
+        "flowSize": 116,
+        "flowGeomeanPerRun": [0.999, 0.9993, 1.0032, 0.9989, 1.002, 1.0026],
+        "flowGeomean": 1.0008,
+        "fasterRuns": "3/6",
+        "signFires": false,
+        "vsBranchNoG3": {
+          "T1": 1.0016,
+          "T2": 1.0027,
+          "T3": 1.0056
+        },
+        "officialViolationsVsMain": 10,
+        "inherited": 9,
+        "newVsMain": [
+          {
+            "key": "G1b | pipe zip+map | S",
+            "tier": 2,
+            "variant": 1.0784,
+            "branch": 1.0466,
+            "variantOverBranch": 1.0422
+          }
+        ],
+        "lossesVsBranch": [
+          {
+            "key": "G1 | map+filter+map | C | headline",
+            "tier": 1,
+            "median": 1.0542,
+            "perRun": [1.033, 1.062, 1.044, 1.059, 1.056, 1.052]
+          },
+          {
+            "key": "G1 | flat+map | S",
+            "tier": 2,
+            "median": 1.0568,
+            "perRun": [1.056, 1.064, 1.052, 1.056, 1.057, 1.061]
+          },
+          {
+            "key": "G1 | flat+map | C",
+            "tier": 2,
+            "median": 1.1015,
+            "perRun": [1.092, 1.103, 1.1, 1.11, 1.085, 1.105]
+          },
+          {
+            "key": "G1b | pipe flatMap+map | C",
+            "tier": 2,
+            "median": 1.0605,
+            "perRun": [1.022, 1.108, 1.061, 1.061, 1.06, 1.058]
+          },
+          {
+            "key": "G1b | pipe map+map | C",
+            "tier": 1,
+            "median": 1.0756,
+            "perRun": [1.076, 1.084, 1.084, 1.075, 1.066, 1.076]
+          }
+        ],
+        "aaFireRate": 0,
+        "verdict": "REJECT",
+        "reason": "3/6, 1.0008; tier 1/2 losses on map-heavy pipes"
+      },
+      {
+        "name": "purry-arity-calls",
+        "batch": "b5",
+        "flowSize": 156,
+        "flowGeomeanPerRun": [0.9721, 0.9702, 0.9753, 0.9715, 0.9752, 0.972],
+        "flowGeomean": 0.9727,
+        "fasterRuns": "6/6",
+        "signFires": true,
+        "vsBranchNoG3": {
+          "T1": 0.9907,
+          "T2": 0.98,
+          "T3": 0.9892
+        },
+        "officialViolationsVsMain": 10,
+        "inherited": 9,
+        "newVsMain": [
+          {
+            "key": "G7 | clamp data-last | C | data-first-guard",
+            "tier": 2,
+            "variant": 1.0853,
+            "branch": 1.0338,
+            "variantOverBranch": 1.0668
+          }
+        ],
+        "lossesVsBranch": [
+          {
+            "key": "G7 | mapValues data-first | C | data-first-guard",
+            "tier": 1,
+            "median": 1.1415,
+            "perRun": [1.262, 1.112, 1.371, 1.053, 0.837, 1.171]
+          },
+          {
+            "key": "G7 | clamp data-last | C | data-first-guard",
+            "tier": 2,
+            "median": 1.0668,
+            "perRun": [1.098, 1.033, 1.033, 1.097, 1.067, 1.066]
+          }
+        ],
+        "aaFireRate": 0,
+        "verdict": "REJECT",
+        "reason": "sign test passes (0.973) but tier 2 G7 clamp data-last C 1.067 vs branch in every run, on its own code path"
+      },
+      {
+        "name": "requiredata-direct-write",
+        "batch": "b3",
+        "flowSize": 150,
+        "flowGeomeanPerRun": [0.9914, 0.991, 1.0065, 1.0124, 1.0094, 0.9901],
+        "flowGeomean": 1.0001,
+        "fasterRuns": "3/6",
+        "signFires": false,
+        "vsBranchNoG3": {
+          "T1": 1.0031,
+          "T2": 1.0103,
+          "T3": 0.997
+        },
+        "officialViolationsVsMain": 13,
+        "inherited": 12,
+        "newVsMain": [
+          {
+            "key": "G1b | pipe take+map | XS",
+            "tier": 2,
+            "variant": 1.0901,
+            "branch": 1.0882,
+            "variantOverBranch": 1.0075
+          }
+        ],
+        "lossesVsBranch": [
+          {
+            "key": "G5 | data-first zip | C | data-first-guard",
+            "tier": 2,
+            "median": 1.7665,
+            "perRun": [1.005, 1.004, 2.526, 2.668, 2.529, 1.007]
+          }
+        ],
+        "aaFireRate": 0.002,
+        "verdict": "INCONCLUSIVE",
+        "reason": "3/6, 1.000 on its declared flow, which is mostly off its code path; 6/6 faster (XS 0.85-0.97) on the 19 data-reading / length-0 entries; needs a pre-declared re-run"
+      },
+      {
+        "name": "requiredata-positional-index",
+        "batch": "b6",
+        "flowSize": 156,
+        "flowGeomeanPerRun": [1.0001, 1.0014, 1.0021, 0.9996, 0.9984, 1.0024],
+        "flowGeomean": 1.0007,
+        "fasterRuns": "2/6",
+        "signFires": false,
+        "vsBranchNoG3": {
+          "T1": 1.0004,
+          "T2": 1.0004,
+          "T3": 0.9993
+        },
+        "officialViolationsVsMain": 9,
+        "inherited": 9,
+        "newVsMain": [],
+        "lossesVsBranch": [],
+        "aaFireRate": 0,
+        "verdict": "REJECT",
+        "reason": "2/6, 1.0007"
+      },
+      {
+        "name": "sentinel-module",
+        "batch": "b1",
+        "flowSize": 106,
+        "flowGeomeanPerRun": [1.0014, 0.9987, 0.9984, 1.0027, 0.9999, 0.9992],
+        "flowGeomean": 1.0001,
+        "fasterRuns": "4/6",
+        "signFires": false,
+        "vsBranchNoG3": {
+          "T1": 1,
+          "T2": 0.9997,
+          "T3": 0.9988
+        },
+        "officialViolationsVsMain": 6,
+        "inherited": 2,
+        "newVsMain": [
+          {
+            "key": "G3 | scalar arrows depth-3 | x64 | headline",
+            "tier": 1,
+            "variant": 1.3509,
+            "branch": 1.1424,
+            "variantOverBranch": 1.0076
+          },
+          {
+            "key": "G3 | scalar arrows depth-3 | x1 | headline",
+            "tier": 1,
+            "variant": 1.226,
+            "branch": 1.0727,
+            "variantOverBranch": 0.9972
+          },
+          {
+            "key": "G3 | scalar arrows depth-10 | x64",
+            "tier": 1,
+            "variant": 1.3395,
+            "branch": 1.1194,
+            "variantOverBranch": 1.0028
+          },
+          {
+            "key": "G3 | scalar arrows depth-10 | x1",
+            "tier": 1,
+            "variant": 1.2818,
+            "branch": 1.1011,
+            "variantOverBranch": 0.9991
+          }
+        ],
+        "lossesVsBranch": [],
+        "aaFireRate": 0,
+        "verdict": "DESIGN",
+        "reason": "timing neutral (4/6, 1.0001; 1.000/1.000/0.999 vs branch); in both combinations"
+      },
+      {
+        "name": "single-array-index-loop",
+        "batch": "b3",
+        "flowSize": 138,
+        "flowGeomeanPerRun": [0.8927, 0.891, 0.9196, 0.9178, 0.9193, 0.9198],
+        "flowGeomean": 0.91,
+        "fasterRuns": "6/6",
+        "signFires": true,
+        "vsBranchNoG3": {
+          "T1": 0.9332,
+          "T2": 0.9519,
+          "T3": 0.9123
+        },
+        "officialViolationsVsMain": 12,
+        "inherited": 11,
+        "newVsMain": [
+          {
+            "key": "G1b | pipe zip+map | S",
+            "tier": 2,
+            "variant": 1.059,
+            "branch": 1.0538,
+            "variantOverBranch": 1.0051
+          }
+        ],
+        "lossesVsBranch": [],
+        "aaFireRate": 0.00475,
+        "verdict": "ADOPT",
+        "reason": "6/6, 0.910; no loss vs branch; largest tier 1 gain"
+      },
+      {
+        "name": "single-skip-first",
+        "batch": "b7",
+        "flowSize": 88,
+        "flowGeomeanPerRun": [0.999, 0.9921, 1.0037, 1.0107, 0.9965, 1.002],
+        "flowGeomean": 1.0007,
+        "fasterRuns": "3/6",
+        "signFires": false,
+        "vsBranchNoG3": {
+          "T1": 1.0003,
+          "T2": 0.9965,
+          "T3": 1.001
+        },
+        "officialViolationsVsMain": 8,
+        "inherited": 8,
+        "newVsMain": [],
+        "lossesVsBranch": [],
+        "aaFireRate": 0,
+        "verdict": "REJECT",
+        "reason": "3/6, 1.0007"
+      },
+      {
+        "name": "single-skip-identity",
+        "batch": "b4",
+        "flowSize": 76,
+        "flowGeomeanPerRun": [0.9727, 0.9718, 0.9714, 0.9698, 0.9697, 0.9758],
+        "flowGeomean": 0.9719,
+        "fasterRuns": "6/6",
+        "signFires": true,
+        "vsBranchNoG3": {
+          "T1": 0.9956,
+          "T2": 0.9974,
+          "T3": 0.9815
+        },
+        "officialViolationsVsMain": 9,
+        "inherited": 9,
+        "newVsMain": [],
+        "lossesVsBranch": [
+          {
+            "key": "G1 | map | C | headline",
+            "tier": 1,
+            "median": 1.0592,
+            "perRun": [1.062, 1.07, 1.051, 1.057, 1.061, 1.055]
+          },
+          {
+            "key": "G1b | pipe map | S",
+            "tier": 1,
+            "median": 1.0455,
+            "perRun": [1.047, 1.044, 1.042, 1.053, 1.047, 1.042]
+          },
+          {
+            "key": "G4 | string unique | S",
+            "tier": 2,
+            "median": 1.0754,
+            "perRun": [1.053, 1.054, 1.116, 1.096, 1.065, 1.086]
+          }
+        ],
+        "aaFireRate": 0,
+        "verdict": "REJECT",
+        "reason": "sign test passes (0.972) but tier 1 losses vs branch: G1 map C 1.059, G1b pipe map S 1.046"
+      },
+      {
+        "name": "unique-single-lookup",
+        "batch": "b4",
+        "flowSize": 13,
+        "flowGeomeanPerRun": [0.9927, 0.9858, 0.9832, 0.9857, 0.9777, 0.9841],
+        "flowGeomean": 0.9849,
+        "fasterRuns": "6/6",
+        "signFires": true,
+        "vsBranchNoG3": {
+          "T1": 0.9954,
+          "T2": 0.9918,
+          "T3": 1.0007
+        },
+        "officialViolationsVsMain": 7,
+        "inherited": 7,
+        "newVsMain": [],
+        "lossesVsBranch": [],
+        "aaFireRate": 0,
+        "verdict": "ADOPT",
+        "reason": "6/6, 0.985 (13-entry flow); no loss vs branch"
+      }
+    ],
+    "extras": {
+      "x-jitless": {
+        "tiers": {
+          "T3": {
+            "n": 64,
+            "weightedGeomean": 0.7236
+          }
+        },
+        "violations": []
+      },
+      "x-maxopt1": {
+        "tiers": {
+          "T3": {
+            "n": 64,
+            "weightedGeomean": 0.7098
+          }
+        },
+        "violations": []
+      },
+      "x-maxopt2": {
+        "tiers": {
+          "T3": {
+            "n": 64,
+            "weightedGeomean": 0.7675
+          }
+        },
+        "violations": []
+      },
+      "x-p0": {
+        "tiers": {
+          "T1": {
+            "n": 12,
+            "weightedGeomean": 0.6927
+          },
+          "T2": {
+            "n": 21,
+            "weightedGeomean": 0.7118
+          },
+          "T3": {
+            "n": 15,
+            "weightedGeomean": 0.6077
+          }
+        },
+        "violations": [
+          {
+            "key": "G10 | filter,map(pick) / groupBy / entries / map / fromEntries | C",
+            "tier": 1,
+            "median": 1.0437,
+            "candidateFirst": 1.0483,
+            "referenceFirst": 1.0391
+          }
+        ]
+      },
+      "x-p1": {
+        "tiers": {
+          "T1": {
+            "n": 12,
+            "weightedGeomean": 0.8226
+          },
+          "T2": {
+            "n": 21,
+            "weightedGeomean": 0.8492
+          },
+          "T3": {
+            "n": 15,
+            "weightedGeomean": 0.7979
+          }
+        },
+        "violations": [
+          {
+            "key": "G10 | filter,map / sortBy / take / groupBy | C | headline",
+            "tier": 1,
+            "median": 1.1074,
+            "candidateFirst": 1.1054,
+            "referenceFirst": 1.1094
+          },
+          {
+            "key": "G10 | filter,map / sortBy / take / groupBy | M | headline",
+            "tier": 2,
+            "median": 1.1463,
+            "candidateFirst": 1.1366,
+            "referenceFirst": 1.1561
+          },
+          {
+            "key": "G2 | deep-8 mixed | M",
+            "tier": 2,
+            "median": 1.1146,
+            "candidateFirst": 1.1147,
+            "referenceFirst": 1.1146
+          },
+          {
+            "key": "G2 | deep-15 mixed | M",
+            "tier": 2,
+            "median": 1.1266,
+            "candidateFirst": 1.1257,
+            "referenceFirst": 1.1274
+          }
+        ]
+      },
+      "x-node22": {
+        "tiers": {
+          "T1": {
+            "n": 57,
+            "weightedGeomean": 0.8743
+          },
+          "T2": {
+            "n": 7,
+            "weightedGeomean": 0.7446
+          }
+        },
+        "violations": []
+      },
+      "x-node24": {
+        "tiers": {
+          "T1": {
+            "n": 57,
+            "weightedGeomean": 0.8695
+          },
+          "T2": {
+            "n": 7,
+            "weightedGeomean": 0.7377
+          }
+        },
+        "violations": [
+          {
+            "key": "G3 | scalar arrows depth-3 | x64 | headline",
+            "tier": 1,
+            "median": 1.3467,
+            "candidateFirst": 1.3467,
+            "referenceFirst": 1.3467
+          },
+          {
+            "key": "G7 | mapValues data-first | C | data-first-guard",
+            "tier": 1,
+            "median": 1.1713,
+            "candidateFirst": 1.2226,
+            "referenceFirst": 1.12
+          }
+        ]
+      },
+      "x-bundle": {
+        "tiers": {
+          "T1": {
+            "n": 16,
+            "weightedGeomean": 0.7676
+          },
+          "T2": {
+            "n": 7,
+            "weightedGeomean": 0.7381
+          }
+        },
+        "violations": []
+      },
+      "x-cjs": {
+        "tiers": {
+          "T1": {
+            "n": 16,
+            "weightedGeomean": 0.7604
+          },
+          "T2": {
+            "n": 7,
+            "weightedGeomean": 0.7186
+          }
+        },
+        "violations": []
+      },
+      "x-bun": {
+        "tiers": {
+          "T1": {
+            "n": 57,
+            "weightedGeomean": 0.8066
+          },
+          "T2": {
+            "n": 7,
+            "weightedGeomean": 0.6159
+          }
+        },
+        "violations": [
+          {
+            "key": "G5 | data-first uniqueBy (reads data) | XS | data-first-guard",
+            "tier": 1,
+            "median": 1.3844,
+            "candidateFirst": 1.4359,
+            "referenceFirst": 1.333
+          }
+        ]
+      },
+      "x-portable-node": {
+        "tiers": {
+          "T1": {
+            "n": 57,
+            "weightedGeomean": 0.8567
+          },
+          "T2": {
+            "n": 7,
+            "weightedGeomean": 0.7452
+          }
+        },
+        "violations": [
+          {
+            "key": "G7 | mapValues data-first | C | data-first-guard",
+            "tier": 1,
+            "median": 1.0527,
+            "candidateFirst": 1.0558,
+            "referenceFirst": 1.0496
+          }
+        ]
+      },
+      "x-isolated": {
+        "tiers": {
+          "T1": {
+            "n": 16,
+            "weightedGeomean": 0.7797
+          },
+          "T2": {
+            "n": 7,
+            "weightedGeomean": 0.7448
+          }
+        },
+        "violations": [
+          {
+            "key": "G3 | scalar arrows depth-3 | x64 | headline",
+            "tier": 1,
+            "median": 1.0453,
+            "candidateFirst": 1.0453,
+            "referenceFirst": 1.0453
+          }
+        ]
+      }
+    }
+  },
+  "part2": {
+    "screen": {
+      "runs": [
+        {
+          "name": "a8/screen-g8-r0",
+          "order": [
+            "main",
+            "branch-v-combo-a",
+            "branch-v-combo-b",
+            "main-aa",
+            "branch"
+          ],
+          "wallS": 4,
+          "load": [3.23, 2.94, 2.53],
+          "power": "AC"
+        },
+        {
+          "name": "a8/screen-g8-r1",
+          "order": [
+            "branch-v-combo-a",
+            "branch-v-combo-b",
+            "main-aa",
+            "branch",
+            "main"
+          ],
+          "wallS": 4,
+          "load": [4.82, 3.63, 3.02],
+          "power": "AC"
+        },
+        {
+          "name": "a8/screen-g8-r2",
+          "order": [
+            "branch-v-combo-b",
+            "main-aa",
+            "branch",
+            "main",
+            "branch-v-combo-a"
+          ],
+          "wallS": 4,
+          "load": [2.52, 3.02, 3.08],
+          "power": "AC"
+        },
+        {
+          "name": "a8/screen-r0",
+          "order": [
+            "main",
+            "branch-v-combo-a",
+            "branch-v-combo-b",
+            "main-aa",
+            "branch"
+          ],
+          "wallS": 555,
+          "load": [3.33, 2.96, 2.53],
+          "power": "AC"
+        },
+        {
+          "name": "a8/screen-r1",
+          "order": [
+            "branch-v-combo-a",
+            "branch-v-combo-b",
+            "main-aa",
+            "branch",
+            "main"
+          ],
+          "wallS": 555,
+          "load": [4.63, 3.58, 3],
+          "power": "AC"
+        },
+        {
+          "name": "a8/screen-r2",
+          "order": [
+            "branch-v-combo-b",
+            "main-aa",
+            "branch",
+            "main",
+            "branch-v-combo-a"
+          ],
+          "wallS": 556,
+          "load": [2.56, 3.04, 3.09],
+          "power": "AC"
+        }
+      ],
+      "floors": {
+        "T1": 0.0897,
+        "T2": 0.0857,
+        "T3": 0.0308
+      },
+      "aaPerRun": [
+        {
+          "run": "a8/screen-g8-r0",
+          "geomean": 0.9909
+        },
+        {
+          "run": "a8/screen-g8-r1",
+          "geomean": 1.0017
+        },
+        {
+          "run": "a8/screen-g8-r2",
+          "geomean": 0.9941
+        },
+        {
+          "run": "a8/screen-r0",
+          "geomean": 0.9663,
+          "t1p95": 0.1165
+        },
+        {
+          "run": "a8/screen-r1",
+          "geomean": 0.9994,
+          "t1p95": 0.0312
+        },
+        {
+          "run": "a8/screen-r2",
+          "geomean": 1.0015,
+          "t1p95": 0.037
+        }
+      ],
+      "aaFalseCalls": {
+        "T1": {
+          "calls": 0,
+          "scenarios": 153,
+          "bar": 0,
+          "keys": []
+        },
+        "T2": {
+          "calls": 0,
+          "scenarios": 173,
+          "bar": 0,
+          "keys": []
+        },
+        "T3": {
+          "calls": 0,
+          "scenarios": 2,
+          "bar": 0,
+          "keys": []
+        }
+      }
+    },
+    "compare": {
+      "comboA_main": {
+        "tiers": {
+          "T1": {
+            "n": 153,
+            "weightedGeomean": 0.7017,
+            "verdicts": {
+              "faster": 98,
+              "neutral": 55
+            },
+            "barViolations": 0,
+            "groups": {
+              "G1": {
+                "n": 21,
+                "weightedGeomean": 0.4892,
+                "bar": 0
+              },
+              "G1b": {
+                "n": 24,
+                "weightedGeomean": 0.5111,
+                "bar": 0
+              },
+              "G2": {
+                "n": 1,
+                "weightedGeomean": 0.7174,
+                "bar": 0
+              },
+              "G3": {
+                "n": 19,
+                "weightedGeomean": 0.7754,
+                "bar": 0
+              },
+              "G5": {
+                "n": 23,
+                "weightedGeomean": 0.7373,
+                "bar": 0
+              },
+              "G6": {
+                "n": 9,
+                "weightedGeomean": 0.6689,
+                "bar": 0
+              },
+              "G7": {
+                "n": 41,
+                "weightedGeomean": 0.9975,
+                "bar": 0
+              },
+              "G10": {
+                "n": 15,
+                "weightedGeomean": 0.6503,
+                "bar": 0
+              }
+            }
+          },
+          "T2": {
+            "n": 173,
+            "weightedGeomean": 0.6609,
+            "verdicts": {
+              "faster": 114,
+              "neutral": 59
+            },
+            "barViolations": 0,
+            "groups": {
+              "G1": {
+                "n": 20,
+                "weightedGeomean": 0.4627,
+                "bar": 0
+              },
+              "G1b": {
+                "n": 50,
+                "weightedGeomean": 0.5208,
+                "bar": 0
+              },
+              "G2": {
+                "n": 2,
+                "weightedGeomean": 0.7994,
+                "bar": 0
+              },
+              "G3": {
+                "n": 1,
+                "weightedGeomean": 0.9914,
+                "bar": 0
+              },
+              "G4": {
+                "n": 12,
+                "weightedGeomean": 0.5625,
+                "bar": 0
+              },
+              "G5": {
+                "n": 23,
+                "weightedGeomean": 0.8339,
+                "bar": 0
+              },
+              "G6": {
+                "n": 7,
+                "weightedGeomean": 0.6732,
+                "bar": 0
+              },
+              "G7": {
+                "n": 41,
+                "weightedGeomean": 1.0013,
+                "bar": 0
+              },
+              "G9": {
+                "n": 12,
+                "weightedGeomean": 0.691,
+                "bar": 0
+              },
+              "G10": {
+                "n": 5,
+                "weightedGeomean": 0.72,
+                "bar": 0
+              }
+            }
+          },
+          "T3": {
+            "n": 2,
+            "weightedGeomean": 1.0143,
+            "verdicts": {
+              "neutral": 2
+            },
+            "barViolations": 0,
+            "groups": {
+              "G8": {
+                "n": 2,
+                "weightedGeomean": 1.0143,
+                "bar": 0
+              }
+            }
+          }
+        },
+        "violations": [],
+        "perRunT1": [0.6839, 0.7033, 0.7047],
+        "perRunT2": [0.6403, 0.6649, 0.6637],
+        "g8": [
+          {
+            "key": "G8 | pass-through Proxy items | C | traps",
+            "median": 0.9934
+          },
+          {
+            "key": "G8 | pass-through Proxy items | M | traps",
+            "median": 1.0355
+          }
+        ]
+      },
+      "comboB_main": {
+        "tiers": {
+          "T1": {
+            "n": 153,
+            "weightedGeomean": 0.6567,
+            "verdicts": {
+              "faster": 98,
+              "neutral": 55
+            },
+            "barViolations": 0,
+            "groups": {
+              "G1": {
+                "n": 21,
+                "weightedGeomean": 0.4575,
+                "bar": 0
+              },
+              "G1b": {
+                "n": 24,
+                "weightedGeomean": 0.4488,
+                "bar": 0
+              },
+              "G2": {
+                "n": 1,
+                "weightedGeomean": 0.5196,
+                "bar": 0
+              },
+              "G3": {
+                "n": 19,
+                "weightedGeomean": 0.7756,
+                "bar": 0
+              },
+              "G5": {
+                "n": 23,
+                "weightedGeomean": 0.6407,
+                "bar": 0
+              },
+              "G6": {
+                "n": 9,
+                "weightedGeomean": 0.6484,
+                "bar": 0
+              },
+              "G7": {
+                "n": 41,
+                "weightedGeomean": 1.0008,
+                "bar": 0
+              },
+              "G10": {
+                "n": 15,
+                "weightedGeomean": 0.5648,
+                "bar": 0
+              }
+            }
+          },
+          "T2": {
+            "n": 173,
+            "weightedGeomean": 0.5591,
+            "verdicts": {
+              "faster": 114,
+              "neutral": 59
+            },
+            "barViolations": 0,
+            "groups": {
+              "G1": {
+                "n": 20,
+                "weightedGeomean": 0.3918,
+                "bar": 0
+              },
+              "G1b": {
+                "n": 50,
+                "weightedGeomean": 0.3824,
+                "bar": 0
+              },
+              "G2": {
+                "n": 2,
+                "weightedGeomean": 0.5983,
+                "bar": 0
+              },
+              "G3": {
+                "n": 1,
+                "weightedGeomean": 1.0118,
+                "bar": 0
+              },
+              "G4": {
+                "n": 12,
+                "weightedGeomean": 0.5434,
+                "bar": 0
+              },
+              "G5": {
+                "n": 23,
+                "weightedGeomean": 0.773,
+                "bar": 0
+              },
+              "G6": {
+                "n": 7,
+                "weightedGeomean": 0.5418,
+                "bar": 0
+              },
+              "G7": {
+                "n": 41,
+                "weightedGeomean": 1.0012,
+                "bar": 0
+              },
+              "G9": {
+                "n": 12,
+                "weightedGeomean": 0.4981,
+                "bar": 0
+              },
+              "G10": {
+                "n": 5,
+                "weightedGeomean": 0.624,
+                "bar": 0
+              }
+            }
+          },
+          "T3": {
+            "n": 2,
+            "weightedGeomean": 0.5981,
+            "verdicts": {
+              "faster": 2
+            },
+            "barViolations": 0,
+            "groups": {
+              "G8": {
+                "n": 2,
+                "weightedGeomean": 0.5981,
+                "bar": 0
+              }
+            }
+          }
+        },
+        "violations": [],
+        "perRunT1": [0.6391, 0.658, 0.6598],
+        "perRunT2": [0.5391, 0.563, 0.5612],
+        "g8": [
+          {
+            "key": "G8 | pass-through Proxy items | C | traps",
+            "median": 0.5895
+          },
+          {
+            "key": "G8 | pass-through Proxy items | M | traps",
+            "median": 0.6069
+          }
+        ]
+      },
+      "comboB_comboA": {
+        "tiers": {
+          "T1": {
+            "n": 153,
+            "weightedGeomean": 0.9353,
+            "verdicts": {
+              "neutral": 104,
+              "regression": 8,
+              "faster": 41
+            },
+            "barViolations": 8,
+            "groups": {
+              "G1": {
+                "n": 21,
+                "weightedGeomean": 0.9355,
+                "bar": 3
+              },
+              "G1b": {
+                "n": 24,
+                "weightedGeomean": 0.8739,
+                "bar": 5
+              },
+              "G2": {
+                "n": 1,
+                "weightedGeomean": 0.7172,
+                "bar": 0
+              },
+              "G3": {
+                "n": 19,
+                "weightedGeomean": 0.9996,
+                "bar": 0
+              },
+              "G5": {
+                "n": 23,
+                "weightedGeomean": 0.8706,
+                "bar": 0
+              },
+              "G6": {
+                "n": 9,
+                "weightedGeomean": 0.9713,
+                "bar": 0
+              },
+              "G7": {
+                "n": 41,
+                "weightedGeomean": 1.004,
+                "bar": 0
+              },
+              "G10": {
+                "n": 15,
+                "weightedGeomean": 0.8661,
+                "bar": 0
+              }
+            }
+          },
+          "T2": {
+            "n": 173,
+            "weightedGeomean": 0.8448,
+            "verdicts": {
+              "regression": 5,
+              "neutral": 88,
+              "faster": 80
+            },
+            "barViolations": 5,
+            "groups": {
+              "G1": {
+                "n": 20,
+                "weightedGeomean": 0.845,
+                "bar": 2
+              },
+              "G1b": {
+                "n": 50,
+                "weightedGeomean": 0.7305,
+                "bar": 2
+              },
+              "G2": {
+                "n": 2,
+                "weightedGeomean": 0.7428,
+                "bar": 0
+              },
+              "G3": {
+                "n": 1,
+                "weightedGeomean": 1.0051,
+                "bar": 0
+              },
+              "G4": {
+                "n": 12,
+                "weightedGeomean": 0.9659,
+                "bar": 1
+              },
+              "G5": {
+                "n": 23,
+                "weightedGeomean": 0.931,
+                "bar": 0
+              },
+              "G6": {
+                "n": 7,
+                "weightedGeomean": 0.8066,
+                "bar": 0
+              },
+              "G7": {
+                "n": 41,
+                "weightedGeomean": 0.9996,
+                "bar": 0
+              },
+              "G9": {
+                "n": 12,
+                "weightedGeomean": 0.7199,
+                "bar": 0
+              },
+              "G10": {
+                "n": 5,
+                "weightedGeomean": 0.865,
+                "bar": 0
+              }
+            }
+          },
+          "T3": {
+            "n": 2,
+            "weightedGeomean": 0.5813,
+            "verdicts": {
+              "faster": 2
+            },
+            "barViolations": 0,
+            "groups": {
+              "G8": {
+                "n": 2,
+                "weightedGeomean": 0.5813,
+                "bar": 0
+              }
+            }
+          }
+        },
+        "violations": [
+          {
+            "key": "G1 | map | S | headline",
+            "tier": 1,
+            "median": 1.2599,
+            "candidateFirst": 1.2755,
+            "referenceFirst": 1.2582
+          },
+          {
+            "key": "G1 | map | C | headline",
+            "tier": 1,
+            "median": 1.3051,
+            "candidateFirst": 1.3051,
+            "referenceFirst": 1.3081
+          },
+          {
+            "key": "G1 | map | M | headline",
+            "tier": 2,
+            "median": 1.2702,
+            "candidateFirst": 1.3169,
+            "referenceFirst": 1.2668
+          },
+          {
+            "key": "G1 | map+filter+map | C | headline",
+            "tier": 1,
+            "median": 1.1501,
+            "candidateFirst": 1.1501,
+            "referenceFirst": 1.1515
+          },
+          {
+            "key": "G1 | map+filter+map | M | headline",
+            "tier": 2,
+            "median": 1.1255,
+            "candidateFirst": 1.1226,
+            "referenceFirst": 1.1288
+          },
+          {
+            "key": "G1b | pipe map | XS",
+            "tier": 1,
+            "median": 1.1034,
+            "candidateFirst": 1.1034,
+            "referenceFirst": 1.101
+          },
+          {
+            "key": "G1b | pipe map | S",
+            "tier": 1,
+            "median": 1.2402,
+            "candidateFirst": 1.2811,
+            "referenceFirst": 1.2396
+          },
+          {
+            "key": "G1b | pipe map | C",
+            "tier": 1,
+            "median": 1.3121,
+            "candidateFirst": 1.3177,
+            "referenceFirst": 1.2994
+          },
+          {
+            "key": "G1b | pipe map | M",
+            "tier": 2,
+            "median": 1.2888,
+            "candidateFirst": 1.3096,
+            "referenceFirst": 1.2815
+          },
+          {
+            "key": "G1b | pipe map+map | S",
+            "tier": 1,
+            "median": 1.1589,
+            "candidateFirst": 1.1758,
+            "referenceFirst": 1.1499
+          },
+          {
+            "key": "G1b | pipe map+map | C",
+            "tier": 1,
+            "median": 1.1806,
+            "candidateFirst": 1.1813,
+            "referenceFirst": 1.1793
+          },
+          {
+            "key": "G1b | pipe map+map | M",
+            "tier": 2,
+            "median": 1.2154,
+            "candidateFirst": 1.2181,
+            "referenceFirst": 1.2061
+          },
+          {
+            "key": "G4 | generator map+filter | M",
+            "tier": 2,
+            "median": 1.0896,
+            "candidateFirst": 1.0896,
+            "referenceFirst": 1.079
+          }
+        ],
+        "perRunT1": [0.9345, 0.9355, 0.9363],
+        "perRunT2": [0.842, 0.8466, 0.8455],
+        "g8": [
+          {
+            "key": "G8 | pass-through Proxy items | C | traps",
+            "median": 0.5765
+          },
+          {
+            "key": "G8 | pass-through Proxy items | M | traps",
+            "median": 0.5861
+          }
+        ]
+      },
+      "branch_main": {
+        "tiers": {
+          "T1": {
+            "n": 153,
+            "weightedGeomean": 0.868,
+            "verdicts": {
+              "faster": 68,
+              "neutral": 77,
+              "regression": 8
+            },
+            "barViolations": 8,
+            "groups": {
+              "G1": {
+                "n": 21,
+                "weightedGeomean": 0.7216,
+                "bar": 1
+              },
+              "G1b": {
+                "n": 24,
+                "weightedGeomean": 0.7683,
+                "bar": 0
+              },
+              "G2": {
+                "n": 1,
+                "weightedGeomean": 0.8729,
+                "bar": 0
+              },
+              "G3": {
+                "n": 19,
+                "weightedGeomean": 0.9732,
+                "bar": 5
+              },
+              "G5": {
+                "n": 23,
+                "weightedGeomean": 0.8226,
+                "bar": 0
+              },
+              "G6": {
+                "n": 9,
+                "weightedGeomean": 0.8732,
+                "bar": 0
+              },
+              "G7": {
+                "n": 41,
+                "weightedGeomean": 1.0114,
+                "bar": 2
+              },
+              "G10": {
+                "n": 15,
+                "weightedGeomean": 0.8428,
+                "bar": 0
+              }
+            }
+          },
+          "T2": {
+            "n": 173,
+            "weightedGeomean": 0.7988,
+            "verdicts": {
+              "faster": 97,
+              "neutral": 74,
+              "regression": 2
+            },
+            "barViolations": 2,
+            "groups": {
+              "G1": {
+                "n": 20,
+                "weightedGeomean": 0.634,
+                "bar": 0
+              },
+              "G1b": {
+                "n": 50,
+                "weightedGeomean": 0.7535,
+                "bar": 1
+              },
+              "G2": {
+                "n": 2,
+                "weightedGeomean": 0.8786,
+                "bar": 0
+              },
+              "G3": {
+                "n": 1,
+                "weightedGeomean": 0.9965,
+                "bar": 0
+              },
+              "G4": {
+                "n": 12,
+                "weightedGeomean": 0.6192,
+                "bar": 0
+              },
+              "G5": {
+                "n": 23,
+                "weightedGeomean": 0.8809,
+                "bar": 0
+              },
+              "G6": {
+                "n": 7,
+                "weightedGeomean": 0.8212,
+                "bar": 0
+              },
+              "G7": {
+                "n": 41,
+                "weightedGeomean": 1.0014,
+                "bar": 0
+              },
+              "G9": {
+                "n": 12,
+                "weightedGeomean": 0.8749,
+                "bar": 1
+              },
+              "G10": {
+                "n": 5,
+                "weightedGeomean": 0.8274,
+                "bar": 0
+              }
+            }
+          },
+          "T3": {
+            "n": 2,
+            "weightedGeomean": 1.1026,
+            "verdicts": {
+              "slower": 2
+            },
+            "barViolations": 0,
+            "groups": {
+              "G8": {
+                "n": 2,
+                "weightedGeomean": 1.1026,
+                "bar": 0
+              }
+            }
+          }
+        },
+        "violations": [
+          {
+            "key": "G1 | 3-step middle reads data | XS",
+            "tier": 1,
+            "median": 1.1199,
+            "candidateFirst": 1.1282,
+            "referenceFirst": 1.0995
+          },
+          {
+            "key": "G1b | pipe difference+map | XS",
+            "tier": 2,
+            "median": 1.1044,
+            "candidateFirst": 1.1245,
+            "referenceFirst": 1.0553
+          },
+          {
+            "key": "G3 | scalar purry depth-10 | x1",
+            "tier": 1,
+            "median": 1.1038,
+            "candidateFirst": 1.104,
+            "referenceFirst": 1.0904
+          },
+          {
+            "key": "G3 | scalar arrows depth-3 | x64 | headline",
+            "tier": 1,
+            "median": 1.375,
+            "candidateFirst": 1.3714,
+            "referenceFirst": 1.375
+          },
+          {
+            "key": "G3 | scalar arrows depth-3 | x1 | headline",
+            "tier": 1,
+            "median": 1.2352,
+            "candidateFirst": 1.24,
+            "referenceFirst": 1.2352
+          },
+          {
+            "key": "G3 | scalar arrows depth-10 | x64",
+            "tier": 1,
+            "median": 1.3584,
+            "candidateFirst": 1.3576,
+            "referenceFirst": 1.3584
+          },
+          {
+            "key": "G3 | scalar arrows depth-10 | x1",
+            "tier": 1,
+            "median": 1.293,
+            "candidateFirst": 1.2864,
+            "referenceFirst": 1.2972
+          },
+          {
+            "key": "G7 | mapValues data-first | C | data-first-guard",
+            "tier": 1,
+            "median": 1.2164,
+            "candidateFirst": 1.1388,
+            "referenceFirst": 1.2164
+          },
+          {
+            "key": "G7 | mapValues data-last | C | data-first-guard",
+            "tier": 1,
+            "median": 1.2878,
+            "candidateFirst": 1.134,
+            "referenceFirst": 1.353
+          },
+          {
+            "key": "G9 | map((...args) => args[0])+filter | XS",
+            "tier": 2,
+            "median": 1.1877,
+            "candidateFirst": 1.2045,
+            "referenceFirst": 1.1386
+          }
+        ],
+        "perRunT1": [0.8449, 0.8668, 0.8712],
+        "perRunT2": [0.7732, 0.801, 0.804],
+        "g8": [
+          {
+            "key": "G8 | pass-through Proxy items | C | traps",
+            "median": 1.0937
+          },
+          {
+            "key": "G8 | pass-through Proxy items | M | traps",
+            "median": 1.1115
+          }
+        ]
+      },
+      "comboA_branch": {
+        "tiers": {
+          "T1": {
+            "n": 153,
+            "weightedGeomean": 0.8098,
+            "verdicts": {
+              "faster": 93,
+              "neutral": 60
+            },
+            "barViolations": 0,
+            "groups": {
+              "G1": {
+                "n": 21,
+                "weightedGeomean": 0.6784,
+                "bar": 0
+              },
+              "G1b": {
+                "n": 24,
+                "weightedGeomean": 0.6678,
+                "bar": 0
+              },
+              "G2": {
+                "n": 1,
+                "weightedGeomean": 0.8168,
+                "bar": 0
+              },
+              "G3": {
+                "n": 19,
+                "weightedGeomean": 0.7962,
+                "bar": 0
+              },
+              "G5": {
+                "n": 23,
+                "weightedGeomean": 0.8971,
+                "bar": 0
+              },
+              "G6": {
+                "n": 9,
+                "weightedGeomean": 0.77,
+                "bar": 0
+              },
+              "G7": {
+                "n": 41,
+                "weightedGeomean": 0.9889,
+                "bar": 0
+              },
+              "G10": {
+                "n": 15,
+                "weightedGeomean": 0.7717,
+                "bar": 0
+              }
+            }
+          },
+          "T2": {
+            "n": 173,
+            "weightedGeomean": 0.8267,
+            "verdicts": {
+              "faster": 102,
+              "neutral": 70,
+              "regression": 1
+            },
+            "barViolations": 1,
+            "groups": {
+              "G1": {
+                "n": 20,
+                "weightedGeomean": 0.7288,
+                "bar": 0
+              },
+              "G1b": {
+                "n": 50,
+                "weightedGeomean": 0.6917,
+                "bar": 0
+              },
+              "G2": {
+                "n": 2,
+                "weightedGeomean": 0.9119,
+                "bar": 0
+              },
+              "G3": {
+                "n": 1,
+                "weightedGeomean": 0.9949,
+                "bar": 0
+              },
+              "G4": {
+                "n": 12,
+                "weightedGeomean": 0.9035,
+                "bar": 1
+              },
+              "G5": {
+                "n": 23,
+                "weightedGeomean": 0.9488,
+                "bar": 0
+              },
+              "G6": {
+                "n": 7,
+                "weightedGeomean": 0.8167,
+                "bar": 0
+              },
+              "G7": {
+                "n": 41,
+                "weightedGeomean": 0.9994,
+                "bar": 0
+              },
+              "G9": {
+                "n": 12,
+                "weightedGeomean": 0.7876,
+                "bar": 0
+              },
+              "G10": {
+                "n": 5,
+                "weightedGeomean": 0.8732,
+                "bar": 0
+              }
+            }
+          },
+          "T3": {
+            "n": 2,
+            "weightedGeomean": 0.9197,
+            "verdicts": {
+              "faster": 1,
+              "neutral": 1
+            },
+            "barViolations": 0,
+            "groups": {
+              "G8": {
+                "n": 2,
+                "weightedGeomean": 0.9197,
+                "bar": 0
+              }
+            }
+          }
+        },
+        "violations": [
+          {
+            "key": "G4 | string unique | M",
+            "tier": 2,
+            "median": 1.1127,
+            "candidateFirst": 1.176,
+            "referenceFirst": 1.1127
+          }
+        ],
+        "perRunT1": [0.8094, 0.8114, 0.8089],
+        "perRunT2": [0.8281, 0.8302, 0.8254],
+        "g8": [
+          {
+            "key": "G8 | pass-through Proxy items | C | traps",
+            "median": 0.9078
+          },
+          {
+            "key": "G8 | pass-through Proxy items | M | traps",
+            "median": 0.9316
+          }
+        ]
+      },
+      "comboB_branch": {
+        "tiers": {
+          "T1": {
+            "n": 153,
+            "weightedGeomean": 0.7581,
+            "verdicts": {
+              "faster": 98,
+              "neutral": 55
+            },
+            "barViolations": 0,
+            "groups": {
+              "G1": {
+                "n": 21,
+                "weightedGeomean": 0.6339,
+                "bar": 0
+              },
+              "G1b": {
+                "n": 24,
+                "weightedGeomean": 0.5848,
+                "bar": 0
+              },
+              "G2": {
+                "n": 1,
+                "weightedGeomean": 0.5842,
+                "bar": 0
+              },
+              "G3": {
+                "n": 19,
+                "weightedGeomean": 0.7968,
+                "bar": 0
+              },
+              "G5": {
+                "n": 23,
+                "weightedGeomean": 0.7822,
+                "bar": 0
+              },
+              "G6": {
+                "n": 9,
+                "weightedGeomean": 0.7478,
+                "bar": 0
+              },
+              "G7": {
+                "n": 41,
+                "weightedGeomean": 0.9938,
+                "bar": 0
+              },
+              "G10": {
+                "n": 15,
+                "weightedGeomean": 0.6691,
+                "bar": 0
+              }
+            }
+          },
+          "T2": {
+            "n": 173,
+            "weightedGeomean": 0.6994,
+            "verdicts": {
+              "faster": 105,
+              "neutral": 68
+            },
+            "barViolations": 0,
+            "groups": {
+              "G1": {
+                "n": 20,
+                "weightedGeomean": 0.6163,
+                "bar": 0
+              },
+              "G1b": {
+                "n": 50,
+                "weightedGeomean": 0.5051,
+                "bar": 0
+              },
+              "G2": {
+                "n": 2,
+                "weightedGeomean": 0.6787,
+                "bar": 0
+              },
+              "G3": {
+                "n": 1,
+                "weightedGeomean": 1.03,
+                "bar": 0
+              },
+              "G4": {
+                "n": 12,
+                "weightedGeomean": 0.8745,
+                "bar": 0
+              },
+              "G5": {
+                "n": 23,
+                "weightedGeomean": 0.886,
+                "bar": 0
+              },
+              "G6": {
+                "n": 7,
+                "weightedGeomean": 0.6615,
+                "bar": 0
+              },
+              "G7": {
+                "n": 41,
+                "weightedGeomean": 1.0007,
+                "bar": 0
+              },
+              "G9": {
+                "n": 12,
+                "weightedGeomean": 0.5673,
+                "bar": 0
+              },
+              "G10": {
+                "n": 5,
+                "weightedGeomean": 0.7547,
+                "bar": 0
+              }
+            }
+          },
+          "T3": {
+            "n": 2,
+            "weightedGeomean": 0.5454,
+            "verdicts": {
+              "faster": 2
+            },
+            "barViolations": 0,
+            "groups": {
+              "G8": {
+                "n": 2,
+                "weightedGeomean": 0.5454,
+                "bar": 0
+              }
+            }
+          }
+        },
+        "violations": [],
+        "perRunT1": [0.7564, 0.7591, 0.7574],
+        "perRunT2": [0.6973, 0.7029, 0.6979],
+        "g8": [
+          {
+            "key": "G8 | pass-through Proxy items | C | traps",
+            "median": 0.5459
+          },
+          {
+            "key": "G8 | pass-through Proxy items | M | traps",
+            "median": 0.5448
+          }
+        ]
+      }
+    },
+    "traps": [
+      {
+        "key": "G8 | pass-through Proxy items | C | traps",
+        "counts": {
+          "main": {
+            "has": 0,
+            "get": 10240
+          },
+          "branch": {
+            "has": 11223,
+            "get": 10240
+          },
+          "branch-v-identity-controls-v2": {
+            "has": 0,
+            "get": 10240
+          },
+          "branch-v-combo-a": {
+            "has": 11223,
+            "get": 10240
+          },
+          "branch-v-combo-b": {
+            "has": 0,
+            "get": 10240
+          }
+        }
+      },
+      {
+        "key": "G8 | pass-through Proxy items | M | traps",
+        "counts": {
+          "main": {
+            "has": 0,
+            "get": 1600
+          },
+          "branch": {
+            "has": 1752,
+            "get": 1600
+          },
+          "branch-v-identity-controls-v2": {
+            "has": 0,
+            "get": 1600
+          },
+          "branch-v-combo-a": {
+            "has": 1752,
+            "get": 1600
+          },
+          "branch-v-combo-b": {
+            "has": 0,
+            "get": 1600
+          }
+        }
+      }
+    ],
+    "validation": {
+      "dist": {
+        "copies": 26,
+        "scenarios": 526,
+        "traceCalls": 233043600,
+        "outputMismatches": 0,
+        "traceMismatches": 0,
+        "crossOk": 480,
+        "crossTotal": 480,
+        "comboPairs": [
+          "branch pipe + branch-v-combo-a steps",
+          "branch-v-combo-a pipe + branch steps",
+          "branch-v-combo-b pipe + branch-v-combo-b (cjs) steps",
+          "branch-v-combo-b (cjs) pipe + branch-v-combo-b steps"
+        ],
+        "failedCopies": []
+      },
+      "cjs": {
+        "copies": 26,
+        "scenarios": 118,
+        "traceCalls": 18366100,
+        "outputMismatches": 0,
+        "traceMismatches": 0,
+        "crossOk": 460,
+        "crossTotal": 460,
+        "comboPairs": [
+          "branch pipe + branch-v-combo-a steps",
+          "branch-v-combo-a pipe + branch steps",
+          "branch-v-combo-b pipe + branch-v-combo-b (esm) steps",
+          "branch-v-combo-b (esm) pipe + branch-v-combo-b steps"
+        ],
+        "failedCopies": []
+      },
+      "bundle": {
+        "copies": 26,
+        "scenarios": 118,
+        "traceCalls": 18366100,
+        "outputMismatches": 0,
+        "traceMismatches": 0,
+        "crossOk": 480,
+        "crossTotal": 480,
+        "comboPairs": [
+          "branch pipe + branch-v-combo-a steps",
+          "branch-v-combo-a pipe + branch steps",
+          "branch-v-combo-b pipe + branch-v-combo-b (cjs) steps",
+          "branch-v-combo-b (cjs) pipe + branch-v-combo-b steps"
+        ],
+        "failedCopies": []
+      }
+    },
+    "reactive": [
+      {
+        "framework": "vue",
+        "copy": "main",
+        "medianUs": 5.625000000009095,
+        "p75Us": 6.7919999999617175,
+        "meanUs": 6.317000999999323,
+        "dependencies": 31,
+        "dependenciesOnControlKey": 0,
+        "onTrackEvents": 31,
+        "onTrackControlKey": 0,
+        "footprintKiB": 9.8125,
+        "heapGrowthKiB": 41.203125
+      },
+      {
+        "framework": "vue",
+        "copy": "branch",
+        "medianUs": 5.8749999999747615,
+        "p75Us": 7.000000000005002,
+        "meanUs": 6.206639999999965,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "onTrackEvents": 41,
+        "onTrackControlKey": 10,
+        "footprintKiB": 3.171875,
+        "heapGrowthKiB": 39.71875
+      },
+      {
+        "framework": "vue",
+        "copy": "branch-v-identity-controls-v2",
+        "medianUs": 5.291999999997188,
+        "p75Us": 6.62500000001387,
+        "meanUs": 5.753050000000286,
+        "dependencies": 31,
+        "dependenciesOnControlKey": 0,
+        "onTrackEvents": 31,
+        "onTrackControlKey": 0,
+        "footprintKiB": 15.0390625,
+        "heapGrowthKiB": 36.8515625
+      },
+      {
+        "framework": "vue",
+        "copy": "branch-v-combo-a",
+        "medianUs": 9.374999999977263,
+        "p75Us": 9.583000000020547,
+        "meanUs": 8.980545000000575,
+        "dependencies": 60,
+        "dependenciesOnControlKey": 10,
+        "onTrackEvents": 78,
+        "onTrackControlKey": 10,
+        "footprintKiB": 7.34375,
+        "heapGrowthKiB": 42.828125
+      },
+      {
+        "framework": "vue",
+        "copy": "branch-v-combo-b",
+        "medianUs": 8.790999999973792,
+        "p75Us": 8.916999999996733,
+        "meanUs": 8.430884999999819,
+        "dependencies": 50,
+        "dependenciesOnControlKey": 0,
+        "onTrackEvents": 68,
+        "onTrackControlKey": 0,
+        "footprintKiB": 23.578125,
+        "heapGrowthKiB": 39.71875
+      },
+      {
+        "framework": "mobx",
+        "copy": "main",
+        "medianUs": 5.457999999975982,
+        "p75Us": 6.750000000010914,
+        "meanUs": 6.365578999998434,
+        "dependencies": 31,
+        "dependenciesOnControlKey": 0,
+        "absentKeyDependencies": 0,
+        "footprintKiB": 893.09375,
+        "heapGrowthKiB": 70.453125
+      },
+      {
+        "framework": "mobx",
+        "copy": "branch",
+        "medianUs": 5.749999999977717,
+        "p75Us": 6.874999999979536,
+        "meanUs": 6.13359099999974,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "absentKeyDependencies": 10,
+        "footprintKiB": 790.546875,
+        "heapGrowthKiB": 79.0703125
+      },
+      {
+        "framework": "mobx",
+        "copy": "branch-v-identity-controls-v2",
+        "medianUs": 6.0409999999819775,
+        "p75Us": 6.915999999989708,
+        "meanUs": 6.044180999999469,
+        "dependencies": 31,
+        "dependenciesOnControlKey": 0,
+        "absentKeyDependencies": 0,
+        "footprintKiB": 883.9296875,
+        "heapGrowthKiB": 61.9453125
+      },
+      {
+        "framework": "mobx",
+        "copy": "branch-v-combo-a",
+        "medianUs": 6.249999999965894,
+        "p75Us": 7.084000000020296,
+        "meanUs": 6.831163999999092,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "absentKeyDependencies": 10,
+        "footprintKiB": 886.8515625,
+        "heapGrowthKiB": 74.421875
+      },
+      {
+        "framework": "mobx",
+        "copy": "branch-v-combo-b",
+        "medianUs": 6.458000000009179,
+        "p75Us": 7.332999999960066,
+        "meanUs": 6.484260000001427,
+        "dependencies": 31,
+        "dependenciesOnControlKey": 0,
+        "absentKeyDependencies": 0,
+        "footprintKiB": 884.0078125,
+        "heapGrowthKiB": 58.8515625
+      }
+    ],
+    "cleanRotationFloors": {
+      "note": "floors from rotations 1-2 only (rotation 0 carries the position offset), verdicts over all 3 runs",
+      "floors": {
+        "T1": 0.0354,
+        "T2": 0.0364,
+        "T3": 0.0133
+      },
+      "violations": {
+        "comboA_main": [],
+        "comboB_main": [],
+        "comboB_comboA": [
+          {
+            "key": "G1 | map | XS | headline",
+            "tier": 1,
+            "median": 1.0932,
+            "candidateFirst": 1.1299,
+            "referenceFirst": 1.0844
+          },
+          {
+            "key": "G1 | map | S | headline",
+            "tier": 1,
+            "median": 1.2599,
+            "candidateFirst": 1.2755,
+            "referenceFirst": 1.2582
+          },
+          {
+            "key": "G1 | map | C | headline",
+            "tier": 1,
+            "median": 1.3051,
+            "candidateFirst": 1.3051,
+            "referenceFirst": 1.3081
+          },
+          {
+            "key": "G1 | map | M | headline",
+            "tier": 2,
+            "median": 1.2702,
+            "candidateFirst": 1.3169,
+            "referenceFirst": 1.2668
+          },
+          {
+            "key": "G1 | map+filter+map | XS | headline",
+            "tier": 1,
+            "median": 1.076,
+            "candidateFirst": 1.0355,
+            "referenceFirst": 1.0799
+          },
+          {
+            "key": "G1 | map+filter+map | S | headline",
+            "tier": 1,
+            "median": 1.1089,
+            "candidateFirst": 1.0659,
+            "referenceFirst": 1.1122
+          },
+          {
+            "key": "G1 | map+filter+map | C | headline",
+            "tier": 1,
+            "median": 1.1501,
+            "candidateFirst": 1.1501,
+            "referenceFirst": 1.1515
+          },
+          {
+            "key": "G1 | map+filter+map | M | headline",
+            "tier": 2,
+            "median": 1.1255,
+            "candidateFirst": 1.1226,
+            "referenceFirst": 1.1288
+          },
+          {
+            "key": "G1b | pipe map | XS",
+            "tier": 1,
+            "median": 1.1034,
+            "candidateFirst": 1.1034,
+            "referenceFirst": 1.101
+          },
+          {
+            "key": "G1b | pipe map | S",
+            "tier": 1,
+            "median": 1.2402,
+            "candidateFirst": 1.2811,
+            "referenceFirst": 1.2396
+          },
+          {
+            "key": "G1b | pipe map | C",
+            "tier": 1,
+            "median": 1.3121,
+            "candidateFirst": 1.3177,
+            "referenceFirst": 1.2994
+          },
+          {
+            "key": "G1b | pipe map | M",
+            "tier": 2,
+            "median": 1.2888,
+            "candidateFirst": 1.3096,
+            "referenceFirst": 1.2815
+          },
+          {
+            "key": "G1b | pipe map+map | XS",
+            "tier": 1,
+            "median": 1.0567,
+            "candidateFirst": 1.0578,
+            "referenceFirst": 1.0565
+          },
+          {
+            "key": "G1b | pipe map+map | S",
+            "tier": 1,
+            "median": 1.1589,
+            "candidateFirst": 1.1758,
+            "referenceFirst": 1.1499
+          },
+          {
+            "key": "G1b | pipe map+map | C",
+            "tier": 1,
+            "median": 1.1806,
+            "candidateFirst": 1.1813,
+            "referenceFirst": 1.1793
+          },
+          {
+            "key": "G1b | pipe map+map | M",
+            "tier": 2,
+            "median": 1.2154,
+            "candidateFirst": 1.2181,
+            "referenceFirst": 1.2061
+          },
+          {
+            "key": "G1b | pipe unique+map | XS",
+            "tier": 1,
+            "median": 1.0485,
+            "candidateFirst": 1.0837,
+            "referenceFirst": 1.0384
+          },
+          {
+            "key": "G4 | generator map+filter | S",
+            "tier": 2,
+            "median": 1.0563,
+            "candidateFirst": 1.0186,
+            "referenceFirst": 1.0638
+          },
+          {
+            "key": "G4 | generator map+filter | M",
+            "tier": 2,
+            "median": 1.0896,
+            "candidateFirst": 1.0896,
+            "referenceFirst": 1.079
+          }
+        ],
+        "comboA_comboB": [
+          {
+            "key": "G8 | pass-through Proxy items | C | traps",
+            "tier": 3,
+            "median": 1.7347,
+            "candidateFirst": 1.754,
+            "referenceFirst": 1.6371
+          },
+          {
+            "key": "G8 | pass-through Proxy items | M | traps",
+            "tier": 3,
+            "median": 1.7063,
+            "candidateFirst": 1.7771,
+            "referenceFirst": 1.7063
+          },
+          {
+            "key": "G1 | map reading data | XS",
+            "tier": 1,
+            "median": 1.0713,
+            "candidateFirst": 1.0702,
+            "referenceFirst": 1.0748
+          },
+          {
+            "key": "G1 | filter+map | XS | headline",
+            "tier": 1,
+            "median": 1.1136,
+            "candidateFirst": 1.1158,
+            "referenceFirst": 1.1092
+          },
+          {
+            "key": "G1 | filter+map | S | headline",
+            "tier": 1,
+            "median": 1.3773,
+            "candidateFirst": 1.3616,
+            "referenceFirst": 1.3856
+          },
+          {
+            "key": "G1 | filter+map | C | headline",
+            "tier": 1,
+            "median": 1.5371,
+            "candidateFirst": 1.5394,
+            "referenceFirst": 1.5371
+          },
+          {
+            "key": "G1 | filter+map | M | headline",
+            "tier": 2,
+            "median": 1.5218,
+            "candidateFirst": 1.5183,
+            "referenceFirst": 1.5287
+          },
+          {
+            "key": "G1 | flatMap+filter+map | XS",
+            "tier": 2,
+            "median": 1.1244,
+            "candidateFirst": 1.1215,
+            "referenceFirst": 1.1497
+          },
+          {
+            "key": "G1 | flatMap+filter+map | S",
+            "tier": 2,
+            "median": 1.2822,
+            "candidateFirst": 1.2793,
+            "referenceFirst": 1.2822
+          },
+          {
+            "key": "G1 | flatMap+filter+map | C",
+            "tier": 2,
+            "median": 1.3438,
+            "candidateFirst": 1.3408,
+            "referenceFirst": 1.3511
+          },
+          {
+            "key": "G1 | uniqueBy | XS",
+            "tier": 1,
+            "median": 1.1439,
+            "candidateFirst": 1.1496,
+            "referenceFirst": 1.1363
+          },
+          {
+            "key": "G1 | uniqueBy | S",
+            "tier": 1,
+            "median": 1.3675,
+            "candidateFirst": 1.3856,
+            "referenceFirst": 1.3615
+          },
+          {
+            "key": "G1 | uniqueBy | C",
+            "tier": 1,
+            "median": 1.3405,
+            "candidateFirst": 1.3348,
+            "referenceFirst": 1.3694
+          },
+          {
+            "key": "G1 | uniqueBy | M",
+            "tier": 2,
+            "median": 1.5557,
+            "candidateFirst": 1.5582,
+            "referenceFirst": 1.5557
+          },
+          {
+            "key": "G1 | filter+map+take(10) | C",
+            "tier": 2,
+            "median": 1.2954,
+            "candidateFirst": 1.3199,
+            "referenceFirst": 1.2954
+          },
+          {
+            "key": "G1 | find early hit | C",
+            "tier": 2,
+            "median": 1.2717,
+            "candidateFirst": 1.2513,
+            "referenceFirst": 1.2912
+          },
+          {
+            "key": "G1 | find late hit | C",
+            "tier": 2,
+            "median": 1.5739,
+            "candidateFirst": 1.6,
+            "referenceFirst": 1.5739
+          },
+          {
+            "key": "G1 | find miss | C",
+            "tier": 2,
+            "median": 1.6044,
+            "candidateFirst": 1.6115,
+            "referenceFirst": 1.5323
+          },
+          {
+            "key": "G1 | filter+first | XS",
+            "tier": 2,
+            "median": 1.0896,
+            "candidateFirst": 1.1045,
+            "referenceFirst": 1.0838
+          },
+          {
+            "key": "G1 | filter+first | S",
+            "tier": 2,
+            "median": 1.2924,
+            "candidateFirst": 1.2896,
+            "referenceFirst": 1.3011
+          },
+          {
+            "key": "G1 | filter+first | C",
+            "tier": 2,
+            "median": 1.3585,
+            "candidateFirst": 1.3586,
+            "referenceFirst": 1.3585
+          },
+          {
+            "key": "G1 | 3-step middle reads data | XS",
+            "tier": 1,
+            "median": 1.0561,
+            "candidateFirst": 1.0597,
+            "referenceFirst": 1.0546
+          },
+          {
+            "key": "G1 | 3-step middle reads data | S",
+            "tier": 1,
+            "median": 1.3299,
+            "candidateFirst": 1.32,
+            "referenceFirst": 1.3325
+          },
+          {
+            "key": "G1 | 3-step middle reads data | C",
+            "tier": 1,
+            "median": 1.4399,
+            "candidateFirst": 1.4495,
+            "referenceFirst": 1.4361
+          },
+          {
+            "key": "G1 | 3-step middle reads data | M",
+            "tier": 2,
+            "median": 1.4655,
+            "candidateFirst": 1.467,
+            "referenceFirst": 1.4496
+          },
+          {
+            "key": "G10 | filter,map / sortBy / take / groupBy | S | headline",
+            "tier": 1,
+            "median": 1.2805,
+            "candidateFirst": 1.2705,
+            "referenceFirst": 1.298
+          },
+          {
+            "key": "G10 | filter,map / sortBy / take / groupBy | C | headline",
+            "tier": 1,
+            "median": 1.4601,
+            "candidateFirst": 1.4776,
+            "referenceFirst": 1.4601
+          },
+          {
+            "key": "G10 | filter,map / sortBy / take / groupBy | M | headline",
+            "tier": 2,
+            "median": 1.1812,
+            "candidateFirst": 1.1526,
+            "referenceFirst": 1.1833
+          },
+          {
+            "key": "G10 | prop / filter,map,take / reverse / map / length | S",
+            "tier": 1,
+            "median": 1.1178,
+            "candidateFirst": 1.1095,
+            "referenceFirst": 1.131
+          },
+          {
+            "key": "G10 | prop / filter,map,take / reverse / map / length | C",
+            "tier": 1,
+            "median": 1.1286,
+            "candidateFirst": 1.1336,
+            "referenceFirst": 1.1259
+          },
+          {
+            "key": "G10 | prop / filter,map,take / reverse / map / length | M",
+            "tier": 2,
+            "median": 1.1363,
+            "candidateFirst": 1.1363,
+            "referenceFirst": 1.0905
+          },
+          {
+            "key": "G10 | filter,map(pick) / groupBy / entries / map / fromEntries | XS",
+            "tier": 1,
+            "median": 1.0605,
+            "candidateFirst": 1.0623,
+            "referenceFirst": 1.0526
+          },
+          {
+            "key": "G10 | filter,map(pick) / groupBy / entries / map / fromEntries | S",
+            "tier": 1,
+            "median": 1.0957,
+            "candidateFirst": 1.127,
+            "referenceFirst": 1.0957
+          },
+          {
+            "key": "G10 | filter,map(pick) / groupBy / entries / map / fromEntries | C",
+            "tier": 1,
+            "median": 1.181,
+            "candidateFirst": 1.1827,
+            "referenceFirst": 1.1497
+          },
+          {
+            "key": "G10 | filter,map(pick) / groupBy / entries / map / fromEntries | M",
+            "tier": 2,
+            "median": 1.181,
+            "candidateFirst": 1.1734,
+            "referenceFirst": 1.1884
+          },
+          {
+            "key": "G10 | map,filter / sortBy / uniqueBy,take / arrow / flatMap,filter,map | XS",
+            "tier": 1,
+            "median": 1.0948,
+            "candidateFirst": 1.0951,
+            "referenceFirst": 1.0865
+          },
+          {
+            "key": "G10 | map,filter / sortBy / uniqueBy,take / arrow / flatMap,filter,map | S",
+            "tier": 1,
+            "median": 1.2165,
+            "candidateFirst": 1.2242,
+            "referenceFirst": 1.2165
+          },
+          {
+            "key": "G10 | map,filter / sortBy / uniqueBy,take / arrow / flatMap,filter,map | C",
+            "tier": 1,
+            "median": 1.299,
+            "candidateFirst": 1.2974,
+            "referenceFirst": 1.299
+          },
+          {
+            "key": "G10 | map,filter / sortBy / uniqueBy,take / arrow / flatMap,filter,map | M",
+            "tier": 2,
+            "median": 1.1424,
+            "candidateFirst": 1.1564,
+            "referenceFirst": 1.1346
+          },
+          {
+            "key": "G10 | filter / sortBy / map,filter / groupBy / arrow / map(prop) / reverse / take,map / arrow | S",
+            "tier": 1,
+            "median": 1.149,
+            "candidateFirst": 1.1504,
+            "referenceFirst": 1.1457
+          },
+          {
+            "key": "G10 | filter / sortBy / map,filter / groupBy / arrow / map(prop) / reverse / take,map / arrow | C",
+            "tier": 1,
+            "median": 1.1431,
+            "candidateFirst": 1.1427,
+            "referenceFirst": 1.1431
+          },
+          {
+            "key": "G10 | filter / sortBy / map,filter / groupBy / arrow / map(prop) / reverse / take,map / arrow | M",
+            "tier": 2,
+            "median": 1.1404,
+            "candidateFirst": 1.1503,
+            "referenceFirst": 1.1244
+          },
+          {
+            "key": "G1b | pipe difference | XS",
+            "tier": 2,
+            "median": 1.2005,
+            "candidateFirst": 1.2028,
+            "referenceFirst": 1.0719
+          },
+          {
+            "key": "G1b | pipe difference | S",
+            "tier": 2,
+            "median": 1.75,
+            "candidateFirst": 1.7609,
+            "referenceFirst": 1.6489
+          },
+          {
+            "key": "G1b | pipe difference | C",
+            "tier": 2,
+            "median": 1.706,
+            "candidateFirst": 1.7064,
+            "referenceFirst": 1.706
+          },
+          {
+            "key": "G1b | pipe difference+map | XS",
+            "tier": 2,
+            "median": 1.1095,
+            "candidateFirst": 1.1088,
+            "referenceFirst": 1.1107
+          },
+          {
+            "key": "G1b | pipe difference+map | S",
+            "tier": 2,
+            "median": 1.6099,
+            "candidateFirst": 1.5499,
+            "referenceFirst": 1.6316
+          },
+          {
+            "key": "G1b | pipe difference+map | C",
+            "tier": 2,
+            "median": 1.6932,
+            "candidateFirst": 1.6837,
+            "referenceFirst": 1.7165
+          },
+          {
+            "key": "G1b | pipe filter | XS",
+            "tier": 1,
+            "median": 1.1989,
+            "candidateFirst": 1.2003,
+            "referenceFirst": 1.1896
+          },
+          {
+            "key": "G1b | pipe filter | S",
+            "tier": 1,
+            "median": 1.6572,
+            "candidateFirst": 1.6666,
+            "referenceFirst": 1.6442
+          },
+          {
+            "key": "G1b | pipe filter | C",
+            "tier": 1,
+            "median": 1.828,
+            "candidateFirst": 1.8416,
+            "referenceFirst": 1.7973
+          },
+          {
+            "key": "G1b | pipe filter | M",
+            "tier": 2,
+            "median": 1.7945,
+            "candidateFirst": 1.7958,
+            "referenceFirst": 1.7639
+          },
+          {
+            "key": "G1b | pipe filter+map | XS",
+            "tier": 1,
+            "median": 1.126,
+            "candidateFirst": 1.1165,
+            "referenceFirst": 1.1327
+          },
+          {
+            "key": "G1b | pipe filter+map | S",
+            "tier": 1,
+            "median": 1.5831,
+            "candidateFirst": 1.5797,
+            "referenceFirst": 1.6065
+          },
+          {
+            "key": "G1b | pipe filter+map | C",
+            "tier": 1,
+            "median": 1.8684,
+            "candidateFirst": 1.8341,
+            "referenceFirst": 1.8684
+          },
+          {
+            "key": "G1b | pipe filter+map | M",
+            "tier": 2,
+            "median": 1.8594,
+            "candidateFirst": 1.8625,
+            "referenceFirst": 1.8519
+          },
+          {
+            "key": "G1b | pipe find | XS",
+            "tier": 2,
+            "median": 1.1157,
+            "candidateFirst": 1.1155,
+            "referenceFirst": 1.1157
+          },
+          {
+            "key": "G1b | pipe find | S",
+            "tier": 2,
+            "median": 1.3846,
+            "candidateFirst": 1.3975,
+            "referenceFirst": 1.3655
+          },
+          {
+            "key": "G1b | pipe find | C",
+            "tier": 2,
+            "median": 1.5462,
+            "candidateFirst": 1.5684,
+            "referenceFirst": 1.5397
+          },
+          {
+            "key": "G1b | pipe find+map | XS",
+            "tier": 2,
+            "median": 1.1129,
+            "candidateFirst": 1.123,
+            "referenceFirst": 1.1129
+          },
+          {
+            "key": "G1b | pipe find+map | S",
+            "tier": 2,
+            "median": 1.4171,
+            "candidateFirst": 1.4277,
+            "referenceFirst": 1.3953
+          },
+          {
+            "key": "G1b | pipe find+map | C",
+            "tier": 2,
+            "median": 1.6132,
+            "candidateFirst": 1.6293,
+            "referenceFirst": 1.5837
+          },
+          {
+            "key": "G1b | pipe first | XS",
+            "tier": 2,
+            "median": 1.1168,
+            "candidateFirst": 1.1129,
+            "referenceFirst": 1.1197
+          },
+          {
+            "key": "G1b | pipe first | S",
+            "tier": 2,
+            "median": 1.1962,
+            "candidateFirst": 1.208,
+            "referenceFirst": 1.1765
+          },
+          {
+            "key": "G1b | pipe first | C",
+            "tier": 2,
+            "median": 1.1889,
+            "candidateFirst": 1.1906,
+            "referenceFirst": 1.1731
+          },
+          {
+            "key": "G1b | pipe first+map | XS",
+            "tier": 2,
+            "median": 1.1048,
+            "candidateFirst": 1.1183,
+            "referenceFirst": 1.0944
+          },
+          {
+            "key": "G1b | pipe first+map | S",
+            "tier": 2,
+            "median": 1.1073,
+            "candidateFirst": 1.1193,
+            "referenceFirst": 1.0934
+          },
+          {
+            "key": "G1b | pipe first+map | C",
+            "tier": 2,
+            "median": 1.1358,
+            "candidateFirst": 1.1242,
+            "referenceFirst": 1.2156
+          },
+          {
+            "key": "G1b | pipe flat | XS",
+            "tier": 2,
+            "median": 1.0627,
+            "candidateFirst": 1.0703,
+            "referenceFirst": 1.0366
+          },
+          {
+            "key": "G1b | pipe flat | S",
+            "tier": 2,
+            "median": 1.1966,
+            "candidateFirst": 1.1892,
+            "referenceFirst": 1.2637
+          },
+          {
+            "key": "G1b | pipe flat | C",
+            "tier": 2,
+            "median": 1.2088,
+            "candidateFirst": 1.22,
+            "referenceFirst": 1.2088
+          },
+          {
+            "key": "G1b | pipe flat+map | XS",
+            "tier": 2,
+            "median": 1.1824,
+            "candidateFirst": 1.183,
+            "referenceFirst": 1.1806
+          },
+          {
+            "key": "G1b | pipe flat+map | S",
+            "tier": 2,
+            "median": 1.499,
+            "candidateFirst": 1.5124,
+            "referenceFirst": 1.499
+          },
+          {
+            "key": "G1b | pipe flat+map | C",
+            "tier": 2,
+            "median": 1.6426,
+            "candidateFirst": 1.6549,
+            "referenceFirst": 1.6324
+          },
+          {
+            "key": "G1b | pipe flatMap | XS",
+            "tier": 2,
+            "median": 1.0746,
+            "candidateFirst": 1.079,
+            "referenceFirst": 1.0735
+          },
+          {
+            "key": "G1b | pipe flatMap | S",
+            "tier": 2,
+            "median": 1.1634,
+            "candidateFirst": 1.1627,
+            "referenceFirst": 1.2442
+          },
+          {
+            "key": "G1b | pipe flatMap | C",
+            "tier": 2,
+            "median": 1.1596,
+            "candidateFirst": 1.1685,
+            "referenceFirst": 1.1445
+          },
+          {
+            "key": "G1b | pipe flatMap+map | XS",
+            "tier": 2,
+            "median": 1.1855,
+            "candidateFirst": 1.2026,
+            "referenceFirst": 1.1819
+          },
+          {
+            "key": "G1b | pipe flatMap+map | S",
+            "tier": 2,
+            "median": 1.4722,
+            "candidateFirst": 1.4921,
+            "referenceFirst": 1.4722
+          },
+          {
+            "key": "G1b | pipe flatMap+map | C",
+            "tier": 2,
+            "median": 1.5006,
+            "candidateFirst": 1.4916,
+            "referenceFirst": 1.5368
+          },
+          {
+            "key": "G1b | pipe take | XS",
+            "tier": 2,
+            "median": 1.0597,
+            "candidateFirst": 1.0621,
+            "referenceFirst": 1.0447
+          },
+          {
+            "key": "G1b | pipe take | S",
+            "tier": 2,
+            "median": 2.0246,
+            "candidateFirst": 1.9882,
+            "referenceFirst": 2.0246
+          },
+          {
+            "key": "G1b | pipe take | C",
+            "tier": 2,
+            "median": 2.2414,
+            "candidateFirst": 2.2446,
+            "referenceFirst": 2.1846
+          },
+          {
+            "key": "G1b | pipe take+map | XS",
+            "tier": 2,
+            "median": 1.0559,
+            "candidateFirst": 1.0551,
+            "referenceFirst": 1.0609
+          },
+          {
+            "key": "G1b | pipe take+map | S",
+            "tier": 2,
+            "median": 1.6211,
+            "candidateFirst": 1.6127,
+            "referenceFirst": 1.6615
+          },
+          {
+            "key": "G1b | pipe take+map | C",
+            "tier": 2,
+            "median": 1.912,
+            "candidateFirst": 1.9069,
+            "referenceFirst": 1.9175
+          },
+          {
+            "key": "G1b | pipe unique | S",
+            "tier": 1,
+            "median": 1.0961,
+            "candidateFirst": 1.0959,
+            "referenceFirst": 1.0961
+          },
+          {
+            "key": "G1b | pipe unique | C",
+            "tier": 1,
+            "median": 1.1667,
+            "candidateFirst": 1.1773,
+            "referenceFirst": 1.1444
+          },
+          {
+            "key": "G1b | pipe unique | M",
+            "tier": 2,
+            "median": 1.2435,
+            "candidateFirst": 1.2529,
+            "referenceFirst": 1.2377
+          },
+          {
+            "key": "G1b | pipe unique+map | C",
+            "tier": 1,
+            "median": 1.06,
+            "candidateFirst": 1.0546,
+            "referenceFirst": 1.0661
+          },
+          {
+            "key": "G1b | pipe unique+map | M",
+            "tier": 2,
+            "median": 1.08,
+            "candidateFirst": 1.0817,
+            "referenceFirst": 1.0475
+          },
+          {
+            "key": "G1b | pipe uniqueBy | XS",
+            "tier": 1,
+            "median": 1.1499,
+            "candidateFirst": 1.1581,
+            "referenceFirst": 1.1418
+          },
+          {
+            "key": "G1b | pipe uniqueBy | S",
+            "tier": 1,
+            "median": 1.3854,
+            "candidateFirst": 1.3714,
+            "referenceFirst": 1.3919
+          },
+          {
+            "key": "G1b | pipe uniqueBy | C",
+            "tier": 1,
+            "median": 1.3717,
+            "candidateFirst": 1.3753,
+            "referenceFirst": 1.3687
+          },
+          {
+            "key": "G1b | pipe uniqueBy | M",
+            "tier": 2,
+            "median": 1.5249,
+            "candidateFirst": 1.5112,
+            "referenceFirst": 1.5249
+          },
+          {
+            "key": "G1b | pipe uniqueBy+map | XS",
+            "tier": 1,
+            "median": 1.072,
+            "candidateFirst": 1.0803,
+            "referenceFirst": 1.0702
+          },
+          {
+            "key": "G1b | pipe uniqueBy+map | S",
+            "tier": 1,
+            "median": 1.3518,
+            "candidateFirst": 1.3559,
+            "referenceFirst": 1.3176
+          },
+          {
+            "key": "G1b | pipe uniqueBy+map | C",
+            "tier": 1,
+            "median": 1.3439,
+            "candidateFirst": 1.3329,
+            "referenceFirst": 1.3439
+          },
+          {
+            "key": "G1b | pipe uniqueBy+map | M",
+            "tier": 2,
+            "median": 1.4406,
+            "candidateFirst": 1.4244,
+            "referenceFirst": 1.456
+          },
+          {
+            "key": "G1b | pipe zip | XS",
+            "tier": 2,
+            "median": 1.2662,
+            "candidateFirst": 1.2696,
+            "referenceFirst": 1.2227
+          },
+          {
+            "key": "G1b | pipe zip | S",
+            "tier": 2,
+            "median": 2.35,
+            "candidateFirst": 2.3524,
+            "referenceFirst": 2.35
+          },
+          {
+            "key": "G1b | pipe zip | C",
+            "tier": 2,
+            "median": 2.5505,
+            "candidateFirst": 2.6545,
+            "referenceFirst": 2.546
+          },
+          {
+            "key": "G1b | pipe zip+map | XS",
+            "tier": 2,
+            "median": 1.2855,
+            "candidateFirst": 1.2657,
+            "referenceFirst": 1.2857
+          },
+          {
+            "key": "G1b | pipe zip+map | S",
+            "tier": 2,
+            "median": 2.1804,
+            "candidateFirst": 2.215,
+            "referenceFirst": 2.1623
+          },
+          {
+            "key": "G1b | pipe zip+map | C",
+            "tier": 2,
+            "median": 2.4951,
+            "candidateFirst": 2.4461,
+            "referenceFirst": 2.5132
+          },
+          {
+            "key": "G2 | deep-8 mixed | S",
+            "tier": 1,
+            "median": 1.3943,
+            "candidateFirst": 1.3963,
+            "referenceFirst": 1.3808
+          },
+          {
+            "key": "G2 | deep-8 mixed | M",
+            "tier": 2,
+            "median": 1.303,
+            "candidateFirst": 1.2904,
+            "referenceFirst": 1.303
+          },
+          {
+            "key": "G2 | deep-15 mixed | M",
+            "tier": 2,
+            "median": 1.3907,
+            "candidateFirst": 1.3849,
+            "referenceFirst": 1.4071
+          },
+          {
+            "key": "G4 | string unique | M",
+            "tier": 2,
+            "median": 1.5812,
+            "candidateFirst": 1.6338,
+            "referenceFirst": 1.5639
+          },
+          {
+            "key": "G4 | generator unique | M",
+            "tier": 2,
+            "median": 1.2096,
+            "candidateFirst": 1.1984,
+            "referenceFirst": 1.2096
+          },
+          {
+            "key": "G5 | data-first difference | XS | data-first-guard",
+            "tier": 1,
+            "median": 1.0698,
+            "candidateFirst": 1.1118,
+            "referenceFirst": 1.0494
+          },
+          {
+            "key": "G5 | data-first difference | S | data-first-guard",
+            "tier": 1,
+            "median": 1.6914,
+            "candidateFirst": 1.7121,
+            "referenceFirst": 1.6377
+          },
+          {
+            "key": "G5 | data-first difference | C | data-first-guard",
+            "tier": 1,
+            "median": 1.6673,
+            "candidateFirst": 1.6884,
+            "referenceFirst": 1.5727
+          },
+          {
+            "key": "G5 | data-first difference | M | data-first-guard",
+            "tier": 1,
+            "median": 1.885,
+            "candidateFirst": 1.9069,
+            "referenceFirst": 1.885
+          },
+          {
+            "key": "G5 | data-first unique | S | data-first-guard",
+            "tier": 1,
+            "median": 1.0885,
+            "candidateFirst": 1.097,
+            "referenceFirst": 1.0881
+          },
+          {
+            "key": "G5 | data-first unique | C | data-first-guard",
+            "tier": 1,
+            "median": 1.1765,
+            "candidateFirst": 1.1516,
+            "referenceFirst": 1.1765
+          },
+          {
+            "key": "G5 | data-first unique | M | data-first-guard",
+            "tier": 2,
+            "median": 1.2258,
+            "candidateFirst": 1.221,
+            "referenceFirst": 1.2583
+          },
+          {
+            "key": "G5 | data-first uniqueBy | XS | data-first-guard",
+            "tier": 1,
+            "median": 1.1499,
+            "candidateFirst": 1.1477,
+            "referenceFirst": 1.1507
+          },
+          {
+            "key": "G5 | data-first uniqueBy | S | data-first-guard",
+            "tier": 1,
+            "median": 1.3542,
+            "candidateFirst": 1.367,
+            "referenceFirst": 1.3273
+          },
+          {
+            "key": "G5 | data-first uniqueBy | C | data-first-guard",
+            "tier": 1,
+            "median": 1.3963,
+            "candidateFirst": 1.415,
+            "referenceFirst": 1.3464
+          },
+          {
+            "key": "G5 | data-first uniqueBy | M | data-first-guard",
+            "tier": 2,
+            "median": 1.5409,
+            "candidateFirst": 1.5243,
+            "referenceFirst": 1.5522
+          },
+          {
+            "key": "G5 | data-first difference(range) (adopter shape) | XS | data-first-guard",
+            "tier": 1,
+            "median": 1.0518,
+            "candidateFirst": 1.0478,
+            "referenceFirst": 1.0518
+          },
+          {
+            "key": "G5 | data-first difference(range) (adopter shape) | C | data-first-guard",
+            "tier": 1,
+            "median": 1.0842,
+            "candidateFirst": 1.1012,
+            "referenceFirst": 1.0831
+          },
+          {
+            "key": "G5 | data-first difference(range) (adopter shape) | M | data-first-guard",
+            "tier": 1,
+            "median": 1.109,
+            "candidateFirst": 1.1222,
+            "referenceFirst": 1.1032
+          },
+          {
+            "key": "G5 | data-first uniqueBy (reads data) | XS | data-first-guard",
+            "tier": 1,
+            "median": 1.0691,
+            "candidateFirst": 1.068,
+            "referenceFirst": 1.0898
+          },
+          {
+            "key": "G5 | data-first uniqueBy (reads data) | S | data-first-guard",
+            "tier": 1,
+            "median": 1.296,
+            "candidateFirst": 1.3014,
+            "referenceFirst": 1.263
+          },
+          {
+            "key": "G5 | data-first uniqueBy (reads data) | C | data-first-guard",
+            "tier": 1,
+            "median": 1.3076,
+            "candidateFirst": 1.3123,
+            "referenceFirst": 1.3076
+          },
+          {
+            "key": "G5 | data-first uniqueBy (reads data) | M | data-first-guard",
+            "tier": 2,
+            "median": 1.4528,
+            "candidateFirst": 1.4394,
+            "referenceFirst": 1.4528
+          },
+          {
+            "key": "G6 | unique()(data) | S",
+            "tier": 1,
+            "median": 1.0933,
+            "candidateFirst": 1.0973,
+            "referenceFirst": 1.0773
+          },
+          {
+            "key": "G6 | unique()(data) | C",
+            "tier": 1,
+            "median": 1.1881,
+            "candidateFirst": 1.2035,
+            "referenceFirst": 1.1162
+          },
+          {
+            "key": "G6 | unique()(data) | M",
+            "tier": 2,
+            "median": 1.2667,
+            "candidateFirst": 1.2701,
+            "referenceFirst": 1.2202
+          },
+          {
+            "key": "G6 | pipe with reused steps | XS",
+            "tier": 2,
+            "median": 1.1084,
+            "candidateFirst": 1.1051,
+            "referenceFirst": 1.1198
+          },
+          {
+            "key": "G6 | pipe with reused steps | S",
+            "tier": 2,
+            "median": 1.36,
+            "candidateFirst": 1.3802,
+            "referenceFirst": 1.3266
+          },
+          {
+            "key": "G6 | pipe with reused steps | C",
+            "tier": 2,
+            "median": 1.5497,
+            "candidateFirst": 1.5368,
+            "referenceFirst": 1.5785
+          },
+          {
+            "key": "G6 | pipe with reused steps | M",
+            "tier": 2,
+            "median": 1.5216,
+            "candidateFirst": 1.4978,
+            "referenceFirst": 1.5394
+          },
+          {
+            "key": "G7 | mapValues data-first | C | data-first-guard",
+            "tier": 1,
+            "median": 1.0777,
+            "candidateFirst": 1.0356,
+            "referenceFirst": 1.1029
+          },
+          {
+            "key": "G9 | map((...args) => args[0]) | XS",
+            "tier": 2,
+            "median": 1.2397,
+            "candidateFirst": 1.2506,
+            "referenceFirst": 1.2217
+          },
+          {
+            "key": "G9 | map((...args) => args[0]) | S",
+            "tier": 2,
+            "median": 1.6885,
+            "candidateFirst": 1.6809,
+            "referenceFirst": 1.6885
+          },
+          {
+            "key": "G9 | map((...args) => args[0]) | C",
+            "tier": 2,
+            "median": 1.8518,
+            "candidateFirst": 1.8609,
+            "referenceFirst": 1.8431
+          },
+          {
+            "key": "G9 | map((...args) => args[0]) | M",
+            "tier": 2,
+            "median": 1.7241,
+            "candidateFirst": 1.7287,
+            "referenceFirst": 1.6874
+          },
+          {
+            "key": "G9 | map((...args) => args[0])+filter | XS",
+            "tier": 2,
+            "median": 1.1728,
+            "candidateFirst": 1.1609,
+            "referenceFirst": 1.185
+          },
+          {
+            "key": "G9 | map((...args) => args[0])+filter | S",
+            "tier": 2,
+            "median": 1.7627,
+            "candidateFirst": 1.7392,
+            "referenceFirst": 1.7629
+          },
+          {
+            "key": "G9 | map((...args) => args[0])+filter | C",
+            "tier": 2,
+            "median": 1.9748,
+            "candidateFirst": 1.9532,
+            "referenceFirst": 1.9978
+          },
+          {
+            "key": "G9 | map((...args) => args[0])+filter | M",
+            "tier": 2,
+            "median": 1.9547,
+            "candidateFirst": 1.9638,
+            "referenceFirst": 1.9322
+          }
+        ],
+        "comboA_branch": [
+          {
+            "key": "G4 | string unique | M",
+            "tier": 2,
+            "median": 1.1127,
+            "candidateFirst": 1.176,
+            "referenceFirst": 1.1127
+          },
+          {
+            "key": "G4 | generator unique | M",
+            "tier": 2,
+            "median": 1.0572,
+            "candidateFirst": 1.0802,
+            "referenceFirst": 1.0539
+          }
+        ],
+        "comboB_branch": [
+          {
+            "key": "G5 | data-first map | C | data-first-guard,headline",
+            "tier": 1,
+            "median": 1.0476,
+            "candidateFirst": 1.0476
+          }
+        ],
+        "branch_main": [
+          {
+            "key": "G1 | 3-step middle reads data | XS",
+            "tier": 1,
+            "median": 1.1199,
+            "candidateFirst": 1.1282,
+            "referenceFirst": 1.0995
+          },
+          {
+            "key": "G1b | pipe difference+map | XS",
+            "tier": 2,
+            "median": 1.1044,
+            "candidateFirst": 1.1245,
+            "referenceFirst": 1.0553
+          },
+          {
+            "key": "G1b | pipe filter+map | XS",
+            "tier": 1,
+            "median": 1.1343,
+            "candidateFirst": 1.1442,
+            "referenceFirst": 1.0666
+          },
+          {
+            "key": "G1b | pipe zip+map | XS",
+            "tier": 2,
+            "median": 1.0728,
+            "candidateFirst": 1.0812,
+            "referenceFirst": 1.0085
+          },
+          {
+            "key": "G3 | scalar purry depth-3 | x64",
+            "tier": 1,
+            "median": 1.1376,
+            "candidateFirst": 1.1422,
+            "referenceFirst": 1.05
+          },
+          {
+            "key": "G3 | scalar purry depth-3 | x1",
+            "tier": 1,
+            "median": 1.1151,
+            "candidateFirst": 1.1257,
+            "referenceFirst": 1.0421
+          },
+          {
+            "key": "G3 | scalar purry depth-10 | x64",
+            "tier": 1,
+            "median": 1.0909,
+            "candidateFirst": 1.103,
+            "referenceFirst": 1.0766
+          },
+          {
+            "key": "G3 | scalar purry depth-10 | x1",
+            "tier": 1,
+            "median": 1.1038,
+            "candidateFirst": 1.104,
+            "referenceFirst": 1.0904
+          },
+          {
+            "key": "G3 | scalar arrows depth-3 | x64 | headline",
+            "tier": 1,
+            "median": 1.375,
+            "candidateFirst": 1.3714,
+            "referenceFirst": 1.375
+          },
+          {
+            "key": "G3 | scalar arrows depth-3 | x1 | headline",
+            "tier": 1,
+            "median": 1.2352,
+            "candidateFirst": 1.24,
+            "referenceFirst": 1.2352
+          },
+          {
+            "key": "G3 | scalar arrows depth-10 | x64",
+            "tier": 1,
+            "median": 1.3584,
+            "candidateFirst": 1.3576,
+            "referenceFirst": 1.3584
+          },
+          {
+            "key": "G3 | scalar arrows depth-10 | x1",
+            "tier": 1,
+            "median": 1.293,
+            "candidateFirst": 1.2864,
+            "referenceFirst": 1.2972
+          },
+          {
+            "key": "G7 | mapValues data-first | C | data-first-guard",
+            "tier": 1,
+            "median": 1.2164,
+            "candidateFirst": 1.1388,
+            "referenceFirst": 1.2164
+          },
+          {
+            "key": "G7 | mapValues data-last | C | data-first-guard",
+            "tier": 1,
+            "median": 1.2878,
+            "candidateFirst": 1.134,
+            "referenceFirst": 1.353
+          },
+          {
+            "key": "G9 | map((...args) => args[0])+filter | XS",
+            "tier": 2,
+            "median": 1.1877,
+            "candidateFirst": 1.2045,
+            "referenceFirst": 1.1386
+          }
+        ]
+      }
+    },
+    "reactiveAttribution": [
+      {
+        "framework": "vue",
+        "copy": "main",
+        "medianUs": 5.832999999995536,
+        "p75Us": 9.125000000040018,
+        "meanUs": 7.0495060000009175,
+        "dependencies": 31,
+        "dependenciesOnControlKey": 0,
+        "onTrackEvents": 31,
+        "onTrackControlKey": 0,
+        "footprintKiB": -9,
+        "heapGrowthKiB": 47.53125
+      },
+      {
+        "framework": "vue",
+        "copy": "branch",
+        "medianUs": 6.20800000001509,
+        "p75Us": 7.500000000050022,
+        "meanUs": 7.155316000000539,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "onTrackEvents": 41,
+        "onTrackControlKey": 10,
+        "footprintKiB": 25.7734375,
+        "heapGrowthKiB": 40.09375
+      },
+      {
+        "framework": "vue",
+        "copy": "branch-v-pipe-array-index-loop",
+        "medianUs": 9.458000000051925,
+        "p75Us": 9.709000000043488,
+        "meanUs": 9.139464999999973,
+        "dependencies": 60,
+        "dependenciesOnControlKey": 10,
+        "onTrackEvents": 78,
+        "onTrackControlKey": 10,
+        "footprintKiB": 34.84375,
+        "heapGrowthKiB": 40.1953125
+      },
+      {
+        "framework": "vue",
+        "copy": "branch-v-single-array-index-loop",
+        "medianUs": 5.792000000042208,
+        "p75Us": 7.334000000014385,
+        "meanUs": 6.766614999999717,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "onTrackEvents": 41,
+        "onTrackControlKey": 10,
+        "footprintKiB": 5.8515625,
+        "heapGrowthKiB": 44.296875
+      },
+      {
+        "framework": "vue",
+        "copy": "branch-v-pipe-isarray-first",
+        "medianUs": 6.0000000000854925,
+        "p75Us": 7.666999999969448,
+        "meanUs": 7.083916000000272,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "onTrackEvents": 41,
+        "onTrackControlKey": 10,
+        "footprintKiB": 12.375,
+        "heapGrowthKiB": 39.34375
+      },
+      {
+        "framework": "vue",
+        "copy": "branch-v-map-callback-as-evaluator",
+        "medianUs": 5.957999999964159,
+        "p75Us": 7.291000000009262,
+        "meanUs": 6.8154589999993505,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "onTrackEvents": 41,
+        "onTrackControlKey": 10,
+        "footprintKiB": -1.578125,
+        "heapGrowthKiB": 41.1171875
+      },
+      {
+        "framework": "vue",
+        "copy": "branch-v-pipe-single-step-runs",
+        "medianUs": 5.958999999961634,
+        "p75Us": 7.457999999928688,
+        "meanUs": 6.840509999998517,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "onTrackEvents": 41,
+        "onTrackControlKey": 10,
+        "footprintKiB": -13.90625,
+        "heapGrowthKiB": 47.1171875
+      },
+      {
+        "framework": "vue",
+        "copy": "branch-v-combo",
+        "medianUs": 9.084000000029846,
+        "p75Us": 9.457999999995081,
+        "meanUs": 8.931632000001287,
+        "dependencies": 60,
+        "dependenciesOnControlKey": 10,
+        "onTrackEvents": 78,
+        "onTrackControlKey": 10,
+        "footprintKiB": -17.25,
+        "heapGrowthKiB": 43.1328125
+      },
+      {
+        "framework": "mobx",
+        "copy": "main",
+        "medianUs": 5.333000000064203,
+        "p75Us": 6.2499999999090505,
+        "meanUs": 5.835881999999515,
+        "dependencies": 31,
+        "dependenciesOnControlKey": 0,
+        "absentKeyDependencies": 0,
+        "footprintKiB": 920.4609375,
+        "heapGrowthKiB": 68.09375
+      },
+      {
+        "framework": "mobx",
+        "copy": "branch",
+        "medianUs": 5.791999999985364,
+        "p75Us": 8.500000000026375,
+        "meanUs": 6.7312149999999065,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "absentKeyDependencies": 10,
+        "footprintKiB": 825.8125,
+        "heapGrowthKiB": 72.0546875
+      },
+      {
+        "framework": "mobx",
+        "copy": "branch-v-pipe-array-index-loop",
+        "medianUs": 6.208999999955722,
+        "p75Us": 7.000000000005002,
+        "meanUs": 6.5236230000006685,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "absentKeyDependencies": 10,
+        "footprintKiB": 870.859375,
+        "heapGrowthKiB": 66.46875
+      },
+      {
+        "framework": "mobx",
+        "copy": "branch-v-single-array-index-loop",
+        "medianUs": 5.750000000034561,
+        "p75Us": 8.416000000011081,
+        "meanUs": 6.7423749999995835,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "absentKeyDependencies": 10,
+        "footprintKiB": 883.875,
+        "heapGrowthKiB": 66.625
+      },
+      {
+        "framework": "mobx",
+        "copy": "branch-v-pipe-isarray-first",
+        "medianUs": 5.875000000003183,
+        "p75Us": 6.999999999948159,
+        "meanUs": 6.395864999999617,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "absentKeyDependencies": 10,
+        "footprintKiB": 883.4921875,
+        "heapGrowthKiB": 61.671875
+      },
+      {
+        "framework": "mobx",
+        "copy": "branch-v-map-callback-as-evaluator",
+        "medianUs": 5.709000000024389,
+        "p75Us": 8.292000000096778,
+        "meanUs": 6.822820999999067,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "absentKeyDependencies": 10,
+        "footprintKiB": 865.484375,
+        "heapGrowthKiB": 73.0546875
+      },
+      {
+        "framework": "mobx",
+        "copy": "branch-v-pipe-single-step-runs",
+        "medianUs": 5.957999999964159,
+        "p75Us": 6.791000000021086,
+        "meanUs": 6.2779169999980695,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "absentKeyDependencies": 10,
+        "footprintKiB": 858.40625,
+        "heapGrowthKiB": 85.2734375
+      },
+      {
+        "framework": "mobx",
+        "copy": "branch-v-combo",
+        "medianUs": 5.708000000026914,
+        "p75Us": 8.708999999953448,
+        "meanUs": 6.936154000000556,
+        "dependencies": 41,
+        "dependenciesOnControlKey": 10,
+        "absentKeyDependencies": 10,
+        "footprintKiB": 869.40625,
+        "heapGrowthKiB": 84.6015625
+      }
+    ],
+    "vueDependencyCountsByShape": [
+      "| copy | pipe(items, filter, map, take(10)) | pipe(items, find(id === 20)) | pipe(items, take(10)) | find(items, id === 20) data-first | filter(items, active) data-first |",
+      "| --- | --- | --- | --- | --- | --- |",
+      "| main | 31 | 23 | 2 | 23 | 1002 |",
+      "| branch | 41 | 23 | 11 | 23 | 1002 |",
+      "| branch-v-identity-controls-v2 | 31 | 23 | 2 | 23 | 1002 |",
+      "| branch-v-pipe-array-index-loop | 60 | 23 | 11 | 23 | 1002 |",
+      "| branch-v-single-array-index-loop | 41 | 44 | 21 | 23 | 1002 |",
+      "| branch-v-pipe-isarray-first | 41 | 23 | 11 | 23 | 1002 |",
+      "| branch-v-combo-a | 60 | 44 | 21 | 23 | 1002 |",
+      "| branch-v-combo-b | 50 | 44 | 12 | 23 | 1002 |"
+    ],
+    "bundle": [
+      {
+        "entry": "import { map }",
+        "bundler": "esbuild",
+        "main": {
+          "minified": 350,
+          "gzip": 249,
+          "sentinel": false
+        },
+        "branch": {
+          "minified": 1125,
+          "gzip": 635,
+          "sentinel": true
+        },
+        "branch-v-sentinel-module": {
+          "minified": 360,
+          "gzip": 249,
+          "sentinel": false
+        },
+        "branch-v-identity-controls-v2": {
+          "minified": 1125,
+          "gzip": 635,
+          "sentinel": true
+        },
+        "branch-v-combo-a": {
+          "minified": 324,
+          "gzip": 229,
+          "sentinel": false
+        },
+        "branch-v-combo-b": {
+          "minified": 348,
+          "gzip": 248,
+          "sentinel": false
+        }
+      },
+      {
+        "entry": "import { map }",
+        "bundler": "rolldown",
+        "main": {
+          "minified": 351,
+          "gzip": 247,
+          "sentinel": false
+        },
+        "branch": {
+          "minified": 1134,
+          "gzip": 636,
+          "sentinel": true
+        },
+        "branch-v-sentinel-module": {
+          "minified": 359,
+          "gzip": 248,
+          "sentinel": false
+        },
+        "branch-v-identity-controls-v2": {
+          "minified": 1134,
+          "gzip": 636,
+          "sentinel": true
+        },
+        "branch-v-combo-a": {
+          "minified": 319,
+          "gzip": 226,
+          "sentinel": false
+        },
+        "branch-v-combo-b": {
+          "minified": 347,
+          "gzip": 246,
+          "sentinel": false
+        }
+      },
+      {
+        "entry": "import { filter, map }",
+        "bundler": "esbuild",
+        "main": {
+          "minified": 500,
+          "gzip": 289,
+          "sentinel": false
+        },
+        "branch": {
+          "minified": 1310,
+          "gzip": 722,
+          "sentinel": true
+        },
+        "branch-v-sentinel-module": {
+          "minified": 545,
+          "gzip": 335,
+          "sentinel": false
+        },
+        "branch-v-identity-controls-v2": {
+          "minified": 1264,
+          "gzip": 697,
+          "sentinel": true
+        },
+        "branch-v-combo-a": {
+          "minified": 556,
+          "gzip": 349,
+          "sentinel": false
+        },
+        "branch-v-combo-b": {
+          "minified": 487,
+          "gzip": 309,
+          "sentinel": false
+        }
+      },
+      {
+        "entry": "import { filter, map }",
+        "bundler": "rolldown",
+        "main": {
+          "minified": 505,
+          "gzip": 293,
+          "sentinel": false
+        },
+        "branch": {
+          "minified": 1313,
+          "gzip": 722,
+          "sentinel": true
+        },
+        "branch-v-sentinel-module": {
+          "minified": 538,
+          "gzip": 334,
+          "sentinel": false
+        },
+        "branch-v-identity-controls-v2": {
+          "minified": 1271,
+          "gzip": 701,
+          "sentinel": true
+        },
+        "branch-v-combo-a": {
+          "minified": 549,
+          "gzip": 347,
+          "sentinel": false
+        },
+        "branch-v-combo-b": {
+          "minified": 484,
+          "gzip": 311,
+          "sentinel": false
+        }
+      },
+      {
+        "entry": "import { pipe }",
+        "bundler": "esbuild",
+        "main": {
+          "minified": 921,
+          "gzip": 520,
+          "sentinel": false
+        },
+        "branch": {
+          "minified": 2317,
+          "gzip": 1151,
+          "sentinel": true
+        },
+        "branch-v-sentinel-module": {
+          "minified": 2051,
+          "gzip": 1040,
+          "sentinel": true
+        },
+        "branch-v-identity-controls-v2": {
+          "minified": 2424,
+          "gzip": 1189,
+          "sentinel": true
+        },
+        "branch-v-combo-a": {
+          "minified": 2368,
+          "gzip": 1132,
+          "sentinel": true
+        },
+        "branch-v-combo-b": {
+          "minified": 2493,
+          "gzip": 1169,
+          "sentinel": true
+        }
+      },
+      {
+        "entry": "import { pipe }",
+        "bundler": "rolldown",
+        "main": {
+          "minified": 922,
+          "gzip": 517,
+          "sentinel": false
+        },
+        "branch": {
+          "minified": 2310,
+          "gzip": 1135,
+          "sentinel": true
+        },
+        "branch-v-sentinel-module": {
+          "minified": 2044,
+          "gzip": 1019,
+          "sentinel": true
+        },
+        "branch-v-identity-controls-v2": {
+          "minified": 2421,
+          "gzip": 1166,
+          "sentinel": true
+        },
+        "branch-v-combo-a": {
+          "minified": 2361,
+          "gzip": 1116,
+          "sentinel": true
+        },
+        "branch-v-combo-b": {
+          "minified": 2490,
+          "gzip": 1148,
+          "sentinel": true
+        }
+      },
+      {
+        "entry": "import { pipe, map, filter, take }",
+        "bundler": "esbuild",
+        "main": {
+          "minified": 1577,
+          "gzip": 783,
+          "sentinel": false
+        },
+        "branch": {
+          "minified": 3071,
+          "gzip": 1453,
+          "sentinel": true
+        },
+        "branch-v-sentinel-module": {
+          "minified": 2809,
+          "gzip": 1340,
+          "sentinel": true
+        },
+        "branch-v-identity-controls-v2": {
+          "minified": 3068,
+          "gzip": 1464,
+          "sentinel": true
+        },
+        "branch-v-combo-a": {
+          "minified": 3137,
+          "gzip": 1452,
+          "sentinel": true
+        },
+        "branch-v-combo-b": {
+          "minified": 3129,
+          "gzip": 1445,
+          "sentinel": true
+        }
+      },
+      {
+        "entry": "import { pipe, map, filter, take }",
+        "bundler": "rolldown",
+        "main": {
+          "minified": 1584,
+          "gzip": 770,
+          "sentinel": false
+        },
+        "branch": {
+          "minified": 3072,
+          "gzip": 1427,
+          "sentinel": true
+        },
+        "branch-v-sentinel-module": {
+          "minified": 2806,
+          "gzip": 1313,
+          "sentinel": true
+        },
+        "branch-v-identity-controls-v2": {
+          "minified": 3079,
+          "gzip": 1454,
+          "sentinel": true
+        },
+        "branch-v-combo-a": {
+          "minified": 3134,
+          "gzip": 1428,
+          "sentinel": true
+        },
+        "branch-v-combo-b": {
+          "minified": 3136,
+          "gzip": 1432,
+          "sentinel": true
+        }
+      },
+      {
+        "entry": "import { unique }",
+        "bundler": "esbuild",
+        "main": {
+          "minified": 1248,
+          "gzip": 671,
+          "sentinel": false
+        },
+        "branch": {
+          "minified": 1447,
+          "gzip": 826,
+          "sentinel": true
+        },
+        "branch-v-sentinel-module": {
+          "minified": 1181,
+          "gzip": 722,
+          "sentinel": true
+        },
+        "branch-v-identity-controls-v2": {
+          "minified": 1480,
+          "gzip": 815,
+          "sentinel": true
+        },
+        "branch-v-combo-a": {
+          "minified": 1337,
+          "gzip": 771,
+          "sentinel": true
+        },
+        "branch-v-combo-b": {
+          "minified": 1391,
+          "gzip": 768,
+          "sentinel": true
+        }
+      },
+      {
+        "entry": "import { unique }",
+        "bundler": "rolldown",
+        "main": {
+          "minified": 1249,
+          "gzip": 661,
+          "sentinel": false
+        },
+        "branch": {
+          "minified": 1440,
+          "gzip": 804,
+          "sentinel": true
+        },
+        "branch-v-sentinel-module": {
+          "minified": 1174,
+          "gzip": 700,
+          "sentinel": true
+        },
+        "branch-v-identity-controls-v2": {
+          "minified": 1477,
+          "gzip": 801,
+          "sentinel": true
+        },
+        "branch-v-combo-a": {
+          "minified": 1330,
+          "gzip": 747,
+          "sentinel": true
+        },
+        "branch-v-combo-b": {
+          "minified": 1388,
+          "gzip": 750,
+          "sentinel": true
+        }
+      },
+      {
+        "entry": "whole library",
+        "bundler": "esbuild",
+        "main": {
+          "minified": 28146,
+          "gzip": 9118,
+          "sentinel": false
+        },
+        "branch": {
+          "minified": 29287,
+          "gzip": 9770,
+          "sentinel": true
+        },
+        "branch-v-sentinel-module": {
+          "minified": 29030,
+          "gzip": 9631,
+          "sentinel": true
+        },
+        "branch-v-identity-controls-v2": {
+          "minified": 29339,
+          "gzip": 9817,
+          "sentinel": true
+        },
+        "branch-v-combo-a": {
+          "minified": 29391,
+          "gzip": 9769,
+          "sentinel": true
+        },
+        "branch-v-combo-b": {
+          "minified": 29435,
+          "gzip": 9798,
+          "sentinel": true
+        }
+      },
+      {
+        "entry": "whole library",
+        "bundler": "rolldown",
+        "main": {
+          "minified": 28166,
+          "gzip": 9088,
+          "sentinel": false
+        },
+        "branch": {
+          "minified": 29307,
+          "gzip": 9695,
+          "sentinel": true
+        },
+        "branch-v-sentinel-module": {
+          "minified": 29052,
+          "gzip": 9562,
+          "sentinel": true
+        },
+        "branch-v-identity-controls-v2": {
+          "minified": 29365,
+          "gzip": 9757,
+          "sentinel": true
+        },
+        "branch-v-combo-a": {
+          "minified": 29413,
+          "gzip": 9693,
+          "sentinel": true
+        },
+        "branch-v-combo-b": {
+          "minified": 29463,
+          "gzip": 9738,
+          "sentinel": true
+        }
+      }
+    ],
+    "designComparison": {
+      "comboA": "branch controls + pipe-single-step-runs, pipe-array-index-loop, pipe-isarray-first, map-callback-as-evaluator, single-array-index-loop, datalast-direct-props, unique-single-lookup, sentinel-module (variants/combo-a.patch)",
+      "comboB": "identity-controls-v2 + the same set without map-callback-as-evaluator (incompatible), ported by hand (variants/combo-b.patch)",
+      "verdict": "No tier bar violation against main for either (any floor). Lexicographic (tier 1 first): B ranks first, T1 0.935 / T2 0.845 / G8 0.58 of A, tolerance 0.5%. B is slower than A on map-heavy lazy pipes (with the clean-rotation floors 13 tier 1 and 6 tier 2 entries, up to 1.31x), the share of map-callback-as-evaluator. Both regress Vue reactive-array tracking through the indexed loops (pipe-array-index-loop, single-array-index-loop)."
+    }
+  }
+}

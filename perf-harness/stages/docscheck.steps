@@ -1,0 +1,2 @@
+# Docs build + purry page check (needs local port binding, so it runs in the maintainer terminal)
+cd /Users/eranhirsch/code/remeda && npm --workspace=remeda run build && npm --workspace=@remeda/docs run build && grep -c 'id="purry"' packages/docs/dist/docs/index.html

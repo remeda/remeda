@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "dependencies": {
+    "mobx": "^7.0.6",
+    "vue": "^3.5.43"
+  }
+}
