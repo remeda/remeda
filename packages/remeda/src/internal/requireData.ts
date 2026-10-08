@@ -1,7 +1,4 @@
-import type {
-  LazyEvaluator,
-  LazyEvaluatorMetadata,
-} from "./types/LazyEvaluator";
+import type { LazyEvaluator } from "./types/LazyEvaluator";
 import type { StrictFunction } from "./types/StrictFunction";
 
 // Most callbacks have the input `data` as their 3rd parameter, as in all the
@@ -29,10 +26,11 @@ export const requireData = <T, R>(
   // `LazyEvaluator<T, R>` return type, so a wrong evaluator is reported at its
   // own return expression instead of widening `R` and failing at the call.
   evaluator: NoInfer<LazyEvaluator<T, R>>,
-): LazyEvaluator<T, R> =>
-  Object.assign(evaluator, {
-    requiresData: true,
-  } satisfies LazyEvaluatorMetadata);
+): LazyEvaluator<T, R> => {
+  // @ts-expect-error [ts2540] -- The marker is read-only so that evaluators can't set it on themselves; this helper is the one place that does.
+  evaluator.requiresData = true;
+  return evaluator;
+};
 
 /**
  * Marks an evaluator as needing `data` only when the user's `callback` is
