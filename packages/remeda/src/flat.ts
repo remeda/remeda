@@ -1,5 +1,9 @@
 import type { IsNumericLiteral } from "type-fest";
-import { manyLazyValues, type LazyResult } from "./internal/lazyControl";
+import {
+  manyLazyValues,
+  type LazyResult,
+  type LazySlot,
+} from "./internal/lazyControl";
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -127,11 +131,18 @@ const lazyImplementation = (depth?: number): LazyEvaluator =>
     ? lazyShallow
     : depth <= 0
       ? (value) => value
-      : (value) =>
-          Array.isArray(value) ? manyLazyValues(value.flat(depth - 1)) : value;
+      : (value, _index, _data, slot) =>
+          Array.isArray(value)
+            ? manyLazyValues(value.flat(depth - 1), slot)
+            : value;
 
 // Pulled out to module scope because, unlike the deeper-than-one branch, it
 // doesn't close over `depth`, so one function serves every `flat()` /
 // `flat(1)` call instead of allocating a closure per call.
-const lazyShallow = <T>(value: T): LazyResult<T> =>
-  Array.isArray(value) ? manyLazyValues(value) : value;
+const lazyShallow = <T>(
+  value: T,
+  _index: number,
+  _data: readonly T[],
+  slot: LazySlot,
+): LazyResult<T> =>
+  Array.isArray(value) ? manyLazyValues(value, slot) : value;

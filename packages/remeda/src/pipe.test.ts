@@ -6,7 +6,7 @@ import { flat } from "./flat";
 import { flatMap } from "./flatMap";
 import { forEach } from "./forEach";
 import { identity } from "./identity";
-import { lazyEmptyEvaluator, manyLazyValues } from "./internal/lazyControl";
+import { lazyEmptyEvaluator } from "./internal/lazyControl";
 import { purryFromLazy } from "./internal/purryFromLazy";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -145,7 +145,7 @@ describe("lazy", () => {
     const mockMapper = vi.fn<(x: number) => number>();
 
     expect(pipe([1, 2, 3, 4, 5], map(mockMapper), take(0))).toStrictEqual([]);
-    // An element must be pulled before `take(0)` can report `isDone`, so the
+    // An element must be pulled before `take(0)` can stop the pipe, so the
     // callback runs exactly once even though the result is empty.
     expect(mockMapper).toHaveBeenCalledTimes(1);
   });
@@ -173,15 +173,6 @@ describe("lazy", () => {
     );
 
     expect(result).toStrictEqual([1, 2]);
-  });
-
-  test("early exit when done with many next values", () => {
-    const mockMapper = vi.fn<(x: number) => number>(identity());
-
-    expect(pipe([1, 2, 3, 4, 5], map(mockMapper), firstTwice())).toStrictEqual([
-      1, 1,
-    ]);
-    expect(mockMapper).toHaveBeenCalledTimes(1);
   });
 
   test("callbacks receive the items processed so far", () => {
@@ -348,14 +339,9 @@ describe("lazy", () => {
       expect(result).toStrictEqual([null, null]);
     });
 
-    test("items with string keys named like the control props pass through as data", () => {
-      const lookalike = {
-        // Same description as the real marker, but not the registered symbol.
-        $$remedaLazyRef: Symbol("$$remedaLazyRef"),
-        control: "last",
-        isDone: true,
-        value: 1,
-      };
+    test("symbols described like the controls pass through as data", () => {
+      // Same description as a real control, but not the registered symbol.
+      const lookalike = Symbol("$$remedaLazySkip");
 
       expect(
         pipe(
@@ -363,28 +349,48 @@ describe("lazy", () => {
           map(() => lookalike),
         ),
       ).toStrictEqual([lookalike]);
+
+      // A fused run checks controls in its own loop.
+      expect(
+        pipe(
+          [0],
+          map(() => lookalike),
+          map((x) => x),
+        ),
+      ).toStrictEqual([lookalike]);
     });
 
-    test("a Proxy whose `has` trap always answers true still passes through as data", () => {
-      const trap = new Proxy({ value: 1 }, { has: () => true });
+    test("items are never probed", () => {
+      const has = vi.fn<() => boolean>(() => true);
+      const get = vi.fn<() => unknown>();
+      const item = new Proxy({}, { has, get });
 
-      const result = pipe(
-        [trap],
+      const single = pipe(
+        [item],
         map((x) => x),
       );
+      const fused = pipe(
+        [item],
+        map((x) => x),
+        filter(() => true),
+      );
 
-      // The trap makes the `in` check pass, but control objects are told apart
-      // by the identity of the marker and the read behind the trap answers
-      // with the target's own (absent) prop, so a lying `has` can't forge one.
-      expect(result).toStrictEqual([trap]);
+      // Checked before the results, which the matchers would probe themselves.
+      expect(has).not.toHaveBeenCalled();
+      expect(get).not.toHaveBeenCalled();
+      expect(single[0]).toBe(item);
+      expect(fused[0]).toBe(item);
     });
 
-    test("control objects from another copy of the library are recognized", async () => {
-      // Re-evaluating the modules gives `otherFilter` its own `lazyControl`,
-      // the way a second installed version, or the CJS build next to the ESM
-      // one, would.
+    test("controls from another copy of the library are recognized", async () => {
+      // Re-evaluating the modules gives the utilities below their own
+      // `lazyControl`, the way a second installed version, or the CJS build
+      // next to the ESM one, would. The payloads of their controls land in
+      // the slot of the pipe that runs them.
       vi.resetModules();
       const { filter: otherFilter } = await import("./filter");
+      const { find: otherFind } = await import("./find");
+      const { flatMap: otherFlatMap } = await import("./flatMap");
 
       expect(
         pipe(
@@ -392,6 +398,26 @@ describe("lazy", () => {
           otherFilter((x) => x % 2 === 0),
         ),
       ).toStrictEqual([2, 4]);
+      expect(
+        pipe(
+          [1, 2],
+          otherFlatMap((x) => [x, x * 10]),
+        ),
+      ).toStrictEqual([1, 10, 2, 20]);
+      expect(
+        pipe(
+          [1, 2, 3],
+          otherFind((x) => x > 1),
+        ),
+      ).toBe(2);
+      expect(
+        pipe(
+          [1, 2, 3],
+          map((x) => x * 10),
+          otherFlatMap((x) => [x, x + 1]),
+          otherFind((x) => x > 20),
+        ),
+      ).toBe(21);
     });
 
     test("index continues across two consecutive fan-outs", () => {
@@ -501,10 +527,6 @@ describe("lazy", () => {
       ]);
     });
 
-    test("fan-out that is also done emits its sub-items and stops", () => {
-      expect(pipe([1, 2, 3], firstTwice())).toStrictEqual([1, 1]);
-    });
-
     test("callbacks receive the items processed so far", () => {
       const mock = vi.fn<LazyCallback<unknown[], unknown>>(
         (_value, _index, data) => [...data],
@@ -566,17 +588,6 @@ describe("lazy", () => {
 
     expect(result).toBe("10,20,30");
   });
-});
-
-// We want to test a lazy evaluator that is both `isDone` and a "many" control
-// at the same time but don't have any utility that does it.
-const firstTwice: () => (data: readonly number[]) => number[] = () =>
-  // @ts-expect-error [ts2322] -- Our purry functions don't infer the correct return type, we explicit casting to force it.
-  purryFromLazy(() => firstTwiceEvaluator, []);
-
-const firstTwiceEvaluator: LazyEvaluator = (value) => ({
-  ...manyLazyValues([value, value]),
-  isDone: true,
 });
 
 describe("known issues!", () => {

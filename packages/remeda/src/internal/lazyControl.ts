@@ -1,98 +1,92 @@
-// Control objects are told apart from user items by the identity of this
-// symbol, which no ordinary value carries: JSON can't produce one, and code has
-// to ask the registry for this exact key. It is registered rather than
-// module-private so that separate copies of Remeda in one program (two
-// installed versions, or the ESM and CJS builds side by side) recognize each
-// other's control objects. Change the key if the shape of the control objects
-// ever changes, so that copies on different shapes ignore each other's control
-// objects instead of misreading them. A plain string key is used on purpose:
-// every computed (symbol) key in an object literal costs
-// V8 a keyed store on top of the literal's boilerplate (four symbol keys
-// measured 10% slower on flatMap pipelines), prototype-identity checks cost
-// more than the lookup they replace (1.5x to 2.9x), and null-prototype objects
-// fall into dictionary mode (5x). Reference equality on a string key measured
-// fastest on every pipeline shape.
-const LAZY_REF = Symbol.for("$$remedaLazyRef");
+import type { Writable } from "type-fest";
+
+// Controls are told apart from user items by identity alone, so `pipe` never
+// touches an item to classify it, and items that are proxies (e.g. reactive
+// stores) see no probe. Each control is a registered symbol, which no ordinary
+// value is: JSON can't produce one, and code has to ask the registry for these
+// exact keys. They are registered rather than module-private so that separate
+// copies of Remeda in one program (two installed versions, or the ESM and CJS
+// builds side by side) recognize each other's controls. Change the keys if the
+// protocol ever changes, so that copies on different protocols ignore each
+// other's controls instead of misreading them.
+
+/**
+ * Skip the current item: nothing reaches the next step.
+ */
+export const SKIP_ITEM: unique symbol = Symbol.for("$$remedaLazySkip");
+
+/**
+ * Stop the pipe without emitting anything.
+ */
+export const STOP: unique symbol = Symbol.for("$$remedaLazyStop");
+
+/**
+ * Emit the slot's `value` and stop the pipe.
+ *
+ * @see lastLazyValue
+ */
+export const LAST: unique symbol = Symbol.for("$$remedaLazyLast");
+
+/**
+ * Feed every element of the slot's `values` through the rest of the pipe, one
+ * by one.
+ *
+ * @see manyLazyValues
+ */
+export const MANY: unique symbol = Symbol.for("$$remedaLazyMany");
 
 /**
  * A lazy evaluator returns the (possibly transformed) item itself in the
- * common case. Anything else it needs to tell `pipe` (skip, stop, expand) is
- * carried by a `LazyControl` object, allocated only when needed.
+ * common case, and one of the controls above for anything else it needs to
+ * tell `pipe` (skip, stop, expand).
  */
-export type LazyResult<T = unknown> = T | LazyControl<T>;
-
-type LazyControl<T = unknown> = LazySkip | LazyLast<T> | LazyMany<T>;
-
-type LazyControlBase = {
-  readonly $$remedaLazyRef: typeof LAZY_REF;
-};
-
-type LazySkip = LazyControlBase & {
-  readonly control: "skip";
-  readonly isDone: boolean;
-};
-
-type LazyLast<T> = LazyControlBase & {
-  readonly control: "last";
-  readonly isDone: true;
-  readonly value: T;
-};
-
-type LazyMany<T> = LazyControlBase & {
-  readonly control: "many";
-  readonly isDone: boolean;
-  readonly value: readonly T[];
-};
+export type LazyResult<T = unknown> =
+  T | typeof LAST | typeof MANY | typeof SKIP_ITEM | typeof STOP;
 
 /**
- * A singleton value for skipping an item in a lazy evaluator.
+ * Where an evaluator leaves the payload of a `LAST` or `MANY` result. The pipe
+ * that calls the evaluator owns it, one per run, so nested pipes and other
+ * copies of Remeda never share one, and reads it as soon as the evaluator
+ * returns. Evaluators only ever hand it to `lastLazyValue` and
+ * `manyLazyValues`.
  */
-export const SKIP_ITEM: LazySkip = {
-  // Every control object lists its keys in this order, so V8 gives the two
-  // singletons one hidden class and every `lastLazyValue`/`manyLazyValues`
-  // result another, keeping the reads in `pipe` to two shapes.
-  $$remedaLazyRef: LAZY_REF,
-  control: "skip",
-  isDone: false,
+export type LazySlot = {
+  readonly value: unknown;
+  readonly values: readonly unknown[];
 };
 
-const STOP: LazySkip = {
-  $$remedaLazyRef: LAZY_REF,
-  control: "skip",
-  isDone: true,
-};
+const NO_VALUES: readonly unknown[] = [];
+
+export const createLazySlot = (): LazySlot => ({
+  value: undefined,
+  values: NO_VALUES,
+});
 
 /**
- * A helper evaluator for stopping the pipe without emitting anything. Both the
- * result and the evaluator are shared singletons.
+ * A helper evaluator for stopping the pipe without emitting anything.
  */
-export const lazyEmptyEvaluator = (): LazySkip => STOP;
+export const lazyEmptyEvaluator = (): typeof STOP => STOP;
 
 /**
  * Emits `value` and stops the pipe.
  */
-export const lastLazyValue = <T>(value: T): LazyLast<T> => ({
-  $$remedaLazyRef: LAZY_REF,
-  control: "last",
-  isDone: true,
-  value,
-});
+export function lastLazyValue(
+  value: unknown,
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The slot exists to carry the payload back to the pipe; this is one of the two helpers that write it.
+  slot: Writable<LazySlot>,
+): typeof LAST {
+  slot.value = value;
+  return LAST;
+}
 
 /**
- * Feeds every element of `value` through the rest of the pipe, one by one.
+ * Feeds every element of `values` through the rest of the pipe, one by one.
  */
-export const manyLazyValues = <T>(value: readonly T[]): LazyMany<T> => ({
-  $$remedaLazyRef: LAZY_REF,
-  control: "many",
-  isDone: false,
-  value,
-});
-
-export const isLazyControl = (result: unknown): result is LazyControl =>
-  // The `typeof` guard is required because `in` throws on a primitive operand;
-  // checking the key before reading it keeps the read off the path for the vast
-  // majority of items.
-  typeof result === "object" &&
-  result !== null &&
-  "$$remedaLazyRef" in result &&
-  result.$$remedaLazyRef === LAZY_REF;
+export function manyLazyValues(
+  values: readonly unknown[],
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The slot exists to carry the payload back to the pipe; this is one of the two helpers that write it.
+  slot: Writable<LazySlot>,
+): typeof MANY {
+  slot.values = values;
+  return MANY;
+}

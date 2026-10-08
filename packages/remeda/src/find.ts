@@ -167,7 +167,7 @@ const lazyImplementation = toSingle(
   <T, S extends T>(
     predicate: (value: T, index: number, data: readonly T[]) => value is S,
   ): LazyEvaluator<T, S> =>
-    requireDataByArity(predicate, (value, index, data) =>
-      predicate(value, index, data) ? lastLazyValue(value) : SKIP_ITEM,
+    requireDataByArity(predicate, (value, index, data, slot) =>
+      predicate(value, index, data) ? lastLazyValue(value, slot) : SKIP_ITEM,
     ),
 );

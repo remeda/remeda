@@ -132,9 +132,11 @@ const lazyImplementation = <T1, T2 extends IterableContainer, Value>(
     ? lazyEmptyEvaluator
     : requireDataByArity(
         fn,
-        (value, index, data) => {
+        (value, index, data, slot) => {
           const zipped = fn(value, second[index], index, [data, second]);
-          return index >= second.length - 1 ? lastLazyValue(zipped) : zipped;
+          return index >= second.length - 1
+            ? lastLazyValue(zipped, slot)
+            : zipped;
         },
         { dataParameterIndex: 3 },
       );

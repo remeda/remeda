@@ -46,4 +46,7 @@ export function first(...args: readonly unknown[]): unknown {
 
 const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;
 
-const lazyImplementation = toSingle((): LazyEvaluator => lastLazyValue);
+const lazyImplementation = toSingle((): LazyEvaluator => emitAndStop);
+
+const emitAndStop: LazyEvaluator = (value, _index, _data, slot) =>
+  lastLazyValue(value, slot);

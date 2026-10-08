@@ -84,7 +84,7 @@ const lazyImplementation = <
 ): LazyEvaluator<F[number], [F[number], S[number]]> =>
   second.length === 0
     ? lazyEmptyEvaluator
-    : (value, index) => {
+    : (value, index, _data, slot) => {
         const pair: [F[number], S[number]] = [value, second[index]];
-        return index >= second.length - 1 ? lastLazyValue(pair) : pair;
+        return index >= second.length - 1 ? lastLazyValue(pair, slot) : pair;
       };

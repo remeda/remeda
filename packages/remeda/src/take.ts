@@ -62,8 +62,8 @@ function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   }
 
   let remaining = n;
-  return (value) => {
+  return (value, _index, _data, slot) => {
     remaining -= 1;
-    return remaining <= 0 ? lastLazyValue(value) : value;
+    return remaining <= 0 ? lastLazyValue(value, slot) : value;
   };
 }

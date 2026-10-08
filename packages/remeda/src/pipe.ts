@@ -2,7 +2,14 @@
  * We document pipe's function params as a single parameter entry in the docs.
  */
 
-import { isLazyControl } from "./internal/lazyControl";
+import {
+  createLazySlot,
+  LAST,
+  MANY,
+  SKIP_ITEM,
+  STOP,
+  type LazySlot,
+} from "./internal/lazyControl";
 import { processSingleLazyStep } from "./internal/processSingleLazyStep";
 import type { LazyDefinition } from "./internal/types/LazyDefinition";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -384,12 +391,14 @@ function processIterable(
   lazySequence: readonly LazyStep[],
 ): unknown[] {
   const accumulator: unknown[] = [];
+  const slot = createLazySlot();
 
   for (const value of iterable) {
     const shouldExitEarly = processItem(
       value,
       accumulator,
       lazySequence,
+      slot,
       0 /* startIndex */,
     );
     if (shouldExitEarly) {
@@ -406,6 +415,7 @@ function processItem(
   accumulator: unknown[],
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
   lazySequence: readonly LazyStep[],
+  slot: LazySlot,
   startIndex: number,
 ): boolean {
   let currentItem = item;
@@ -419,41 +429,56 @@ function processItem(
     if (step.requiresData) {
       step.items.push(currentItem);
     }
-    const result = step.lazyEvaluator(currentItem, step.index, step.items);
+    const result = step.lazyEvaluator(
+      currentItem,
+      step.index,
+      step.items,
+      slot,
+    );
     step.index += 1;
 
-    if (isLazyControl(result)) {
-      if (result.isDone) {
-        isDone = true;
+    // Every control is a symbol, so an item of any other type skips the
+    // comparisons below with this one check.
+    if (typeof result === "symbol") {
+      if (result === SKIP_ITEM) {
+        // Nothing reaches the next step.
+        return isDone;
       }
 
-      switch (result.control) {
-        case "skip":
-          // Skipped, or stopped without a value; nothing reaches the next step.
-          return isDone;
-
-        case "many":
-          for (const subItem of result.value) {
-            const shouldExitEarly = processItem(
-              subItem,
-              accumulator,
-              lazySequence,
-              stepIndex + 1,
-            );
-            if (shouldExitEarly) {
-              return true;
-            }
+      if (result === MANY) {
+        // Read before the steps below run, as they leave their own payloads
+        // in the same slot.
+        const { values } = slot;
+        for (const subItem of values) {
+          const shouldExitEarly = processItem(
+            subItem,
+            accumulator,
+            lazySequence,
+            slot,
+            stepIndex + 1,
+          );
+          if (shouldExitEarly) {
+            return true;
           }
-          return isDone;
-
-        case "last":
-          currentItem = result.value;
+        }
+        return isDone;
       }
-    } else {
-      // The common case: the evaluator emitted an item, hand it to the next
-      // step as-is.
-      currentItem = result;
+
+      if (result === LAST) {
+        currentItem = slot.value;
+        isDone = true;
+        continue;
+      }
+
+      if (result === STOP) {
+        // Stopped without a value; nothing reaches the next step.
+        return true;
+      }
     }
+
+    // The common case: the evaluator emitted an item, hand it to the next
+    // step as-is.
+    currentItem = result;
   }
 
   accumulator.push(currentItem);

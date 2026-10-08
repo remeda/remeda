@@ -64,7 +64,7 @@ function lazyImplementation<T, S>(
     remaining.set(value, (remaining.get(value) ?? 0) + 1);
   }
 
-  return (value) => {
+  return (value, _index, _data, slot) => {
     const copies = remaining.get(value);
 
     if (copies === undefined || copies === 0) {
@@ -87,6 +87,6 @@ function lazyImplementation<T, S>(
     const matched = value as S & T;
 
     // We can stop the iteration if the remaining map is empty.
-    return remaining.size === 0 ? lastLazyValue(matched) : matched;
+    return remaining.size === 0 ? lastLazyValue(matched, slot) : matched;
   };
 }

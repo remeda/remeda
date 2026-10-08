@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import { lastLazyValue } from "./lazyControl";
 import { purryFromLazy } from "./purryFromLazy";
 import { toSingle } from "./toSingle";
+import type { LazyEvaluator } from "./types/LazyEvaluator";
 
 describe("an implementation wrapped with `toSingle`", () => {
   test("dataFirst", () => {
@@ -25,4 +26,7 @@ const firstPurried: {
   (): (data: readonly number[]) => number | undefined;
 } = (...args: readonly unknown[]) => purryFromLazy(firstLazyImpl, args);
 
-const firstLazyImpl = toSingle(() => lastLazyValue);
+const firstLazyImpl = toSingle((): LazyEvaluator => emitAndStop);
+
+const emitAndStop: LazyEvaluator = (value, _index, _data, slot) =>
+  lastLazyValue(value, slot);

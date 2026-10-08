@@ -1,4 +1,4 @@
-import type { LazyResult } from "../lazyControl";
+import type { LazyResult, LazySlot } from "../lazyControl";
 
 /**
  * Extra levers an evaluator gives `pipe` over how it runs the step.
@@ -18,5 +18,8 @@ export type LazyEvaluator<T = unknown, R = T> = ((
   item: T,
   index: number,
   data: readonly T[],
+  // Only evaluators that stop with a value or fan out need it, and only to
+  // pass it to `lastLazyValue` or `manyLazyValues`.
+  slot: LazySlot,
 ) => LazyResult<R>) &
   LazyEvaluatorMetadata;
