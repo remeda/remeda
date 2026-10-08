@@ -36,16 +36,7 @@ export const requireData = <T, R>(
  * Marks an evaluator as needing `data` only when the user's `callback` is
  * likely to read it, based on its signature.
  *
- * `Function.length` counts only the plain parameters before the first rest or
- * defaulted one. It is 0 for wrappers that forward `arguments` (memoize,
- * debounce), which we can't see through, so those buffer too.
- *
- * Three holes are documented rather than guarded: a default value on `data` or
- * any parameter before it (`(value, index, data = []) => ...` reports 2),
- * `arguments[i]` access, and a trailing rest parameter
- * (`(value, index, ...rest) => ...` reports 2).
- * A callback that falls through one of them receives
- * `UNEXPECTED_ACCESS_SENTINEL`, which throws when read.
+ * @see canReadData
  */
 export const requireDataByArity = <T, R>(
   callback: StrictFunction,
@@ -54,6 +45,26 @@ export const requireDataByArity = <T, R>(
     dataParameterIndex = DEFAULT_DATA_PARAMETER_INDEX,
   }: RequireDataByArityOptions = {},
 ): LazyEvaluator<T, R> =>
-  callback.length === 0 || callback.length > dataParameterIndex
+  canReadData(callback, dataParameterIndex)
     ? requireData(evaluator)
     : evaluator;
+
+/**
+ * Whether the user's `callback` is likely to read its `data` parameter, based
+ * on its signature.
+ *
+ * `Function.length` counts only the plain parameters before the first rest or
+ * defaulted one. It is 0 for wrappers that forward `arguments` (memoize,
+ * debounce), which we can't see through, so those count as reading it too.
+ *
+ * Three holes are documented rather than guarded: a default value on `data` or
+ * any parameter before it (`(value, index, data = []) => ...` reports 2),
+ * `arguments[i]` access, and a trailing rest parameter
+ * (`(value, index, ...rest) => ...` reports 2).
+ * A callback that falls through one of them receives
+ * `UNEXPECTED_ACCESS_SENTINEL`, which throws when read.
+ */
+export const canReadData = (
+  callback: StrictFunction,
+  dataParameterIndex = DEFAULT_DATA_PARAMETER_INDEX,
+): boolean => callback.length === 0 || callback.length > dataParameterIndex;

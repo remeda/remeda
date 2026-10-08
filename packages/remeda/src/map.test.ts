@@ -87,6 +87,28 @@ describe(pipe, () => {
     ]);
     expect(anyItems2).toStrictEqual([[1], [1, 3], [1, 3, 5]]);
   });
+
+  test("never marks the callback itself", () => {
+    pipe([1, 2, 3], map(double), map(addDataLength));
+
+    expect(double).not.toHaveProperty("requiresData");
+    expect(addDataLength).not.toHaveProperty("requiresData");
+  });
+
+  test("calls the callback without a receiver", () => {
+    const receivers: unknown[] = [];
+
+    pipe(
+      [1, 2],
+      map(function recordReceiver(this: unknown, x: number) {
+        receivers.push(this);
+        return x;
+      }),
+      map((x) => x),
+    );
+
+    expect(receivers).toStrictEqual([undefined, undefined]);
+  });
 });
 
 test("number array", () => {
@@ -121,3 +143,11 @@ describe("indexed", () => {
     expect(map([1, "2", true], (_, index) => index)).toStrictEqual([0, 1, 2]);
   });
 });
+
+const double = (x: number): number => x * 2;
+
+const addDataLength = (
+  x: number,
+  _index: number,
+  data: readonly number[],
+): number => x + data.length;

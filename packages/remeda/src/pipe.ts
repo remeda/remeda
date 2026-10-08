@@ -458,12 +458,10 @@ function processItem(
     if (step.requiresData) {
       step.items.push(currentItem);
     }
-    const result = step.lazyEvaluator(
-      currentItem,
-      step.index,
-      step.items,
-      slot,
-    );
+    // Called without a receiver: the evaluator can be the user's own callback,
+    // which mustn't see the step as `this`.
+    const { lazyEvaluator } = step;
+    const result = lazyEvaluator(currentItem, step.index, step.items, slot);
     step.index += 1;
 
     // Every control is a symbol, so an item of any other type skips the
