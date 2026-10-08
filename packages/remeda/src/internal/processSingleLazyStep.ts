@@ -4,8 +4,8 @@
  */
 
 import { isLazyControl } from "./lazyControl";
-import { UNEXPECTED_ACCESS_SENTINEL } from "./requireData";
 import type { LazyDefinition } from "./types/LazyDefinition";
+import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
 
 /**
  * Runs an iterable through a single lazy step, skipping the step objects and

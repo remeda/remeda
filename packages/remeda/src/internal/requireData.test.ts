@@ -1,36 +1,26 @@
-import { inspect } from "node:util";
-import { describe, expect, test } from "vitest";
-import { UNEXPECTED_ACCESS_SENTINEL } from "./requireData";
+import { expect, test } from "vitest";
+import { requireData, requireDataByArity } from "./requireData";
 
-describe("unexpected access sentinel", () => {
-  // Typed the way the callbacks that receive it see it.
-  const data: readonly number[] = UNEXPECTED_ACCESS_SENTINEL;
-
-  test.each([
-    ["index access", () => data[0]],
-    ["length", () => data.length],
-    ["method call", () => data.at(0)],
-    ["iteration", () => [...data]],
-    ["string coercion", () => String(data)],
-    ["serialization", () => JSON.stringify(data)],
-    ["`in`", () => 0 in data],
-    ["key enumeration", () => Object.keys(data)],
-    [
-      "prototype lookup",
-      () => {
-        Object.getPrototypeOf(data);
-      },
-    ],
-    ["assignment", () => Reflect.set(data, 0, 1)],
-  ])("throws on %s", (_name, operation) => {
-    expect(operation).toThrow(/^Remeda: /u);
-  });
-
-  test("is not an array", () => {
-    expect(Array.isArray(data)).toBe(false);
-  });
-
-  test("explains itself when logged", () => {
-    expect(inspect(data)).toContain("Remeda: ");
-  });
+test("`requireData` marks the evaluator", () => {
+  expect(requireData((value) => value).requiresData).toBe(true);
 });
+
+test("`requireDataByArity` marks the evaluator when the callback declares `data`", () => {
+  expect(requireDataByArity(declaresData, (value) => value).requiresData).toBe(
+    true,
+  );
+});
+
+test("`requireDataByArity` leaves the evaluator unmarked when the callback doesn't declare `data`", () => {
+  expect(
+    requireDataByArity(ignoresData, (value) => value).requiresData,
+  ).toBeUndefined();
+});
+
+const declaresData = (
+  value: number,
+  _index: number,
+  data: readonly number[],
+): number => value + data.length;
+
+const ignoresData = (value: number, index: number): number => value + index;

@@ -1,58 +1,12 @@
-import type { Tagged } from "type-fest";
 import type {
   LazyEvaluator,
   LazyEvaluatorMetadata,
 } from "./types/LazyEvaluator";
 import type { StrictFunction } from "./types/StrictFunction";
 
-const UNEXPECTED_ACCESS_MESSAGE =
-  "Remeda: a callback's `data` argument was read, but Remeda didn't provide it. Remeda only provides `data` to callbacks that declare it as a plain parameter, detected via `Function.length`, which misses a default value on `data` or an earlier parameter, a rest parameter after other parameters, `arguments` access, and mocks whose implementation declares fewer parameters. Declare `data` in the callback (or the mock's implementation), e.g. `(value, index, data) => ...`. If it already is, please report this at https://github.com/remeda/remeda/issues";
-
 // Most callbacks have the input `data` as their 3rd parameter, as in all the
 // standard library functions.
 const DEFAULT_DATA_PARAMETER_INDEX = 2;
-
-/**
- * Provided to a callback's `data` parameter whenever we believe it would not
- * be used. A callback only receives it by slipping through the arity gate.
- *
- * Every operation on it throws, so the first touch signals that `data` wasn't
- * collected for this callback: usually one of the holes documented on
- * `requireDataByArity`, otherwise a detection bug worth reporting.
- *
- * @see requireDataByArity
- */
-// @ts-expect-error [ts2322] -- The proxy isn't an array, but any attempt to use it as one throws, so no code that relies on its type can run past the first touch.
-export const UNEXPECTED_ACCESS_SENTINEL: Tagged<
-  readonly never[],
-  "RemedaUnexpectedAccessSentinel"
-> = new Proxy(
-  {
-    // `console.log` and devtools print a proxy's target without running its
-    // traps, so the message lives on the target too and a logged `data` still
-    // explains itself.
-    error: UNEXPECTED_ACCESS_MESSAGE,
-  },
-  {
-    // Reads: what a callback that slipped through the arity gate does with it.
-    get: alwaysThrow,
-    getOwnPropertyDescriptor: alwaysThrow,
-    getPrototypeOf: alwaysThrow,
-    has: alwaysThrow,
-    isExtensible: alwaysThrow,
-    ownKeys: alwaysThrow,
-
-    // Writes: would otherwise reach the target, which every pipe shares.
-    defineProperty: alwaysThrow,
-    deleteProperty: alwaysThrow,
-    preventExtensions: alwaysThrow,
-    set: alwaysThrow,
-    setPrototypeOf: alwaysThrow,
-
-    // `apply` and `construct` are left out: they only fire for callable
-    // targets.
-  },
-);
 
 type RequireDataByArityOptions = {
   /**
@@ -105,7 +59,3 @@ export const requireDataByArity = <T, R>(
   callback.length === 0 || callback.length > dataParameterIndex
     ? requireData(evaluator)
     : evaluator;
-
-function alwaysThrow(): never {
-  throw new Error(UNEXPECTED_ACCESS_MESSAGE);
-}

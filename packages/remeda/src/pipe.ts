@@ -4,9 +4,9 @@
 
 import { isLazyControl } from "./internal/lazyControl";
 import { processSingleLazyStep } from "./internal/processSingleLazyStep";
-import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/requireData";
 import type { LazyDefinition } from "./internal/types/LazyDefinition";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/unexpectedAccessSentinel";
 
 type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
@@ -103,7 +103,8 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  *    }); //=> "[1, 2, 3, 4]" logged 4 times
  *
  *    // But with `pipe` data would only contain the items up to the current
- *    // index
+ *    // index. A callback only receives `data` when it declares it as a
+ *    // parameter.
  *    pipe([1, 2, 3, 4], forEach((_item, _index, data) => {
  *      console.log(data);
  *    })); //=> "[1]", "[1, 2]", "[1, 2, 3]", "[1, 2, 3, 4]"
