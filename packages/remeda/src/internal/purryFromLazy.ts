@@ -24,10 +24,11 @@ export function purryFromLazy(
 ): unknown {
   if (args.length === lazy.length) {
     // data-last
-    return Object.assign(
-      (data: Iterable<unknown>) => processSingleLazyStep(data, lazy, args),
-      { lazy, lazyArgs: args } satisfies LazyDefinition,
-    );
+    const dataLast = (data: Iterable<unknown>): unknown =>
+      processSingleLazyStep(data, lazy, args);
+    dataLast.lazy = lazy;
+    dataLast.lazyArgs = args;
+    return dataLast;
   }
 
   // data-first
