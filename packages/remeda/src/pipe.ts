@@ -306,11 +306,7 @@ export function pipe(
   }
 
   if (functions.length === 1) {
-    // A pipe of one lazy function is a lazy sequence of one step, which has no
-    // cross-step bookkeeping to set up: the step array, the step object, and
-    // the hand-off through them are all overhead. It is decided here rather
-    // than inside the loop below because a second processing call in the loop
-    // body measured ~7% slower on multi-step pipes.
+    // The most common pipe, a single function, skips the loop below.
     const func = functions[0]!;
     return "lazy" in func && isIterable(input)
       ? processSingleLazyStep(input, func.lazy, func.lazyArgs)
@@ -318,21 +314,33 @@ export function pipe(
   }
 
   let output = input;
-  const lazySteps = functions.map((op) =>
-    "lazy" in op ? buildLazyStep(op) : undefined,
-  );
-
   let functionIndex = 0;
   while (functionIndex < functions.length) {
-    const lazyStep = lazySteps[functionIndex];
-    if (lazyStep === undefined || !isIterable(output)) {
-      const func = functions[functionIndex]!;
+    const func = functions[functionIndex]!;
+    if (!("lazy" in func) || !isIterable(output)) {
       output = func(output);
       functionIndex += 1;
       continue;
     }
 
-    const lazySequence = extractLazySequence(lazySteps, functionIndex);
+    const nextFunc = functions[functionIndex + 1];
+    if (
+      nextFunc === undefined ||
+      !("lazy" in nextFunc) ||
+      func.lazy.single === true
+    ) {
+      // A run of one lazy function is a lazy sequence of one step, which has
+      // no cross-step bookkeeping to set up: the step array, the step object,
+      // and the hand-off through them are all overhead.
+      output = processSingleLazyStep(output, func.lazy, func.lazyArgs);
+      functionIndex += 1;
+      continue;
+    }
+
+    // Steps are built when the loop reaches their run with iterable data, so
+    // a pipe without lazy functions, or whose lazy functions get non-iterable
+    // data, builds none.
+    const lazySequence = buildLazySequence(functions, functionIndex);
     const accumulator = processIterable(output, lazySequence);
 
     const { isSingle } = lazySequence.at(-1)!;
@@ -363,19 +371,19 @@ function buildLazyStep({ lazy, lazyArgs }: LazyDefinition): LazyStep {
       };
 }
 
-function extractLazySequence(
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
-  lazySteps: readonly (LazyStep | undefined)[],
+function buildLazySequence(
+  functions: readonly (LazyFunction | ((value: unknown) => unknown))[],
   startIndex: number,
 ): readonly LazyStep[] {
   const lazySequence: LazyStep[] = [];
 
-  for (let index = startIndex; index < lazySteps.length; index++) {
-    const lazyStep = lazySteps[index];
-    if (lazyStep === undefined) {
+  for (let index = startIndex; index < functions.length; index++) {
+    const func = functions[index]!;
+    if (!("lazy" in func)) {
       break;
     }
 
+    const lazyStep = buildLazyStep(func);
     lazySequence.push(lazyStep);
     if (lazyStep.isSingle) {
       break;
