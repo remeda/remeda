@@ -135,7 +135,7 @@ Tabulate the mode per (run, position, copy), and confirm it on a minimal repro w
 
 ## The harness
 
-The harness from PR #1444 is preserved at [`perf-harness/` in `<HARNESS_COMMIT>`](https://github.com/remeda/remeda/tree/<HARNESS_COMMIT>/perf-harness). Restore it outside the package (`git archive <HARNESS_COMMIT> perf-harness | tar -x -C <scratch-dir>`) and follow its README, which lists every command and the SHAs it measured. It holds:
+The harness from PR #1444 is preserved at [`perf-harness/` in `849849a2c90016745ffb178955b3c5759114f2a7`](https://github.com/remeda/remeda/tree/849849a2c90016745ffb178955b3c5759114f2a7/perf-harness). The commit is reachable through PR #1444's refs, so `git fetch origin pull/1444/head` may be needed first. Restore it outside the package (`git archive 849849a2c90016745ffb178955b3c5759114f2a7 perf-harness | tar -x -C <scratch-dir>`) and follow its README, which lists every command and the SHAs it measured. It holds:
 
 - `harness/`: copy loading per source mode, the scenario matrix as data (groups G1-G10, from lazy pipe shapes to interleaved pipes, at 0 to 100k items), fixtures, the pollution profiles, the tiers, and the verdict statistics;
 - `bench/` and `scripts/`: the vitest bench project and the vitest-free runner, snapshot preparation and builds, aggregation into per-tier reports, and the allocation, peak-heap, bundle-size, cold-start and reactive-store probes;
