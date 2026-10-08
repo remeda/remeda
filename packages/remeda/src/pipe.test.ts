@@ -598,6 +598,17 @@ describe("lazy", () => {
 
     expect(result).toBe("10,20,30");
   });
+
+  test("fused steps pull from a non-array iterable only until done", () => {
+    expect(
+      pipe(
+        naturals(),
+        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
+        map((x: number) => x * 10),
+        take(3),
+      ),
+    ).toStrictEqual([0, 10, 20]);
+  });
 });
 
 // Never finishes on its own, so only a pipe that stops pulling can consume it.

@@ -401,16 +401,37 @@ function processIterable(
   const accumulator: unknown[] = [];
   const slot = createLazySlot();
 
-  for (const value of iterable) {
-    const shouldExitEarly = processItem(
-      value,
-      accumulator,
-      lazySequence,
-      slot,
-      0 /* startIndex */,
-    );
-    if (shouldExitEarly) {
-      break;
+  if (Array.isArray(iterable)) {
+    // A `for...of` that has only ever seen arrays is compiled without the
+    // iterator protocol, which the generic loop below can't be, as it also
+    // sees sets, strings and generators. Both loops still iterate, so an array
+    // that is a proxy (e.g. a reactive store) observes one iteration instead of
+    // a read per index.
+    for (const value of iterable) {
+      const shouldExitEarly = processItem(
+        value,
+        accumulator,
+        lazySequence,
+        slot,
+        0 /* startIndex */,
+      );
+      if (shouldExitEarly) {
+        break;
+      }
+    }
+    // eslint-disable-next-line unicorn/no-duplicate-if-branches -- Identical on purpose: each loop is its own iteration site (see above), which is what lets the compiler specialize the first one for arrays.
+  } else {
+    for (const value of iterable) {
+      const shouldExitEarly = processItem(
+        value,
+        accumulator,
+        lazySequence,
+        slot,
+        0 /* startIndex */,
+      );
+      if (shouldExitEarly) {
+        break;
+      }
     }
   }
 
