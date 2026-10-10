@@ -14,14 +14,19 @@ export function lazyDataLastImpl(
   lazy?: LazyDefinition["lazy"],
   // TODO: We can probably provide better typing to the return type...
 ): unknown {
-  const dataLast = createDataLast(
-    // @ts-expect-error [ts2345] -- This error is accurate because we don't
-    // know anything about `fn` so can't ensure that we are passing the correct
-    // arguments to it, we just have to trust that the caller knows what they
-    // are doing.
-    fn,
-    args,
-  );
+  // @ts-expect-error [ts2322] -- This error is accurate because we don't know
+  // anything about `fn` so can't ensure that we are passing the correct
+  // arguments to it, we just have to trust that the caller knows what they are
+  // doing.
+  const implementation: (...args: readonly unknown[]) => unknown = fn;
+
+  // Spreading `args` into the call goes through a generic builtin on every
+  // invocation of the data-last function, so the most common data-last arity,
+  // a single argument, is passed directly.
+  const dataLast: DataLast =
+    args.length === 1
+      ? (data) => implementation(data, args[0])
+      : (data) => implementation(data, ...args);
 
   if (lazy !== undefined) {
     dataLast.lazy = lazy;
@@ -35,25 +40,3 @@ type DataLast = ((data: unknown) => unknown) & {
   lazy?: LazyDefinition["lazy"];
   lazyArgs?: readonly unknown[];
 };
-
-// Spreading `args` into the call would go through a generic builtin on every
-// invocation of the data-last function; the arities that cover almost every
-// data-last call get a function that passes them directly.
-function createDataLast(
-  fn: (...args: readonly unknown[]) => unknown,
-  args: readonly unknown[],
-): DataLast {
-  switch (args.length) {
-    case 0:
-      return (data) => fn(data);
-
-    case 1:
-      return (data) => fn(data, args[0]);
-
-    case 2:
-      return (data) => fn(data, args[0], args[1]);
-
-    default:
-      return (data) => fn(data, ...args);
-  }
-}
