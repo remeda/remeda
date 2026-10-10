@@ -3,9 +3,9 @@ import { pipe } from "./pipe";
 import { uniqueBy } from "./uniqueBy";
 
 describe("callback data param", () => {
-  test("lazily reconstructed in data-first", () => {
+  test("complete in data-first", () => {
     uniqueBy([1, 2, 3] as const, (_item, _index, data) => {
-      expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+      expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
 
       return 0;
     });

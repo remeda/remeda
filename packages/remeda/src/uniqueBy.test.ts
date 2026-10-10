@@ -51,20 +51,33 @@ test("returns people with uniq first letter of name", () => {
   ]);
 });
 
-test("provides the items processed so far to the key function", () => {
-  const mock = vi.fn<LazyCallback<unknown[], unknown>>(
-    (_item, _index, data) => [...data],
-  );
-  uniqueBy([1, 2, 2, 3], mock);
+test("provides the whole input to the key function", () => {
+  const data = [1, 2, 2, 3];
+  const mock = vi.fn<
+    (item: unknown, index: number, items: readonly unknown[]) => unknown
+  >((_item, _index, items) => [...items]);
+  uniqueBy(data, mock);
 
-  expect(mock).toHaveNthReturnedWith(1, [1]);
-  expect(mock).toHaveNthReturnedWith(2, [1, 2]);
-  expect(mock).toHaveNthReturnedWith(3, [1, 2, 2]);
-  expect(mock).toHaveNthReturnedWith(4, [1, 2, 2, 3]);
+  expect(mock).toHaveNthReturnedWith(1, data);
+  expect(mock).toHaveNthReturnedWith(2, data);
+  expect(mock).toHaveNthReturnedWith(3, data);
+  expect(mock).toHaveNthReturnedWith(4, data);
 });
 
 // eslint-disable-next-line vitest/valid-title -- This seems to be a bug in the rule, @see https://github.com/vitest-dev/eslint-plugin-vitest/issues/692
 describe(pipe, () => {
+  test("provides the items processed so far to the key function", () => {
+    const mock = vi.fn<LazyCallback<unknown[], unknown>>(
+      (_item, _index, data) => [...data],
+    );
+    pipe([1, 2, 2, 3], uniqueBy(mock));
+
+    expect(mock).toHaveNthReturnedWith(1, [1]);
+    expect(mock).toHaveNthReturnedWith(2, [1, 2]);
+    expect(mock).toHaveNthReturnedWith(3, [1, 2, 2]);
+    expect(mock).toHaveNthReturnedWith(4, [1, 2, 2, 3]);
+  });
+
   test("gets executed until target length is reached", () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
@@ -93,14 +106,17 @@ describe(pipe, () => {
 });
 
 describe("known issues!", () => {
-  test("a trailing rest parameter hides `data` from the arity check, data-first too", () => {
+  test("a trailing rest parameter hides `data` from the arity check", () => {
     expect(() =>
-      uniqueBy(
+      pipe(
         [1, 2, 3],
-        (_item, _index, ...rest) =>
-          // this callback reports a `length` of 2 and `rest[0]` is
-          // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so far.
-          rest[0].length,
+        uniqueBy(
+          (_item, _index, ...rest) =>
+            // this callback reports a `length` of 2 and `rest[0]` is
+            // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so
+            // far.
+            rest[0].length,
+        ),
       ),
     ).toThrow(/^Remeda: /u);
   });

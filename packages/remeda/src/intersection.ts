@@ -3,7 +3,7 @@ import {
   lazyEmptyEvaluator,
   SKIP_ITEM,
 } from "./internal/lazyControl";
-import { purryFromLazy } from "./internal/purryFromLazy";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
@@ -47,7 +47,38 @@ export function intersection<S>(
 ): <T>(data: readonly T[]) => (S & T)[];
 
 export function intersection(...args: readonly unknown[]): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return purryWithLazy(intersectionImplementation, args, lazyImplementation);
+}
+
+function intersectionImplementation<T>(
+  data: readonly T[],
+  other: readonly unknown[],
+): T[] {
+  // Each copy in `other` matches a single occurrence in `data`, so the map
+  // counts the copies that are still unmatched. A value leaves the map once
+  // all its copies are matched, so an empty map ends the search early.
+  const remaining = new Map<unknown, number>();
+  for (const value of other) {
+    remaining.set(value, (remaining.get(value) ?? 0) + 1);
+  }
+
+  const result: T[] = [];
+  for (const value of data) {
+    if (remaining.size === 0) {
+      break;
+    }
+
+    const copies = remaining.get(value);
+    if (copies !== undefined) {
+      result.push(value);
+      if (copies === 1) {
+        remaining.delete(value);
+      } else {
+        remaining.set(value, copies - 1);
+      }
+    }
+  }
+  return result;
 }
 
 function lazyImplementation<T, S>(

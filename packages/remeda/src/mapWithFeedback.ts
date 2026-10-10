@@ -1,10 +1,19 @@
-import { purryFromLazy } from "./internal/purryFromLazy";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
 
+type FeedbackCallback<T extends IterableContainer, U> = (
+  previousValue: U,
+  currentValue: T[number],
+  currentIndex: number,
+  data: T,
+) => U;
+
+// Inside `pipe` the data flows through lazily, so the callback only sees the
+// items processed so far.
 type LazyFeedbackCallback<T extends IterableContainer, U> = (
   previousValue: U,
   currentValue: T[number],
@@ -37,7 +46,7 @@ type LazyFeedbackCallback<T extends IterableContainer, U> = (
  */
 export function mapWithFeedback<T extends IterableContainer, U>(
   data: T,
-  callbackfn: LazyFeedbackCallback<T, U>,
+  callbackfn: FeedbackCallback<T, U>,
   initialValue: U,
 ): Mapped<T, U>;
 
@@ -68,7 +77,28 @@ export function mapWithFeedback<T extends IterableContainer, U>(
 ): (data: T) => Mapped<T, U>;
 
 export function mapWithFeedback(...args: readonly unknown[]): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return purryWithLazy(mapWithFeedbackImplementation, args, lazyImplementation);
+}
+
+function mapWithFeedbackImplementation<T, U>(
+  data: readonly T[],
+  reducer: (
+    previousValue: U,
+    currentValue: T,
+    index: number,
+    data: readonly T[],
+  ) => U,
+  initialValue: U,
+): U[] {
+  const result: U[] = [];
+  let previousValue = initialValue;
+  let index = 0;
+  for (const currentValue of data) {
+    previousValue = reducer(previousValue, currentValue, index, data);
+    result.push(previousValue);
+    index += 1;
+  }
+  return result;
 }
 
 const lazyImplementation = <T, U>(

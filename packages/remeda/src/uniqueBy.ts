@@ -1,5 +1,5 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { purryFromLazy } from "./internal/purryFromLazy";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
 import type { BrandedReturn } from "./internal/types/BrandedReturn";
 import type { Deduped } from "./internal/types/Deduped";
@@ -26,7 +26,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  */
 export function uniqueBy<T extends IterableContainer>(
   data: T,
-  keyFunction: LazyCallback<T, unknown>,
+  keyFunction: (value: T[number], index: number, data: T) => unknown,
 ): Deduped<T>;
 
 /**
@@ -51,7 +51,27 @@ export function uniqueBy<T extends IterableContainer>(
 ): (data: T) => Deduped<T>;
 
 export function uniqueBy(...args: readonly unknown[]): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return purryWithLazy(uniqueByImplementation, args, lazyImplementation);
+}
+
+function uniqueByImplementation<T>(
+  data: readonly T[],
+  keyFunction: (value: T, index: number, data: readonly T[]) => unknown,
+): T[] {
+  const seenKeys = new Set<unknown>();
+  const result: T[] = [];
+  let index = 0;
+  for (const value of data) {
+    // `add` leaves the set unchanged for a key it already holds, so the size
+    // tells duplicates apart with a single hash lookup per item.
+    const sizeBefore = seenKeys.size;
+    seenKeys.add(keyFunction(value, index, data));
+    if (seenKeys.size > sizeBefore) {
+      result.push(value);
+    }
+    index += 1;
+  }
+  return result;
 }
 
 function lazyImplementation<T>(

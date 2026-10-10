@@ -1,5 +1,5 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { purryFromLazy } from "./internal/purryFromLazy";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
@@ -38,7 +38,30 @@ export function difference<T>(data: readonly T[], other: readonly T[]): T[];
 export function difference<T>(other: readonly T[]): (data: readonly T[]) => T[];
 
 export function difference(...args: readonly unknown[]): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return purryWithLazy(differenceImplementation, args, lazyImplementation);
+}
+
+function differenceImplementation<T>(
+  data: readonly T[],
+  other: readonly T[],
+): T[] {
+  // Each copy in `other` excludes a single occurrence from `data`, so the map
+  // counts the copies that are still unused.
+  const remaining = new Map<T, number>();
+  for (const value of other) {
+    remaining.set(value, (remaining.get(value) ?? 0) + 1);
+  }
+
+  const result: T[] = [];
+  for (const value of data) {
+    const copies = remaining.get(value);
+    if (copies === undefined || copies === 0) {
+      result.push(value);
+    } else {
+      remaining.set(value, copies - 1);
+    }
+  }
+  return result;
 }
 
 function lazyImplementation<T>(other: readonly T[]): LazyEvaluator<T> {

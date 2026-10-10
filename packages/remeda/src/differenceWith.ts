@@ -1,5 +1,5 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { purryFromLazy } from "./internal/purryFromLazy";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 type IsEqual<T, Other> = (data: T, other: Other) => boolean;
@@ -52,7 +52,21 @@ export function differenceWith<T, Other>(
 ): (data: readonly T[]) => T[];
 
 export function differenceWith(...args: readonly unknown[]): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return purryWithLazy(differenceWithImplementation, args, lazyImplementation);
+}
+
+function differenceWithImplementation<T, Other>(
+  data: readonly T[],
+  other: readonly Other[],
+  isEqual: IsEqual<T, Other>,
+): T[] {
+  const result: T[] = [];
+  for (const value of data) {
+    if (other.every((otherValue) => !isEqual(value, otherValue))) {
+      result.push(value);
+    }
+  }
+  return result;
 }
 
 const lazyImplementation =

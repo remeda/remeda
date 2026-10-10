@@ -1,5 +1,5 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { purryFromLazy } from "./internal/purryFromLazy";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireData } from "./internal/requireData";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -53,7 +53,26 @@ export function uniqueWith<T extends IterableContainer>(
 ): (data: T) => Deduped<T>;
 
 export function uniqueWith(...args: readonly unknown[]): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return purryWithLazy(uniqueWithImplementation, args, lazyImplementation);
+}
+
+function uniqueWithImplementation<T>(
+  data: readonly T[],
+  isEquals: IsEquals<T>,
+): T[] {
+  const result: T[] = [];
+  for (const [index, value] of data.entries()) {
+    // Every earlier item is compared, not just the ones kept, so a comparator
+    // that isn't transitive dedupes the same way it does in `pipe`.
+    const firstEqualIndex = data.findIndex(
+      (otherValue, otherIndex) =>
+        index === otherIndex || isEquals(value, otherValue),
+    );
+    if (firstEqualIndex === index) {
+      result.push(value);
+    }
+  }
+  return result;
 }
 
 const lazyImplementation = <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>

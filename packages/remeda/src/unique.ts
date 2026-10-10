@@ -1,5 +1,5 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { purryFromLazy } from "./internal/purryFromLazy";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -38,7 +38,24 @@ export function unique<T extends IterableContainer>(data: T): Deduped<T>;
 export function unique(): <T extends IterableContainer>(data: T) => Deduped<T>;
 
 export function unique(...args: readonly unknown[]): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return purryWithLazy(uniqueImplementation, args, lazyImplementation);
+}
+
+function uniqueImplementation<T>(data: readonly T[]): T[] {
+  // The items are collected from `data` rather than spread out of the set,
+  // which would turn a `-0` into `0`.
+  const seen = new Set<T>();
+  const result: T[] = [];
+  for (const value of data) {
+    // `add` leaves the set unchanged for a value it already holds, so the size
+    // tells duplicates apart with a single hash lookup per item.
+    const sizeBefore = seen.size;
+    seen.add(value);
+    if (seen.size > sizeBefore) {
+      result.push(value);
+    }
+  }
+  return result;
 }
 
 function lazyImplementation<T>(): LazyEvaluator<T> {
