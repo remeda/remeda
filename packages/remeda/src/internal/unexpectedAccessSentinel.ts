@@ -1,7 +1,7 @@
 import type { Tagged } from "type-fest";
 
 const UNEXPECTED_ACCESS_MESSAGE =
-  "Remeda: a callback used its `data` argument as an array, but didn't declare it as a parameter, so Remeda didn't provide it. Declare it, e.g. `(value, index, data) => ...`.";
+  "Remeda: unexpected access to a callback's `data` argument during lazy evaluation.";
 
 // The canonical array indices, which every indexed read and write uses as its
 // key.
