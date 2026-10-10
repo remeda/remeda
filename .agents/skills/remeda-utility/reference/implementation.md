@@ -86,6 +86,7 @@ Measured and rejected (candidate/baseline; below 1 is faster):
 - Indexed loops over arrays: 0.939 and 0.910, but reactive arrays track every index read: a probe pipe went from 31 to 60 dependencies (5.63 -> 9.46 us per re-evaluation), and a lone `find` from 23 to 44.
 - With object controls, a `=== SKIP_ITEM` shortcut ahead of the probe: lone `map` steps 1.046-1.059; in `pipe`'s loop, faster in 3 of 6 runs only.
 - `purry`'s data-first `fn(...args)` by arity instead of a spread: data-last `clamp` at 100 items 1.067 in all 6 runs.
+- No dedicated data-last closure at all (one spread closure): 6-12% slower on scalar data-last pipes.
 - Building evaluators by arity (0.9949) and `[length - 1]` instead of `.at(-1)` (0.9957): faster in every run, under the 0.99 bar.
 - No effect: a hoisted step count (1.000), slicing `purryFromLazy`'s arguments (1.013), reordered control checks (0.993-1.008), a positional `dataParameterIndex` (0.999-1.004), index access in `first` (0.996-1.005).
 - `/* @__PURE__ */` on the sentinel: the published build is unchanged (see above).
