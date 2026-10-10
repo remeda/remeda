@@ -38,7 +38,8 @@ describe("data first", () => {
     expect(result).not.toBe(data);
   });
 
-  test("should provide the items processed so far", () => {
+  test("should provide the whole input", () => {
+    const data = [1, 2, 3, 4, 5];
     const mock = vi.fn<
       (
         acc: unknown,
@@ -48,13 +49,13 @@ describe("data first", () => {
       ) => unknown
     >((_acc, _x, _index, items) => [...items]);
 
-    mapWithFeedback([1, 2, 3, 4, 5], mock, []);
+    mapWithFeedback(data, mock, []);
 
-    expect(mock).toHaveNthReturnedWith(1, [1]);
-    expect(mock).toHaveNthReturnedWith(2, [1, 2]);
-    expect(mock).toHaveNthReturnedWith(3, [1, 2, 3]);
-    expect(mock).toHaveNthReturnedWith(4, [1, 2, 3, 4]);
-    expect(mock).toHaveNthReturnedWith(5, [1, 2, 3, 4, 5]);
+    expect(mock).toHaveNthReturnedWith(1, data);
+    expect(mock).toHaveNthReturnedWith(2, data);
+    expect(mock).toHaveNthReturnedWith(3, data);
+    expect(mock).toHaveNthReturnedWith(4, data);
+    expect(mock).toHaveNthReturnedWith(5, data);
   });
 });
 
@@ -100,5 +101,27 @@ describe("data last", () => {
       [1, 2, 3, 4],
       [1, 2, 3, 4, 5],
     ]);
+  });
+});
+
+describe("known issues!", () => {
+  test("a trailing rest parameter hides `data` from the arity check", () => {
+    expect(() =>
+      pipe(
+        [1, 2, 3],
+        mapWithFeedback(
+          (
+            accumulator: number,
+            _value: number,
+            _index: number,
+            // this callback reports a `length` of 3 and `rest[0]` is
+            // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so
+            // far.
+            ...rest: readonly [readonly unknown[]]
+          ) => accumulator + rest[0].length,
+          0,
+        ),
+      ),
+    ).toThrow(/^Remeda: /u);
   });
 });

@@ -57,4 +57,12 @@ describe("piping", () => {
     expect(mock).toHaveBeenCalledTimes(4);
     expect(result).toStrictEqual([2, 4]);
   });
+
+  test("returns empty array on empty other array", () => {
+    expect(pipe([1, 2, 3], intersection([]))).toStrictEqual([]);
+  });
+
+  test("maintains multi-set semantics (returns as many copies as available)", () => {
+    expect(pipe([1, 1, 1, 1, 1], intersection([1, 1]))).toStrictEqual([1, 1]);
+  });
 });

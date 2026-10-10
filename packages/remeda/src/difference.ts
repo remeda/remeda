@@ -1,6 +1,6 @@
-import { purryFromLazy } from "./internal/purryFromLazy";
+import { SKIP_ITEM } from "./internal/lazyControl";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 
 /**
  * Excludes the values from `other` array. The output maintains the same order
@@ -38,12 +38,35 @@ export function difference<T>(data: readonly T[], other: readonly T[]): T[];
 export function difference<T>(other: readonly T[]): (data: readonly T[]) => T[];
 
 export function difference(...args: readonly unknown[]): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return purryWithLazy(differenceImplementation, args, lazyImplementation);
+}
+
+function differenceImplementation<T>(
+  data: readonly T[],
+  other: readonly T[],
+): T[] {
+  // Each copy in `other` excludes a single occurrence from `data`, so the map
+  // counts the copies that are still unused.
+  const remaining = new Map<T, number>();
+  for (const value of other) {
+    remaining.set(value, (remaining.get(value) ?? 0) + 1);
+  }
+
+  const result: T[] = [];
+  for (const value of data) {
+    const copies = remaining.get(value);
+    if (copies === undefined || copies === 0) {
+      result.push(value);
+    } else {
+      remaining.set(value, copies - 1);
+    }
+  }
+  return result;
 }
 
 function lazyImplementation<T>(other: readonly T[]): LazyEvaluator<T> {
   if (other.length === 0) {
-    return lazyIdentityEvaluator;
+    return (value) => value;
   }
 
   // We need to build a more efficient data structure that would allow us to
@@ -59,7 +82,7 @@ function lazyImplementation<T>(other: readonly T[]): LazyEvaluator<T> {
     if (copies === undefined || copies === 0) {
       // The item is either not part of the other array or we've dropped enough
       // copies of it so we return it.
-      return { done: false, hasNext: true, next: value };
+      return value;
     }
 
     // The item is equal to an item in the other array and there are still

@@ -141,9 +141,14 @@ export function when<
 
 export function when(...args: readonly unknown[]): unknown {
   return args.length === 2
-    ? (data: unknown, ...extraArgs: readonly unknown[]) =>
+    ? (...dataAndExtraArgs: readonly unknown[]) => {
+        // A rest-only signature keeps `length` at 0, which `canReadData`
+        // treats as reading `data`, so a lazy step passes its `data` array on
+        // to `when`'s functions.
+        const [data, ...extraArgs] = dataAndExtraArgs;
         // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
-        whenImplementation(data, ...args, ...extraArgs)
+        return whenImplementation(data, ...args, ...extraArgs);
+      }
     : // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
       whenImplementation(...args);
 }

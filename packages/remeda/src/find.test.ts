@@ -76,4 +76,34 @@ describe("data last", () => {
     expect(counter).toHaveBeenCalledTimes(2);
     expect(actual).toStrictEqual({ a: 1, b: 2 });
   });
+
+  test("provides the items processed so far to the predicate", () => {
+    const dataSnapshots: number[][] = [];
+    pipe(
+      [1, 2, 3],
+      find((_value, _index, data) => {
+        dataSnapshots.push([...data]);
+        return false;
+      }),
+    );
+
+    expect(dataSnapshots).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+  });
+});
+
+describe("known issues!", () => {
+  test("a trailing rest parameter hides `data` from the arity check", () => {
+    expect(() =>
+      pipe(
+        [1, 2, 3],
+        find(
+          (_value, _index, ...rest) =>
+            // this callback reports a `length` of 2 and `rest[0]` is
+            // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so
+            // far.
+            rest[0].length > 2,
+        ),
+      ),
+    ).toThrow(/^Remeda: /u);
+  });
 });

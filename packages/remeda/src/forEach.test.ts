@@ -1,4 +1,4 @@
-import { expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { forEach } from "./forEach";
 import { pipe } from "./pipe";
 import { take } from "./take";
@@ -58,4 +58,19 @@ test("with take", () => {
 
   expect(count).toHaveBeenCalledTimes(2);
   expect(result).toStrictEqual([1, 2]);
+});
+
+describe("known issues!", () => {
+  test("a trailing rest parameter hides `data` from the arity check", () => {
+    expect(() =>
+      pipe(
+        [1, 2, 3],
+        forEach((_value, _index, ...rest) => {
+          // this callback reports a `length` of 2 and `rest[0]` is
+          // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so far.
+          rest[0].at(0);
+        }),
+      ),
+    ).toThrow(/^Remeda: /u);
+  });
 });

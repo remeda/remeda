@@ -1,6 +1,8 @@
+import { manyLazyValues, type LazyResult } from "./internal/lazyControl";
+import { purryWithLazy } from "./internal/purryWithLazy";
+import { requireDataByArity } from "./internal/requireData";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { purry } from "./purry";
 
 /**
  * Returns a new array formed by applying a given callback function to each
@@ -53,7 +55,7 @@ export function flatMap<T, U>(
 ): (data: readonly T[]) => U[];
 
 export function flatMap(...args: readonly unknown[]): unknown {
-  return purry(flatMapImplementation, args, lazyImplementation);
+  return purryWithLazy(flatMapImplementation, args, lazyImplementation);
 }
 
 const flatMapImplementation = <T, U>(
@@ -61,18 +63,11 @@ const flatMapImplementation = <T, U>(
   callbackfn: (value: T, index: number, data: readonly T[]) => readonly U[] | U,
 ): U[] => data.flatMap(callbackfn);
 
-const lazyImplementation =
-  <T, K>(
-    callbackfn: (
-      input: T,
-      index: number,
-      data: readonly T[],
-    ) => K | readonly K[],
-  ): LazyEvaluator<T, K> =>
-  // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
-  (value, index, data) => {
-    const next = callbackfn(value, index, data);
-    return Array.isArray(next)
-      ? { done: false, hasNext: true, hasMany: true, next }
-      : { done: false, hasNext: true, next };
-  };
+const lazyImplementation = <T, K>(
+  callbackfn: (input: T, index: number, data: readonly T[]) => K | readonly K[],
+): LazyEvaluator<T, K> =>
+  requireDataByArity(callbackfn, (value, index, data, slot): LazyResult<K> => {
+    const mapped = callbackfn(value, index, data);
+    // @ts-expect-error [ts2322] -- Array.isArray doesn't narrow readonly arrays (https://github.com/microsoft/TypeScript/issues/17002), so the non-array branch is still typed as K | readonly K[] even though it only ever sees non-arrays at runtime.
+    return Array.isArray(mapped) ? manyLazyValues(mapped, slot) : mapped;
+  });

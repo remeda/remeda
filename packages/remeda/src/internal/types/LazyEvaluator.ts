@@ -1,7 +1,26 @@
-import type { LazyResult } from "./LazyResult";
+import type { LazyResult, LazySlot } from "../lazyControl";
 
-export type LazyEvaluator<T = unknown, R = T> = (
+/**
+ * Extra levers an evaluator gives `pipe` over how it runs the step.
+ */
+type LazyEvaluatorMetadata = {
+  /**
+   * Some evaluators provide `data` to their callbacks (e.g., `map`'s 3rd
+   * parameter). Collecting it lazily costs a buffer that grows with every
+   * item, so the lazy runners (`pipe`, `processSingleLazyStep`) only collect
+   * it for evaluators marked with this flag and hand every other evaluator
+   * `UNEXPECTED_ACCESS_SENTINEL` instead. Set it via `requireData` or
+   * `requireDataByArity`, never directly.
+   */
+  readonly requiresData?: true;
+};
+
+export type LazyEvaluator<T = unknown, R = T> = ((
   item: T,
   index: number,
   data: readonly T[],
-) => LazyResult<R>;
+  // Only evaluators that stop with a value or fan out need it, and only to
+  // pass it to `lastLazyValue` or `manyLazyValues`.
+  slot: LazySlot,
+) => LazyResult<R>) &
+  LazyEvaluatorMetadata;

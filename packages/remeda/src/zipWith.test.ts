@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { filter } from "./filter";
 import { pipe } from "./pipe";
 import { zipWith } from "./zipWith";
 
@@ -110,5 +111,33 @@ describe("data second with initial arg", () => {
         zipWith(["a", "b"], (a, b) => `${a}${b}`),
       ),
     ).toStrictEqual([]);
+  });
+
+  test("pairs by the step's own count after an upstream filter", () => {
+    expect(
+      pipe(
+        [1, 2, 3, 4, 5, 6],
+        filter((x) => x % 2 === 0),
+        zipWith(["a", "b", "c"], (n, s) => `${n}${s}`),
+      ),
+    ).toStrictEqual(["2a", "4b", "6c"]);
+  });
+});
+
+describe("known issues!", () => {
+  test("a trailing rest parameter hides `data` from the arity check", () => {
+    expect(() =>
+      pipe(
+        [1, 2, 3],
+        zipWith(
+          ["a", "b", "c"],
+          (_first, _second, _index, ...rest) =>
+            // this callback reports a `length` of 3 and `rest[0][0]` is
+            // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so
+            // far.
+            rest[0][0].length,
+        ),
+      ),
+    ).toThrow(/^Remeda: /u);
   });
 });

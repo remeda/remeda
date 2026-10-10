@@ -1,12 +1,12 @@
 import type { IsInteger, IsNegative, Writable } from "type-fest";
+import { SKIP_ITEM } from "./internal/lazyControl";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
 import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { PartialArray } from "./internal/types/PartialArray";
 import type { TupleParts } from "./internal/types/TupleParts";
-import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
-import { purry } from "./purry";
 
 type Drop<T extends IterableContainer, N extends number> =
   IsNegative<N> extends true
@@ -138,7 +138,7 @@ export function drop<N extends number>(
 ): <T extends IterableContainer>(array: T) => Drop<T, N>;
 
 export function drop(...args: readonly unknown[]): unknown {
-  return purry(dropImplementation, args, lazyImplementation);
+  return purryWithLazy(dropImplementation, args, lazyImplementation);
 }
 
 const dropImplementation = <T extends IterableContainer>(
@@ -148,7 +148,7 @@ const dropImplementation = <T extends IterableContainer>(
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (n <= 0) {
-    return lazyIdentityEvaluator;
+    return (value) => value;
   }
 
   let left = n;
@@ -157,6 +157,6 @@ function lazyImplementation<T>(n: number): LazyEvaluator<T> {
       left -= 1;
       return SKIP_ITEM;
     }
-    return { done: false, hasNext: true, next: value };
+    return value;
   };
 }

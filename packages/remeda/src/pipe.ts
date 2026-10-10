@@ -2,18 +2,37 @@
  * We document pipe's function params as a single parameter entry in the docs.
  */
 
+import {
+  createLazySlot,
+  LAST,
+  MANY,
+  SKIP_ITEM,
+  STOP,
+  type LazySlot,
+} from "./internal/lazyControl";
+import { processSingleLazyStep } from "./internal/processSingleLazyStep";
 import type { LazyDefinition } from "./internal/types/LazyDefinition";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import type { LazyResult } from "./internal/types/LazyResult";
-import { SKIP_ITEM } from "./internal/utilityEvaluators";
+import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/unexpectedAccessSentinel";
 
 type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
-  readonly isSingle: boolean;
-  // Notice the array is mutable, we will be adding items as the pipe is
-  // evaluating them.
-  readonly items: unknown[];
-};
+  readonly isSingle: true | undefined;
+  // Counted here rather than derived from `items`, which only fills for steps
+  // that require `data`.
+  index: number;
+} & (
+  | {
+      readonly requiresData: true;
+      // Notice the array is mutable, we will be adding items as the pipe is
+      // evaluating them. It is shared with every invocation of the evaluator.
+      readonly items: unknown[];
+    }
+  | {
+      readonly requiresData: false;
+      readonly items: typeof UNEXPECTED_ACCESS_SENTINEL;
+    }
+);
 
 type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
 
@@ -33,10 +52,6 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * Functions are only evaluated lazily when their data-last form is used
  * directly in the pipe. To disable lazy evaluation, use data-first calls via
  * arrow functions: `($) => map($, callback)` instead of `map(callback)`.
- *
- * Any function can be used in pipes, not just Remeda utilities. For creating
- * custom functions with currying and lazy evaluation support, see the `purry`
- * utility.
  *
  * A "headless" variant `piped` is available for creating reusable pipe
  * functions without initial data.
@@ -96,7 +111,8 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  *    }); //=> "[1, 2, 3, 4]" logged 4 times
  *
  *    // But with `pipe` data would only contain the items up to the current
- *    // index
+ *    // index. A callback only receives `data` when it declares it as a
+ *    // parameter.
  *    pipe([1, 2, 3, 4], forEach((_item, _index, data) => {
  *      console.log(data);
  *    })); //=> "[1]", "[1, 2]", "[1, 2, 3]", "[1, 2, 3, 4]"
@@ -286,52 +302,85 @@ export function pipe(
   input: unknown,
   ...functions: readonly (LazyFunction | ((value: unknown) => unknown))[]
 ): unknown {
+  if (functions.length === 0) {
+    return input;
+  }
+
+  if (functions.length === 1) {
+    // The most common pipe, a single function, skips the loop below.
+    const func = functions[0]!;
+    return "lazy" in func && isIterable(input)
+      ? processSingleLazyStep(input, func.lazy, func.lazyArgs)
+      : func(input);
+  }
+
   let output = input;
-
-  const lazySteps = functions.map((op) =>
-    "lazy" in op
-      ? {
-          lazyEvaluator: op.lazy(...op.lazyArgs),
-          isSingle: op.lazy.single ?? false,
-          index: 0,
-          items: [],
-        }
-      : undefined,
-  );
-
   let functionIndex = 0;
   while (functionIndex < functions.length) {
-    const lazyStep = lazySteps[functionIndex];
-    if (lazyStep === undefined || !isIterable(output)) {
-      const func = functions[functionIndex]!;
+    const func = functions[functionIndex]!;
+    if (!("lazy" in func) || !isIterable(output)) {
       output = func(output);
       functionIndex += 1;
       continue;
     }
 
-    const lazySequence = extractLazySequence(lazySteps, functionIndex);
+    const nextFunc = functions[functionIndex + 1];
+    if (nextFunc === undefined || !("lazy" in nextFunc) || func.lazy.single) {
+      // A run of one lazy function is a lazy sequence of one step, which has
+      // no cross-step bookkeeping to set up: the step array, the step object,
+      // and the hand-off through them are all overhead.
+      output = processSingleLazyStep(output, func.lazy, func.lazyArgs);
+      functionIndex += 1;
+      continue;
+    }
+
+    // Steps are built when the loop reaches their run with iterable data, so
+    // a pipe without lazy functions, or whose lazy functions get non-iterable
+    // data, builds none.
+    const lazySequence = buildLazySequence(functions, functionIndex);
     const accumulator = processIterable(output, lazySequence);
 
     const { isSingle } = lazySequence.at(-1)!;
     output = isSingle ? accumulator[0] : accumulator;
     functionIndex += lazySequence.length;
   }
+
   return output;
 }
 
-function extractLazySequence(
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The items array is mutable for efficiency.
-  lazySteps: readonly (LazyStep | undefined)[],
+function buildLazyStep({ lazy, lazyArgs }: LazyDefinition): LazyStep {
+  const lazyEvaluator = lazy(...lazyArgs);
+  const isSingle = lazy.single;
+  return lazyEvaluator.requiresData
+    ? {
+        lazyEvaluator,
+        isSingle,
+        index: 0,
+        requiresData: true,
+        items: [],
+      }
+    : {
+        lazyEvaluator,
+        isSingle,
+        index: 0,
+        requiresData: false,
+        items: UNEXPECTED_ACCESS_SENTINEL,
+      };
+}
+
+function buildLazySequence(
+  functions: readonly (LazyFunction | ((value: unknown) => unknown))[],
   startIndex: number,
 ): readonly LazyStep[] {
   const lazySequence: LazyStep[] = [];
 
-  for (let index = startIndex; index < lazySteps.length; index++) {
-    const lazyStep = lazySteps[index];
-    if (lazyStep === undefined) {
+  for (let index = startIndex; index < functions.length; index++) {
+    const func = functions[index]!;
+    if (!("lazy" in func)) {
       break;
     }
 
+    const lazyStep = buildLazyStep(func);
     lazySequence.push(lazyStep);
     if (lazyStep.isSingle) {
       break;
@@ -343,15 +392,43 @@ function extractLazySequence(
 
 function processIterable(
   iterable: Iterable<unknown>,
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The items array is mutable for efficiency.
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
   lazySequence: readonly LazyStep[],
 ): unknown[] {
   const accumulator: unknown[] = [];
+  const slot = createLazySlot();
 
-  for (const value of iterable) {
-    const shouldExitEarly = processItem(value, accumulator, lazySequence);
-    if (shouldExitEarly) {
-      break;
+  if (Array.isArray(iterable)) {
+    // In V8, a `for...of` that has only ever seen arrays skips the iterator
+    // protocol; the generic loop below also sees sets, strings and generators,
+    // so it can't. Both loops iterate rather than index, so a reactive array
+    // that instruments iteration tracks one dependency instead of one per
+    // index.
+    for (const value of iterable) {
+      const shouldExitEarly = processItem(
+        value,
+        accumulator,
+        lazySequence,
+        slot,
+        0 /* startIndex */,
+      );
+      if (shouldExitEarly) {
+        break;
+      }
+    }
+    // eslint-disable-next-line unicorn/no-duplicate-if-branches -- Identical on purpose: each loop is its own iteration site (see above), which is what lets the compiler specialize the first one for arrays.
+  } else {
+    for (const value of iterable) {
+      const shouldExitEarly = processItem(
+        value,
+        accumulator,
+        lazySequence,
+        slot,
+        0 /* startIndex */,
+      );
+      if (shouldExitEarly) {
+        break;
+      }
     }
   }
 
@@ -362,36 +439,46 @@ function processItem(
   item: unknown,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
   accumulator: unknown[],
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The items array is mutable for efficiency.
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
   lazySequence: readonly LazyStep[],
+  slot: LazySlot,
+  startIndex: number,
 ): boolean {
-  if (lazySequence.length === 0) {
-    accumulator.push(item);
-    return false;
-  }
-
   let currentItem = item;
-
-  let lazyResult: LazyResult = SKIP_ITEM;
   let isDone = false;
-  for (const [
-    functionsIndex,
-    { items, lazyEvaluator },
-  ] of lazySequence.entries()) {
-    items.push(currentItem);
-    lazyResult = lazyEvaluator(currentItem, items.length - 1, items);
-
-    if (lazyResult.done) {
-      isDone = true;
+  for (
+    let stepIndex = startIndex;
+    stepIndex < lazySequence.length;
+    stepIndex++
+  ) {
+    const step = lazySequence[stepIndex]!;
+    if (step.requiresData) {
+      step.items.push(currentItem);
     }
+    // Called without a receiver: the evaluator can be the user's own callback,
+    // which mustn't see the step as `this`.
+    const { lazyEvaluator } = step;
+    const result = lazyEvaluator(currentItem, step.index, step.items, slot);
+    step.index += 1;
 
-    if (lazyResult.hasNext) {
-      if (lazyResult.hasMany ?? false) {
-        for (const subItem of lazyResult.next as readonly unknown[]) {
+    // Every control is a symbol, so an item of any other type skips the
+    // comparisons below with this one check.
+    if (typeof result === "symbol") {
+      if (result === SKIP_ITEM) {
+        return isDone;
+      }
+
+      if (result === MANY) {
+        // Read before the steps below run, as they leave their own payloads
+        // in the same slot.
+        const { values } = slot;
+        for (const subItem of values) {
           const shouldExitEarly = processItem(
             subItem,
             accumulator,
-            lazySequence.slice(functionsIndex + 1),
+            lazySequence,
+            slot,
+            stepIndex + 1,
           );
           if (shouldExitEarly) {
             return true;
@@ -399,24 +486,35 @@ function processItem(
         }
         return isDone;
       }
-      currentItem = lazyResult.next;
-    } else {
-      break;
+
+      if (result === LAST) {
+        currentItem = slot.value;
+        isDone = true;
+        continue;
+      }
+
+      if (result === STOP) {
+        return true;
+      }
     }
+
+    // The common case: the evaluator emitted an item, hand it to the next
+    // step as-is.
+    currentItem = result;
   }
 
-  if (lazyResult.hasNext) {
-    accumulator.push(currentItem);
-  }
-
+  accumulator.push(currentItem);
   return isDone;
 }
 
 function isIterable(something: unknown): something is Iterable<unknown> {
-  // Check for null and undefined to avoid errors when accessing Symbol.iterator
   return (
+    // Arrays are by far the most common input, and the compiler reduces this
+    // check to a type test, where the `in` check below is a property lookup.
+    Array.isArray(something) ||
     typeof something === "string" ||
     (typeof something === "object" &&
+      // `typeof` reports `null` as an object, and `in` throws on it.
       something !== null &&
       // eslint-disable-next-line unicorn/no-computed-property-existence-check -- The prototype-chain check is intentional: iterables inherit `Symbol.iterator` from their prototype (e.g. `Array.prototype`), and `Object.hasOwn` would reject them all.
       Symbol.iterator in something)

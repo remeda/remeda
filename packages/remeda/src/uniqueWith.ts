@@ -1,8 +1,9 @@
-import { purryFromLazy } from "./internal/purryFromLazy";
+import { SKIP_ITEM } from "./internal/lazyControl";
+import { purryWithLazy } from "./internal/purryWithLazy";
+import { requireData } from "./internal/requireData";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { SKIP_ITEM } from "./internal/utilityEvaluators";
 
 type IsEquals<T> = (a: T, b: T) => boolean;
 
@@ -52,19 +53,35 @@ export function uniqueWith<T extends IterableContainer>(
 ): (data: T) => Deduped<T>;
 
 export function uniqueWith(...args: readonly unknown[]): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return purryWithLazy(uniqueWithImplementation, args, lazyImplementation);
 }
 
-const lazyImplementation =
-  <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>
-  (value, index, data) => {
+function uniqueWithImplementation<T>(
+  data: readonly T[],
+  isEquals: IsEquals<T>,
+): T[] {
+  const result: T[] = [];
+  for (const [index, value] of data.entries()) {
+    // Every earlier item is compared, not just the ones kept, so a comparator
+    // that isn't transitive dedupes the same way it does in `pipe`.
+    const firstEqualIndex = data.findIndex(
+      (otherValue, otherIndex) =>
+        index === otherIndex || isEquals(value, otherValue),
+    );
+    if (firstEqualIndex === index) {
+      result.push(value);
+    }
+  }
+  return result;
+}
+
+const lazyImplementation = <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>
+  requireData((value, index, data) => {
     const firstEqualIndex = data.findIndex(
       (otherValue, otherIndex) =>
         index === otherIndex || isEquals(value, otherValue),
     );
 
     // skip items that aren't at the first equal index.
-    return firstEqualIndex === index
-      ? { done: false, hasNext: true, next: value }
-      : SKIP_ITEM;
-  };
+    return firstEqualIndex === index ? value : SKIP_ITEM;
+  });

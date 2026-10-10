@@ -19,10 +19,9 @@ import type { TupleParts } from "./TupleParts";
  * a required first item (e.g., the array is not empty), similar to calling
  * `hasAtLeast(1)` on the shape we computed.
  *
- * Use this type for any callback that `pipe` invokes lazily. That is always
- * the data-last overload, and for utilities built on `purryFromLazy` (which
- * routes data-first calls through `pipe` as well) it is the data-first overload
- * too. This is a low-level type, prefer `LazyCallback` and
+ * Use this type for any callback that is invoked lazily, which is the
+ * data-last overload; the data-first overload runs eagerly over the complete
+ * input. This is a low-level type, prefer `LazyCallback` and
  * `LazyTypePredicate` over direct usage.
  *
  * When the type is used for a callback used in `pipe` it should be wrapped in

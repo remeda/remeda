@@ -7,5 +7,5 @@ export type LazyDefinition = {
 };
 
 type LazyMeta = {
-  readonly single?: boolean;
+  readonly single?: true;
 };

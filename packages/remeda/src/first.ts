@@ -1,8 +1,9 @@
+import { lastLazyValue } from "./internal/lazyControl";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import { toSingle } from "./internal/toSingle";
 import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { purry } from "./purry";
 
 /**
  * Gets the first element of `array`.
@@ -40,12 +41,12 @@ export function first<T extends IterableContainer>(data: T): First<T>;
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
 export function first(...args: readonly unknown[]): unknown {
-  return purry(firstImplementation, args, toSingle(lazyImplementation));
+  return purryWithLazy(firstImplementation, args, lazyImplementation);
 }
 
 const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;
 
-const lazyImplementation = (): LazyEvaluator => firstLazy;
+const lazyImplementation = toSingle((): LazyEvaluator => emitAndStop);
 
-const firstLazy = <T>(value: T) =>
-  ({ hasNext: true, next: value, done: true }) as const;
+const emitAndStop: LazyEvaluator = (value, _index, _data, slot) =>
+  lastLazyValue(value, slot);

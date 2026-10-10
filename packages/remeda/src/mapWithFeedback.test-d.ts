@@ -43,11 +43,11 @@ test("should correctly infer type with a non-literal array type", () => {
   expectTypeOf(result).toEqualTypeOf<number[]>();
 });
 
-test("data param is lazily reconstructed in data-first", () => {
+test("data param is complete in data-first", () => {
   mapWithFeedback(
     [1, 2, 3] as const,
     (_previousValue, _currentValue, _currentIndex, data) => {
-      expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+      expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
 
       return 0;
     },

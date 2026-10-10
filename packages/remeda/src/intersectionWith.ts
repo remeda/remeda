@@ -1,6 +1,6 @@
-import { purryFromLazy } from "./internal/purryFromLazy";
+import { SKIP_ITEM } from "./internal/lazyControl";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { SKIP_ITEM } from "./internal/utilityEvaluators";
 
 type IsEqual<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 
@@ -62,7 +62,25 @@ export function intersectionWith<TFirst, TSecond>(
 ): (array: readonly TFirst[]) => TFirst[];
 
 export function intersectionWith(...args: readonly unknown[]): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return purryWithLazy(
+    intersectionWithImplementation,
+    args,
+    lazyImplementation,
+  );
+}
+
+function intersectionWithImplementation<TFirst, TSecond>(
+  array: readonly TFirst[],
+  other: readonly TSecond[],
+  isEqual: IsEqual<TFirst, TSecond>,
+): TFirst[] {
+  const result: TFirst[] = [];
+  for (const value of array) {
+    if (other.some((otherValue) => isEqual(value, otherValue))) {
+      result.push(value);
+    }
+  }
+  return result;
 }
 
 const lazyImplementation =
@@ -71,6 +89,4 @@ const lazyImplementation =
     isEqual: IsEqual<TFirst, TSecond>,
   ): LazyEvaluator<TFirst> =>
   (value) =>
-    other.some((otherValue) => isEqual(value, otherValue))
-      ? { done: false, hasNext: true, next: value }
-      : SKIP_ITEM;
+    other.some((otherValue) => isEqual(value, otherValue)) ? value : SKIP_ITEM;

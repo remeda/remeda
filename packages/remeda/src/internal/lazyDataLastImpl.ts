@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import type { LazyEvaluator } from "./types/LazyEvaluator";
+import type { LazyDefinition } from "./types/LazyDefinition";
 import type { StrictFunction } from "./types/StrictFunction";
 
 /**
@@ -13,16 +11,32 @@ import type { StrictFunction } from "./types/StrictFunction";
 export function lazyDataLastImpl(
   fn: StrictFunction,
   args: readonly unknown[],
-  lazy?: (...args: any) => LazyEvaluator,
+  lazy?: LazyDefinition["lazy"],
   // TODO: We can probably provide better typing to the return type...
 ): unknown {
-  // @ts-expect-error [ts2345] -- This error is accurate because we don't know
+  // @ts-expect-error [ts2322] -- This error is accurate because we don't know
   // anything about `fn` so can't ensure that we are passing the correct
   // arguments to it, we just have to trust that the caller knows what they are
   // doing.
-  const dataLast = (data: unknown): unknown => fn(data, ...args);
+  const implementation: (...args: readonly unknown[]) => unknown = fn;
 
-  return lazy === undefined
-    ? dataLast
-    : Object.assign(dataLast, { lazy, lazyArgs: args });
+  // Spreading `args` into the call goes through a generic builtin on every
+  // invocation of the data-last function, so the most common data-last arity,
+  // a single argument, is passed directly.
+  const dataLast: DataLast =
+    args.length === 1
+      ? (data) => implementation(data, args[0])
+      : (data) => implementation(data, ...args);
+
+  if (lazy !== undefined) {
+    dataLast.lazy = lazy;
+    dataLast.lazyArgs = args;
+  }
+
+  return dataLast;
 }
+
+type DataLast = ((data: unknown) => unknown) & {
+  lazy?: LazyDefinition["lazy"];
+  lazyArgs?: readonly unknown[];
+};

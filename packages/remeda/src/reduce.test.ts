@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import { add } from "./add";
 import { pipe } from "./pipe";
 import { reduce } from "./reduce";
 
@@ -24,6 +25,10 @@ describe("data first", () => {
         100,
       ),
     ).toBe(115);
+  });
+
+  test("a purried reducer runs data-first", () => {
+    expect(reduce([1, 2, 3], add, 0)).toBe(6);
   });
 });
 

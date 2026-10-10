@@ -1,8 +1,9 @@
+import { purryWithLazy } from "./internal/purryWithLazy";
+import { canReadData, requireData } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
-import { purry } from "./purry";
 
 /**
  * Creates a new array populated with the results of calling a provided function
@@ -51,7 +52,7 @@ export function map<T extends IterableContainer, U>(
 ): (data: T) => Mapped<T, U>;
 
 export function map(...args: readonly unknown[]): unknown {
-  return purry(mapImplementation, args, lazyImplementation);
+  return purryWithLazy(mapImplementation, args, lazyImplementation);
 }
 
 const mapImplementation = <T, U>(
@@ -59,12 +60,15 @@ const mapImplementation = <T, U>(
   callbackfn: (value: T, index: number, data: readonly T[]) => U,
 ): U[] => data.map(callbackfn);
 
-const lazyImplementation =
-  <T, U>(
-    callbackfn: (value: T, index: number, data: readonly T[]) => U,
-  ): LazyEvaluator<T, U> =>
-  (value, index, data) => ({
-    done: false,
-    hasNext: true,
-    next: callbackfn(value, index, data),
-  });
+const lazyImplementation = <T, U>(
+  callbackfn: (value: T, index: number, data: readonly T[]) => U,
+): LazyEvaluator<T, U> =>
+  canReadData(callbackfn)
+    ? requireData((value, index, data) => callbackfn(value, index, data))
+    : // A callback that doesn't read `data` already is a complete evaluator,
+      // and using it directly saves a call per item. It is never marked:
+      // `requireData` only marks the wrapper above. It also receives the
+      // pipe's slot as a 4th argument, which it doesn't declare, so it is
+      // visible only through the arity holes (`arguments`, or a trailing rest
+      // parameter such as `(value, index, ...rest)`).
+      callbackfn;
