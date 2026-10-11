@@ -1,10 +1,6 @@
 import type { LazyDefinition } from "./types/LazyDefinition";
+import type { SimplifiedWritable } from "./types/SimplifiedWritable";
 import type { StrictFunction } from "./types/StrictFunction";
-
-type DataLast = ((data: unknown) => unknown) & {
-  lazy?: LazyDefinition["lazy"];
-  lazyArgs?: LazyDefinition["lazyArgs"];
-};
 
 /**
  * Use this helper function to build the data last implementation together with
@@ -28,14 +24,15 @@ export function lazyDataLastImpl(
   // Spreading `args` into the call goes through a generic builtin on every
   // invocation of the data-last function, so the most common data-last arity,
   // a single argument, is passed directly.
-  const dataLast: DataLast =
+  const dataLast =
     args.length === 1
-      ? (data) => implementation(data, args[0])
-      : (data) => implementation(data, ...args);
+      ? (data: unknown) => implementation(data, args[0])
+      : (data: unknown) => implementation(data, ...args);
 
   if (lazy !== undefined) {
-    dataLast.lazy = lazy;
-    dataLast.lazyArgs = args;
+    // We are injecting the props onto the function itself!
+    (dataLast as unknown as SimplifiedWritable<LazyDefinition>).lazy = lazy;
+    (dataLast as unknown as SimplifiedWritable<LazyDefinition>).lazyArgs = args;
   }
 
   return dataLast;
