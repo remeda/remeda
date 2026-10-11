@@ -1,15 +1,16 @@
-import type { Tagged, Writable } from "type-fest";
+// A lazy evaluator answers `pipe` with the item itself, or with one of the
+// control symbols defined here to skip the item, stop, or expand it. Controls
+// are told apart from user items by identity alone, so `pipe` never touches an
+// item to classify it, and items that are proxies (e.g. reactive stores) see
+// no probe. Each control is a registered symbol, which no ordinary value is:
+// JSON can't produce one, and code has to ask the registry for these exact
+// keys. They are registered rather than module-private so that separate copies
+// of Remeda in one program (two installed versions, or the ESM and CJS builds
+// side by side) interoperate while they share this protocol. Mixing copies on
+// different protocols in one pipe is unsupported; changing the keys along with
+// the protocol keeps a future shape change from being read as this one.
 
-// Controls are told apart from user items by identity alone, so `pipe` never
-// touches an item to classify it, and items that are proxies (e.g. reactive
-// stores) see no probe. Each control is a registered symbol, which no ordinary
-// value is: JSON can't produce one, and code has to ask the registry for these
-// exact keys. They are registered rather than module-private so that separate
-// copies of Remeda in one program (two installed versions, or the ESM and CJS
-// builds side by side) interoperate while they share this protocol. Mixing
-// copies on different protocols in one pipe is unsupported; changing the keys
-// along with the protocol keeps a future shape change from being read as this
-// one.
+import type { Tagged, Writable } from "type-fest";
 
 /**
  * Skip the current item: nothing reaches the next step.
