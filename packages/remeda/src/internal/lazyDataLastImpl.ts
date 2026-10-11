@@ -15,19 +15,29 @@ export function lazyDataLastImpl(
   lazy?: LazyDefinition["lazy"],
   // TODO: We can probably provide better typing to the return type...
 ): unknown {
-  // @ts-expect-error [ts2322] -- This error is accurate because we don't know
-  // anything about `fn` so can't ensure that we are passing the correct
-  // arguments to it, we just have to trust that the caller knows what they are
-  // doing.
-  const implementation: (...args: readonly unknown[]) => unknown = fn;
-
-  // Spreading `args` into the call goes through a generic builtin on every
-  // invocation of the data-last function, so the most common data-last arity,
-  // a single argument, is passed directly.
   const dataLast =
     args.length === 1
-      ? (data: unknown) => implementation(data, args[0])
-      : (data: unknown) => implementation(data, ...args);
+      ? // Spreading `args` into the call goes through a generic builtin on
+        // every invocation of the data-last function, so the most common
+        // data-last arity, a single argument, is passed directly.
+        (data: unknown) =>
+          fn(
+            // @ts-expect-error [ts2345] -- This error is accurate because we
+            // don't know anything about `fn` so can't ensure that we are
+            // passing the correct arguments to it, we just have to trust that
+            // the caller knows what they are doing.
+            data,
+            args[0],
+          )
+      : (data: unknown) =>
+          fn(
+            // @ts-expect-error [ts2345] -- This error is accurate because we
+            // don't know anything about `fn` so can't ensure that we are
+            // passing the correct arguments to it, we just have to trust that
+            // the caller knows what they are doing.
+            data,
+            ...args,
+          );
 
   if (lazy !== undefined) {
     // We are injecting the props onto the function itself!
