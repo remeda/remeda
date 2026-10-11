@@ -3,12 +3,12 @@ import type { LazyDefinition } from "./types/LazyDefinition";
 import type { StrictFunction } from "./types/StrictFunction";
 
 /**
- * A re-implementation of `purry` that allows passing a lazy function to the
- * internal `lazyDataLastImpl` which is not allowed in the exported `purry`
- * function we provide to users.
+ * An internal-only re-implementation of `purry` that allows passing a lazy
+ * function to the `lazyDataLastImpl`.
  *
- * Lazy implementations depend on the internal lazy protocol (`lazyControl`),
- * which we don't export or support.
+ * This is done as a copy instead of having `purry` call it so that utilities
+ * that are not lazy don't end up importing the whole lazy machinery they don't
+ * use or need.
  */
 export const purryWithLazy = (
   fn: StrictFunction,
