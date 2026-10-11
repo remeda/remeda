@@ -26,11 +26,8 @@ export function processSingleLazyStep(
   const lazyEvaluator = lazy(...lazyArgs);
 
   // `dataBuffer` exists only when the evaluator requires `data`, so it doubles
-  // as the flag for filling it; every other evaluator sees
-  // `UNEXPECTED_ACCESS_SENTINEL`.
-  const dataBuffer: unknown[] | undefined = lazyEvaluator.requiresData
-    ? []
-    : undefined;
+  // as the flag for filling it.
+  const dataBuffer = lazyEvaluator.requiresData ? ([] as unknown[]) : undefined;
   const items = dataBuffer ?? UNEXPECTED_ACCESS_SENTINEL;
 
   const slot = createLazySlot();
@@ -38,11 +35,8 @@ export function processSingleLazyStep(
   let index = 0;
 
   if (Array.isArray(iterable)) {
-    // In V8, a `for...of` that has only ever seen arrays skips the iterator
-    // protocol; the generic loop below also sees sets, strings and generators,
-    // so it can't. Both loops iterate rather than index, so a reactive array
-    // that instruments iteration tracks one dependency instead of one per
-    // index.
+    // Iterated rather than indexed, so a reactive array that instruments
+    // iteration tracks one dependency instead of one per index.
     for (const value of iterable) {
       dataBuffer?.push(value);
 
@@ -56,7 +50,7 @@ export function processSingleLazyStep(
         break;
       }
     }
-    // eslint-disable-next-line unicorn/no-duplicate-if-branches -- Identical on purpose: each loop is its own iteration site (see above), which is what lets the compiler specialize the first one for arrays.
+    // eslint-disable-next-line unicorn/no-duplicate-if-branches -- Intentional! Identical on purpose. In V8, a `for...of` that has only ever seen arrays skips the iterator protocol; each loop is its own iteration site, which is what lets the compiler specialize the first one for arrays, that sets, strings and generators never reach.
   } else {
     for (const value of iterable) {
       dataBuffer?.push(value);
