@@ -1,7 +1,6 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
-import type { BrandedReturn } from "./internal/types/BrandedReturn";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
@@ -26,7 +25,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  */
 export function uniqueBy<T extends IterableContainer>(
   data: T,
-  keyFunction: (value: T[number], index: number, data: T) => unknown,
+  keyFunction: (value: T[number], index: number, data: Readonly<T>) => unknown,
 ): Deduped<T>;
 
 /**
@@ -77,16 +76,13 @@ function uniqueByImplementation<T>(
 function lazyImplementation<T>(
   keyFunction: (item: T, index: number, data: readonly T[]) => unknown,
 ): LazyEvaluator<T> {
-  // @see https://github.com/typescript-eslint/typescript-eslint/issues/9885
-  const brandedKeyFunction = keyFunction as BrandedReturn<typeof keyFunction>;
-
-  const set = new Set<ReturnType<typeof brandedKeyFunction>>();
-  return requireDataByArity(brandedKeyFunction, (value, index, data) => {
-    const key = brandedKeyFunction(value, index, data);
+  const seenKeys = new Set<unknown>();
+  return requireDataByArity(keyFunction, (value, index, data) => {
+    const key = keyFunction(value, index, data);
     // `add` leaves the set unchanged for a key it already holds, so the size
     // tells duplicates apart with a single hash lookup per item.
-    const sizeBefore = set.size;
-    set.add(key);
-    return set.size === sizeBefore ? SKIP_ITEM : value;
+    const sizeBefore = seenKeys.size;
+    seenKeys.add(key);
+    return seenKeys.size === sizeBefore ? SKIP_ITEM : value;
   });
 }

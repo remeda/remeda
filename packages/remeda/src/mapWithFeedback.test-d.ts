@@ -55,6 +55,18 @@ test("data param is complete in data-first", () => {
   );
 });
 
+test("data param is readonly for a mutable array in data-first", () => {
+  mapWithFeedback(
+    [1, 2, 3] as number[],
+    (_previousValue, _currentValue, _currentIndex, data) => {
+      expectTypeOf(data).toEqualTypeOf<readonly number[]>();
+
+      return 0;
+    },
+    0,
+  );
+});
+
 test("data param is lazily reconstructed in data-last", () => {
   pipe(
     [1, 2, 3] as const,

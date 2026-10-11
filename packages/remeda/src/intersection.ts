@@ -2,6 +2,7 @@ import {
   lastLazyValue,
   lazyEmptyEvaluator,
   SKIP_ITEM,
+  type LazyResult,
 } from "./internal/lazyControl";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -50,19 +51,19 @@ export function intersection(...args: readonly unknown[]): unknown {
   return purryWithLazy(intersectionImplementation, args, lazyImplementation);
 }
 
-function intersectionImplementation<T>(
+function intersectionImplementation<T, S>(
   data: readonly T[],
-  other: readonly unknown[],
-): T[] {
+  other: readonly S[],
+): (S & T)[] {
   // Each copy in `other` matches a single occurrence in `data`, so the map
   // counts the copies that are still unmatched. A value leaves the map once
   // all its copies are matched, so an empty map ends the search early.
-  const remaining = new Map<unknown, number>();
+  const remaining = new Map<S | T, number>();
   for (const value of other) {
     remaining.set(value, (remaining.get(value) ?? 0) + 1);
   }
 
-  const result: T[] = [];
+  const result: (S & T)[] = [];
   for (const value of data) {
     if (remaining.size === 0) {
       break;
@@ -70,7 +71,10 @@ function intersectionImplementation<T>(
 
     const copies = remaining.get(value);
     if (copies !== undefined) {
-      result.push(value);
+      result.push(
+        // @ts-expect-error [ts2345] -- `value` is `T & S` here semantically, but TypeScript can't infer it via this implementation.
+        value,
+      );
       if (copies === 1) {
         remaining.delete(value);
       } else {
@@ -95,12 +99,12 @@ function lazyImplementation<T, S>(
     remaining.set(value, (remaining.get(value) ?? 0) + 1);
   }
 
-  return (value, _index, _data, slot) => {
+  return (value, _index, _data, slot): LazyResult<S & T> => {
     const copies = remaining.get(value);
 
-    if (copies === undefined || copies === 0) {
-      // The item is either not part of the other array or we've "used" enough
-      // copies of it so we skip the remaining values.
+    if (copies === undefined) {
+      // The item is either not part of the other array or all its copies were
+      // already matched (they leave the map below), so we skip it.
       return SKIP_ITEM;
     }
 
@@ -113,11 +117,11 @@ function lazyImplementation<T, S>(
       remaining.set(value, copies - 1);
     }
 
-    // We can safely cast here because if value was in the `remaining` map, it
-    // has to be of type S (that's just how we built it).
-    const matched = value as S & T;
-
     // We can stop the iteration if the remaining map is empty.
-    return remaining.size === 0 ? lastLazyValue(matched, slot) : matched;
+    return remaining.size === 0
+      ? // @ts-expect-error [ts2322] -- `value` is `T & S` here semantically, but TypeScript can't infer it via this implementation.
+        lastLazyValue(value, slot)
+      : // @ts-expect-error [ts2322] -- `value` is `T & S` here semantically, but TypeScript can't infer it via this implementation.
+        value;
   };
 }

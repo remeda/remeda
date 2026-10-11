@@ -38,8 +38,8 @@ describe("unexpected access sentinel", () => {
     expect(operation).toThrow(/^Remeda: /u);
   });
 
-  // Curried functions (e.g. Ramda's) probe every argument they receive for a
-  // placeholder marker, so one used as a callback probes `data` too.
+  // A curried function may probe every argument it receives for a placeholder
+  // marker, so one used as a callback probes `data` too.
   test("a placeholder probe reads nothing", () => {
     expect(Reflect.get(data, "@@functional/placeholder")).toBeUndefined();
   });

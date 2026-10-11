@@ -29,3 +29,21 @@ describe("runtime (dataFirst)", () => {
     expect(rankBy(data, 6, identity())).toBe(3);
   });
 });
+
+describe("known issues!", () => {
+  test("a function `item` is read as an order rule", () => {
+    const result = rankBy(
+      [() => "foo"],
+      () => "bar",
+      () => 0,
+    );
+
+    // The 2nd argument to `rankBy` represents an item in the array, but
+    // because it is a function it is detected as a projection rule, which
+    // causes our purrying logic to fail to detect this as a data-first call.
+    expect(result).not.toBe(0);
+
+    // It is curried as a data-last call instead.
+    expect(result).toBeTypeOf("function");
+  });
+});

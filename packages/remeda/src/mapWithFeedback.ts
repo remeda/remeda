@@ -9,7 +9,7 @@ type FeedbackCallback<T extends IterableContainer, U> = (
   previousValue: U,
   currentValue: T[number],
   currentIndex: number,
-  data: T,
+  data: Readonly<T>,
 ) => U;
 
 // Inside `pipe` the data flows through lazily, so the callback only sees the
@@ -82,12 +82,7 @@ export function mapWithFeedback(...args: readonly unknown[]): unknown {
 
 function mapWithFeedbackImplementation<T, U>(
   data: readonly T[],
-  reducer: (
-    previousValue: U,
-    currentValue: T,
-    index: number,
-    data: readonly T[],
-  ) => U,
+  reducer: FeedbackCallback<readonly T[], U>,
   initialValue: U,
 ): U[] {
   const result: U[] = [];
@@ -102,12 +97,7 @@ function mapWithFeedbackImplementation<T, U>(
 }
 
 const lazyImplementation = <T, U>(
-  reducer: (
-    previousValue: U,
-    currentValue: T,
-    index: number,
-    data: readonly T[],
-  ) => U,
+  reducer: FeedbackCallback<readonly T[], U>,
   initialValue: U,
 ): LazyEvaluator<T, U> => {
   let previousValue = initialValue;

@@ -25,6 +25,21 @@ describe("data_first", () => {
     expect(uniqueWith([1, 1, 2, 2], (a, b) => a === b)).toStrictEqual([1, 2]);
   });
 
+  test("returns a shallow clone when no items are equal", () => {
+    const data = [1, 2, 3];
+    const result = uniqueWith(data, (a, b) => a === b);
+
+    expect(result).toStrictEqual(data);
+    expect(result).not.toBe(data);
+  });
+
+  test("compares with every earlier item, not just the kept ones", () => {
+    expect(
+      // `3` is equal only to `2`, which is dropped for being equal to `1`.
+      uniqueWith([1, 2, 3], (a, b) => Math.abs(a - b) === 1),
+    ).toStrictEqual([1]);
+  });
+
   test("should return items that are not equal to themselves", () => {
     // test case based on https://github.com/remeda/remeda/issues/999
     const data = [
@@ -54,6 +69,16 @@ describe("data_first", () => {
 describe("data_last", () => {
   test("should return uniq", () => {
     expect(uniqueWith(isDeepEqual)(source)).toStrictEqual(expected);
+  });
+
+  test("compares with every earlier item, not just the kept ones", () => {
+    expect(
+      pipe(
+        // `3` is equal only to `2`, which is dropped for being equal to `1`.
+        [1, 2, 3],
+        uniqueWith((a, b) => Math.abs(a - b) === 1),
+      ),
+    ).toStrictEqual([1]);
   });
 
   test("should return items that are not equal to themselves", () => {

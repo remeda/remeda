@@ -12,7 +12,7 @@ const item = fc.oneof(
   fc.constantFrom(NaN, -0, "0", { id: 0 }, { id: 0 }),
 );
 
-// Both calling styles read a hole as `undefined`.
+// Both calling styles treat a hole the same way.
 const items = fc.oneof(fc.array(item), fc.sparseArray(item));
 
 // A generated comparator is neither symmetric nor transitive, so the result

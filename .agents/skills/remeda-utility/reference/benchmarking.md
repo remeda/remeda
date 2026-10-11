@@ -124,7 +124,7 @@ Every candidate also gets a bytes check: bundle size per import set, minified an
 
 ## The deopt lottery
 
-In PR #1444's main run, every multi-function non-lazy pipe of the branch read either slow or fast, nothing in between, and all of them switched together: the slow mode read 1.24-1.36x main on scalar pipes of arrow functions and 1.10-1.16x on scalar pipes of data-last utilities, the fast mode 0.88-0.95x. Which copies landed in the slow mode changed with the rotation, independently of their code: a variant that never touched the code path looked about 30% faster than the branch whenever its position put it in the fast mode. The slow mode showed on Node 24 too, and never on Node 22, Bun, the bundle, CJS, the vitest-free runner, `--jitless` or `--max-opt`; one copy per process read 1.045x.
+In PR #1444's main run, every multi-function non-lazy pipe of the branch read either slow or fast, nothing in between, and all of them switched together: the slow mode read 1.24-1.36x pre-#1444 main on scalar pipes of arrow functions and 1.10-1.16x on scalar pipes of data-last utilities, the fast mode 0.88-0.95x. Which copies landed in the slow mode changed with the rotation, independently of their code: a variant that never touched the code path looked about 30% faster than the branch whenever its position put it in the fast mode. The slow mode showed on Node 24 too, and never on Node 22, Bun, the bundle, CJS, the vitest-free runner, `--jitless` or `--max-opt`; one copy per process read 1.045x.
 
 Signs of a lottery:
 
@@ -133,7 +133,7 @@ Signs of a lottery:
 - the mode following the position across rotations rather than the copy;
 - the effect vanishing under other loaders, runtimes or JIT tiers.
 
-Tabulate the mode per (run, position, copy), and confirm it on a minimal repro with `--trace-opt --trace-deopt`. Keep it out of variant verdicts, and treat it as a hazard of the code shape: production processes have a history too. Here the cause was the step array `pipe` built up front for every pipe of two or more functions. Building each lazy run on demand removed the slow mode from every run (0.58-0.60x main).
+Tabulate the mode per (run, position, copy), and confirm it on a minimal repro with `--trace-opt --trace-deopt`. Keep it out of variant verdicts, and treat it as a hazard of the code shape: production processes have a history too. Here the cause was the step array `pipe` built up front for every pipe of two or more functions. Building each lazy run on demand removed the slow mode from every run (0.58-0.60x pre-#1444 main).
 
 ## The harness
 

@@ -4,6 +4,11 @@ import type { StrictFunction } from "./internal/types/StrictFunction";
 /**
  * Creates a function with `dataFirst` and `dataLast` signatures.
  *
+ * When `args` has at least `fn.length` items (`Function.length` counts the
+ * parameters before the first defaulted or rest one), `fn` is called with all
+ * of them, extra ones included (data-first). Otherwise `purry` returns a
+ * function that takes the data and calls `fn(data, ...args)` (data-last).
+ *
  * `purry` is a dynamic function and it's not type safe. It should be wrapped by
  * a function that have proper typings. Refer to the example below for correct
  * usage.

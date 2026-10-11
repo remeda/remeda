@@ -22,6 +22,14 @@ test("handles uniq by identity", () => {
   ]);
 });
 
+test("returns a shallow clone when no key repeats", () => {
+  const data = [1, 2, 3];
+  const result = uniqueBy(data, identity());
+
+  expect(result).toStrictEqual(data);
+  expect(result).not.toBe(data);
+});
+
 test("returns people with uniq names", () => {
   expect(uniqueBy(PEOPLE, (p) => p.name)).toStrictEqual([
     { name: "John", age: 42 },

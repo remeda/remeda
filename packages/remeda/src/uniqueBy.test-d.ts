@@ -11,6 +11,14 @@ describe("callback data param", () => {
     });
   });
 
+  test("readonly for a mutable array in data-first", () => {
+    uniqueBy([1, 2, 3] as number[], (_item, _index, data) => {
+      expectTypeOf(data).toEqualTypeOf<readonly number[]>();
+
+      return 0;
+    });
+  });
+
   test("lazily reconstructed in data-last", () => {
     pipe(
       [1, 2, 3] as const,

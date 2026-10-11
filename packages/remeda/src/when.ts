@@ -146,8 +146,12 @@ export function when(...args: readonly unknown[]): unknown {
         // treats as reading `data`, so a lazy step passes its `data` array on
         // to `when`'s functions.
         const [data, ...extraArgs] = dataAndExtraArgs;
-        // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
-        return whenImplementation(data, ...args, ...extraArgs);
+        return whenImplementation(
+          data,
+          // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
+          ...args,
+          ...extraArgs,
+        );
       }
     : // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
       whenImplementation(...args);

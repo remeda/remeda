@@ -18,7 +18,8 @@ type RequireDataByArityOptions = {
 };
 
 /**
- * Marks an evaluator that reads `data` itself, so `pipe` must always buffer.
+ * Marks an evaluator that always needs `data`, because it reads it itself or
+ * forwards it to a callback known to read it, so `pipe` must always buffer.
  * The marker is applied by mutating `evaluator`, so callers must pass a freshly
  * created closure, never a shared singleton or the user's callback itself.
  */
@@ -58,13 +59,15 @@ export const requireDataByArity = <T, R>(
  * on its signature.
  *
  * `Function.length` counts only the plain parameters before the first rest or
- * defaulted one. It is 0 for wrappers that forward `arguments` (memoize,
- * debounce), which we can't see through, so those count as reading it too.
+ * defaulted one. It is 0 for callbacks that declare no parameters, and for
+ * wrappers that forward `arguments` (memoize, debounce), which we can't see
+ * through, so all of those count as reading it.
  *
  * Three holes are documented rather than guarded: a default value on `data` or
- * any parameter before it (`(value, index, data = []) => ...` reports 2),
- * `arguments[i]` access, and a trailing rest parameter
- * (`(value, index, ...rest) => ...` reports 2).
+ * any parameter before it (`(value, index, data = []) => ...` reports 2), a
+ * callback that declares some parameters and reads `data` through `arguments`
+ * (`function (value) { return arguments[2]; }` reports 1), and a trailing rest
+ * parameter (`(value, index, ...rest) => ...` reports 2).
  * A callback that falls through one of them receives
  * `UNEXPECTED_ACCESS_SENTINEL`, which throws when used as an array or written
  * to.

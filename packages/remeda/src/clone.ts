@@ -42,11 +42,9 @@ export function clone(...args: readonly unknown[]): unknown {
   return purry(cloneImplementation, args);
 }
 
-function cloneImplementation<T>(
-  value: T,
-  refFrom: unknown[] = [],
-  refTo: unknown[] = [],
-): T {
+const cloneImplementation = <T>(value: T): T => cloneValue(value, [], []);
+
+function cloneValue<T>(value: T, refFrom: unknown[], refTo: unknown[]): T {
   if (typeof value === "function") {
     // Functions aren't cloned, we return the same instance.
     return value;
@@ -101,7 +99,7 @@ function deepCloneObject<T extends object>(
   refTo.push(copiedValue);
 
   for (const [k, v] of Object.entries(value)) {
-    copiedValue[k] = cloneImplementation(v, refFrom, refTo);
+    copiedValue[k] = cloneValue(v, refFrom, refTo);
   }
 
   return copiedValue as T;
@@ -119,7 +117,7 @@ function deepCloneArray<T extends readonly unknown[]>(
   refTo.push(copiedValue);
 
   for (const [index, item] of value.entries()) {
-    copiedValue[index] = cloneImplementation(item, refFrom, refTo);
+    copiedValue[index] = cloneValue(item, refFrom, refTo);
   }
 
   return copiedValue as unknown as T;

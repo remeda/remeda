@@ -29,7 +29,7 @@ import type { TupleParts } from "./TupleParts";
  * and can corrupt future iterations.
  *
  * @example
- *   // data-first (eager, via `purry`)
+ *   // data-first (eager)
  *   function map<T extends IterableContainer, U>(
  *     data: T,
  *     callbackfn: (value: T[number], index: number, data: T) => U,

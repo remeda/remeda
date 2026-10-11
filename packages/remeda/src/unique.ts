@@ -59,12 +59,12 @@ function uniqueImplementation<T>(data: readonly T[]): T[] {
 }
 
 function lazyImplementation<T>(): LazyEvaluator<T> {
-  const set = new Set<T>();
+  const seen = new Set<T>();
   return (value) => {
     // `add` leaves the set unchanged for a value it already holds, so the size
     // tells duplicates apart with a single hash lookup per item.
-    const sizeBefore = set.size;
-    set.add(value);
-    return set.size === sizeBefore ? SKIP_ITEM : value;
+    const sizeBefore = seen.size;
+    seen.add(value);
+    return seen.size === sizeBefore ? SKIP_ITEM : value;
   };
 }

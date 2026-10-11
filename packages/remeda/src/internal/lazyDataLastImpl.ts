@@ -1,6 +1,11 @@
 import type { LazyDefinition } from "./types/LazyDefinition";
 import type { StrictFunction } from "./types/StrictFunction";
 
+type DataLast = ((data: unknown) => unknown) & {
+  lazy?: LazyDefinition["lazy"];
+  lazyArgs?: LazyDefinition["lazyArgs"];
+};
+
 /**
  * Use this helper function to build the data last implementation together with
  * a lazy implementation. Use this when you need to build your own purrying
@@ -35,8 +40,3 @@ export function lazyDataLastImpl(
 
   return dataLast;
 }
-
-type DataLast = ((data: unknown) => unknown) & {
-  lazy?: LazyDefinition["lazy"];
-  lazyArgs?: readonly unknown[];
-};
