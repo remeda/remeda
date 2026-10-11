@@ -36,19 +36,7 @@ export const LAST: unique symbol = Symbol.for("remeda/lazy/last");
  */
 export const MANY: unique symbol = Symbol.for("remeda/lazy/many");
 
-// The payload travels in the slot, so the tag is what ties its type to the
-// control: `LAST` and `MANY` only typecheck as the result of the helpers that
-// write a payload of the evaluator's declared result type.
-type LazyLast<T> = Tagged<typeof LAST, "RemedaLazyLast", T>;
-type LazyMany<T> = Tagged<typeof MANY, "RemedaLazyMany", readonly T[]>;
-
-/**
- * A lazy evaluator returns the (possibly transformed) item itself in the
- * common case, and one of the controls above for anything else it needs to
- * tell `pipe` (skip, stop, expand).
- */
-export type LazyResult<T> =
-  T | LazyLast<T> | LazyMany<T> | typeof SKIP_ITEM | typeof STOP;
+const NO_VALUES: readonly unknown[] = [];
 
 /**
  * Where an evaluator leaves the payload of a `LAST` or `MANY` result. The pipe
@@ -62,7 +50,19 @@ export type LazySlot = {
   readonly values: readonly unknown[];
 };
 
-const NO_VALUES: readonly unknown[] = [];
+/**
+ * A lazy evaluator returns the (possibly transformed) item itself in the
+ * common case, and one of the controls above for anything else it needs to
+ * tell `pipe` (skip, stop, expand).
+ */
+export type LazyResult<T> =
+  T | LazyLast<T> | LazyMany<T> | typeof SKIP_ITEM | typeof STOP;
+
+// The payload travels in the slot, so the tag is what ties its type to the
+// control: `LAST` and `MANY` only typecheck as the result of the helpers that
+// write a payload of the evaluator's declared result type.
+type LazyLast<T> = Tagged<typeof LAST, "RemedaLazyLast", T>;
+type LazyMany<T> = Tagged<typeof MANY, "RemedaLazyMany", readonly T[]>;
 
 export const createLazySlot = (): LazySlot => ({
   value: undefined,
