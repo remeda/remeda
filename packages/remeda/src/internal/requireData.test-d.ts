@@ -11,13 +11,11 @@ test("an evaluator returning the declared type", () => {
 });
 
 test("an evaluator returning another type", () => {
-  numberEvaluator(
-    requireData(
-      () =>
-        // @ts-expect-error [ts2322] -- `requireData` takes its types from the
-        // declared evaluator type alone, so the mismatch is reported at the
-        // evaluator's own return expression.
-        "x",
-    ),
-  );
+  // TODO [>2]: Split the evaluator onto its own lines so the directive pins the
+  // error to its return expression. Our `NoInfer` polyfill doesn't block
+  // inference the way the native one (TypeScript 5.4) does, so on older
+  // versions the error lands on the `requireData` call instead.
+  // @ts-expect-error [ts2322] -- The evaluator returns a string where the
+  // declared evaluator type expects a number.
+  numberEvaluator(requireData(() => "x"));
 });
