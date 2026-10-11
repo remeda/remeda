@@ -439,6 +439,15 @@ describe("lazy", () => {
           ),
       ],
       [
+        "a run of one step",
+        (data: readonly number[]) =>
+          pipe(
+            data,
+            identity(),
+            map((x) => x),
+          ),
+      ],
+      [
         "fused steps",
         (data: readonly number[]) =>
           pipe(
@@ -657,16 +666,6 @@ describe("lazy", () => {
 
       expect(() => data?.at(0)).toThrow(/^Remeda: /u);
     });
-
-    test("a non-lazy function alongside it opts the pipe out", () => {
-      const result = pipe(
-        [1, 2, 3],
-        map((x) => x * 10),
-        (values) => values.join(","),
-      );
-
-      expect(result).toBe("10,20,30");
-    });
   });
 
   test("reused among several fused lazy steps, starts fresh on every run", () => {
@@ -687,15 +686,38 @@ describe("lazy", () => {
     ]);
   });
 
-  test("one lazy function between two non-lazy ones", () => {
-    const result = pipe(
-      { inner: [1, 2, 3] },
-      prop("inner"),
-      map((x) => x * 10),
-      (values) => values.join(","),
-    );
+  describe("a run of one lazy function", () => {
+    test("between two non-lazy ones", () => {
+      expect(
+        pipe(
+          { inner: [1, 2, 3] },
+          prop("inner"),
+          map((x) => x * 10),
+          (values) => values.join(","),
+        ),
+      ).toBe("10,20,30");
+    });
 
-    expect(result).toBe("10,20,30");
+    test("callbacks receive the items processed so far", () => {
+      expect(
+        pipe(
+          { inner: [1, 2, 3] },
+          prop("inner"),
+          map((_value, _index, data) => [...data]),
+        ),
+      ).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+    });
+
+    test("pulls from a non-array iterable only until done", () => {
+      expect(
+        pipe(
+          naturals(),
+          identity(),
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
+          take(3),
+        ),
+      ).toStrictEqual([0, 1, 2]);
+    });
   });
 
   test("fused steps pull from a non-array iterable only until done", () => {
@@ -825,28 +847,6 @@ describe("lazy", () => {
   });
 });
 
-// Never finishes on its own, so only a pipe that stops pulling can consume it.
-function* naturals(): Generator<number> {
-  for (let value = 0; ; value++) {
-    yield value;
-  }
-}
-
-function* upTo(last: number): Generator<number> {
-  for (let value = 1; value <= last; value++) {
-    yield value;
-  }
-}
-
-// A `for...of` that exits early closes the generator, which runs its `finally`.
-function* closesWith(onClose: () => void): Generator<number> {
-  try {
-    yield* [1, 2, 3];
-  } finally {
-    onClose();
-  }
-}
-
 describe("known issues!", () => {
   test("default parameters hide `data` from the arity check", () => {
     // `Function.length` stops counting at the first parameter with a
@@ -897,3 +897,25 @@ describe("known issues!", () => {
     ).toThrow(/^Remeda: /u);
   });
 });
+
+// Never finishes on its own, so only a pipe that stops pulling can consume it.
+function* naturals(): Generator<number> {
+  for (let value = 0; ; value++) {
+    yield value;
+  }
+}
+
+function* upTo(last: number): Generator<number> {
+  for (let value = 1; value <= last; value++) {
+    yield value;
+  }
+}
+
+// A `for...of` that exits early closes the generator, which runs its `finally`.
+function* closesWith(onClose: () => void): Generator<number> {
+  try {
+    yield* [1, 2, 3];
+  } finally {
+    onClose();
+  }
+}
