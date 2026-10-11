@@ -14,19 +14,19 @@ import type { Tagged, Writable } from "type-fest";
 /**
  * Skip the current item: nothing reaches the next step.
  */
-export const SKIP_ITEM: unique symbol = Symbol.for("$$remedaLazySkip");
+export const SKIP_ITEM: unique symbol = Symbol.for("remeda/lazy/skip");
 
 /**
  * Stop the pipe without emitting anything.
  */
-export const STOP: unique symbol = Symbol.for("$$remedaLazyStop");
+export const STOP: unique symbol = Symbol.for("remeda/lazy/stop");
 
 /**
  * Emit the slot's `value` and stop the pipe.
  *
  * @see lastLazyValue
  */
-export const LAST: unique symbol = Symbol.for("$$remedaLazyLast");
+export const LAST: unique symbol = Symbol.for("remeda/lazy/last");
 
 /**
  * Feed every element of the slot's `values` through the rest of the pipe, one
@@ -34,7 +34,7 @@ export const LAST: unique symbol = Symbol.for("$$remedaLazyLast");
  *
  * @see manyLazyValues
  */
-export const MANY: unique symbol = Symbol.for("$$remedaLazyMany");
+export const MANY: unique symbol = Symbol.for("remeda/lazy/many");
 
 // The payload travels in the slot, so the tag is what ties its type to the
 // control: `LAST` and `MANY` only typecheck as the result of the helpers that

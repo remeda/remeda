@@ -388,7 +388,7 @@ describe("lazy", () => {
 
     test("symbols described like the controls pass through as data", () => {
       // Same description as a real control, but not the registered symbol.
-      const lookalike = Symbol("$$remedaLazySkip");
+      const lookalike = Symbol("remeda/lazy/skip");
 
       expect(
         pipe(
