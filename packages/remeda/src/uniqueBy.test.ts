@@ -86,6 +86,17 @@ describe(pipe, () => {
     expect(mock).toHaveNthReturnedWith(4, [1, 2, 2, 3]);
   });
 
+  test("doesn't collect the items processed so far for a key function without `data`", () => {
+    // `vi.fn` keeps its implementation's `length`, which is all the arity
+    // check reads.
+    const keyFunction = vi.fn<
+      (item: number, index: number, data: readonly number[]) => number
+    >((item, index) => item + index);
+    pipe([1, 2, 3], uniqueBy(keyFunction));
+
+    expect(() => keyFunction.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
+  });
+
   test("gets executed until target length is reached", () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
@@ -110,22 +121,5 @@ describe(pipe, () => {
 
     expect(counter.count).toHaveBeenCalledTimes(3);
     expect(result).toStrictEqual([1, 2]);
-  });
-});
-
-describe("known issues!", () => {
-  test("a trailing rest parameter hides `data` from the arity check", () => {
-    expect(() =>
-      pipe(
-        [1, 2, 3],
-        uniqueBy(
-          (_item, _index, ...rest) =>
-            // this callback reports a `length` of 2 and `rest[0]` is
-            // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so
-            // far.
-            rest[0].length,
-        ),
-      ),
-    ).toThrow(/^Remeda: /u);
   });
 });

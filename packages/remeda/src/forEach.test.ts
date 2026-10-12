@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from "vitest";
+import { expect, test, vi } from "vitest";
 import { forEach } from "./forEach";
 import { pipe } from "./pipe";
 import { take } from "./take";
@@ -46,6 +46,17 @@ test("pipe", () => {
   expect(result).not.toBe(data);
 });
 
+test("doesn't collect the items processed so far for a callback without `data`", () => {
+  // `vi.fn` keeps its implementation's `length`, which is all the arity
+  // check reads.
+  const callback = vi.fn<
+    (value: number, index: number, data: readonly number[]) => void
+  >((value, index) => value + index);
+  pipe([1, 2, 3], forEach(callback));
+
+  expect(() => callback.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
+});
+
 test("with take", () => {
   const count = vi.fn<() => void>();
   const result = pipe(
@@ -58,19 +69,4 @@ test("with take", () => {
 
   expect(count).toHaveBeenCalledTimes(2);
   expect(result).toStrictEqual([1, 2]);
-});
-
-describe("known issues!", () => {
-  test("a trailing rest parameter hides `data` from the arity check", () => {
-    expect(() =>
-      pipe(
-        [1, 2, 3],
-        forEach((_value, _index, ...rest) => {
-          // this callback reports a `length` of 2 and `rest[0]` is
-          // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so far.
-          rest[0].at(0);
-        }),
-      ),
-    ).toThrow(/^Remeda: /u);
-  });
 });

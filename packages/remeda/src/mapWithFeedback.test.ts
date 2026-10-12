@@ -102,26 +102,20 @@ describe("data last", () => {
       [1, 2, 3, 4, 5],
     ]);
   });
-});
 
-describe("known issues!", () => {
-  test("a trailing rest parameter hides `data` from the arity check", () => {
-    expect(() =>
-      pipe(
-        [1, 2, 3],
-        mapWithFeedback(
-          (
-            accumulator: number,
-            _value: number,
-            _index: number,
-            // this callback reports a `length` of 3 and `rest[0]` is
-            // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so
-            // far.
-            ...rest: readonly [readonly unknown[]]
-          ) => accumulator + rest[0].length,
-          0,
-        ),
-      ),
-    ).toThrow(/^Remeda: /u);
+  test("doesn't collect the items processed so far for a reducer without `data`", () => {
+    // `vi.fn` keeps its implementation's `length`, which is all the arity
+    // check reads.
+    const reducer = vi.fn<
+      (
+        accumulator: number,
+        value: number,
+        index: number,
+        data: readonly number[],
+      ) => number
+    >((accumulator, value, index) => accumulator + value + index);
+    pipe([1, 2, 3], mapWithFeedback(reducer, 0));
+
+    expect(() => reducer.mock.calls[0]?.[3]?.at(0)).toThrow(/^Remeda: /u);
   });
 });

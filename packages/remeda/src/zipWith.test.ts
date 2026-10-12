@@ -104,6 +104,22 @@ describe("data second with initial arg", () => {
     expect(mock).toHaveNthReturnedWith(3, [[1, 2, 3], other]);
   });
 
+  test("doesn't collect the first items processed so far for a zipper without `data`", () => {
+    // `vi.fn` keeps its implementation's `length`, which is all the arity
+    // check reads.
+    const zipper = vi.fn<
+      (
+        first: number,
+        second: string,
+        index: number,
+        data: readonly [readonly number[], readonly string[]],
+      ) => string
+    >((first, second, index) => `${first}${second}${index}`);
+    pipe([1, 2, 3], zipWith(["a", "b", "c"], zipper));
+
+    expect(() => zipper.mock.calls[0]?.[3]?.[0]?.at(0)).toThrow(/^Remeda: /u);
+  });
+
   test("should return empty when first is empty", () => {
     expect(
       pipe(
@@ -121,23 +137,5 @@ describe("data second with initial arg", () => {
         zipWith(["a", "b", "c"], (n, s) => `${n}${s}`),
       ),
     ).toStrictEqual(["2a", "4b", "6c"]);
-  });
-});
-
-describe("known issues!", () => {
-  test("a trailing rest parameter hides `data` from the arity check", () => {
-    expect(() =>
-      pipe(
-        [1, 2, 3],
-        zipWith(
-          ["a", "b", "c"],
-          (_first, _second, _index, ...rest) =>
-            // this callback reports a `length` of 3 and `rest[0][0]` is
-            // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so
-            // far.
-            rest[0][0].length,
-        ),
-      ),
-    ).toThrow(/^Remeda: /u);
   });
 });

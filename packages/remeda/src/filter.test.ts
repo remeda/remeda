@@ -73,22 +73,16 @@ describe("data_last", () => {
 
     expect(dataSnapshots).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
   });
-});
 
-describe("known issues!", () => {
-  test("a trailing rest parameter hides `data` from the arity check", () => {
-    expect(() =>
-      pipe(
-        [1, 2, 3],
-        filter(
-          (_value, _index, ...rest) =>
-            // this callback reports a `length` of 2 and `rest[0]` is
-            // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so
-            // far.
-            rest[0].length > 0,
-        ),
-      ),
-    ).toThrow(/^Remeda: /u);
+  test("doesn't collect the items processed so far for a predicate without `data`", () => {
+    // `vi.fn` keeps its implementation's `length`, which is all the arity
+    // check reads.
+    const predicate = vi.fn<
+      (value: number, index: number, data: readonly number[]) => boolean
+    >((value, index) => value > index);
+    pipe([1, 2, 3], filter(predicate));
+
+    expect(() => predicate.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
   });
 });
 

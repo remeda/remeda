@@ -67,20 +67,16 @@ describe("dataLast", () => {
       expect(mapper).toHaveNthReturnedWith(2, [1, 2]);
       expect(mapper).toHaveNthReturnedWith(3, [1, 2, 3]);
     });
-  });
-});
 
-describe("known issues!", () => {
-  test("a trailing rest parameter hides `data` from the arity check", () => {
-    expect(() =>
-      pipe(
-        [1, 2, 3],
-        flatMap((_value, _index, ...rest) => [
-          // this callback reports a `length` of 2 and `rest[0]` is
-          // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so far.
-          rest[0].length,
-        ]),
-      ),
-    ).toThrow(/^Remeda: /u);
+    test("doesn't collect the items processed so far for a callback without `data`", () => {
+      // `vi.fn` keeps its implementation's `length`, which is all the arity
+      // check reads.
+      const callback = vi.fn<
+        (value: number, index: number, data: readonly number[]) => number[]
+      >((value, index) => [value + index]);
+      pipe([1, 2, 3], flatMap(callback));
+
+      expect(() => callback.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
+    });
   });
 });
