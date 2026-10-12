@@ -1,70 +1,72 @@
 import { inspect } from "node:util";
-import { describe, expect, test } from "vitest";
+import { expect, test, describe } from "vitest";
 import { isDeepEqual } from "../isDeepEqual";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
 
-describe("unexpected access sentinel", () => {
-  // Typed the way the callbacks that receive it see it.
-  const data: readonly number[] = UNEXPECTED_ACCESS_SENTINEL;
+// Typed the way the callbacks that receive it see it.
+const DATA: readonly number[] = UNEXPECTED_ACCESS_SENTINEL;
 
+describe("throws", () => {
   test.each([
-    ["index access", () => data[0]],
-    ["length", () => data.length],
-    ["`map`", () => data.map((value) => value)],
-    ["`at`", () => data.at(0)],
-    ["iteration", () => [...data]],
-    ["string coercion", () => String(data)],
-    ["serialization", () => JSON.stringify(data)],
+    ["index access", () => DATA[0]],
+    ["length", () => DATA.length],
+    ["`map`", () => DATA.map((value) => value)],
+    ["`at`", () => DATA.at(0)],
+    ["iteration", () => [...DATA]],
+    ["string coercion", () => String(DATA)],
+    ["serialization", () => JSON.stringify(DATA)],
     // eslint-disable-next-line unicorn/prefer-spread -- `concat` is the subject: unlike a spread, it only spreads arguments that are arrays.
-    ["`concat` spreading it", () => [1].concat(data)],
-    ["`flat` spreading it", () => [data].flat()],
-    ["deep equality", () => isDeepEqual(data, [])],
-    ["`in` with an index", () => 0 in data],
-    ["`in` with an array method", () => "map" in data],
-    ["key enumeration", () => Object.keys(data)],
-    ["own index lookup", () => Object.hasOwn(data, 0)],
-    ["assignment", () => Reflect.set(data, 0, 1)],
+    ["`concat` spreading it", () => [1].concat(DATA)],
+    ["`flat` spreading it", () => [DATA].flat()],
+    ["deep equality", () => isDeepEqual(DATA, [])],
+    ["`in` with an index", () => 0 in DATA],
+    ["`in` with an array method", () => "map" in DATA],
+    ["key enumeration", () => Object.keys(DATA)],
+    ["own index lookup", () => Object.hasOwn(DATA, 0)],
+    ["assignment", () => Reflect.set(DATA, 0, 1)],
     [
       "property definition",
-      () => Reflect.defineProperty(data, "key", { value: 1 }),
+      () => Reflect.defineProperty(DATA, "key", { value: 1 }),
     ],
-    ["deletion", () => Reflect.deleteProperty(data, "key")],
-    ["preventing extensions", () => Reflect.preventExtensions(data)],
+    ["deletion", () => Reflect.deleteProperty(DATA, "key")],
+    ["preventing extensions", () => Reflect.preventExtensions(DATA)],
     [
       "prototype replacement",
-      () => Reflect.setPrototypeOf(data, Array.prototype),
+      () => Reflect.setPrototypeOf(DATA, Array.prototype),
     ],
   ])("throws on %s", (_name, operation) => {
     expect(operation).toThrow(/^Remeda: /u);
   });
+});
 
-  // A curried function may probe every argument it receives for a placeholder
-  // marker, so one used as a callback probes `data` too.
-  test("a placeholder probe reads nothing", () => {
-    expect(Reflect.get(data, "@@functional/placeholder")).toBeUndefined();
+describe("allows through", () => {
+  test("accessing a specific prop", () => {
+    expect(Reflect.get(DATA, "key")).toBeUndefined();
   });
 
-  test("a placeholder probe finds nothing", () => {
-    expect("@@functional/placeholder" in data).toBe(false);
+  test("checking a specific prop exists (in)", () => {
+    expect("key" in DATA).toBe(false);
   });
 
-  test("an own placeholder probe finds nothing", () => {
-    expect(Object.hasOwn(data, "@@functional/placeholder")).toBe(false);
+  test("checking a specific prop exists (hasOwn)", () => {
+    expect(Object.hasOwn(DATA, "key")).toBe(false);
   });
+});
 
+describe("looks like an array", () => {
   test("inherits from `Array.prototype`", () => {
-    expect(Object.getPrototypeOf(data)).toBe(Array.prototype);
+    expect(Object.getPrototypeOf(DATA)).toBe(Array.prototype);
   });
 
   test("is an array", () => {
-    expect(Array.isArray(data)).toBe(true);
+    expect(Array.isArray(DATA)).toBe(true);
   });
 
   test("is tagged as an array", () => {
-    expect(Object.prototype.toString.call(data)).toBe("[object Array]");
+    expect(Object.prototype.toString.call(DATA)).toBe("[object Array]");
   });
+});
 
-  test("explains itself when logged", () => {
-    expect(inspect(data)).toContain("Remeda: ");
-  });
+test("renders the error message when viewed by debuggers", () => {
+  expect(inspect(DATA)).toContain("Remeda: ");
 });
