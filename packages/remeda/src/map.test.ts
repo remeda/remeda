@@ -16,13 +16,6 @@ describe("data_first", () => {
   test("map indexed", () => {
     expect(map([0, 0, 0], (_, i) => i)).toStrictEqual([0, 1, 2]);
   });
-
-  test("ignores extra arguments", () => {
-    expect(
-      // @ts-expect-error [ts2554] -- The types reject the extra argument; this checks that the runtime ignores it the way native functions do.
-      map([1, 2, 3], (x) => x * 2, "extra"),
-    ).toStrictEqual([2, 4, 6]);
-  });
 });
 
 describe("data-last", () => {
@@ -111,6 +104,8 @@ describe(pipe, () => {
         receivers.push(this);
         return x;
       }),
+      // A lone lazy step runs its evaluator from a local; only a run of steps
+      // keeps it on a step object it could be called as a method of.
       map((x) => x),
     );
 

@@ -5,20 +5,11 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
 
-type FeedbackCallback<T extends IterableContainer, U> = (
+type FeedbackCallback<T extends IterableContainer, U, Data = T> = (
   previousValue: U,
   currentValue: T[number],
   currentIndex: number,
-  data: Readonly<T>,
-) => U;
-
-// Inside `pipe` the data flows through lazily, so the callback only sees the
-// items processed so far.
-type LazyFeedbackCallback<T extends IterableContainer, U> = (
-  previousValue: U,
-  currentValue: T[number],
-  currentIndex: number,
-  data: Readonly<NonEmptyPrefix<T>>,
+  data: Readonly<Data>,
 ) => U;
 
 /**
@@ -72,7 +63,7 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  * @category Array
  */
 export function mapWithFeedback<T extends IterableContainer, U>(
-  callbackfn: LazyFeedbackCallback<T, U>,
+  callbackfn: FeedbackCallback<T, U, NonEmptyPrefix<T>>,
   initialValue: U,
 ): (data: T) => Mapped<T, U>;
 
@@ -82,31 +73,37 @@ export function mapWithFeedback(...args: readonly unknown[]): unknown {
 
 function mapWithFeedbackImplementation<T, U>(
   data: readonly T[],
-  reducer: FeedbackCallback<readonly T[], U>,
+  callbackfn: FeedbackCallback<readonly T[], U>,
   initialValue: U,
 ): U[] {
-  const result: U[] = [];
   let previousValue = initialValue;
-  let index = 0;
+
+  const result: U[] = [];
   for (const currentValue of data) {
-    previousValue = reducer(previousValue, currentValue, index, data);
+    previousValue = callbackfn(
+      previousValue,
+      currentValue,
+      result.length,
+      data,
+    );
     result.push(previousValue);
-    index += 1;
   }
+
   return result;
 }
 
-const lazyImplementation = <T, U>(
-  reducer: FeedbackCallback<readonly T[], U>,
+function lazyImplementation<T, U>(
+  callbackfn: FeedbackCallback<readonly T[], U>,
   initialValue: U,
-): LazyEvaluator<T, U> => {
+): LazyEvaluator<T, U> {
   let previousValue = initialValue;
+
   return requireDataByArity(
-    reducer,
+    callbackfn,
     (currentValue, index, data) => {
-      previousValue = reducer(previousValue, currentValue, index, data);
+      previousValue = callbackfn(previousValue, currentValue, index, data);
       return previousValue;
     },
     { dataParameterIndex: 3 },
   );
-};
+}

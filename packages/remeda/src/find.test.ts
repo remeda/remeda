@@ -91,8 +91,6 @@ describe("data last", () => {
   });
 
   test("doesn't collect the items processed so far for a predicate without `data`", () => {
-    // `vi.fn` keeps its implementation's `length`, which is all the arity
-    // check reads.
     const predicate = vi.fn<
       (value: number, index: number, data: readonly number[]) => boolean
     >((value, index) => value > index);

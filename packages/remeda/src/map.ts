@@ -66,8 +66,5 @@ const lazyImplementation = <T, U>(
   canReadData(callbackfn)
     ? requireData((value, index, data) => callbackfn(value, index, data))
     : // A callback that doesn't read `data` already is a complete evaluator,
-      // and using it directly saves a call per item. It is never marked:
-      // `requireData` only marks the wrapper above. It also receives the
-      // pipe's slot as a 4th argument, which it can only see through the
-      // arity holes documented on `canReadData`.
+      // and using it directly saves a call per item.
       callbackfn;

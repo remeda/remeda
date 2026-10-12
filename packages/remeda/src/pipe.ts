@@ -18,8 +18,6 @@ import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/unexpectedAccessSentinel"
 type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
   readonly isSingle: true | undefined;
-  // Counted here rather than derived from `items`, which only fills for steps
-  // that require `data`.
   index: number;
 } & (
   | {
@@ -115,8 +113,7 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  *    }); //=> "[1, 2, 3, 4]" logged 4 times
  *
  *    // But with `pipe` data would only contain the items up to the current
- *    // index. A callback only receives `data` when it declares it as a
- *    // parameter.
+ *    // index.
  *    pipe([1, 2, 3, 4], forEach((_item, _index, data) => {
  *      console.log(data);
  *    })); //=> "[1]", "[1, 2]", "[1, 2, 3]", "[1, 2, 3, 4]"
@@ -313,8 +310,13 @@ export function pipe(
   if (functions.length === 1) {
     // The most common pipe, a single function, skips the loop below.
     const func = functions[0]!;
-    return "lazy" in func && isIterable(input)
-      ? processSingleLazyStep(input, func.lazy, func.lazyArgs)
+    return "lazy" in func
+      ? processSingleLazyStep(
+          // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
+          input,
+          func.lazy,
+          func.lazyArgs,
+        )
       : func(input);
   }
 
@@ -322,7 +324,7 @@ export function pipe(
   let functionIndex = 0;
   while (functionIndex < functions.length) {
     const func = functions[functionIndex]!;
-    if (!("lazy" in func) || !isIterable(output)) {
+    if (!("lazy" in func)) {
       output = func(output);
       functionIndex += 1;
       continue;
@@ -333,16 +335,24 @@ export function pipe(
       // A run of one lazy function is a lazy sequence of one step, which has
       // no cross-step bookkeeping to set up: the step array, the step object,
       // and the hand-off through them are all overhead.
-      output = processSingleLazyStep(output, func.lazy, func.lazyArgs);
+      output = processSingleLazyStep(
+        // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
+        output,
+        func.lazy,
+        func.lazyArgs,
+      );
       functionIndex += 1;
       continue;
     }
 
-    // Steps are built when the loop reaches their run with iterable data, so
-    // a pipe without lazy functions, or whose lazy functions get non-iterable
-    // data, builds none.
+    // Steps are built when the loop reaches their run, so a pipe without lazy
+    // functions builds none.
     const lazySequence = buildLazySequence(functions, functionIndex);
-    const accumulator = processIterable(output, lazySequence);
+    const accumulator = processIterable(
+      // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
+      output,
+      lazySequence,
+    );
 
     const { isSingle } = lazySequence.at(-1)!;
     output = isSingle ? accumulator[0] : accumulator;
@@ -350,26 +360,6 @@ export function pipe(
   }
 
   return output;
-}
-
-function buildLazyStep({ lazy, lazyArgs }: LazyDefinition): LazyStep {
-  const lazyEvaluator = lazy(...lazyArgs);
-  const isSingle = lazy.single;
-  return lazyEvaluator.requiresData
-    ? {
-        lazyEvaluator,
-        isSingle,
-        index: 0,
-        requiresData: true,
-        items: [],
-      }
-    : {
-        lazyEvaluator,
-        isSingle,
-        index: 0,
-        requiresData: false,
-        items: UNEXPECTED_ACCESS_SENTINEL,
-      };
 }
 
 function buildLazySequence(
@@ -384,9 +374,28 @@ function buildLazySequence(
       break;
     }
 
-    const lazyStep = buildLazyStep(func);
-    lazySequence.push(lazyStep);
-    if (lazyStep.isSingle) {
+    const isSingle = func.lazy.single;
+
+    const lazyEvaluator = func.lazy(...func.lazyArgs);
+    lazySequence.push(
+      lazyEvaluator.requiresData
+        ? {
+            lazyEvaluator,
+            isSingle,
+            index: 0,
+            requiresData: true,
+            items: [],
+          }
+        : {
+            lazyEvaluator,
+            isSingle,
+            index: 0,
+            requiresData: false,
+            items: UNEXPECTED_ACCESS_SENTINEL,
+          },
+    );
+
+    if (isSingle) {
       break;
     }
   }
@@ -403,34 +412,18 @@ function processIterable(
   const slot = createLazySlot();
 
   if (Array.isArray(iterable)) {
-    // In V8, a `for...of` that has only ever seen arrays skips the iterator
-    // protocol; the generic loop below also sees sets, strings and generators,
-    // so it can't. Both loops iterate rather than index, so a reactive array
-    // that instruments iteration tracks one dependency instead of one per
-    // index.
+    // Iterated rather than indexed, so a reactive array that instruments
+    // iteration tracks one dependency instead of one per index.
     for (const value of iterable) {
-      const shouldExitEarly = processItem(
-        value,
-        accumulator,
-        lazySequence,
-        slot,
-        0 /* startIndex */,
-      );
-      if (shouldExitEarly) {
+      if (processItem(value, accumulator, lazySequence, slot)) {
         break;
       }
     }
-    // eslint-disable-next-line unicorn/no-duplicate-if-branches -- Identical on purpose: each loop is its own iteration site (see above), which is what lets the compiler specialize the first one for arrays.
+
+    // eslint-disable-next-line unicorn/no-duplicate-if-branches -- Intentional! Identical on purpose. In V8, a `for...of` that has only ever seen arrays skips the iterator protocol; each loop is its own iteration site, which is what lets the compiler specialize the first one for arrays, that sets, strings and generators never reach.
   } else {
     for (const value of iterable) {
-      const shouldExitEarly = processItem(
-        value,
-        accumulator,
-        lazySequence,
-        slot,
-        0 /* startIndex */,
-      );
-      if (shouldExitEarly) {
+      if (processItem(value, accumulator, lazySequence, slot)) {
         break;
       }
     }
@@ -439,6 +432,16 @@ function processIterable(
   return accumulator;
 }
 
+/**
+ * TODO.
+ *
+ * @param item
+ * @param accumulator
+ * @param lazySequence
+ * @param slot
+ * @param startIndex
+ * @returns ShouldExitEarly.
+ */
 function processItem(
   item: unknown,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
@@ -446,7 +449,7 @@ function processItem(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
   lazySequence: readonly LazyStep[],
   slot: LazySlot,
-  startIndex: number,
+  startIndex = 0,
 ): boolean {
   let currentItem = item;
   let isDone = false;
@@ -509,18 +512,4 @@ function processItem(
 
   accumulator.push(currentItem);
   return isDone;
-}
-
-function isIterable(something: unknown): something is Iterable<unknown> {
-  return (
-    // Arrays are by far the most common input, and the compiler reduces this
-    // check to a type test, where the `in` check below is a property lookup.
-    Array.isArray(something) ||
-    typeof something === "string" ||
-    (typeof something === "object" &&
-      // `typeof` reports `null` as an object, and `in` throws on it.
-      something !== null &&
-      // eslint-disable-next-line unicorn/no-computed-property-existence-check -- The prototype-chain check is intentional: iterables inherit `Symbol.iterator` from their prototype (e.g. `Array.prototype`), and `Object.hasOwn` would reject them all.
-      Symbol.iterator in something)
-  );
 }

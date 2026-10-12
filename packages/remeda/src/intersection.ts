@@ -26,7 +26,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 export function intersection<T, S>(
   data: readonly T[],
   other: readonly S[],
-): (S & T)[];
+): (T & S)[];
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the
@@ -45,7 +45,7 @@ export function intersection<T, S>(
  */
 export function intersection<S>(
   other: readonly S[],
-): <T>(data: readonly T[]) => (S & T)[];
+): <T>(data: readonly T[]) => (T & S)[];
 
 export function intersection(...args: readonly unknown[]): unknown {
   return purryWithLazy(intersectionImplementation, args, lazyImplementation);
@@ -54,7 +54,7 @@ export function intersection(...args: readonly unknown[]): unknown {
 function intersectionImplementation<T, S>(
   data: readonly T[],
   other: readonly S[],
-): (S & T)[] {
+): (T & S)[] {
   // Each copy in `other` matches a single occurrence in `data`, so the map
   // counts the copies that are still unmatched. A value leaves the map once
   // all its copies are matched, so an empty map ends the search early.
@@ -63,10 +63,10 @@ function intersectionImplementation<T, S>(
     remaining.set(value, (remaining.get(value) ?? 0) + 1);
   }
 
-  const result: (S & T)[] = [];
+  const result: (T & S)[] = [];
   for (const value of data) {
     if (remaining.size === 0) {
-      break;
+      return result;
     }
 
     const copies = remaining.get(value);
@@ -75,6 +75,7 @@ function intersectionImplementation<T, S>(
         // @ts-expect-error [ts2345] -- `value` is `T & S` here semantically, but TypeScript can't infer it via this implementation.
         value,
       );
+
       if (copies === 1) {
         remaining.delete(value);
       } else {
@@ -82,12 +83,13 @@ function intersectionImplementation<T, S>(
       }
     }
   }
+
   return result;
 }
 
 function lazyImplementation<T, S>(
   other: readonly S[],
-): LazyEvaluator<T, S & T> {
+): LazyEvaluator<T, T & S> {
   if (other.length === 0) {
     return lazyEmptyEvaluator;
   }
@@ -99,7 +101,7 @@ function lazyImplementation<T, S>(
     remaining.set(value, (remaining.get(value) ?? 0) + 1);
   }
 
-  return (value, _index, _data, slot): LazyResult<S & T> => {
+  return (value, _index, _data, slot): LazyResult<T & S> => {
     const copies = remaining.get(value);
 
     if (copies === undefined) {
