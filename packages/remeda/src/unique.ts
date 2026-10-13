@@ -45,6 +45,7 @@ function uniqueImplementation<T>(data: readonly T[]): T[] {
   // The items are collected from `data` rather than spread out of the set,
   // which would turn a `-0` into `0`.
   const seen = new Set<T>();
+
   const result: T[] = [];
   for (const value of data) {
     // `add` leaves the set unchanged for a value it already holds, so the size
@@ -55,11 +56,13 @@ function uniqueImplementation<T>(data: readonly T[]): T[] {
       result.push(value);
     }
   }
+
   return result;
 }
 
 function lazyImplementation<T>(): LazyEvaluator<T> {
   const seen = new Set<T>();
+
   return (value) => {
     // `add` leaves the set unchanged for a value it already holds, so the size
     // tells duplicates apart with a single hash lookup per item.
