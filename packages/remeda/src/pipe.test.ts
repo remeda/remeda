@@ -7,7 +7,7 @@ import { flatMap } from "./flatMap";
 import { forEach } from "./forEach";
 import { identity } from "./identity";
 import { lazyEmptyEvaluator } from "./internal/lazyControl";
-import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
+import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { map } from "./map";
@@ -314,8 +314,8 @@ describe("lazy", () => {
       pipe(
         [1, 2, 3],
         map((x) => x),
-        // @ts-expect-error [ts2345] -- `lazyDataLastImpl` returns `unknown`; the step only exists to expose what `pipe` hands its evaluator.
-        lazyDataLastImpl(identity(), [], () => evaluator),
+        // @ts-expect-error [ts2345] -- `lazyDataLastImplementation` returns `unknown`; the step only exists to expose what `pipe` hands its evaluator.
+        lazyDataLastImplementation(identity(), [], () => evaluator),
       );
 
       // Asserting identity with `toBe` would make the matcher format the
@@ -582,8 +582,8 @@ describe("lazy", () => {
 
       pipe(
         [1, 2, 3],
-        // @ts-expect-error [ts2345] -- `lazyDataLastImpl` returns `unknown`; the overloads of the utilities built on it are what make the result a function.
-        lazyDataLastImpl(identity(), [], () => evaluator),
+        // @ts-expect-error [ts2345] -- `lazyDataLastImplementation` returns `unknown`; the overloads of the utilities built on it are what make the result a function.
+        lazyDataLastImplementation(identity(), [], () => evaluator),
       );
 
       expect(evaluator).toHaveBeenCalledTimes(1);
@@ -658,8 +658,8 @@ describe("lazy", () => {
       const evaluator = vi.fn<LazyEvaluator>((value) => value);
       pipe(
         [1, 2, 3],
-        // @ts-expect-error [ts2345] -- `lazyDataLastImpl` returns `unknown`; the step only exists to expose what `pipe` hands its evaluator.
-        lazyDataLastImpl(identity(), [], () => evaluator),
+        // @ts-expect-error [ts2345] -- `lazyDataLastImplementation` returns `unknown`; the step only exists to expose what `pipe` hands its evaluator.
+        lazyDataLastImplementation(identity(), [], () => evaluator),
       );
 
       const data = evaluator.mock.calls[0]?.[2];

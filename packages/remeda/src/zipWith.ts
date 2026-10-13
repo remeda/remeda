@@ -1,5 +1,5 @@
 import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
-import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
+import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -99,7 +99,7 @@ export function zipWith(
 
   if (typeof arg1 === "function") {
     // dataLast
-    return lazyDataLastImpl(
+    return lazyDataLastImplementation(
       zipWithImplementation,
       [arg0, arg1],
       lazyImplementation,

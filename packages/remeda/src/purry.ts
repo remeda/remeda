@@ -1,4 +1,4 @@
-import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
+import { dataLastImplementation } from "./internal/dataLastImplementation";
 import type { StrictFunction } from "./internal/types/StrictFunction";
 
 /**
@@ -20,7 +20,7 @@ import type { StrictFunction } from "./internal/types/StrictFunction";
  * crafting one manually isn't worthwhile as we rely on function declaration
  * overloading to combine the types for dataFirst and dataLast invocations!
  *
- * @param fn - The function to purry.
+ * @param dataFirst - The function to purry.
  * @param args - The arguments.
  * @signature purry(fn, args);
  * @example
@@ -44,13 +44,16 @@ import type { StrictFunction } from "./internal/types/StrictFunction";
  *    }
  * @category Function
  */
-export const purry = (fn: StrictFunction, args: readonly unknown[]): unknown =>
-  args.length >= fn.length
-    ? fn(
+export const purry = (
+  dataFirst: StrictFunction,
+  args: readonly unknown[],
+): unknown =>
+  args.length >= dataFirst.length
+    ? dataFirst(
         // @ts-expect-error [ts2345] -- This error is accurate because we don't
         // know anything about `fn` so can't ensure that we are passing the
         // correct arguments to it, we just have to trust that the caller knows
         // what they are doing.
         ...args,
       )
-    : lazyDataLastImpl(fn, args);
+    : dataLastImplementation(dataFirst, args);
