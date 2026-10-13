@@ -62,16 +62,16 @@ function uniqueWithImplementation<T>(
 ): T[] {
   const result: T[] = [];
   for (const [index, value] of data.entries()) {
-    // Every earlier item is compared, not just the ones kept, so a comparator
-    // that isn't transitive dedupes the same way it does in `pipe`.
     const firstEqualIndex = data.findIndex(
       (otherValue, otherIndex) =>
         index === otherIndex || isEquals(value, otherValue),
     );
+
     if (firstEqualIndex === index) {
       result.push(value);
     }
   }
+
   return result;
 }
 
@@ -82,6 +82,5 @@ const lazyImplementation = <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>
         index === otherIndex || isEquals(value, otherValue),
     );
 
-    // skip items that aren't at the first equal index.
     return firstEqualIndex === index ? value : SKIP_ITEM;
   });
