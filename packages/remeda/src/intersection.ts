@@ -58,7 +58,7 @@ function intersectionImplementation<T, S>(
   // Each copy in `other` matches a single occurrence in `data`, so the map
   // counts the copies that are still unmatched. A value leaves the map once
   // all its copies are matched, so an empty map ends the search early.
-  const remaining = new Map<S | T, number>();
+  const remaining = new Map<T | S, number>();
   for (const value of other) {
     remaining.set(value, (remaining.get(value) ?? 0) + 1);
   }
@@ -96,7 +96,7 @@ function lazyImplementation<T, S>(
 
   // We need to build a more efficient data structure that would allow us to
   // keep track of the number of times we've seen a value in the other array.
-  const remaining = new Map<S | T, number>();
+  const remaining = new Map<T | S, number>();
   for (const value of other) {
     remaining.set(value, (remaining.get(value) ?? 0) + 1);
   }
