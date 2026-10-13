@@ -410,7 +410,7 @@ function runLazySequence(
     // Iterated rather than indexed, so a reactive array that instruments
     // iteration tracks one dependency instead of one per index.
     for (const item of input) {
-      const isDone = processItem(lazySequence, output, item, slot);
+      const isDone = processItem(lazySequence, output, item, slot, 0);
       if (isDone) {
         break;
       }
@@ -420,7 +420,7 @@ function runLazySequence(
   } else {
     // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
     for (const item of input) {
-      const isDone = processItem(lazySequence, output, item, slot);
+      const isDone = processItem(lazySequence, output, item, slot, 0);
       if (isDone) {
         break;
       }
@@ -437,7 +437,7 @@ function processItem(
   output: unknown[],
   item: unknown,
   slot: LazySlot,
-  startIndex = 0,
+  startIndex: number,
 ): boolean {
   let currentItem = item;
   let isDone = false;
@@ -452,7 +452,7 @@ function processItem(
       step.items.push(currentItem);
     }
 
-    // pull the evaluator out of the step to nullify it's `this`.
+    // Pull the evaluator out of the step to nullify its `this`.
     const { lazyEvaluator } = step;
     const result = lazyEvaluator(currentItem, step.index, step.items, slot);
 

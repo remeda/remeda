@@ -9,7 +9,7 @@ type IsEqual<T, S> = (a: T, b: S) => boolean;
  * comparator function that compares elements of both arrays.
  *
  * @param data - The source data.
- * @param other - The second data.
+ * @param other - The other data.
  * @param isEqual - The custom comparator.
  * @signature
  *    intersectionWith(data, other, isEqual)
@@ -36,7 +36,7 @@ export function intersectionWith<T, S>(
  * Returns a list of intersecting values based on a custom
  * comparator function that compares elements of both arrays.
  *
- * @param other - The second data.
+ * @param other - The other data.
  * @param isEqual - The custom comparator.
  * @signature
  *    intersectionWith(other, isEqual)(data)
