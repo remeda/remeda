@@ -40,8 +40,8 @@ describe("data_first", () => {
     ).toStrictEqual([1]);
   });
 
-  test("should return items that are not equal to themselves", () => {
-    // test case based on https://github.com/remeda/remeda/issues/999
+  // @see https://github.com/remeda/remeda/issues/999
+  test("should return items that are not equal to themselves (#999)", () => {
     const data = [
       { id: 1, reason: "No name" },
       { id: 1, reason: "No name" },
@@ -81,8 +81,8 @@ describe("data_last", () => {
     ).toStrictEqual([1]);
   });
 
-  test("should return items that are not equal to themselves", () => {
-    // test case based on https://github.com/remeda/remeda/issues/999
+  // @see https://github.com/remeda/remeda/issues/999
+  test("should return items that are not equal to themselves (#999)", () => {
     const data = [
       { id: 1, reason: "No name" },
       { id: 1, reason: "No name" },
@@ -122,8 +122,8 @@ describe("data_last", () => {
     expect(result).toStrictEqual([{ a: 1 }, { a: 2 }, { a: 5 }]);
   });
 
-  test("take before uniq", () => {
-    // bug from https://github.com/remeda/remeda/issues/14
+  // @see https://github.com/remeda/remeda/issues/14
+  test("take before uniq (#14)", () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
       [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }],
