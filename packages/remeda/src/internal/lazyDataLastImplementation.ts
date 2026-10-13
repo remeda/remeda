@@ -11,12 +11,12 @@ import type { StrictFunction } from "./types/StrictFunction";
  * functions with optional or variadic arguments.
  */
 export function lazyDataLastImplementation(
-  fn: StrictFunction,
+  dataFirst: StrictFunction,
   args: readonly unknown[],
   lazy: LazyDefinition["lazy"],
   // TODO: We can probably provide better typing to the return type...
 ): unknown {
-  const dataLast = dataLastImplementation(fn, args);
+  const dataLast = dataLastImplementation(dataFirst, args);
 
   // We are injecting the props onto the function itself!
   (dataLast as unknown as SimplifiedWritable<LazyDefinition>).lazy = lazy;
