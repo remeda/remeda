@@ -58,18 +58,21 @@ function uniqueByImplementation<T>(
   keyFunction: (value: T, index: number, data: readonly T[]) => unknown,
 ): T[] {
   const seenKeys = new Set<unknown>();
+
   const result: T[] = [];
   let index = 0;
   for (const value of data) {
+    const key = keyFunction(value, index, data);
     // `add` leaves the set unchanged for a key it already holds, so the size
     // tells duplicates apart with a single hash lookup per item.
     const sizeBefore = seenKeys.size;
-    seenKeys.add(keyFunction(value, index, data));
+    seenKeys.add(key);
     if (seenKeys.size > sizeBefore) {
       result.push(value);
     }
     index += 1;
   }
+
   return result;
 }
 
@@ -77,6 +80,7 @@ function lazyImplementation<T>(
   keyFunction: (item: T, index: number, data: readonly T[]) => unknown,
 ): LazyEvaluator<T> {
   const seenKeys = new Set<unknown>();
+
   return requireDataByArity(keyFunction, (value, index, data) => {
     const key = keyFunction(value, index, data);
     // `add` leaves the set unchanged for a key it already holds, so the size
