@@ -5,20 +5,14 @@ import { pipe } from "./pipe";
 import { take } from "./take";
 import { uniqueWith } from "./uniqueWith";
 
-const source = [
-  { a: 1 },
-  { a: 2 },
-  { a: 2 },
-  { a: 5 },
-  { a: 1 },
-  { a: 6 },
-  { a: 7 },
-];
-const expected = [{ a: 1 }, { a: 2 }, { a: 5 }, { a: 6 }, { a: 7 }];
-
 describe("data_first", () => {
   test("should return uniq", () => {
-    expect(uniqueWith(source, isDeepEqual)).toStrictEqual(expected);
+    expect(
+      uniqueWith(
+        [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }],
+        isDeepEqual,
+      ),
+    ).toStrictEqual([{ a: 1 }, { a: 2 }, { a: 5 }, { a: 6 }, { a: 7 }]);
   });
 
   test("consecutive duplicates", () => {
@@ -42,33 +36,43 @@ describe("data_first", () => {
 
   // @see https://github.com/remeda/remeda/issues/999
   test("should return items that are not equal to themselves (#999)", () => {
-    const data = [
+    expect(
+      uniqueWith(
+        [
+          { id: 1, reason: "No name" },
+          { id: 1, reason: "No name" },
+          { reason: "No name" },
+          { reason: "No name" },
+        ] satisfies { id?: number; reason: string }[],
+        (errorA, errorB) => {
+          // the objects with no ids should effectively be ignored from removal of duplicates
+          if (errorA.id === undefined || errorB.id === undefined) {
+            return false;
+          }
+          return errorA.id === errorB.id;
+        },
+      ),
+    ).toStrictEqual([
       { id: 1, reason: "No name" },
-      { id: 1, reason: "No name" },
       { reason: "No name" },
       { reason: "No name" },
-    ];
-    const expectedResult = [
-      { id: 1, reason: "No name" },
-      { reason: "No name" },
-      { reason: "No name" },
-    ];
-
-    const result = uniqueWith(data, (errorA, errorB) => {
-      // the objects with no ids should effectively be ignored from removal of duplicates
-      if (errorA.id === undefined || errorB.id === undefined) {
-        return false;
-      }
-      return errorA.id === errorB.id;
-    });
-
-    expect(result).toStrictEqual(expectedResult);
+    ]);
   });
 });
 
 describe("data_last", () => {
   test("should return uniq", () => {
-    expect(uniqueWith(isDeepEqual)(source)).toStrictEqual(expected);
+    expect(
+      uniqueWith(isDeepEqual)([
+        { a: 1 },
+        { a: 2 },
+        { a: 2 },
+        { a: 5 },
+        { a: 1 },
+        { a: 6 },
+        { a: 7 },
+      ]),
+    ).toStrictEqual([{ a: 1 }, { a: 2 }, { a: 5 }, { a: 6 }, { a: 7 }]);
   });
 
   test("compares with every earlier item, not just the kept ones", () => {
@@ -83,30 +87,27 @@ describe("data_last", () => {
 
   // @see https://github.com/remeda/remeda/issues/999
   test("should return items that are not equal to themselves (#999)", () => {
-    const data = [
+    expect(
+      pipe(
+        [
+          { id: 1, reason: "No name" },
+          { id: 1, reason: "No name" },
+          { reason: "No name" },
+          { reason: "No name" },
+        ],
+        uniqueWith((errorA, errorB) => {
+          // the objects with no ids should effectively be ignored from removal of duplicates
+          if (errorA.id === undefined || errorB.id === undefined) {
+            return false;
+          }
+          return errorA.id === errorB.id;
+        }),
+      ),
+    ).toStrictEqual([
       { id: 1, reason: "No name" },
-      { id: 1, reason: "No name" },
       { reason: "No name" },
       { reason: "No name" },
-    ];
-    const expectedResult = [
-      { id: 1, reason: "No name" },
-      { reason: "No name" },
-      { reason: "No name" },
-    ];
-
-    const result = pipe(
-      data,
-      uniqueWith((errorA, errorB) => {
-        // the objects with no ids should effectively be ignored from removal of duplicates
-        if (errorA.id === undefined || errorB.id === undefined) {
-          return false;
-        }
-        return errorA.id === errorB.id;
-      }),
-    );
-
-    expect(result).toStrictEqual(expectedResult);
+    ]);
   });
 
   test("lazy", () => {
