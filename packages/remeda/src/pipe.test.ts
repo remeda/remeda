@@ -646,12 +646,12 @@ describe("lazy", () => {
     });
 
     test("callbacks receive the items processed so far", () => {
-      const mock = vi.fn<LazyCallback<unknown[], unknown>>(
+      const callback = vi.fn<LazyCallback<unknown[], unknown>>(
         (_value, _index, data) => [...data],
       );
-      pipe([1, 2, 3], forEach(mock));
+      pipe([1, 2, 3], forEach(callback));
 
-      expect(mock).toHaveNthReturnedWith(2, [1, 2]);
+      expect(callback).toHaveNthReturnedWith(2, [1, 2]);
     });
 
     test("an evaluator that doesn't require `data` gets the sentinel", () => {

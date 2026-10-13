@@ -61,29 +61,29 @@ test("returns people with uniq first letter of name", () => {
 
 test("provides the whole input to the key function", () => {
   const data = [1, 2, 2, 3];
-  const mock = vi.fn<
+  const keyFunction = vi.fn<
     (item: unknown, index: number, items: readonly unknown[]) => unknown
   >((_item, _index, items) => [...items]);
-  uniqueBy(data, mock);
+  uniqueBy(data, keyFunction);
 
-  expect(mock).toHaveNthReturnedWith(1, data);
-  expect(mock).toHaveNthReturnedWith(2, data);
-  expect(mock).toHaveNthReturnedWith(3, data);
-  expect(mock).toHaveNthReturnedWith(4, data);
+  expect(keyFunction).toHaveNthReturnedWith(1, data);
+  expect(keyFunction).toHaveNthReturnedWith(2, data);
+  expect(keyFunction).toHaveNthReturnedWith(3, data);
+  expect(keyFunction).toHaveNthReturnedWith(4, data);
 });
 
 // eslint-disable-next-line vitest/valid-title -- This seems to be a bug in the rule, @see https://github.com/vitest-dev/eslint-plugin-vitest/issues/692
 describe(pipe, () => {
   test("provides the items processed so far to the key function", () => {
-    const mock = vi.fn<LazyCallback<unknown[], unknown>>(
+    const keyFunction = vi.fn<LazyCallback<unknown[], unknown>>(
       (_item, _index, data) => [...data],
     );
-    pipe([1, 2, 2, 3], uniqueBy(mock));
+    pipe([1, 2, 2, 3], uniqueBy(keyFunction));
 
-    expect(mock).toHaveNthReturnedWith(1, [1]);
-    expect(mock).toHaveNthReturnedWith(2, [1, 2]);
-    expect(mock).toHaveNthReturnedWith(3, [1, 2, 2]);
-    expect(mock).toHaveNthReturnedWith(4, [1, 2, 2, 3]);
+    expect(keyFunction).toHaveNthReturnedWith(1, [1]);
+    expect(keyFunction).toHaveNthReturnedWith(2, [1, 2]);
+    expect(keyFunction).toHaveNthReturnedWith(3, [1, 2, 2]);
+    expect(keyFunction).toHaveNthReturnedWith(4, [1, 2, 2, 3]);
   });
 
   test("doesn't collect the items processed so far for a key function without `data`", () => {

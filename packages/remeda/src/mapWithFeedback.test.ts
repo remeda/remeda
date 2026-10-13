@@ -40,7 +40,7 @@ describe("data first", () => {
 
   test("should provide the whole input", () => {
     const data = [1, 2, 3, 4, 5];
-    const mock = vi.fn<
+    const callback = vi.fn<
       (
         acc: unknown,
         x: unknown,
@@ -49,13 +49,13 @@ describe("data first", () => {
       ) => unknown
     >((_acc, _x, _index, items) => [...items]);
 
-    mapWithFeedback(data, mock, []);
+    mapWithFeedback(data, callback, []);
 
-    expect(mock).toHaveNthReturnedWith(1, data);
-    expect(mock).toHaveNthReturnedWith(2, data);
-    expect(mock).toHaveNthReturnedWith(3, data);
-    expect(mock).toHaveNthReturnedWith(4, data);
-    expect(mock).toHaveNthReturnedWith(5, data);
+    expect(callback).toHaveNthReturnedWith(1, data);
+    expect(callback).toHaveNthReturnedWith(2, data);
+    expect(callback).toHaveNthReturnedWith(3, data);
+    expect(callback).toHaveNthReturnedWith(4, data);
+    expect(callback).toHaveNthReturnedWith(5, data);
   });
 });
 
