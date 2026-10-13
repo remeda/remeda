@@ -62,12 +62,12 @@ function uniqueWithImplementation<T>(
 ): T[] {
   const result: T[] = [];
   for (const [index, value] of data.entries()) {
-    const firstEqualIndex = data.findIndex(
-      (otherValue, otherIndex) =>
-        index === otherIndex || isEquals(value, otherValue),
-    );
-
-    if (firstEqualIndex === index) {
+    if (
+      data.findIndex(
+        (otherValue, otherIndex) =>
+          index === otherIndex || isEquals(value, otherValue),
+      ) === index
+    ) {
       result.push(value);
     }
   }
@@ -76,11 +76,11 @@ function uniqueWithImplementation<T>(
 }
 
 const lazyImplementation = <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>
-  requireData((value, index, data) => {
-    const firstEqualIndex = data.findIndex(
+  requireData((value, index, data) =>
+    data.findIndex(
       (otherValue, otherIndex) =>
         index === otherIndex || isEquals(value, otherValue),
-    );
-
-    return firstEqualIndex === index ? value : SKIP_ITEM;
-  });
+    ) === index
+      ? value
+      : SKIP_ITEM,
+  );
