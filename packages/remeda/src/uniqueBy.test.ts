@@ -72,7 +72,6 @@ test("provides the whole input to the key function", () => {
   expect(keyFunction).toHaveNthReturnedWith(4, data);
 });
 
-// eslint-disable-next-line vitest/valid-title -- This seems to be a bug in the rule, @see https://github.com/vitest-dev/eslint-plugin-vitest/issues/692
 describe(pipe, () => {
   test("provides the items processed so far to the key function", () => {
     const keyFunction = vi.fn<LazyCallback<unknown[], unknown>>(
