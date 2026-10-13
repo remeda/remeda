@@ -105,8 +105,6 @@ describe("data second with initial arg", () => {
   });
 
   test("doesn't collect the first items processed so far for a zipper without `data`", () => {
-    // `vi.fn` keeps its implementation's `length`, which is all the arity
-    // check reads.
     const zipper = vi.fn<
       (
         first: number,
