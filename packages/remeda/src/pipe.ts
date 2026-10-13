@@ -17,7 +17,6 @@ import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/unexpectedAccessSentinel"
 
 type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
-  readonly isSingle: true | undefined;
   index: number;
 } & (
   | {
@@ -345,18 +344,17 @@ export function pipe(
       continue;
     }
 
-    // Steps are built when the loop reaches their run, so a pipe without lazy
-    // functions builds none.
     const lazySequence = buildLazySequence(functions, functionIndex);
-    const accumulator = processIterable(
-      // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
-      output,
-      lazySequence,
-    );
 
-    const { isSingle } = lazySequence.at(-1)!;
-    output = isSingle ? accumulator[0] : accumulator;
+    output = runLazySequence(output, lazySequence);
     functionIndex += lazySequence.length;
+
+    // @ts-expect-error [ts2322] -- TypeScript fails to follow the logic that `functionIndex` is pointing to the last function in `lazySequence`.
+    const lastLazyFunction: LazyFunction = functions[functionIndex - 1];
+    if (lastLazyFunction.lazy.single) {
+      // @ts-expect-error [ts18046] -- output is always an array when the last lazy function in the sequence was single.
+      output = output[0];
+    }
   }
 
   return output;
@@ -374,28 +372,25 @@ function buildLazySequence(
       break;
     }
 
-    const isSingle = func.lazy.single;
-
     const lazyEvaluator = func.lazy(...func.lazyArgs);
     lazySequence.push(
       lazyEvaluator.requiresData
         ? {
             lazyEvaluator,
-            isSingle,
             index: 0,
             requiresData: true,
             items: [],
           }
         : {
             lazyEvaluator,
-            isSingle,
             index: 0,
             requiresData: false,
             items: UNEXPECTED_ACCESS_SENTINEL,
           },
     );
 
-    if (isSingle) {
+    if (func.lazy.single) {
+      // Functions that generate a single value always end the sequence.
       break;
     }
   }
@@ -403,51 +398,44 @@ function buildLazySequence(
   return lazySequence;
 }
 
-function processIterable(
-  iterable: Iterable<unknown>,
+function runLazySequence(
+  input: unknown,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
   lazySequence: readonly LazyStep[],
 ): unknown[] {
-  const accumulator: unknown[] = [];
+  const output: unknown[] = [];
   const slot = createLazySlot();
 
-  if (Array.isArray(iterable)) {
+  if (Array.isArray(input)) {
     // Iterated rather than indexed, so a reactive array that instruments
     // iteration tracks one dependency instead of one per index.
-    for (const value of iterable) {
-      if (processItem(value, accumulator, lazySequence, slot)) {
+    for (const item of input) {
+      const isDone = processItem(lazySequence, output, item, slot);
+      if (isDone) {
         break;
       }
     }
 
     // eslint-disable-next-line unicorn/no-duplicate-if-branches -- Intentional! Identical on purpose. In V8, a `for...of` that has only ever seen arrays skips the iterator protocol; each loop is its own iteration site, which is what lets the compiler specialize the first one for arrays, that sets, strings and generators never reach.
   } else {
-    for (const value of iterable) {
-      if (processItem(value, accumulator, lazySequence, slot)) {
+    // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
+    for (const item of input) {
+      const isDone = processItem(lazySequence, output, item, slot);
+      if (isDone) {
         break;
       }
     }
   }
 
-  return accumulator;
+  return output;
 }
 
-/**
- * TODO.
- *
- * @param item
- * @param accumulator
- * @param lazySequence
- * @param slot
- * @param startIndex
- * @returns ShouldExitEarly.
- */
 function processItem(
-  item: unknown,
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
-  accumulator: unknown[],
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
   lazySequence: readonly LazyStep[],
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use `output` directly to accumulate the results.
+  output: unknown[],
+  item: unknown,
   slot: LazySlot,
   startIndex = 0,
 ): boolean {
@@ -459,38 +447,29 @@ function processItem(
     stepIndex++
   ) {
     const step = lazySequence[stepIndex]!;
+
     if (step.requiresData) {
       step.items.push(currentItem);
     }
-    // Called without a receiver: the evaluator can be the user's own callback,
-    // which mustn't see the step as `this`.
+
+    // pull the evaluator out of the step to nullify it's `this`.
     const { lazyEvaluator } = step;
     const result = lazyEvaluator(currentItem, step.index, step.items, slot);
+
     step.index += 1;
 
-    // Every control is a symbol, so an item of any other type skips the
-    // comparisons below with this one check.
     if (typeof result === "symbol") {
       if (result === SKIP_ITEM) {
         return isDone;
       }
 
       if (result === MANY) {
-        // Read before the steps below run, as they leave their own payloads
-        // in the same slot.
-        const { values } = slot;
-        for (const subItem of values) {
-          const shouldExitEarly = processItem(
-            subItem,
-            accumulator,
-            lazySequence,
-            slot,
-            stepIndex + 1,
-          );
-          if (shouldExitEarly) {
+        for (const subItem of slot.values) {
+          if (processItem(lazySequence, output, subItem, slot, stepIndex + 1)) {
             return true;
           }
         }
+
         return isDone;
       }
 
@@ -510,6 +489,7 @@ function processItem(
     currentItem = result;
   }
 
-  accumulator.push(currentItem);
+  output.push(currentItem);
+
   return isDone;
 }
