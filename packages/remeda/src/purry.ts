@@ -4,10 +4,11 @@ import type { StrictFunction } from "./internal/types/StrictFunction";
 /**
  * Creates a function with `dataFirst` and `dataLast` signatures.
  *
- * When `args` has at least `fn.length` items (`Function.length` counts the
- * parameters before the first defaulted or rest one), `fn` is called with all
- * of them, extra ones included (data-first). Otherwise `purry` returns a
- * function that takes the data and calls `fn(data, ...args)` (data-last).
+ * When `args` has at least `dataFirst.length` items (`Function.length` counts
+ * the parameters before the first defaulted or rest one), `dataFirst` is
+ * called with all of them, extra ones included (data-first). Otherwise `purry`
+ * returns a function that takes the data and calls `fn(data, ...args)`
+ * (data-last).
  *
  * `purry` is a dynamic function and it's not type safe. It should be wrapped by
  * a function that have proper typings. Refer to the example below for correct
@@ -22,7 +23,8 @@ import type { StrictFunction } from "./internal/types/StrictFunction";
  *
  * @param dataFirst - The function to purry.
  * @param args - The arguments.
- * @signature purry(fn, args);
+ * @signature
+ *   purry(dataFirst, args);
  * @example
  *    function _findIndex(array, fn) {
  *      for (let i = 0; i < array.length; i++) {
@@ -50,10 +52,7 @@ export const purry = (
 ): unknown =>
   args.length >= dataFirst.length
     ? dataFirst(
-        // @ts-expect-error [ts2345] -- This error is accurate because we don't
-        // know anything about `fn` so can't ensure that we are passing the
-        // correct arguments to it, we just have to trust that the caller knows
-        // what they are doing.
+        // @ts-expect-error [ts2345] -- This error is accurate because we don't know anything about `dataFirst` so can't ensure that we are passing the correct arguments to it, we just have to trust that the caller knows what they are doing.
         ...args,
       )
     : dataLastImplementation(dataFirst, args);
