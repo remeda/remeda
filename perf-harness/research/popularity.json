@@ -1,0 +1,4964 @@
+{
+  "method": "Primary signal: Sourcegraph public code search (sourcegraph.com stream API, context:global, non-fork, non-archived repos, TS/JS/SFC files). All files importing from remeda were fetched with multi-line regex queries and parsed locally: named imports (value imports only, aliases resolved, v1 names folded into v2 names), namespace imports (import * as R, then R.name usage via an AND query), plus require/dynamic forms. Excluded: remeda's own repo and any repo whose name contains remeda or es-toolkit, forks, archived repos, node_modules/dist/build/vendor, .d.ts, five benchmark/comparison/vendored repos, and vendored paths. De-duplication: repos sharing >= 5 identical (last-two-path-segments + function set) file signatures were merged into clone clusters (one 36-repo opencode-derived cluster and 3 pairs); identical files inside a cluster, and identical full-path+function-set files across repos (6 files), were counted once. Metrics per function: remedaCount = files using it (deduped sample of 2143 files in 121 repo clusters); remedaShare = count/2143; remedaRepoShare = share of repo clusters using it at least once; remedaBalancedShare = mean over repo clusters of the within-cluster file share, weighted by sqrt(cluster file count). score = mean(remedaShare, remedaRepoShare, remedaBalancedShare); bootstrap (1000 resamples of repo clusters, seed 20261007) gives scoreP05/P95 and tierProbability. Tier = high if score >= 8%, mid if >= 2% and used in >= 4 repo clusters, else low. Lodash fallback: functions with < 5 sampled files or < 4 repo clusters and >= 30,000,000 lodash per-method downloads/month (excluding packages dominated by a known transitive dependent) are at least mid. Adopter tie-break: functions whose score is within 25% below a tier threshold and that are used by an adopter package with >= 1M downloads/month move up one tier (applied to no function). Adopter signal: tarballs of @prisma/dev and ten other npm dependents were scanned for remeda imports (or the esbuild metafile for bundled @prisma/studio-core). Lodash proxy: last-month downloads of lodash.<lowercased name> per-method packages for every lodash function whose docs mapping page names a Remeda function; lodashDownloads is the sum over the lodash functions mapped to the Remeda function (tap has no package). pipeShare = share of deduped remeda-importing files that import pipe or use R.pipe.",
+  "generated": "2026-10-07",
+  "sample": {
+    "source": "sourcegraph.com public index (stream search API), snapshot 2026-10-07",
+    "rawFilesImportingRemeda": 2936,
+    "rawRepos": 168,
+    "dedupedFiles": 2143,
+    "dedupedRepoClusters": 121,
+    "namedImportFiles": 1400,
+    "namespaceImportFiles": 750,
+    "packageJsonFilesListingRemeda": 430,
+    "packageJsonRepos": 184,
+    "functionsWithZeroSampledFiles": 34,
+    "functionsFewerThanFiveSampledFiles": 71
+  },
+  "tierRules": {
+    "high": "score >= 0.08",
+    "mid": "score >= 0.02 and used in >= 4 repo clusters",
+    "low": "otherwise",
+    "thinFilesThreshold": 5,
+    "lodashFallbackMinDownloads": 30000000,
+    "adopterTieBreak": "score within 25% below a threshold and used by an adopter with >= 1000000 downloads/month"
+  },
+  "tierCounts": {
+    "high": 12,
+    "mid": 47,
+    "low": 104
+  },
+  "pipeShare": 0.1367,
+  "pipeShareDetail": {
+    "fileShare": 0.1367,
+    "files": 293,
+    "of": 2143,
+    "repoClusterShare": 0.3884,
+    "repoClusters": 47,
+    "ofRepoClusters": 121,
+    "sqrtWeightedShare": 0.1563,
+    "pipeOrPipedFileShare": 0.1386,
+    "excludingFourLargestClusters": 0.1313,
+    "namedImportFilesOnly": 0.1618,
+    "namespaceImportFilesOnly": 0.0877
+  },
+  "g7Pick": [
+    "omit",
+    "entries",
+    "mapValues",
+    "isDeepEqual",
+    "groupBy",
+    "pick",
+    "clone",
+    "clamp",
+    "chunk",
+    "mergeDeep",
+    "keys",
+    "mapToObj"
+  ],
+  "g7PickStability": {
+    "omit": 1,
+    "entries": 1,
+    "mapValues": 1,
+    "isDeepEqual": 1,
+    "groupBy": 1,
+    "pick": 0.996,
+    "clone": 0.83,
+    "clamp": 0.796,
+    "chunk": 0.768,
+    "mergeDeep": 0.616,
+    "keys": 0.619,
+    "mapToObj": 0.462
+  },
+  "adopters": [
+    {
+      "package": "@prisma/dev",
+      "version": "0.25.2",
+      "downloadsLastMonth": 28985936,
+      "remedaDependency": "dependencies (remeda 2.33.4)",
+      "method": "built ESM chunk + CJS bundles (external require/import of remeda)",
+      "functions": ["difference", "range"]
+    },
+    {
+      "package": "@prisma/studio-core",
+      "version": "0.33.0",
+      "downloadsLastMonth": 26708827,
+      "remedaDependency": "devDependencies (bundled, remeda 2.33.4)",
+      "method": "esbuild metafile (remeda bundled into dist; modules with bytesInOutput > 0)",
+      "functions": ["isDeepEqual", "isObjectType", "omit"]
+    },
+    {
+      "package": "@convex-dev/better-auth",
+      "version": "0.12.5",
+      "downloadsLastMonth": 992732,
+      "remedaDependency": "dependencies (^2.32.0)",
+      "method": "published dist + src imports",
+      "functions": ["prop", "sortBy"]
+    },
+    {
+      "package": "figma-developer-mcp",
+      "version": "0.13.2",
+      "downloadsLastMonth": 320171,
+      "remedaDependency": "dependencies (^2.20.1)",
+      "method": "published dist imports",
+      "functions": ["isTruthy"]
+    },
+    {
+      "package": "@snaplet/seed",
+      "version": "0.98.0",
+      "downloadsLastMonth": 196217,
+      "remedaDependency": "dependencies (^1.61.0, remeda v1)",
+      "method": "published dist imports",
+      "functions": [
+        "filter",
+        "flat",
+        "intersection",
+        "isIncludedIn",
+        "isNot",
+        "mapValues",
+        "mergeDeep",
+        "sortBy"
+      ]
+    },
+    {
+      "package": "@llm-ui/markdown",
+      "version": "0.13.3",
+      "downloadsLastMonth": 155794,
+      "remedaDependency": "dependencies (^1.57.0, remeda v1)",
+      "method": "published dist imports",
+      "functions": ["isDeepEqual"]
+    },
+    {
+      "package": "isolate-package",
+      "version": "1.38.0",
+      "downloadsLastMonth": 111269,
+      "remedaDependency": "dependencies (^2.33.7)",
+      "method": "published dist + src imports",
+      "functions": ["isEmpty", "omit", "pick", "unique"]
+    },
+    {
+      "package": "@kubb/studio",
+      "version": "5.5.3",
+      "downloadsLastMonth": 75699,
+      "remedaDependency": "dependencies (^2.50.0)",
+      "method": "published dist imports",
+      "functions": ["isPlainObject"]
+    },
+    {
+      "package": "@opencode-ai/ui",
+      "version": "1.18.35",
+      "downloadsLastMonth": 68995,
+      "remedaDependency": "dependencies (2.26.0)",
+      "method": "published src imports",
+      "functions": ["entries", "flatMap", "groupBy", "map", "pipe"]
+    },
+    {
+      "package": "@likec4/diagram",
+      "version": "1.59.4",
+      "downloadsLastMonth": 29747,
+      "remedaDependency": "dependencies (^2.45.0)",
+      "method": "published dist imports",
+      "functions": [
+        "ceil",
+        "clamp",
+        "concat",
+        "difference",
+        "entries",
+        "filter",
+        "find",
+        "findLast",
+        "first",
+        "firstBy",
+        "flat",
+        "flatMap",
+        "forEachObj",
+        "groupBy",
+        "groupByProp",
+        "hasAtLeast",
+        "hasSubObject",
+        "identity",
+        "isArray",
+        "isBoolean",
+        "isDefined",
+        "isEmpty",
+        "isEmptyish",
+        "isFunction",
+        "isNonNull",
+        "isNonNullish",
+        "isNot",
+        "isNullish",
+        "isNumber",
+        "isPlainObject",
+        "isShallowEqual",
+        "isString",
+        "isTruthy",
+        "join",
+        "keys",
+        "last",
+        "map",
+        "mapToObj",
+        "mapValues",
+        "mergeDeep",
+        "omit",
+        "once",
+        "only",
+        "partition",
+        "pick",
+        "pickBy",
+        "pipe",
+        "piped",
+        "prop",
+        "reduce",
+        "reverse",
+        "sort",
+        "sortBy",
+        "tap",
+        "unique",
+        "values"
+      ]
+    },
+    {
+      "package": "kitcn",
+      "version": "0.33.7",
+      "downloadsLastMonth": 11030,
+      "remedaDependency": "dependencies (^2.33.6)",
+      "method": "published dist imports",
+      "functions": ["prop", "sortBy"]
+    }
+  ],
+  "prismaContext": {
+    "@prisma/dev downloads last month": 28985936,
+    "remeda downloads last month": 46666933,
+    "@prisma/dev as share of remeda downloads": 0.621,
+    "@prisma/studio-core downloads last month": 26708827
+  },
+  "functions": {
+    "add": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 1127,
+      "lodashMapped": [
+        {
+          "lodash": "add",
+          "package": "lodash.add",
+          "downloads": 1127
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.add=1,127",
+      "rank": 130
+    },
+    "addProp": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0003,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.003,
+      "scoreP05": 0,
+      "scoreP95": 0.009,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (1 files in 1 repo clusters); no lodash mapping page",
+      "rank": 123
+    },
+    "allPass": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 3,
+      "remedaShare": 0.0014,
+      "remedaRepoCount": 2,
+      "remedaRepoShare": 0.0165,
+      "remedaBalancedShare": 0.0025,
+      "filesAlsoUsingPipeShare": 0.3333,
+      "score": 0.0068,
+      "scoreP05": 0,
+      "scoreP95": 0.0155,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.012,
+        "low": 0.988
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (3 files in 2 repo clusters); no lodash mapping page",
+      "rank": 100
+    },
+    "anyPass": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 13,
+      "remedaShare": 0.0061,
+      "remedaRepoCount": 2,
+      "remedaRepoShare": 0.0165,
+      "remedaBalancedShare": 0.004,
+      "filesAlsoUsingPipeShare": 0.4615,
+      "score": 0.0089,
+      "scoreP05": 0,
+      "scoreP95": 0.0195,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.045,
+        "low": 0.955
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (13 files in 2 repo clusters); concentrated: 85% of its sampled files are in likec4/likec4; no lodash mapping page",
+      "rank": 94
+    },
+    "capitalize": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 12,
+      "remedaShare": 0.0056,
+      "remedaRepoCount": 6,
+      "remedaRepoShare": 0.0496,
+      "remedaBalancedShare": 0.0043,
+      "filesAlsoUsingPipeShare": 0.25,
+      "score": 0.0198,
+      "scoreP05": 0.0078,
+      "scoreP95": 0.0325,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.489,
+        "low": 0.511
+      },
+      "adopterUse": [],
+      "lodashDownloads": 41958198,
+      "lodashMapped": [
+        {
+          "lodash": "capitalize",
+          "package": "lodash.capitalize",
+          "downloads": 15355086
+        },
+        {
+          "lodash": "upperFirst",
+          "package": "lodash.upperfirst",
+          "downloads": 26603112
+        }
+      ],
+      "notes": "concentrated: 50% of its sampled files are in owid/owid-grapher; lodash proxy (docs mapping): lodash.capitalize=15,355,086, lodash.upperfirst=26,603,112",
+      "rank": 60
+    },
+    "ceil": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0002,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.003,
+      "scoreP05": 0,
+      "scoreP95": 0.0088,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 6617,
+      "lodashMapped": [
+        {
+          "lodash": "ceil",
+          "package": "lodash.ceil",
+          "downloads": 6617
+        }
+      ],
+      "notes": "thin remeda sample (1 files in 1 repo clusters); lodash proxy (docs mapping): lodash.ceil=6,617",
+      "rank": 124
+    },
+    "chunk": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 57,
+      "remedaShare": 0.0266,
+      "remedaRepoCount": 17,
+      "remedaRepoShare": 0.1405,
+      "remedaBalancedShare": 0.0267,
+      "filesAlsoUsingPipeShare": 0.0351,
+      "score": 0.0646,
+      "scoreP05": 0.0432,
+      "scoreP95": 0.0893,
+      "tierProbability": {
+        "high": 0.152,
+        "mid": 0.848,
+        "low": 0
+      },
+      "adopterUse": [],
+      "lodashDownloads": 7306167,
+      "lodashMapped": [
+        {
+          "lodash": "chunk",
+          "package": "lodash.chunk",
+          "downloads": 7306167
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.chunk=7,306,167",
+      "rank": 17
+    },
+    "clamp": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 71,
+      "remedaShare": 0.0331,
+      "remedaRepoCount": 15,
+      "remedaRepoShare": 0.124,
+      "remedaBalancedShare": 0.0438,
+      "filesAlsoUsingPipeShare": 0.2958,
+      "score": 0.067,
+      "scoreP05": 0.041,
+      "scoreP95": 0.0939,
+      "tierProbability": {
+        "high": 0.201,
+        "mid": 0.799,
+        "low": 0
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 1394939,
+      "lodashMapped": [
+        {
+          "lodash": "clamp",
+          "package": "lodash.clamp",
+          "downloads": 1394939
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.clamp=1,394,939",
+      "rank": 15
+    },
+    "clone": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 103,
+      "remedaShare": 0.0481,
+      "remedaRepoCount": 15,
+      "remedaRepoShare": 0.124,
+      "remedaBalancedShare": 0.0427,
+      "filesAlsoUsingPipeShare": 0.0388,
+      "score": 0.0716,
+      "scoreP05": 0.0436,
+      "scoreP95": 0.1058,
+      "tierProbability": {
+        "high": 0.332,
+        "mid": 0.668,
+        "low": 0
+      },
+      "adopterUse": [],
+      "lodashDownloads": 119758698,
+      "lodashMapped": [
+        {
+          "lodash": "cloneDeep",
+          "package": "lodash.clonedeep",
+          "downloads": 119758698
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.clonedeep=119,758,698",
+      "rank": 14
+    },
+    "concat": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 12,
+      "remedaShare": 0.0056,
+      "remedaRepoCount": 6,
+      "remedaRepoShare": 0.0496,
+      "remedaBalancedShare": 0.0049,
+      "filesAlsoUsingPipeShare": 0.6667,
+      "score": 0.02,
+      "scoreP05": 0.007,
+      "scoreP95": 0.0348,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.503,
+        "low": 0.497
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 89288,
+      "lodashMapped": [
+        {
+          "lodash": "concat",
+          "package": "lodash.concat",
+          "downloads": 89288
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.concat=89,288",
+      "rank": 57
+    },
+    "conditional": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 1077932,
+      "lodashMapped": [
+        {
+          "lodash": "cond",
+          "package": "lodash.cond",
+          "downloads": 1077932
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.cond=1,077,932",
+      "rank": 131
+    },
+    "constant": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0002,
+      "filesAlsoUsingPipeShare": 1,
+      "score": 0.003,
+      "scoreP05": 0,
+      "scoreP95": 0.0088,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 975394,
+      "lodashMapped": [
+        {
+          "lodash": "constant",
+          "package": "lodash.constant",
+          "downloads": 975394
+        }
+      ],
+      "notes": "thin remeda sample (1 files in 1 repo clusters); lodash proxy (docs mapping): lodash.constant=975,394",
+      "rank": 125
+    },
+    "countBy": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 9,
+      "remedaShare": 0.0042,
+      "remedaRepoCount": 4,
+      "remedaRepoShare": 0.0331,
+      "remedaBalancedShare": 0.0023,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0132,
+      "scoreP05": 0.0032,
+      "scoreP95": 0.0235,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.135,
+        "low": 0.865
+      },
+      "adopterUse": [],
+      "lodashDownloads": 85153,
+      "lodashMapped": [
+        {
+          "lodash": "countBy",
+          "package": "lodash.countby",
+          "downloads": 85153
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.countby=85,153",
+      "rank": 73
+    },
+    "debounce": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 3,
+      "remedaShare": 0.0014,
+      "remedaRepoCount": 2,
+      "remedaRepoShare": 0.0165,
+      "remedaBalancedShare": 0.0043,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0074,
+      "scoreP05": 0,
+      "scoreP95": 0.0173,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.011,
+        "low": 0.989
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "deprecated in source in favor of funnel; thin remeda sample (3 files in 2 repo clusters); no lodash mapping page; the docs map lodash debounce/throttle to funnel, so lodash.debounce (208,203,230/month) is not counted here",
+      "rank": 96
+    },
+    "defaultTo": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0028,
+      "filesAlsoUsingPipeShare": 1,
+      "score": 0.0039,
+      "scoreP05": 0,
+      "scoreP95": 0.0117,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 134426,
+      "lodashMapped": [
+        {
+          "lodash": "defaultTo",
+          "package": "lodash.defaultto",
+          "downloads": 134426
+        }
+      ],
+      "notes": "thin remeda sample (1 files in 1 repo clusters); lodash proxy (docs mapping): lodash.defaultto=134,426",
+      "rank": 107
+    },
+    "difference": {
+      "kind": "lazy",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 24,
+      "remedaShare": 0.0112,
+      "remedaRepoCount": 9,
+      "remedaRepoShare": 0.0744,
+      "remedaBalancedShare": 0.0093,
+      "filesAlsoUsingPipeShare": 0.125,
+      "score": 0.0316,
+      "scoreP05": 0.0163,
+      "scoreP95": 0.0499,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.886,
+        "low": 0.114
+      },
+      "adopterUse": ["@prisma/dev", "@likec4/diagram"],
+      "lodashDownloads": 83797863,
+      "lodashMapped": [
+        {
+          "lodash": "difference",
+          "package": "lodash.difference",
+          "downloads": 83797863
+        }
+      ],
+      "notes": "concentrated: 54% of its sampled files are in pkcprotocol/pkc-js; lodash proxy (docs mapping): lodash.difference=83,797,863",
+      "rank": 44
+    },
+    "differenceWith": {
+      "kind": "lazy",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0005,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0031,
+      "scoreP05": 0,
+      "scoreP95": 0.0092,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.001,
+        "low": 0.999
+      },
+      "adopterUse": [],
+      "lodashDownloads": 596543,
+      "lodashMapped": [
+        {
+          "lodash": "differenceWith",
+          "package": "lodash.differencewith",
+          "downloads": 596543
+        }
+      ],
+      "notes": "thin remeda sample (1 files in 1 repo clusters); lodash proxy (docs mapping): lodash.differencewith=596,543",
+      "rank": 119
+    },
+    "divide": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 196,
+      "lodashMapped": [
+        {
+          "lodash": "divide",
+          "package": "lodash.divide",
+          "downloads": 196
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.divide=196",
+      "rank": 132
+    },
+    "doNothing": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 16,
+      "remedaShare": 0.0075,
+      "remedaRepoCount": 5,
+      "remedaRepoShare": 0.0413,
+      "remedaBalancedShare": 0.0105,
+      "filesAlsoUsingPipeShare": 0.0625,
+      "score": 0.0198,
+      "scoreP05": 0.0069,
+      "scoreP95": 0.0343,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.489,
+        "low": 0.511
+      },
+      "adopterUse": [],
+      "lodashDownloads": 1700632,
+      "lodashMapped": [
+        {
+          "lodash": "noop",
+          "package": "lodash.noop",
+          "downloads": 1700632
+        }
+      ],
+      "notes": "includes v1 names: 2 files used the v1 name noop; lodash proxy (docs mapping): lodash.noop=1,700,632",
+      "rank": 59
+    },
+    "drop": {
+      "kind": "lazy",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 5,
+      "remedaShare": 0.0023,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0014,
+      "filesAlsoUsingPipeShare": 0.6,
+      "score": 0.0095,
+      "scoreP05": 0.003,
+      "scoreP95": 0.019,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.037,
+        "low": 0.963
+      },
+      "adopterUse": [],
+      "lodashDownloads": 10384,
+      "lodashMapped": [
+        {
+          "lodash": "drop",
+          "package": "lodash.drop",
+          "downloads": 10384
+        }
+      ],
+      "notes": "thin remeda sample (5 files in 3 repo clusters); lodash proxy (docs mapping): lodash.drop=10,384",
+      "rank": 90
+    },
+    "dropFirstBy": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (0 files in 0 repo clusters); no lodash mapping page",
+      "rank": 133
+    },
+    "dropLast": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 4,
+      "remedaShare": 0.0019,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0019,
+      "filesAlsoUsingPipeShare": 0.75,
+      "score": 0.0095,
+      "scoreP05": 0.003,
+      "scoreP95": 0.0194,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.04,
+        "low": 0.96
+      },
+      "adopterUse": [],
+      "lodashDownloads": 3645,
+      "lodashMapped": [
+        {
+          "lodash": "dropRight",
+          "package": "lodash.dropright",
+          "downloads": 3645
+        }
+      ],
+      "notes": "thin remeda sample (4 files in 3 repo clusters); lodash proxy (docs mapping): lodash.dropright=3,645",
+      "rank": 91
+    },
+    "dropLastWhile": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 2,
+      "remedaShare": 0.0009,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0005,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0032,
+      "scoreP05": 0,
+      "scoreP95": 0.0096,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 794,
+      "lodashMapped": [
+        {
+          "lodash": "dropRightWhile",
+          "package": "lodash.droprightwhile",
+          "downloads": 794
+        }
+      ],
+      "notes": "thin remeda sample (2 files in 1 repo clusters); lodash proxy (docs mapping): lodash.droprightwhile=794",
+      "rank": 114
+    },
+    "dropWhile": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 6,
+      "remedaShare": 0.0028,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0015,
+      "filesAlsoUsingPipeShare": 0.6667,
+      "score": 0.0097,
+      "scoreP05": 0.0031,
+      "scoreP95": 0.0191,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.035,
+        "low": 0.965
+      },
+      "adopterUse": [],
+      "lodashDownloads": 5351,
+      "lodashMapped": [
+        {
+          "lodash": "dropWhile",
+          "package": "lodash.dropwhile",
+          "downloads": 5351
+        }
+      ],
+      "notes": "thin remeda sample (6 files in 3 repo clusters); lodash proxy (docs mapping): lodash.dropwhile=5,351",
+      "rank": 87
+    },
+    "endsWith": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 476618,
+      "lodashMapped": [
+        {
+          "lodash": "endsWith",
+          "package": "lodash.endswith",
+          "downloads": 476618
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.endswith=476,618",
+      "rank": 134
+    },
+    "entries": {
+      "kind": "plainPurry",
+      "tier": "high",
+      "tierBasis": "remeda-score",
+      "remedaCount": 107,
+      "remedaShare": 0.0499,
+      "remedaRepoCount": 34,
+      "remedaRepoShare": 0.281,
+      "remedaBalancedShare": 0.0711,
+      "filesAlsoUsingPipeShare": 0.5514,
+      "score": 0.134,
+      "scoreP05": 0.1062,
+      "scoreP95": 0.1652,
+      "tierProbability": {
+        "high": 1,
+        "mid": 0,
+        "low": 0
+      },
+      "adopterUse": ["@opencode-ai/ui", "@likec4/diagram"],
+      "lodashDownloads": 1274095,
+      "lodashMapped": [
+        {
+          "lodash": "toPairs",
+          "package": "lodash.topairs",
+          "downloads": 1274095
+        }
+      ],
+      "notes": "includes v1 names: 4 files used the v1 name toPairs; lodash proxy (docs mapping): lodash.topairs=1,274,095",
+      "rank": 4
+    },
+    "evolve": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (0 files in 0 repo clusters); no lodash mapping page",
+      "rank": 135
+    },
+    "filter": {
+      "kind": "lazy",
+      "tier": "high",
+      "tierBasis": "remeda-score",
+      "remedaCount": 135,
+      "remedaShare": 0.063,
+      "remedaRepoCount": 23,
+      "remedaRepoShare": 0.1901,
+      "remedaBalancedShare": 0.0586,
+      "filesAlsoUsingPipeShare": 0.8889,
+      "score": 0.1039,
+      "scoreP05": 0.0742,
+      "scoreP95": 0.1345,
+      "tierProbability": {
+        "high": 0.898,
+        "mid": 0.102,
+        "low": 0
+      },
+      "adopterUse": ["@snaplet/seed", "@likec4/diagram"],
+      "lodashDownloads": 10035228,
+      "lodashMapped": [
+        {
+          "lodash": "compact",
+          "package": "lodash.compact",
+          "downloads": 1049662
+        },
+        {
+          "lodash": "differenceBy",
+          "package": "lodash.differenceby",
+          "downloads": 109181
+        },
+        {
+          "lodash": "filter",
+          "package": "lodash.filter",
+          "downloads": 5278775
+        },
+        {
+          "lodash": "reject",
+          "package": "lodash.reject",
+          "downloads": 3597610
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.compact=1,049,662, lodash.differenceby=109,181, lodash.filter=5,278,775, lodash.reject=3,597,610",
+      "rank": 11
+    },
+    "find": {
+      "kind": "lazy",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 20,
+      "remedaShare": 0.0093,
+      "remedaRepoCount": 6,
+      "remedaRepoShare": 0.0496,
+      "remedaBalancedShare": 0.0089,
+      "filesAlsoUsingPipeShare": 0.5,
+      "score": 0.0226,
+      "scoreP05": 0.008,
+      "scoreP95": 0.0383,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.592,
+        "low": 0.408
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 6555530,
+      "lodashMapped": [
+        {
+          "lodash": "find",
+          "package": "lodash.find",
+          "downloads": 6555530
+        }
+      ],
+      "notes": "concentrated: 60% of its sampled files are in likec4/likec4; lodash proxy (docs mapping): lodash.find=6,555,530",
+      "rank": 54
+    },
+    "findIndex": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 641225,
+      "lodashMapped": [
+        {
+          "lodash": "findIndex",
+          "package": "lodash.findindex",
+          "downloads": 641225
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.findindex=641,225",
+      "rank": 136
+    },
+    "findLast": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 13,
+      "remedaShare": 0.0061,
+      "remedaRepoCount": 5,
+      "remedaRepoShare": 0.0413,
+      "remedaBalancedShare": 0.005,
+      "filesAlsoUsingPipeShare": 0.2308,
+      "score": 0.0174,
+      "scoreP05": 0.0067,
+      "scoreP95": 0.0304,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.378,
+        "low": 0.622
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 176876,
+      "lodashMapped": [
+        {
+          "lodash": "findLast",
+          "package": "lodash.findlast",
+          "downloads": 176876
+        }
+      ],
+      "notes": "concentrated: 54% of its sampled files are in likec4/likec4; lodash proxy (docs mapping): lodash.findlast=176,876",
+      "rank": 65
+    },
+    "findLastIndex": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 2,
+      "remedaShare": 0.0009,
+      "remedaRepoCount": 2,
+      "remedaRepoShare": 0.0165,
+      "remedaBalancedShare": 0.0005,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.006,
+      "scoreP05": 0,
+      "scoreP95": 0.0146,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.004,
+        "low": 0.996
+      },
+      "adopterUse": [],
+      "lodashDownloads": 106875,
+      "lodashMapped": [
+        {
+          "lodash": "findLastIndex",
+          "package": "lodash.findlastindex",
+          "downloads": 106875
+        }
+      ],
+      "notes": "thin remeda sample (2 files in 2 repo clusters); lodash proxy (docs mapping): lodash.findlastindex=106,875",
+      "rank": 105
+    },
+    "first": {
+      "kind": "lazy",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 45,
+      "remedaShare": 0.021,
+      "remedaRepoCount": 6,
+      "remedaRepoShare": 0.0496,
+      "remedaBalancedShare": 0.0125,
+      "filesAlsoUsingPipeShare": 0.2889,
+      "score": 0.0277,
+      "scoreP05": 0.0103,
+      "scoreP95": 0.0452,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.756,
+        "low": 0.244
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 525964,
+      "lodashMapped": [
+        {
+          "lodash": "head",
+          "package": "lodash.head",
+          "downloads": 525964
+        }
+      ],
+      "notes": "concentrated: 53% of its sampled files are in likec4/likec4; lodash proxy (docs mapping): lodash.head=525,964",
+      "rank": 46
+    },
+    "firstBy": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 39,
+      "remedaShare": 0.0182,
+      "remedaRepoCount": 12,
+      "remedaRepoShare": 0.0992,
+      "remedaBalancedShare": 0.0144,
+      "filesAlsoUsingPipeShare": 0.1538,
+      "score": 0.0439,
+      "scoreP05": 0.0274,
+      "scoreP95": 0.0638,
+      "tierProbability": {
+        "high": 0.002,
+        "mid": 0.987,
+        "low": 0.011
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 5066023,
+      "lodashMapped": [
+        {
+          "lodash": "max",
+          "package": "lodash.max",
+          "downloads": 1191644
+        },
+        {
+          "lodash": "maxBy",
+          "package": "lodash.maxby",
+          "downloads": 3696164
+        },
+        {
+          "lodash": "min",
+          "package": "lodash.min",
+          "downloads": 105850
+        },
+        {
+          "lodash": "minBy",
+          "package": "lodash.minby",
+          "downloads": 72365
+        }
+      ],
+      "notes": "includes v1 names: 4 files used the v1 name minBy; lodash proxy (docs mapping): lodash.max=1,191,644, lodash.maxby=3,696,164, lodash.min=105,850, lodash.minby=72,365",
+      "rank": 34
+    },
+    "flat": {
+      "kind": "lazy",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 12,
+      "remedaShare": 0.0056,
+      "remedaRepoCount": 7,
+      "remedaRepoShare": 0.0579,
+      "remedaBalancedShare": 0.0069,
+      "filesAlsoUsingPipeShare": 0.4167,
+      "score": 0.0235,
+      "scoreP05": 0.0101,
+      "scoreP95": 0.0376,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.639,
+        "low": 0.361
+      },
+      "adopterUse": ["@snaplet/seed", "@likec4/diagram"],
+      "lodashDownloads": 134295562,
+      "lodashMapped": [
+        {
+          "lodash": "flatten",
+          "package": "lodash.flatten",
+          "downloads": 92006449
+        },
+        {
+          "lodash": "flattenDeep",
+          "package": "lodash.flattendeep",
+          "downloads": 42289113
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.flatten=92,006,449, lodash.flattendeep=42,289,113",
+      "rank": 51
+    },
+    "flatMap": {
+      "kind": "lazy",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 46,
+      "remedaShare": 0.0215,
+      "remedaRepoCount": 12,
+      "remedaRepoShare": 0.0992,
+      "remedaBalancedShare": 0.0209,
+      "filesAlsoUsingPipeShare": 0.9348,
+      "score": 0.0472,
+      "scoreP05": 0.0267,
+      "scoreP95": 0.0682,
+      "tierProbability": {
+        "high": 0.008,
+        "mid": 0.979,
+        "low": 0.013
+      },
+      "adopterUse": ["@opencode-ai/ui", "@likec4/diagram"],
+      "lodashDownloads": 3111869,
+      "lodashMapped": [
+        {
+          "lodash": "flatMap",
+          "package": "lodash.flatmap",
+          "downloads": 3111869
+        }
+      ],
+      "notes": "concentrated: 50% of its sampled files are in likec4/likec4; lodash proxy (docs mapping): lodash.flatmap=3,111,869",
+      "rank": 28
+    },
+    "floor": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 20027,
+      "lodashMapped": [
+        {
+          "lodash": "floor",
+          "package": "lodash.floor",
+          "downloads": 20027
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.floor=20,027",
+      "rank": 137
+    },
+    "forEach": {
+      "kind": "lazy",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 15,
+      "remedaShare": 0.007,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.003,
+      "filesAlsoUsingPipeShare": 0.9333,
+      "score": 0.0116,
+      "scoreP05": 0,
+      "scoreP95": 0.0225,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.106,
+        "low": 0.894
+      },
+      "adopterUse": [],
+      "lodashDownloads": 11013859,
+      "lodashMapped": [
+        {
+          "lodash": "forEach",
+          "package": "lodash.foreach",
+          "downloads": 11013859
+        }
+      ],
+      "notes": "thin remeda sample (15 files in 3 repo clusters); concentrated: 87% of its sampled files are in likec4/likec4; lodash proxy (docs mapping): lodash.foreach=11,013,859",
+      "rank": 78
+    },
+    "forEachObj": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 6,
+      "remedaShare": 0.0028,
+      "remedaRepoCount": 4,
+      "remedaRepoShare": 0.0331,
+      "remedaBalancedShare": 0.0022,
+      "filesAlsoUsingPipeShare": 0.6667,
+      "score": 0.0127,
+      "scoreP05": 0.0031,
+      "scoreP95": 0.0247,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.124,
+        "low": 0.876
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 1563736,
+      "lodashMapped": [
+        {
+          "lodash": "forOwn",
+          "package": "lodash.forown",
+          "downloads": 1563736
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.forown=1,563,736",
+      "rank": 77
+    },
+    "fromEntries": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 22,
+      "remedaShare": 0.0103,
+      "remedaRepoCount": 15,
+      "remedaRepoShare": 0.124,
+      "remedaBalancedShare": 0.0176,
+      "filesAlsoUsingPipeShare": 0.6364,
+      "score": 0.0506,
+      "scoreP05": 0.0331,
+      "scoreP95": 0.0697,
+      "tierProbability": {
+        "high": 0.005,
+        "mid": 0.992,
+        "low": 0.003
+      },
+      "adopterUse": [],
+      "lodashDownloads": 868493,
+      "lodashMapped": [
+        {
+          "lodash": "fromPairs",
+          "package": "lodash.frompairs",
+          "downloads": 868493
+        }
+      ],
+      "notes": "includes v1 names: 2 files used the v1 name fromPairs; lodash proxy (docs mapping): lodash.frompairs=868,493",
+      "rank": 26
+    },
+    "fromKeys": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 4,
+      "remedaShare": 0.0019,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.001,
+      "filesAlsoUsingPipeShare": 0.25,
+      "score": 0.0092,
+      "scoreP05": 0,
+      "scoreP95": 0.0184,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.04,
+        "low": 0.96
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (4 files in 3 repo clusters); no lodash mapping page",
+      "rank": 93
+    },
+    "funnel": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 16,
+      "remedaShare": 0.0075,
+      "remedaRepoCount": 5,
+      "remedaRepoShare": 0.0413,
+      "remedaBalancedShare": 0.011,
+      "filesAlsoUsingPipeShare": 0.0625,
+      "score": 0.0199,
+      "scoreP05": 0.0066,
+      "scoreP95": 0.0349,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.483,
+        "low": 0.517
+      },
+      "adopterUse": [],
+      "lodashDownloads": 288833534,
+      "lodashMapped": [
+        {
+          "lodash": "debounce",
+          "package": "lodash.debounce",
+          "downloads": 208203230
+        },
+        {
+          "lodash": "throttle",
+          "package": "lodash.throttle",
+          "downloads": 80630304
+        }
+      ],
+      "notes": "concentrated: 56% of its sampled files are in TabbyML/pochi; lodash proxy (docs mapping): lodash.debounce=208,203,230, lodash.throttle=80,630,304",
+      "rank": 58
+    },
+    "groupBy": {
+      "kind": "plainPurry",
+      "tier": "high",
+      "tierBasis": "remeda-score",
+      "remedaCount": 108,
+      "remedaShare": 0.0504,
+      "remedaRepoCount": 30,
+      "remedaRepoShare": 0.2479,
+      "remedaBalancedShare": 0.0543,
+      "filesAlsoUsingPipeShare": 0.4815,
+      "score": 0.1175,
+      "scoreP05": 0.0896,
+      "scoreP95": 0.1459,
+      "tierProbability": {
+        "high": 0.987,
+        "mid": 0.013,
+        "low": 0
+      },
+      "adopterUse": ["@opencode-ai/ui", "@likec4/diagram"],
+      "lodashDownloads": 83256777,
+      "lodashMapped": [
+        {
+          "lodash": "groupBy",
+          "package": "lodash.groupby",
+          "downloads": 83256777
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.groupby=83,256,777",
+      "rank": 9
+    },
+    "groupByProp": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 4,
+      "remedaShare": 0.0019,
+      "remedaRepoCount": 2,
+      "remedaRepoShare": 0.0165,
+      "remedaBalancedShare": 0.0011,
+      "filesAlsoUsingPipeShare": 0.5,
+      "score": 0.0065,
+      "scoreP05": 0,
+      "scoreP95": 0.0154,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.006,
+        "low": 0.994
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (4 files in 2 repo clusters); no lodash mapping page",
+      "rank": 101
+    },
+    "hasAtLeast": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 62,
+      "remedaShare": 0.0289,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.011,
+      "filesAlsoUsingPipeShare": 0.4677,
+      "score": 0.0216,
+      "scoreP05": 0.003,
+      "scoreP95": 0.0441,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.301,
+        "low": 0.699
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "breadth guard: score is above the mid threshold but only 3 repo clusters use it, so it stays low; thin remeda sample (62 files in 3 repo clusters); concentrated: 97% of its sampled files are in likec4/likec4; no lodash mapping page",
+      "rank": 55
+    },
+    "hasProp": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 5659260,
+      "lodashMapped": [
+        {
+          "lodash": "has",
+          "package": "lodash.has",
+          "downloads": 5081471
+        },
+        {
+          "lodash": "hasIn",
+          "package": "lodash.hasin",
+          "downloads": 577789
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.has=5,081,471, lodash.hasin=577,789",
+      "rank": 138
+    },
+    "hasSubObject": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 2,
+      "remedaShare": 0.0009,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0003,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0032,
+      "scoreP05": 0,
+      "scoreP95": 0.0093,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 17235721,
+      "lodashMapped": [
+        {
+          "lodash": "isMatch",
+          "package": "lodash.ismatch",
+          "downloads": 17235721
+        }
+      ],
+      "notes": "thin remeda sample (2 files in 1 repo clusters); lodash proxy (docs mapping): lodash.ismatch=17,235,721",
+      "rank": 115
+    },
+    "identity": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 24,
+      "remedaShare": 0.0112,
+      "remedaRepoCount": 7,
+      "remedaRepoShare": 0.0579,
+      "remedaBalancedShare": 0.0078,
+      "filesAlsoUsingPipeShare": 0.3333,
+      "score": 0.0256,
+      "scoreP05": 0.012,
+      "scoreP95": 0.0415,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.741,
+        "low": 0.259
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 5745861,
+      "lodashMapped": [
+        {
+          "lodash": "identity",
+          "package": "lodash.identity",
+          "downloads": 5745861
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.identity=5,745,861",
+      "rank": 50
+    },
+    "indexBy": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 36,
+      "remedaShare": 0.0168,
+      "remedaRepoCount": 7,
+      "remedaRepoShare": 0.0579,
+      "remedaBalancedShare": 0.0128,
+      "filesAlsoUsingPipeShare": 0.2778,
+      "score": 0.0292,
+      "scoreP05": 0.0137,
+      "scoreP95": 0.0468,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.789,
+        "low": 0.211
+      },
+      "adopterUse": [],
+      "lodashDownloads": 604189,
+      "lodashMapped": [
+        {
+          "lodash": "keyBy",
+          "package": "lodash.keyby",
+          "downloads": 604189
+        }
+      ],
+      "notes": "concentrated: 58% of its sampled files are in likec4/likec4; lodash proxy (docs mapping): lodash.keyby=604,189",
+      "rank": 45
+    },
+    "intersection": {
+      "kind": "lazy",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 7,
+      "remedaShare": 0.0033,
+      "remedaRepoCount": 4,
+      "remedaRepoShare": 0.0331,
+      "remedaBalancedShare": 0.0028,
+      "filesAlsoUsingPipeShare": 0.1429,
+      "score": 0.013,
+      "scoreP05": 0.0033,
+      "scoreP95": 0.025,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.146,
+        "low": 0.854
+      },
+      "adopterUse": ["@snaplet/seed"],
+      "lodashDownloads": 3388759,
+      "lodashMapped": [
+        {
+          "lodash": "intersection",
+          "package": "lodash.intersection",
+          "downloads": 3388759
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.intersection=3,388,759",
+      "rank": 76
+    },
+    "intersectionWith": {
+      "kind": "lazy",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 88579,
+      "lodashMapped": [
+        {
+          "lodash": "intersectionWith",
+          "package": "lodash.intersectionwith",
+          "downloads": 88579
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.intersectionwith=88,579",
+      "rank": 139
+    },
+    "invert": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 5,
+      "remedaShare": 0.0023,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0018,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0096,
+      "scoreP05": 0.0029,
+      "scoreP95": 0.0191,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.035,
+        "low": 0.965
+      },
+      "adopterUse": [],
+      "lodashDownloads": 445097,
+      "lodashMapped": [
+        {
+          "lodash": "invert",
+          "package": "lodash.invert",
+          "downloads": 445097
+        }
+      ],
+      "notes": "thin remeda sample (5 files in 3 repo clusters); lodash proxy (docs mapping): lodash.invert=445,097",
+      "rank": 89
+    },
+    "isArray": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 51,
+      "remedaShare": 0.0238,
+      "remedaRepoCount": 9,
+      "remedaRepoShare": 0.0744,
+      "remedaBalancedShare": 0.0175,
+      "filesAlsoUsingPipeShare": 0.2353,
+      "score": 0.0386,
+      "scoreP05": 0.02,
+      "scoreP95": 0.0608,
+      "tierProbability": {
+        "high": 0.001,
+        "mid": 0.949,
+        "low": 0.05
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 9955159,
+      "lodashMapped": [
+        {
+          "lodash": "isArray",
+          "package": "lodash.isarray",
+          "downloads": 9955159
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.isarray=9,955,159",
+      "rank": 39
+    },
+    "isBigInt": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0008,
+      "filesAlsoUsingPipeShare": 1,
+      "score": 0.0032,
+      "scoreP05": 0,
+      "scoreP95": 0.0096,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (1 files in 1 repo clusters); no lodash mapping page",
+      "rank": 118
+    },
+    "isBoolean": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 21,
+      "remedaShare": 0.0098,
+      "remedaRepoCount": 4,
+      "remedaRepoShare": 0.0331,
+      "remedaBalancedShare": 0.0053,
+      "filesAlsoUsingPipeShare": 0.1429,
+      "score": 0.0161,
+      "scoreP05": 0.0035,
+      "scoreP95": 0.03,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.315,
+        "low": 0.685
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 241431247,
+      "lodashMapped": [
+        {
+          "lodash": "isBoolean",
+          "package": "lodash.isboolean",
+          "downloads": 241431247,
+          "transitiveAnchor": "jsonwebtoken"
+        }
+      ],
+      "notes": "concentrated: 52% of its sampled files are in suyuan32/simple-admin-backend-ui; lodash proxy (docs mapping): lodash.isboolean=241,431,247; lodash figure inflated by transitive dependents (lodash.isboolean via jsonwebtoken); excluded from the fallback test",
+      "rank": 67
+    },
+    "isDate": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 218336,
+      "lodashMapped": [
+        {
+          "lodash": "isDate",
+          "package": "lodash.isdate",
+          "downloads": 218336
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.isdate=218,336",
+      "rank": 140
+    },
+    "isDeepEqual": {
+      "kind": "plainPurry",
+      "tier": "high",
+      "tierBasis": "remeda-score",
+      "remedaCount": 125,
+      "remedaShare": 0.0583,
+      "remedaRepoCount": 29,
+      "remedaRepoShare": 0.2397,
+      "remedaBalancedShare": 0.0678,
+      "filesAlsoUsingPipeShare": 0.08,
+      "score": 0.1219,
+      "scoreP05": 0.0918,
+      "scoreP95": 0.1516,
+      "tierProbability": {
+        "high": 0.988,
+        "mid": 0.012,
+        "low": 0
+      },
+      "adopterUse": ["@prisma/studio-core", "@llm-ui/markdown"],
+      "lodashDownloads": 128383958,
+      "lodashMapped": [
+        {
+          "lodash": "isEqual",
+          "package": "lodash.isequal",
+          "downloads": 128383958
+        }
+      ],
+      "notes": "includes v1 names: 4 files used the v1 name equals; lodash proxy (docs mapping): lodash.isequal=128,383,958",
+      "rank": 7
+    },
+    "isDefined": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 42,
+      "remedaShare": 0.0196,
+      "remedaRepoCount": 11,
+      "remedaRepoShare": 0.0909,
+      "remedaBalancedShare": 0.0183,
+      "filesAlsoUsingPipeShare": 0.3333,
+      "score": 0.0429,
+      "scoreP05": 0.0252,
+      "scoreP95": 0.0631,
+      "tierProbability": {
+        "high": 0.002,
+        "mid": 0.983,
+        "low": 0.015
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "no lodash mapping page",
+      "rank": 35
+    },
+    "isEmpty": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 93,
+      "remedaShare": 0.0434,
+      "remedaRepoCount": 16,
+      "remedaRepoShare": 0.1322,
+      "remedaBalancedShare": 0.0443,
+      "filesAlsoUsingPipeShare": 0.1828,
+      "score": 0.0733,
+      "scoreP05": 0.0475,
+      "scoreP95": 0.1012,
+      "tierProbability": {
+        "high": 0.336,
+        "mid": 0.664,
+        "low": 0
+      },
+      "adopterUse": ["isolate-package", "@likec4/diagram"],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "partly deprecated in source (string/undefined overload; use isEmptyish); no lodash mapping page",
+      "rank": 13
+    },
+    "isEmptyish": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 23,
+      "remedaShare": 0.0107,
+      "remedaRepoCount": 2,
+      "remedaRepoShare": 0.0165,
+      "remedaBalancedShare": 0.0036,
+      "filesAlsoUsingPipeShare": 0.3478,
+      "score": 0.0103,
+      "scoreP05": 0,
+      "scoreP95": 0.0223,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.08,
+        "low": 0.92
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 16393435,
+      "lodashMapped": [
+        {
+          "lodash": "isEmpty",
+          "package": "lodash.isempty",
+          "downloads": 16393435
+        }
+      ],
+      "notes": "thin remeda sample (23 files in 2 repo clusters); concentrated: 96% of its sampled files are in likec4/likec4; lodash proxy (docs mapping): lodash.isempty=16,393,435",
+      "rank": 83
+    },
+    "isError": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 4,
+      "remedaShare": 0.0019,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0036,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0101,
+      "scoreP05": 0.0031,
+      "scoreP95": 0.0199,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.04,
+        "low": 0.96
+      },
+      "adopterUse": [],
+      "lodashDownloads": 1108677,
+      "lodashMapped": [
+        {
+          "lodash": "isError",
+          "package": "lodash.iserror",
+          "downloads": 1108677
+        }
+      ],
+      "notes": "thin remeda sample (4 files in 3 repo clusters); lodash proxy (docs mapping): lodash.iserror=1,108,677",
+      "rank": 85
+    },
+    "isFunction": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 71,
+      "remedaShare": 0.0331,
+      "remedaRepoCount": 5,
+      "remedaRepoShare": 0.0413,
+      "remedaBalancedShare": 0.0206,
+      "filesAlsoUsingPipeShare": 0.0423,
+      "score": 0.0317,
+      "scoreP05": 0.0097,
+      "scoreP95": 0.0601,
+      "tierProbability": {
+        "high": 0.006,
+        "mid": 0.694,
+        "low": 0.3
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 82164073,
+      "lodashMapped": [
+        {
+          "lodash": "isFunction",
+          "package": "lodash.isfunction",
+          "downloads": 82164073
+        }
+      ],
+      "notes": "concentrated: 55% of its sampled files are in suyuan32/simple-admin-backend-ui; lodash proxy (docs mapping): lodash.isfunction=82,164,073",
+      "rank": 43
+    },
+    "isIncludedIn": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 5,
+      "remedaShare": 0.0023,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0021,
+      "filesAlsoUsingPipeShare": 0.6,
+      "score": 0.0097,
+      "scoreP05": 0.003,
+      "scoreP95": 0.0195,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.037,
+        "low": 0.963
+      },
+      "adopterUse": ["@snaplet/seed"],
+      "lodashDownloads": 209760987,
+      "lodashMapped": [
+        {
+          "lodash": "includes",
+          "package": "lodash.includes",
+          "downloads": 209760987,
+          "transitiveAnchor": "jsonwebtoken"
+        }
+      ],
+      "notes": "thin remeda sample (5 files in 3 repo clusters); lodash proxy (docs mapping): lodash.includes=209,760,987; lodash figure inflated by transitive dependents (lodash.includes via jsonwebtoken); excluded from the fallback test",
+      "rank": 88
+    },
+    "isNonNull": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 20,
+      "remedaShare": 0.0093,
+      "remedaRepoCount": 5,
+      "remedaRepoShare": 0.0413,
+      "remedaBalancedShare": 0.0056,
+      "filesAlsoUsingPipeShare": 0.05,
+      "score": 0.0188,
+      "scoreP05": 0.0062,
+      "scoreP95": 0.0318,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.409,
+        "low": 0.591
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "concentrated: 65% of its sampled files are in foundryvtt/pf2e; no lodash mapping page",
+      "rank": 63
+    },
+    "isNonNullish": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 41,
+      "remedaShare": 0.0191,
+      "remedaRepoCount": 11,
+      "remedaRepoShare": 0.0909,
+      "remedaBalancedShare": 0.0172,
+      "filesAlsoUsingPipeShare": 0.1951,
+      "score": 0.0424,
+      "scoreP05": 0.0229,
+      "scoreP95": 0.0621,
+      "tierProbability": {
+        "high": 0.001,
+        "mid": 0.974,
+        "low": 0.025
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "no lodash mapping page",
+      "rank": 36
+    },
+    "isNot": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 10,
+      "remedaShare": 0.0047,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0044,
+      "filesAlsoUsingPipeShare": 0.4,
+      "score": 0.0113,
+      "scoreP05": 0.0033,
+      "scoreP95": 0.0223,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.081,
+        "low": 0.919
+      },
+      "adopterUse": ["@snaplet/seed", "@likec4/diagram"],
+      "lodashDownloads": 133537,
+      "lodashMapped": [
+        {
+          "lodash": "negate",
+          "package": "lodash.negate",
+          "downloads": 133537
+        }
+      ],
+      "notes": "thin remeda sample (10 files in 3 repo clusters); concentrated: 70% of its sampled files are in likec4/likec4; lodash proxy (docs mapping): lodash.negate=133,537",
+      "rank": 80
+    },
+    "isNullish": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 61,
+      "remedaShare": 0.0285,
+      "remedaRepoCount": 12,
+      "remedaRepoShare": 0.0992,
+      "remedaBalancedShare": 0.0251,
+      "filesAlsoUsingPipeShare": 0.2295,
+      "score": 0.0509,
+      "scoreP05": 0.0295,
+      "scoreP95": 0.0722,
+      "tierProbability": {
+        "high": 0.01,
+        "mid": 0.978,
+        "low": 0.012
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 71230833,
+      "lodashMapped": [
+        {
+          "lodash": "isNil",
+          "package": "lodash.isnil",
+          "downloads": 71230833
+        }
+      ],
+      "notes": "concentrated: 51% of its sampled files are in likec4/likec4; includes v1 names: 2 files used the v1 name isNil; lodash proxy (docs mapping): lodash.isnil=71,230,833",
+      "rank": 23
+    },
+    "isNumber": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 33,
+      "remedaShare": 0.0154,
+      "remedaRepoCount": 7,
+      "remedaRepoShare": 0.0579,
+      "remedaBalancedShare": 0.0096,
+      "filesAlsoUsingPipeShare": 0.1515,
+      "score": 0.0276,
+      "scoreP05": 0.012,
+      "scoreP95": 0.0449,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.795,
+        "low": 0.205
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 209156767,
+      "lodashMapped": [
+        {
+          "lodash": "isNumber",
+          "package": "lodash.isnumber",
+          "downloads": 209156767,
+          "transitiveAnchor": "jsonwebtoken"
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.isnumber=209,156,767; lodash figure inflated by transitive dependents (lodash.isnumber via jsonwebtoken); excluded from the fallback test",
+      "rank": 47
+    },
+    "isObjectType": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 51,
+      "remedaShare": 0.0238,
+      "remedaRepoCount": 12,
+      "remedaRepoShare": 0.0992,
+      "remedaBalancedShare": 0.0212,
+      "filesAlsoUsingPipeShare": 0.0392,
+      "score": 0.0481,
+      "scoreP05": 0.0286,
+      "scoreP95": 0.0715,
+      "tierProbability": {
+        "high": 0.007,
+        "mid": 0.977,
+        "low": 0.016
+      },
+      "adopterUse": ["@prisma/studio-core"],
+      "lodashDownloads": 199452,
+      "lodashMapped": [
+        {
+          "lodash": "isObjectLike",
+          "package": "lodash.isobjectlike",
+          "downloads": 199452
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.isobjectlike=199,452",
+      "rank": 27
+    },
+    "isPlainObject": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 129,
+      "remedaShare": 0.0602,
+      "remedaRepoCount": 10,
+      "remedaRepoShare": 0.0826,
+      "remedaBalancedShare": 0.0359,
+      "filesAlsoUsingPipeShare": 0.0078,
+      "score": 0.0596,
+      "scoreP05": 0.0282,
+      "scoreP95": 0.0953,
+      "tierProbability": {
+        "high": 0.147,
+        "mid": 0.833,
+        "low": 0.02
+      },
+      "adopterUse": ["@kubb/studio", "@likec4/diagram"],
+      "lodashDownloads": 299108113,
+      "lodashMapped": [
+        {
+          "lodash": "isPlainObject",
+          "package": "lodash.isplainobject",
+          "downloads": 299108113,
+          "transitiveAnchor": "jsonwebtoken"
+        }
+      ],
+      "notes": "concentrated: 59% of its sampled files are in foundryvtt/pf2e; lodash proxy (docs mapping): lodash.isplainobject=299,108,113; lodash figure inflated by transitive dependents (lodash.isplainobject via jsonwebtoken); excluded from the fallback test",
+      "rank": 19
+    },
+    "isPromise": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 6,
+      "remedaShare": 0.0028,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0023,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.01,
+      "scoreP05": 0.0029,
+      "scoreP95": 0.0196,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.042,
+        "low": 0.958
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (6 files in 3 repo clusters); no lodash mapping page",
+      "rank": 86
+    },
+    "isShallowEqual": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 8,
+      "remedaShare": 0.0037,
+      "remedaRepoCount": 5,
+      "remedaRepoShare": 0.0413,
+      "remedaBalancedShare": 0.0029,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.016,
+      "scoreP05": 0.0061,
+      "scoreP95": 0.028,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.256,
+        "low": 0.744
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "no lodash mapping page",
+      "rank": 68
+    },
+    "isStrictEqual": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (0 files in 0 repo clusters); no lodash mapping page",
+      "rank": 141
+    },
+    "isString": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 76,
+      "remedaShare": 0.0355,
+      "remedaRepoCount": 9,
+      "remedaRepoShare": 0.0744,
+      "remedaBalancedShare": 0.0222,
+      "filesAlsoUsingPipeShare": 0.1053,
+      "score": 0.044,
+      "scoreP05": 0.0229,
+      "scoreP95": 0.0679,
+      "tierProbability": {
+        "high": 0.006,
+        "mid": 0.959,
+        "low": 0.035
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 225252061,
+      "lodashMapped": [
+        {
+          "lodash": "isString",
+          "package": "lodash.isstring",
+          "downloads": 225252061,
+          "transitiveAnchor": "jsonwebtoken"
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.isstring=225,252,061; lodash figure inflated by transitive dependents (lodash.isstring via jsonwebtoken); excluded from the fallback test",
+      "rank": 33
+    },
+    "isSymbol": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0003,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.003,
+      "scoreP05": 0,
+      "scoreP95": 0.009,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 1834,
+      "lodashMapped": [
+        {
+          "lodash": "isSymbol",
+          "package": "lodash.issymbol",
+          "downloads": 1834
+        }
+      ],
+      "notes": "thin remeda sample (1 files in 1 repo clusters); lodash proxy (docs mapping): lodash.issymbol=1,834",
+      "rank": 126
+    },
+    "isTruthy": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 158,
+      "remedaShare": 0.0737,
+      "remedaRepoCount": 10,
+      "remedaRepoShare": 0.0826,
+      "remedaBalancedShare": 0.0424,
+      "filesAlsoUsingPipeShare": 0.2342,
+      "score": 0.0662,
+      "scoreP05": 0.0334,
+      "scoreP95": 0.0972,
+      "tierProbability": {
+        "high": 0.238,
+        "mid": 0.754,
+        "low": 0.008
+      },
+      "adopterUse": ["figma-developer-mcp", "@likec4/diagram"],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "no lodash mapping page",
+      "rank": 16
+    },
+    "join": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 9,
+      "remedaShare": 0.0042,
+      "remedaRepoCount": 6,
+      "remedaRepoShare": 0.0496,
+      "remedaBalancedShare": 0.0052,
+      "filesAlsoUsingPipeShare": 0.8889,
+      "score": 0.0197,
+      "scoreP05": 0.0091,
+      "scoreP95": 0.0329,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.443,
+        "low": 0.557
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 3482,
+      "lodashMapped": [
+        {
+          "lodash": "join",
+          "package": "lodash.join",
+          "downloads": 3482
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.join=3,482",
+      "rank": 61
+    },
+    "keys": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 87,
+      "remedaShare": 0.0406,
+      "remedaRepoCount": 13,
+      "remedaRepoShare": 0.1074,
+      "remedaBalancedShare": 0.0302,
+      "filesAlsoUsingPipeShare": 0.069,
+      "score": 0.0594,
+      "scoreP05": 0.0342,
+      "scoreP95": 0.0879,
+      "tierProbability": {
+        "high": 0.109,
+        "mid": 0.885,
+        "low": 0.006
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 16342206,
+      "lodashMapped": [
+        {
+          "lodash": "keys",
+          "package": "lodash.keys",
+          "downloads": 16342206
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.keys=16,342,206",
+      "rank": 20
+    },
+    "last": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 57,
+      "remedaShare": 0.0266,
+      "remedaRepoCount": 9,
+      "remedaRepoShare": 0.0744,
+      "remedaBalancedShare": 0.0158,
+      "filesAlsoUsingPipeShare": 0.1579,
+      "score": 0.0389,
+      "scoreP05": 0.0182,
+      "scoreP95": 0.0614,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.93,
+        "low": 0.07
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 1070384,
+      "lodashMapped": [
+        {
+          "lodash": "last",
+          "package": "lodash.last",
+          "downloads": 1070384
+        }
+      ],
+      "notes": "concentrated: 54% of its sampled files are in owid/owid-grapher; lodash proxy (docs mapping): lodash.last=1,070,384",
+      "rank": 38
+    },
+    "length": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0005,
+      "filesAlsoUsingPipeShare": 1,
+      "score": 0.0031,
+      "scoreP05": 0,
+      "scoreP95": 0.0092,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.001,
+        "low": 0.999
+      },
+      "adopterUse": [],
+      "lodashDownloads": 1064645,
+      "lodashMapped": [
+        {
+          "lodash": "size",
+          "package": "lodash.size",
+          "downloads": 1064645
+        }
+      ],
+      "notes": "thin remeda sample (1 files in 1 repo clusters); lodash proxy (docs mapping): lodash.size=1,064,645",
+      "rank": 120
+    },
+    "map": {
+      "kind": "lazy",
+      "tier": "high",
+      "tierBasis": "remeda-score",
+      "remedaCount": 188,
+      "remedaShare": 0.0877,
+      "remedaRepoCount": 27,
+      "remedaRepoShare": 0.2231,
+      "remedaBalancedShare": 0.0699,
+      "filesAlsoUsingPipeShare": 0.7766,
+      "score": 0.1269,
+      "scoreP05": 0.0917,
+      "scoreP95": 0.1628,
+      "tierProbability": {
+        "high": 0.988,
+        "mid": 0.012,
+        "low": 0
+      },
+      "adopterUse": ["@opencode-ai/ui", "@likec4/diagram"],
+      "lodashDownloads": 13706013,
+      "lodashMapped": [
+        {
+          "lodash": "invokeMap",
+          "package": "lodash.invokemap",
+          "downloads": 590455
+        },
+        {
+          "lodash": "map",
+          "package": "lodash.map",
+          "downloads": 13115558
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.invokemap=590,455, lodash.map=13,115,558",
+      "rank": 6
+    },
+    "mapKeys": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 10,
+      "remedaShare": 0.0047,
+      "remedaRepoCount": 7,
+      "remedaRepoShare": 0.0579,
+      "remedaBalancedShare": 0.0057,
+      "filesAlsoUsingPipeShare": 0.3,
+      "score": 0.0228,
+      "scoreP05": 0.0101,
+      "scoreP95": 0.0368,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.606,
+        "low": 0.394
+      },
+      "adopterUse": [],
+      "lodashDownloads": 471876,
+      "lodashMapped": [
+        {
+          "lodash": "mapKeys",
+          "package": "lodash.mapkeys",
+          "downloads": 471876
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.mapkeys=471,876",
+      "rank": 53
+    },
+    "mapToObj": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 86,
+      "remedaShare": 0.0401,
+      "remedaRepoCount": 12,
+      "remedaRepoShare": 0.0992,
+      "remedaBalancedShare": 0.0229,
+      "filesAlsoUsingPipeShare": 0.1977,
+      "score": 0.0541,
+      "scoreP05": 0.0312,
+      "scoreP95": 0.077,
+      "tierProbability": {
+        "high": 0.026,
+        "mid": 0.969,
+        "low": 0.005
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "concentrated: 52% of its sampled files are in foundryvtt/pf2e; no lodash mapping page",
+      "rank": 22
+    },
+    "mapValues": {
+      "kind": "plainPurry",
+      "tier": "high",
+      "tierBasis": "remeda-score",
+      "remedaCount": 138,
+      "remedaShare": 0.0644,
+      "remedaRepoCount": 31,
+      "remedaRepoShare": 0.2562,
+      "remedaBalancedShare": 0.0607,
+      "filesAlsoUsingPipeShare": 0.2681,
+      "score": 0.1271,
+      "scoreP05": 0.1005,
+      "scoreP95": 0.155,
+      "tierProbability": {
+        "high": 0.997,
+        "mid": 0.003,
+        "low": 0
+      },
+      "adopterUse": ["@snaplet/seed", "@likec4/diagram"],
+      "lodashDownloads": 14947429,
+      "lodashMapped": [
+        {
+          "lodash": "mapValues",
+          "package": "lodash.mapvalues",
+          "downloads": 14947429
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.mapvalues=14,947,429",
+      "rank": 5
+    },
+    "mapWithFeedback": {
+      "kind": "lazy",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (0 files in 0 repo clusters); no lodash mapping page",
+      "rank": 142
+    },
+    "mean": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 2,
+      "remedaShare": 0.0009,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0005,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0032,
+      "scoreP05": 0,
+      "scoreP95": 0.0096,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 19834,
+      "lodashMapped": [
+        {
+          "lodash": "mean",
+          "package": "lodash.mean",
+          "downloads": 19834
+        }
+      ],
+      "notes": "thin remeda sample (2 files in 1 repo clusters); lodash proxy (docs mapping): lodash.mean=19,834",
+      "rank": 116
+    },
+    "meanBy": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 3,
+      "remedaShare": 0.0014,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0005,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0034,
+      "scoreP05": 0,
+      "scoreP95": 0.0099,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 2745,
+      "lodashMapped": [
+        {
+          "lodash": "meanBy",
+          "package": "lodash.meanby",
+          "downloads": 2745
+        }
+      ],
+      "notes": "thin remeda sample (3 files in 1 repo clusters); lodash proxy (docs mapping): lodash.meanby=2,745",
+      "rank": 112
+    },
+    "median": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0002,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.003,
+      "scoreP05": 0,
+      "scoreP95": 0.0089,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (1 files in 1 repo clusters); no lodash mapping page",
+      "rank": 127
+    },
+    "merge": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 7,
+      "remedaShare": 0.0033,
+      "remedaRepoCount": 4,
+      "remedaRepoShare": 0.0331,
+      "remedaBalancedShare": 0.0029,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0131,
+      "scoreP05": 0.0031,
+      "scoreP95": 0.0251,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.153,
+        "low": 0.847
+      },
+      "adopterUse": [],
+      "lodashDownloads": 10516797,
+      "lodashMapped": [
+        {
+          "lodash": "assign",
+          "package": "lodash.assign",
+          "downloads": 10516797
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.assign=10,516,797",
+      "rank": 74
+    },
+    "mergeAll": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 9,
+      "remedaShare": 0.0042,
+      "remedaRepoCount": 8,
+      "remedaRepoShare": 0.0661,
+      "remedaBalancedShare": 0.0084,
+      "filesAlsoUsingPipeShare": 0.4444,
+      "score": 0.0262,
+      "scoreP05": 0.0131,
+      "scoreP95": 0.0423,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.759,
+        "low": 0.241
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "no lodash mapping page",
+      "rank": 48
+    },
+    "mergeDeep": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 64,
+      "remedaShare": 0.0299,
+      "remedaRepoCount": 14,
+      "remedaRepoShare": 0.1157,
+      "remedaBalancedShare": 0.0378,
+      "filesAlsoUsingPipeShare": 0.25,
+      "score": 0.0611,
+      "scoreP05": 0.0349,
+      "scoreP95": 0.0891,
+      "tierProbability": {
+        "high": 0.138,
+        "mid": 0.86,
+        "low": 0.002
+      },
+      "adopterUse": ["@snaplet/seed", "@likec4/diagram"],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "concentrated: 64% of its sampled files are in anomalyco/opencode (+35 near-identical repos); no lodash mapping page; no lodash mapping page; for context lodash.merge=529,973,268/month and lodash.mergewith=50,092,373/month",
+      "rank": 18
+    },
+    "multiply": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 135,
+      "lodashMapped": [
+        {
+          "lodash": "multiply",
+          "package": "lodash.multiply",
+          "downloads": 135
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.multiply=135",
+      "rank": 143
+    },
+    "nthBy": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (0 files in 0 repo clusters); no lodash mapping page",
+      "rank": 144
+    },
+    "objOf": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (0 files in 0 repo clusters); no lodash mapping page",
+      "rank": 145
+    },
+    "omit": {
+      "kind": "plainPurry",
+      "tier": "high",
+      "tierBasis": "remeda-score",
+      "remedaCount": 180,
+      "remedaShare": 0.084,
+      "remedaRepoCount": 37,
+      "remedaRepoShare": 0.3058,
+      "remedaBalancedShare": 0.0882,
+      "filesAlsoUsingPipeShare": 0.0611,
+      "score": 0.1593,
+      "scoreP05": 0.1265,
+      "scoreP95": 0.1947,
+      "tierProbability": {
+        "high": 1,
+        "mid": 0,
+        "low": 0
+      },
+      "adopterUse": [
+        "@prisma/studio-core",
+        "isolate-package",
+        "@likec4/diagram"
+      ],
+      "lodashDownloads": 13877091,
+      "lodashMapped": [
+        {
+          "lodash": "omit",
+          "package": "lodash.omit",
+          "downloads": 13877091
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.omit=13,877,091",
+      "rank": 3
+    },
+    "omitBy": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 18,
+      "remedaShare": 0.0084,
+      "remedaRepoCount": 13,
+      "remedaRepoShare": 0.1074,
+      "remedaBalancedShare": 0.0106,
+      "filesAlsoUsingPipeShare": 0.1667,
+      "score": 0.0422,
+      "scoreP05": 0.026,
+      "scoreP95": 0.0588,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.987,
+        "low": 0.013
+      },
+      "adopterUse": [],
+      "lodashDownloads": 3091712,
+      "lodashMapped": [
+        {
+          "lodash": "omitBy",
+          "package": "lodash.omitby",
+          "downloads": 3091712
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.omitby=3,091,712",
+      "rank": 37
+    },
+    "once": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 10,
+      "remedaShare": 0.0047,
+      "remedaRepoCount": 2,
+      "remedaRepoShare": 0.0165,
+      "remedaBalancedShare": 0.0023,
+      "filesAlsoUsingPipeShare": 0.3,
+      "score": 0.0078,
+      "scoreP05": 0,
+      "scoreP95": 0.0159,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.01,
+        "low": 0.99
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 225002419,
+      "lodashMapped": [
+        {
+          "lodash": "once",
+          "package": "lodash.once",
+          "downloads": 225002419,
+          "transitiveAnchor": "jsonwebtoken"
+        }
+      ],
+      "notes": "thin remeda sample (10 files in 2 repo clusters); concentrated: 80% of its sampled files are in likec4/likec4; lodash proxy (docs mapping): lodash.once=225,002,419; lodash figure inflated by transitive dependents (lodash.once via jsonwebtoken); excluded from the fallback test",
+      "rank": 95
+    },
+    "only": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 17,
+      "remedaShare": 0.0079,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0026,
+      "filesAlsoUsingPipeShare": 0.7059,
+      "score": 0.0063,
+      "scoreP05": 0,
+      "scoreP95": 0.0167,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.011,
+        "low": 0.989
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (17 files in 1 repo clusters); concentrated: 100% of its sampled files are in likec4/likec4; no lodash mapping page",
+      "rank": 103
+    },
+    "partialBind": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 332950,
+      "lodashMapped": [
+        {
+          "lodash": "partial",
+          "package": "lodash.partial",
+          "downloads": 332950
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.partial=332,950",
+      "rank": 146
+    },
+    "partialLastBind": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 540874,
+      "lodashMapped": [
+        {
+          "lodash": "partialRight",
+          "package": "lodash.partialright",
+          "downloads": 540874
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.partialright=540,874",
+      "rank": 147
+    },
+    "partition": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 38,
+      "remedaShare": 0.0177,
+      "remedaRepoCount": 8,
+      "remedaRepoShare": 0.0661,
+      "remedaBalancedShare": 0.0153,
+      "filesAlsoUsingPipeShare": 0.2632,
+      "score": 0.033,
+      "scoreP05": 0.0154,
+      "scoreP95": 0.052,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.884,
+        "low": 0.116
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 554128,
+      "lodashMapped": [
+        {
+          "lodash": "partition",
+          "package": "lodash.partition",
+          "downloads": 554128
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.partition=554,128",
+      "rank": 42
+    },
+    "pathOr": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 12,
+      "remedaShare": 0.0056,
+      "remedaRepoCount": 10,
+      "remedaRepoShare": 0.0826,
+      "remedaBalancedShare": 0.0229,
+      "filesAlsoUsingPipeShare": 0.5833,
+      "score": 0.0371,
+      "scoreP05": 0.0193,
+      "scoreP95": 0.0582,
+      "tierProbability": {
+        "high": 0.001,
+        "mid": 0.942,
+        "low": 0.057
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "deprecated in source (use defaultTo(prop(...))); no lodash mapping page",
+      "rank": 41
+    },
+    "pick": {
+      "kind": "plainPurry",
+      "tier": "high",
+      "tierBasis": "remeda-score",
+      "remedaCount": 180,
+      "remedaShare": 0.084,
+      "remedaRepoCount": 22,
+      "remedaRepoShare": 0.1818,
+      "remedaBalancedShare": 0.0666,
+      "filesAlsoUsingPipeShare": 0.0611,
+      "score": 0.1108,
+      "scoreP05": 0.0764,
+      "scoreP95": 0.144,
+      "tierProbability": {
+        "high": 0.93,
+        "mid": 0.07,
+        "low": 0
+      },
+      "adopterUse": ["isolate-package", "@likec4/diagram"],
+      "lodashDownloads": 8780883,
+      "lodashMapped": [
+        {
+          "lodash": "pick",
+          "package": "lodash.pick",
+          "downloads": 8780883
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.pick=8,780,883",
+      "rank": 10
+    },
+    "pickBy": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 45,
+      "remedaShare": 0.021,
+      "remedaRepoCount": 14,
+      "remedaRepoShare": 0.1157,
+      "remedaBalancedShare": 0.0158,
+      "filesAlsoUsingPipeShare": 0.1111,
+      "score": 0.0508,
+      "scoreP05": 0.0327,
+      "scoreP95": 0.071,
+      "tierProbability": {
+        "high": 0.008,
+        "mid": 0.991,
+        "low": 0.001
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 9732771,
+      "lodashMapped": [
+        {
+          "lodash": "pickBy",
+          "package": "lodash.pickby",
+          "downloads": 9732771
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.pickby=9,732,771",
+      "rank": 24
+    },
+    "pipe": {
+      "kind": "composition",
+      "tier": "high",
+      "tierBasis": "remeda-score",
+      "remedaCount": 293,
+      "remedaShare": 0.1367,
+      "remedaRepoCount": 47,
+      "remedaRepoShare": 0.3884,
+      "remedaBalancedShare": 0.1563,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0.2271,
+      "scoreP05": 0.1801,
+      "scoreP95": 0.2743,
+      "tierProbability": {
+        "high": 1,
+        "mid": 0,
+        "low": 0
+      },
+      "adopterUse": ["@opencode-ai/ui", "@likec4/diagram"],
+      "lodashDownloads": 7417427,
+      "lodashMapped": [
+        {
+          "lodash": "flow",
+          "package": "lodash.flow",
+          "downloads": 7417427
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.flow=7,417,427",
+      "rank": 1
+    },
+    "piped": {
+      "kind": "composition",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 13,
+      "remedaShare": 0.0061,
+      "remedaRepoCount": 4,
+      "remedaRepoShare": 0.0331,
+      "remedaBalancedShare": 0.006,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0.015,
+      "scoreP05": 0.004,
+      "scoreP95": 0.0282,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.223,
+        "low": 0.777
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "concentrated: 69% of its sampled files are in likec4/likec4; no lodash mapping page",
+      "rank": 70
+    },
+    "product": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (0 files in 0 repo clusters); no lodash mapping page",
+      "rank": 148
+    },
+    "prop": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 63,
+      "remedaShare": 0.0294,
+      "remedaRepoCount": 10,
+      "remedaRepoShare": 0.0826,
+      "remedaBalancedShare": 0.0216,
+      "filesAlsoUsingPipeShare": 0.4286,
+      "score": 0.0445,
+      "scoreP05": 0.0223,
+      "scoreP95": 0.0666,
+      "tierProbability": {
+        "high": 0.002,
+        "mid": 0.973,
+        "low": 0.025
+      },
+      "adopterUse": ["@convex-dev/better-auth", "@likec4/diagram", "kitcn"],
+      "lodashDownloads": 74614021,
+      "lodashMapped": [
+        {
+          "lodash": "get",
+          "package": "lodash.get",
+          "downloads": 74614021
+        }
+      ],
+      "notes": "concentrated: 75% of its sampled files are in likec4/likec4; lodash proxy (docs mapping): lodash.get=74,614,021",
+      "rank": 32
+    },
+    "pullObject": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 2,
+      "remedaShare": 0.0009,
+      "remedaRepoCount": 2,
+      "remedaRepoShare": 0.0165,
+      "remedaBalancedShare": 0.0016,
+      "filesAlsoUsingPipeShare": 0.5,
+      "score": 0.0063,
+      "scoreP05": 0,
+      "scoreP95": 0.0152,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.003,
+        "low": 0.997
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (2 files in 2 repo clusters); no lodash mapping page",
+      "rank": 104
+    },
+    "purry": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 2,
+      "remedaShare": 0.0009,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0003,
+      "filesAlsoUsingPipeShare": 1,
+      "score": 0.0032,
+      "scoreP05": 0,
+      "scoreP95": 0.0093,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (2 files in 1 repo clusters); no lodash mapping page",
+      "rank": 117
+    },
+    "randomBigInt": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (0 files in 0 repo clusters); no lodash mapping page",
+      "rank": 149
+    },
+    "randomInteger": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 7,
+      "remedaShare": 0.0033,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0063,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0114,
+      "scoreP05": 0.003,
+      "scoreP95": 0.0235,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.103,
+        "low": 0.897
+      },
+      "adopterUse": [],
+      "lodashDownloads": 314871,
+      "lodashMapped": [
+        {
+          "lodash": "random",
+          "package": "lodash.random",
+          "downloads": 314871
+        }
+      ],
+      "notes": "thin remeda sample (7 files in 3 repo clusters); lodash proxy (docs mapping): lodash.random=314,871",
+      "rank": 79
+    },
+    "randomString": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 16,
+      "remedaShare": 0.0075,
+      "remedaRepoCount": 6,
+      "remedaRepoShare": 0.0496,
+      "remedaBalancedShare": 0.0076,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0215,
+      "scoreP05": 0.01,
+      "scoreP95": 0.0361,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.578,
+        "low": 0.422
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "no lodash mapping page",
+      "rank": 56
+    },
+    "range": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 50,
+      "remedaShare": 0.0233,
+      "remedaRepoCount": 11,
+      "remedaRepoShare": 0.0909,
+      "remedaBalancedShare": 0.0242,
+      "filesAlsoUsingPipeShare": 0.06,
+      "score": 0.0461,
+      "scoreP05": 0.0263,
+      "scoreP95": 0.0682,
+      "tierProbability": {
+        "high": 0.007,
+        "mid": 0.981,
+        "low": 0.012
+      },
+      "adopterUse": ["@prisma/dev"],
+      "lodashDownloads": 924970,
+      "lodashMapped": [
+        {
+          "lodash": "range",
+          "package": "lodash.range",
+          "downloads": 924970
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.range=924,970",
+      "rank": 29
+    },
+    "rankBy": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (0 files in 0 repo clusters); no lodash mapping page",
+      "rank": 150
+    },
+    "reduce": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 19,
+      "remedaShare": 0.0089,
+      "remedaRepoCount": 5,
+      "remedaRepoShare": 0.0413,
+      "remedaBalancedShare": 0.0079,
+      "filesAlsoUsingPipeShare": 0.8947,
+      "score": 0.0194,
+      "scoreP05": 0.0065,
+      "scoreP95": 0.0335,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.459,
+        "low": 0.541
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 15447992,
+      "lodashMapped": [
+        {
+          "lodash": "reduce",
+          "package": "lodash.reduce",
+          "downloads": 8600780
+        },
+        {
+          "lodash": "reduceRight",
+          "package": "lodash.reduceright",
+          "downloads": 2053
+        },
+        {
+          "lodash": "transform",
+          "package": "lodash.transform",
+          "downloads": 6845159
+        }
+      ],
+      "notes": "concentrated: 79% of its sampled files are in likec4/likec4; lodash proxy (docs mapping): lodash.reduce=8,600,780, lodash.reduceright=2,053, lodash.transform=6,845,159",
+      "rank": 62
+    },
+    "reverse": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 25,
+      "remedaShare": 0.0117,
+      "remedaRepoCount": 14,
+      "remedaRepoShare": 0.1157,
+      "remedaBalancedShare": 0.0252,
+      "filesAlsoUsingPipeShare": 0.6,
+      "score": 0.0508,
+      "scoreP05": 0.0318,
+      "scoreP95": 0.072,
+      "tierProbability": {
+        "high": 0.017,
+        "mid": 0.979,
+        "low": 0.004
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 19752,
+      "lodashMapped": [
+        {
+          "lodash": "reverse",
+          "package": "lodash.reverse",
+          "downloads": 19752
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.reverse=19,752",
+      "rank": 25
+    },
+    "round": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 16,
+      "remedaShare": 0.0075,
+      "remedaRepoCount": 4,
+      "remedaRepoShare": 0.0331,
+      "remedaBalancedShare": 0.0081,
+      "filesAlsoUsingPipeShare": 0.0625,
+      "score": 0.0162,
+      "scoreP05": 0.0043,
+      "scoreP95": 0.0309,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.316,
+        "low": 0.684
+      },
+      "adopterUse": [],
+      "lodashDownloads": 260477,
+      "lodashMapped": [
+        {
+          "lodash": "round",
+          "package": "lodash.round",
+          "downloads": 260477
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.round=260,477",
+      "rank": 66
+    },
+    "sample": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 13,
+      "remedaShare": 0.0061,
+      "remedaRepoCount": 5,
+      "remedaRepoShare": 0.0413,
+      "remedaBalancedShare": 0.0061,
+      "filesAlsoUsingPipeShare": 0.0769,
+      "score": 0.0178,
+      "scoreP05": 0.0066,
+      "scoreP95": 0.0321,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.385,
+        "low": 0.615
+      },
+      "adopterUse": [],
+      "lodashDownloads": 422618,
+      "lodashMapped": [
+        {
+          "lodash": "sample",
+          "package": "lodash.sample",
+          "downloads": 294258
+        },
+        {
+          "lodash": "sampleSize",
+          "package": "lodash.samplesize",
+          "downloads": 128360
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.sample=294,258, lodash.samplesize=128,360",
+      "rank": 64
+    },
+    "set": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 2,
+      "remedaShare": 0.0009,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0006,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0033,
+      "scoreP05": 0,
+      "scoreP95": 0.0098,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (2 files in 1 repo clusters); no lodash mapping page",
+      "rank": 113
+    },
+    "setPath": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 8857426,
+      "lodashMapped": [
+        {
+          "lodash": "set",
+          "package": "lodash.set",
+          "downloads": 8857426
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.set=8,857,426",
+      "rank": 151
+    },
+    "shuffle": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 17,
+      "remedaShare": 0.0079,
+      "remedaRepoCount": 6,
+      "remedaRepoShare": 0.0496,
+      "remedaBalancedShare": 0.0107,
+      "filesAlsoUsingPipeShare": 0.0588,
+      "score": 0.0228,
+      "scoreP05": 0.009,
+      "scoreP95": 0.0394,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.6,
+        "low": 0.4
+      },
+      "adopterUse": [],
+      "lodashDownloads": 794142,
+      "lodashMapped": [
+        {
+          "lodash": "shuffle",
+          "package": "lodash.shuffle",
+          "downloads": 794142
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.shuffle=794,142",
+      "rank": 52
+    },
+    "sliceString": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (0 files in 0 repo clusters); no lodash mapping page",
+      "rank": 152
+    },
+    "sort": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 45,
+      "remedaShare": 0.021,
+      "remedaRepoCount": 9,
+      "remedaRepoShare": 0.0744,
+      "remedaBalancedShare": 0.0177,
+      "filesAlsoUsingPipeShare": 0.3111,
+      "score": 0.0377,
+      "scoreP05": 0.0178,
+      "scoreP95": 0.0602,
+      "tierProbability": {
+        "high": 0.002,
+        "mid": 0.92,
+        "low": 0.078
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "no lodash mapping page",
+      "rank": 40
+    },
+    "sortBy": {
+      "kind": "other",
+      "tier": "high",
+      "tierBasis": "remeda-score",
+      "remedaCount": 192,
+      "remedaShare": 0.0896,
+      "remedaRepoCount": 36,
+      "remedaRepoShare": 0.2975,
+      "remedaBalancedShare": 0.1024,
+      "filesAlsoUsingPipeShare": 0.3958,
+      "score": 0.1632,
+      "scoreP05": 0.1275,
+      "scoreP95": 0.1989,
+      "tierProbability": {
+        "high": 1,
+        "mid": 0,
+        "low": 0
+      },
+      "adopterUse": [
+        "@convex-dev/better-auth",
+        "@snaplet/seed",
+        "@likec4/diagram",
+        "kitcn"
+      ],
+      "lodashDownloads": 93376531,
+      "lodashMapped": [
+        {
+          "lodash": "orderBy",
+          "package": "lodash.orderby",
+          "downloads": 1695332
+        },
+        {
+          "lodash": "sortBy",
+          "package": "lodash.sortby",
+          "downloads": 91681199
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.orderby=1,695,332, lodash.sortby=91,681,199",
+      "rank": 2
+    },
+    "sortedIndex": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 4,
+      "remedaShare": 0.0019,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0009,
+      "filesAlsoUsingPipeShare": 0.25,
+      "score": 0.0037,
+      "scoreP05": 0,
+      "scoreP95": 0.0109,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 30404,
+      "lodashMapped": [
+        {
+          "lodash": "sortedIndex",
+          "package": "lodash.sortedindex",
+          "downloads": 30404
+        }
+      ],
+      "notes": "thin remeda sample (4 files in 1 repo clusters); lodash proxy (docs mapping): lodash.sortedindex=30,404",
+      "rank": 109
+    },
+    "sortedIndexBy": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0002,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.003,
+      "scoreP05": 0,
+      "scoreP95": 0.0089,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 19206,
+      "lodashMapped": [
+        {
+          "lodash": "sortedIndexBy",
+          "package": "lodash.sortedindexby",
+          "downloads": 19206
+        }
+      ],
+      "notes": "thin remeda sample (1 files in 1 repo clusters); lodash proxy (docs mapping): lodash.sortedindexby=19,206",
+      "rank": 128
+    },
+    "sortedIndexWith": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 5,
+      "remedaShare": 0.0023,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0045,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0105,
+      "scoreP05": 0.0032,
+      "scoreP95": 0.0211,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.08,
+        "low": 0.92
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (5 files in 3 repo clusters); no lodash mapping page",
+      "rank": 81
+    },
+    "sortedLastIndex": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 1023582,
+      "lodashMapped": [
+        {
+          "lodash": "sortedLastIndex",
+          "package": "lodash.sortedlastindex",
+          "downloads": 1023582
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.sortedlastindex=1,023,582",
+      "rank": 153
+    },
+    "sortedLastIndexBy": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 414,
+      "lodashMapped": [
+        {
+          "lodash": "sortedLastIndexBy",
+          "package": "lodash.sortedlastindexby",
+          "downloads": 414
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.sortedlastindexby=414",
+      "rank": 154
+    },
+    "splice": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (0 files in 0 repo clusters); no lodash mapping page",
+      "rank": 155
+    },
+    "split": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0005,
+      "filesAlsoUsingPipeShare": 1,
+      "score": 0.0031,
+      "scoreP05": 0,
+      "scoreP95": 0.0092,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.001,
+        "low": 0.999
+      },
+      "adopterUse": [],
+      "lodashDownloads": 273852,
+      "lodashMapped": [
+        {
+          "lodash": "split",
+          "package": "lodash.split",
+          "downloads": 273852
+        }
+      ],
+      "notes": "thin remeda sample (1 files in 1 repo clusters); lodash proxy (docs mapping): lodash.split=273,852",
+      "rank": 121
+    },
+    "splitAt": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (0 files in 0 repo clusters); no lodash mapping page",
+      "rank": 156
+    },
+    "splitWhen": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 3,
+      "remedaShare": 0.0014,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0021,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0094,
+      "scoreP05": 0.003,
+      "scoreP95": 0.019,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.033,
+        "low": 0.967
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (3 files in 3 repo clusters); no lodash mapping page",
+      "rank": 92
+    },
+    "startsWith": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 3314726,
+      "lodashMapped": [
+        {
+          "lodash": "startsWith",
+          "package": "lodash.startswith",
+          "downloads": 3314726
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.startswith=3,314,726",
+      "rank": 157
+    },
+    "stringToPath": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 3,
+      "remedaShare": 0.0014,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0052,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0105,
+      "scoreP05": 0.003,
+      "scoreP95": 0.0216,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.078,
+        "low": 0.922
+      },
+      "adopterUse": [],
+      "lodashDownloads": 14759687,
+      "lodashMapped": [
+        {
+          "lodash": "toPath",
+          "package": "lodash.topath",
+          "downloads": 14759687
+        }
+      ],
+      "notes": "thin remeda sample (3 files in 3 repo clusters); lodash proxy (docs mapping): lodash.topath=14,759,687",
+      "rank": 82
+    },
+    "subtract": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 134,
+      "lodashMapped": [
+        {
+          "lodash": "subtract",
+          "package": "lodash.subtract",
+          "downloads": 134
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.subtract=134",
+      "rank": 158
+    },
+    "sum": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 18,
+      "remedaShare": 0.0084,
+      "remedaRepoCount": 4,
+      "remedaRepoShare": 0.0331,
+      "remedaBalancedShare": 0.0053,
+      "filesAlsoUsingPipeShare": 0.2778,
+      "score": 0.0156,
+      "scoreP05": 0.004,
+      "scoreP95": 0.0277,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.266,
+        "low": 0.734
+      },
+      "adopterUse": [],
+      "lodashDownloads": 181952,
+      "lodashMapped": [
+        {
+          "lodash": "sum",
+          "package": "lodash.sum",
+          "downloads": 181952
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.sum=181,952",
+      "rank": 69
+    },
+    "sumBy": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 42,
+      "remedaShare": 0.0196,
+      "remedaRepoCount": 12,
+      "remedaRepoShare": 0.0992,
+      "remedaBalancedShare": 0.0156,
+      "filesAlsoUsingPipeShare": 0.2619,
+      "score": 0.0448,
+      "scoreP05": 0.0269,
+      "scoreP95": 0.0643,
+      "tierProbability": {
+        "high": 0.002,
+        "mid": 0.989,
+        "low": 0.009
+      },
+      "adopterUse": [],
+      "lodashDownloads": 131477,
+      "lodashMapped": [
+        {
+          "lodash": "sumBy",
+          "package": "lodash.sumby",
+          "downloads": 131477
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.sumby=131,477",
+      "rank": 31
+    },
+    "swapIndices": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.002,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0036,
+      "scoreP05": 0,
+      "scoreP95": 0.0108,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.002,
+        "low": 0.998
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (1 files in 1 repo clusters); no lodash mapping page",
+      "rank": 110
+    },
+    "swapProps": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (0 files in 0 repo clusters); no lodash mapping page",
+      "rank": 159
+    },
+    "take": {
+      "kind": "lazy",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 31,
+      "remedaShare": 0.0145,
+      "remedaRepoCount": 15,
+      "remedaRepoShare": 0.124,
+      "remedaBalancedShare": 0.0273,
+      "filesAlsoUsingPipeShare": 0.8387,
+      "score": 0.0552,
+      "scoreP05": 0.0351,
+      "scoreP95": 0.0767,
+      "tierProbability": {
+        "high": 0.033,
+        "mid": 0.966,
+        "low": 0.001
+      },
+      "adopterUse": [],
+      "lodashDownloads": 220362,
+      "lodashMapped": [
+        {
+          "lodash": "take",
+          "package": "lodash.take",
+          "downloads": 220362
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.take=220,362",
+      "rank": 21
+    },
+    "takeFirstBy": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 2,
+      "remedaShare": 0.0009,
+      "remedaRepoCount": 2,
+      "remedaRepoShare": 0.0165,
+      "remedaBalancedShare": 0.0005,
+      "filesAlsoUsingPipeShare": 0.5,
+      "score": 0.006,
+      "scoreP05": 0,
+      "scoreP95": 0.0146,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.002,
+        "low": 0.998
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (2 files in 2 repo clusters); no lodash mapping page",
+      "rank": 106
+    },
+    "takeLast": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 144873,
+      "lodashMapped": [
+        {
+          "lodash": "takeRight",
+          "package": "lodash.takeright",
+          "downloads": 144873
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.takeright=144,873",
+      "rank": 160
+    },
+    "takeLastWhile": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 459,
+      "lodashMapped": [
+        {
+          "lodash": "takeRightWhile",
+          "package": "lodash.takerightwhile",
+          "downloads": 459
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.takerightwhile=459",
+      "rank": 161
+    },
+    "takeWhile": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 6,
+      "remedaShare": 0.0028,
+      "remedaRepoCount": 4,
+      "remedaRepoShare": 0.0331,
+      "remedaBalancedShare": 0.0041,
+      "filesAlsoUsingPipeShare": 0.6667,
+      "score": 0.0133,
+      "scoreP05": 0.0033,
+      "scoreP95": 0.0247,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.158,
+        "low": 0.842
+      },
+      "adopterUse": [],
+      "lodashDownloads": 12415,
+      "lodashMapped": [
+        {
+          "lodash": "takeWhile",
+          "package": "lodash.takewhile",
+          "downloads": 12415
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.takewhile=12,415",
+      "rank": 71
+    },
+    "tap": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 5,
+      "remedaShare": 0.0023,
+      "remedaRepoCount": 2,
+      "remedaRepoShare": 0.0165,
+      "remedaBalancedShare": 0.0018,
+      "filesAlsoUsingPipeShare": 1,
+      "score": 0.0069,
+      "scoreP05": 0,
+      "scoreP95": 0.0159,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.008,
+        "low": 0.992
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 0,
+      "lodashMapped": [
+        {
+          "lodash": "tap",
+          "package": "lodash.tap",
+          "downloads": 0,
+          "noPackage": true
+        }
+      ],
+      "notes": "thin remeda sample (5 files in 2 repo clusters); lodash proxy (docs mapping): lodash.tap=no package",
+      "rank": 99
+    },
+    "times": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 5,
+      "remedaShare": 0.0023,
+      "remedaRepoCount": 2,
+      "remedaRepoShare": 0.0165,
+      "remedaBalancedShare": 0.0029,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0073,
+      "scoreP05": 0,
+      "scoreP95": 0.0173,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.018,
+        "low": 0.982
+      },
+      "adopterUse": [],
+      "lodashDownloads": 322400,
+      "lodashMapped": [
+        {
+          "lodash": "times",
+          "package": "lodash.times",
+          "downloads": 322400
+        }
+      ],
+      "notes": "thin remeda sample (5 files in 2 repo clusters); lodash proxy (docs mapping): lodash.times=322,400",
+      "rank": 97
+    },
+    "toCamelCase": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 15,
+      "remedaShare": 0.007,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0073,
+      "filesAlsoUsingPipeShare": 0.1333,
+      "score": 0.013,
+      "scoreP05": 0.0031,
+      "scoreP95": 0.0267,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.179,
+        "low": 0.821
+      },
+      "adopterUse": [],
+      "lodashDownloads": 231699488,
+      "lodashMapped": [
+        {
+          "lodash": "camelCase",
+          "package": "lodash.camelcase",
+          "downloads": 231699488,
+          "transitiveAnchor": "@grpc/proto-loader"
+        }
+      ],
+      "notes": "thin remeda sample (15 files in 3 repo clusters); concentrated: 87% of its sampled files are in i-am-bee/beeai-framework (+1 near-identical repos); lodash proxy (docs mapping): lodash.camelcase=231,699,488; lodash figure inflated by transitive dependents (lodash.camelcase via @grpc/proto-loader); excluded from the fallback test",
+      "rank": 75
+    },
+    "toKebabCase": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "lodash-fallback",
+      "remedaCount": 3,
+      "remedaShare": 0.0014,
+      "remedaRepoCount": 3,
+      "remedaRepoShare": 0.0248,
+      "remedaBalancedShare": 0.0046,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0103,
+      "scoreP05": 0.0031,
+      "scoreP95": 0.0204,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.06,
+        "low": 0.94
+      },
+      "adopterUse": [],
+      "lodashDownloads": 34437001,
+      "lodashMapped": [
+        {
+          "lodash": "kebabCase",
+          "package": "lodash.kebabcase",
+          "downloads": 34437001
+        }
+      ],
+      "notes": "tier raised from low to mid by the lodash fallback (thin sample, 34,437,001 non-transitive-anchored lodash per-method downloads/month); thin remeda sample (3 files in 3 repo clusters); lodash proxy (docs mapping): lodash.kebabcase=34,437,001",
+      "rank": 84
+    },
+    "toLowerCase": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0005,
+      "filesAlsoUsingPipeShare": 1,
+      "score": 0.0031,
+      "scoreP05": 0,
+      "scoreP95": 0.0092,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.001,
+        "low": 0.999
+      },
+      "adopterUse": [],
+      "lodashDownloads": 22527,
+      "lodashMapped": [
+        {
+          "lodash": "toLower",
+          "package": "lodash.tolower",
+          "downloads": 22527
+        }
+      ],
+      "notes": "thin remeda sample (1 files in 1 repo clusters); lodash proxy (docs mapping): lodash.tolower=22,527",
+      "rank": 122
+    },
+    "toSnakeCase": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "lodash-fallback",
+      "remedaCount": 3,
+      "remedaShare": 0.0014,
+      "remedaRepoCount": 2,
+      "remedaRepoShare": 0.0165,
+      "remedaBalancedShare": 0.0013,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0064,
+      "scoreP05": 0,
+      "scoreP95": 0.0149,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.004,
+        "low": 0.996
+      },
+      "adopterUse": [],
+      "lodashDownloads": 57644221,
+      "lodashMapped": [
+        {
+          "lodash": "snakeCase",
+          "package": "lodash.snakecase",
+          "downloads": 57644221
+        }
+      ],
+      "notes": "tier raised from low to mid by the lodash fallback (thin sample, 57,644,221 non-transitive-anchored lodash per-method downloads/month); thin remeda sample (3 files in 2 repo clusters); lodash proxy (docs mapping): lodash.snakecase=57,644,221",
+      "rank": 102
+    },
+    "toTitleCase": {
+      "kind": "other",
+      "tier": "mid",
+      "tierBasis": "lodash-fallback",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0028,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0039,
+      "scoreP05": 0,
+      "scoreP95": 0.0116,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.001,
+        "low": 0.999
+      },
+      "adopterUse": [],
+      "lodashDownloads": 45771826,
+      "lodashMapped": [
+        {
+          "lodash": "lowerCase",
+          "package": "lodash.lowercase",
+          "downloads": 5356238
+        },
+        {
+          "lodash": "startCase",
+          "package": "lodash.startcase",
+          "downloads": 40161461
+        },
+        {
+          "lodash": "upperCase",
+          "package": "lodash.uppercase",
+          "downloads": 254127
+        }
+      ],
+      "notes": "tier raised from low to mid by the lodash fallback (thin sample, 45,771,826 non-transitive-anchored lodash per-method downloads/month); thin remeda sample (1 files in 1 repo clusters); lodash proxy (docs mapping): lodash.lowercase=5,356,238, lodash.startcase=40,161,461, lodash.uppercase=254,127",
+      "rank": 108
+    },
+    "toUpperCase": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 2038049,
+      "lodashMapped": [
+        {
+          "lodash": "toUpper",
+          "package": "lodash.toupper",
+          "downloads": 2038049
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.toupper=2,038,049",
+      "rank": 162
+    },
+    "truncate": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 0,
+      "remedaShare": 0,
+      "remedaRepoCount": 0,
+      "remedaRepoShare": 0,
+      "remedaBalancedShare": 0,
+      "filesAlsoUsingPipeShare": null,
+      "score": 0,
+      "scoreP05": 0,
+      "scoreP95": 0,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": 72157841,
+      "lodashMapped": [
+        {
+          "lodash": "truncate",
+          "package": "lodash.truncate",
+          "downloads": 72157841,
+          "transitiveAnchor": "table"
+        }
+      ],
+      "notes": "thin remeda sample (0 files in 0 repo clusters); lodash proxy (docs mapping): lodash.truncate=72,157,841; lodash figure inflated by transitive dependents (lodash.truncate via table); excluded from the fallback test",
+      "rank": 163
+    },
+    "uncapitalize": {
+      "kind": "plainPurry",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 5,
+      "remedaShare": 0.0023,
+      "remedaRepoCount": 2,
+      "remedaRepoShare": 0.0165,
+      "remedaBalancedShare": 0.0022,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.007,
+      "scoreP05": 0,
+      "scoreP95": 0.0148,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.017,
+        "low": 0.983
+      },
+      "adopterUse": [],
+      "lodashDownloads": 401648,
+      "lodashMapped": [
+        {
+          "lodash": "lowerFirst",
+          "package": "lodash.lowerfirst",
+          "downloads": 401648
+        }
+      ],
+      "notes": "thin remeda sample (5 files in 2 repo clusters); lodash proxy (docs mapping): lodash.lowerfirst=401,648",
+      "rank": 98
+    },
+    "unique": {
+      "kind": "lazy",
+      "tier": "high",
+      "tierBasis": "remeda-score",
+      "remedaCount": 185,
+      "remedaShare": 0.0863,
+      "remedaRepoCount": 26,
+      "remedaRepoShare": 0.2149,
+      "remedaBalancedShare": 0.0541,
+      "filesAlsoUsingPipeShare": 0.1459,
+      "score": 0.1184,
+      "scoreP05": 0.0844,
+      "scoreP95": 0.1502,
+      "tierProbability": {
+        "high": 0.971,
+        "mid": 0.029,
+        "low": 0
+      },
+      "adopterUse": ["isolate-package", "@likec4/diagram"],
+      "lodashDownloads": 148658629,
+      "lodashMapped": [
+        {
+          "lodash": "sortedUniq",
+          "package": "lodash.sorteduniq",
+          "downloads": 875
+        },
+        {
+          "lodash": "uniq",
+          "package": "lodash.uniq",
+          "downloads": 148657754
+        }
+      ],
+      "notes": "includes v1 names: 4 files used the v1 name uniq; lodash proxy (docs mapping): lodash.sorteduniq=875, lodash.uniq=148,657,754",
+      "rank": 8
+    },
+    "uniqueBy": {
+      "kind": "lazy",
+      "tier": "high",
+      "tierBasis": "remeda-score",
+      "remedaCount": 64,
+      "remedaShare": 0.0299,
+      "remedaRepoCount": 24,
+      "remedaRepoShare": 0.1983,
+      "remedaBalancedShare": 0.0336,
+      "filesAlsoUsingPipeShare": 0.25,
+      "score": 0.0873,
+      "scoreP05": 0.064,
+      "scoreP95": 0.1127,
+      "tierProbability": {
+        "high": 0.693,
+        "mid": 0.307,
+        "low": 0
+      },
+      "adopterUse": [],
+      "lodashDownloads": 28070353,
+      "lodashMapped": [
+        {
+          "lodash": "uniqBy",
+          "package": "lodash.uniqby",
+          "downloads": 28070353
+        }
+      ],
+      "notes": "includes v1 names: 11 files used the v1 name uniqBy; lodash proxy (docs mapping): lodash.uniqby=28,070,353",
+      "rank": 12
+    },
+    "uniqueWith": {
+      "kind": "lazy",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.002,
+      "filesAlsoUsingPipeShare": 0,
+      "score": 0.0036,
+      "scoreP05": 0,
+      "scoreP95": 0.0108,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.002,
+        "low": 0.998
+      },
+      "adopterUse": [],
+      "lodashDownloads": 4379316,
+      "lodashMapped": [
+        {
+          "lodash": "uniqWith",
+          "package": "lodash.uniqwith",
+          "downloads": 4379316
+        }
+      ],
+      "notes": "thin remeda sample (1 files in 1 repo clusters); lodash proxy (docs mapping): lodash.uniqwith=4,379,316",
+      "rank": 111
+    },
+    "values": {
+      "kind": "plainPurry",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 48,
+      "remedaShare": 0.0224,
+      "remedaRepoCount": 12,
+      "remedaRepoShare": 0.0992,
+      "remedaBalancedShare": 0.0132,
+      "filesAlsoUsingPipeShare": 0.6458,
+      "score": 0.0449,
+      "scoreP05": 0.027,
+      "scoreP95": 0.0645,
+      "tierProbability": {
+        "high": 0.001,
+        "mid": 0.99,
+        "low": 0.009
+      },
+      "adopterUse": ["@likec4/diagram"],
+      "lodashDownloads": 3138859,
+      "lodashMapped": [
+        {
+          "lodash": "values",
+          "package": "lodash.values",
+          "downloads": 3138859
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.values=3,138,859",
+      "rank": 30
+    },
+    "when": {
+      "kind": "other",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 1,
+      "remedaShare": 0.0005,
+      "remedaRepoCount": 1,
+      "remedaRepoShare": 0.0083,
+      "remedaBalancedShare": 0.0002,
+      "filesAlsoUsingPipeShare": 1,
+      "score": 0.003,
+      "scoreP05": 0,
+      "scoreP95": 0.0088,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0,
+        "low": 1
+      },
+      "adopterUse": [],
+      "lodashDownloads": null,
+      "lodashMapped": null,
+      "notes": "thin remeda sample (1 files in 1 repo clusters); no lodash mapping page",
+      "rank": 129
+    },
+    "zip": {
+      "kind": "lazy",
+      "tier": "mid",
+      "tierBasis": "remeda-score",
+      "remedaCount": 14,
+      "remedaShare": 0.0065,
+      "remedaRepoCount": 8,
+      "remedaRepoShare": 0.0661,
+      "remedaBalancedShare": 0.0052,
+      "filesAlsoUsingPipeShare": 0.3571,
+      "score": 0.026,
+      "scoreP05": 0.0131,
+      "scoreP95": 0.0407,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.748,
+        "low": 0.252
+      },
+      "adopterUse": [],
+      "lodashDownloads": 10784990,
+      "lodashMapped": [
+        {
+          "lodash": "zip",
+          "package": "lodash.zip",
+          "downloads": 10784990
+        }
+      ],
+      "notes": "lodash proxy (docs mapping): lodash.zip=10,784,990",
+      "rank": 49
+    },
+    "zipWith": {
+      "kind": "lazy",
+      "tier": "low",
+      "tierBasis": "remeda-score",
+      "remedaCount": 4,
+      "remedaShare": 0.0019,
+      "remedaRepoCount": 4,
+      "remedaRepoShare": 0.0331,
+      "remedaBalancedShare": 0.005,
+      "filesAlsoUsingPipeShare": 0.5,
+      "score": 0.0133,
+      "scoreP05": 0.0033,
+      "scoreP95": 0.024,
+      "tierProbability": {
+        "high": 0,
+        "mid": 0.139,
+        "low": 0.861
+      },
+      "adopterUse": [],
+      "lodashDownloads": 76304,
+      "lodashMapped": [
+        {
+          "lodash": "zipWith",
+          "package": "lodash.zipwith",
+          "downloads": 76304
+        }
+      ],
+      "notes": "thin remeda sample (4 files in 4 repo clusters); lodash proxy (docs mapping): lodash.zipwith=76,304",
+      "rank": 72
+    }
+  }
+}

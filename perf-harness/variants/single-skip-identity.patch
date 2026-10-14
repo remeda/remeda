@@ -1,0 +1,26 @@
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/processSingleLazyStep.ts b/src/internal/processSingleLazyStep.ts
+--- a/src/internal/processSingleLazyStep.ts	2026-10-06 23:12:55
++++ b/src/internal/processSingleLazyStep.ts	2026-10-07 09:52:02
+@@ -3,7 +3,7 @@
+  * left by the `isDone` check, which sits outside the `switch`.
+  */
+ 
+-import { isLazyControl } from "./lazyControl";
++import { isLazyControl, SKIP_ITEM } from "./lazyControl";
+ import { UNEXPECTED_ACCESS_SENTINEL } from "./requireData";
+ import type { LazyDefinition } from "./types/LazyDefinition";
+ 
+@@ -39,6 +39,13 @@
+ 
+     const result = lazyEvaluator(value, index, items);
+     index += 1;
++
++    if (result === SKIP_ITEM) {
++      // Skipping is the most frequent control (every item a `filter` drops),
++      // and this copy's singleton is recognized by identity alone; another
++      // copy's singleton still takes the general check below.
++      continue;
++    }
+ 
+     if (isLazyControl(result)) {
+       switch (result.control) {

@@ -1,0 +1,46 @@
+{
+  "node": "v26.9.0",
+  "shapes": [
+    "pipe(items, filter, map, take(10))",
+    "pipe(items, find(id === 20))",
+    "pipe(items, take(10))",
+    "find(items, id === 20) data-first",
+    "filter(items, active) data-first"
+  ],
+  "rows": [
+    {
+      "copy": "main",
+      "dependencies": {
+        "pipe(items, filter, map, take(10))": 31,
+        "pipe(items, find(id === 20))": 23,
+        "pipe(items, take(10))": 2,
+        "find(items, id === 20) data-first": 23,
+        "filter(items, active) data-first": 1002
+      },
+      "matchesMain": {
+        "pipe(items, filter, map, take(10))": true,
+        "pipe(items, find(id === 20))": true,
+        "pipe(items, take(10))": true,
+        "find(items, id === 20) data-first": true,
+        "filter(items, active) data-first": true
+      }
+    },
+    {
+      "copy": "branch",
+      "dependencies": {
+        "pipe(items, filter, map, take(10))": 31,
+        "pipe(items, find(id === 20))": 23,
+        "pipe(items, take(10))": 2,
+        "find(items, id === 20) data-first": 23,
+        "filter(items, active) data-first": 1002
+      },
+      "matchesMain": {
+        "pipe(items, filter, map, take(10))": true,
+        "pipe(items, find(id === 20))": true,
+        "pipe(items, take(10))": true,
+        "find(items, id === 20) data-first": true,
+        "filter(items, active) data-first": true
+      }
+    }
+  ]
+}

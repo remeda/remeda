@@ -1,0 +1,727 @@
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/find.ts b/src/find.ts
+--- a/src/find.ts	2026-10-06 23:12:55
++++ b/src/find.ts	2026-10-07 12:56:39
+@@ -167,7 +167,7 @@
+   <T, S extends T>(
+     predicate: (value: T, index: number, data: readonly T[]) => value is S,
+   ): LazyEvaluator<T, S> =>
+-    requireDataByArity(predicate, (value, index, data) =>
+-      predicate(value, index, data) ? lastLazyValue(value) : SKIP_ITEM,
++    requireDataByArity(predicate, (value, index, data, slot) =>
++      predicate(value, index, data) ? lastLazyValue(value, slot) : SKIP_ITEM,
+     ),
+ );
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/first.ts b/src/first.ts
+--- a/src/first.ts	2026-10-06 23:12:55
++++ b/src/first.ts	2026-10-07 12:56:39
+@@ -46,4 +46,7 @@
+ 
+ const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;
+ 
+-const lazyImplementation = toSingle((): LazyEvaluator => lastLazyValue);
++const lazyImplementation = toSingle((): LazyEvaluator => emitAndStop);
++
++const emitAndStop: LazyEvaluator = (value, _index, _data, slot) =>
++  lastLazyValue(value, slot);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/flat.ts b/src/flat.ts
+--- a/src/flat.ts	2026-10-06 23:12:55
++++ b/src/flat.ts	2026-10-07 12:56:39
+@@ -1,5 +1,9 @@
+ import type { IsNumericLiteral } from "type-fest";
+-import { manyLazyValues, type LazyResult } from "./internal/lazyControl";
++import {
++  manyLazyValues,
++  type LazyResult,
++  type LazySlot,
++} from "./internal/lazyControl";
+ import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
+ import type { IterableContainer } from "./internal/types/IterableContainer";
+ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+@@ -127,11 +131,18 @@
+     ? lazyShallow
+     : depth <= 0
+       ? (value) => value
+-      : (value) =>
+-          Array.isArray(value) ? manyLazyValues(value.flat(depth - 1)) : value;
++      : (value, _index, _data, slot) =>
++          Array.isArray(value)
++            ? manyLazyValues(value.flat(depth - 1), slot)
++            : value;
+ 
+ // Pulled out to module scope because, unlike the deeper-than-one branch, it
+ // doesn't close over `depth`, so one function serves every `flat()` /
+ // `flat(1)` call instead of allocating a closure per call.
+-const lazyShallow = <T>(value: T): LazyResult<T> =>
+-  Array.isArray(value) ? manyLazyValues(value) : value;
++const lazyShallow = <T>(
++  value: T,
++  _index: number,
++  _data: readonly T[],
++  slot: LazySlot,
++): LazyResult<T> =>
++  Array.isArray(value) ? manyLazyValues(value, slot) : value;
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/flatMap.ts b/src/flatMap.ts
+--- a/src/flatMap.ts	2026-10-06 23:12:55
++++ b/src/flatMap.ts	2026-10-07 12:56:39
+@@ -66,8 +66,8 @@
+ const lazyImplementation = <T, K>(
+   callbackfn: (input: T, index: number, data: readonly T[]) => K | readonly K[],
+ ): LazyEvaluator<T, K> =>
+-  requireDataByArity(callbackfn, (value, index, data): LazyResult<K> => {
++  requireDataByArity(callbackfn, (value, index, data, slot): LazyResult<K> => {
+     const mapped = callbackfn(value, index, data);
+     // @ts-expect-error [ts2322] -- Array.isArray doesn't narrow readonly arrays (https://github.com/microsoft/TypeScript/issues/17002), so the non-array branch is still typed as K | readonly K[] even though it only ever sees non-arrays at runtime.
+-    return Array.isArray(mapped) ? manyLazyValues(mapped) : mapped;
++    return Array.isArray(mapped) ? manyLazyValues(mapped, slot) : mapped;
+   });
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/lazyControl.ts b/src/internal/lazyControl.ts
+--- a/src/internal/lazyControl.ts	2026-10-06 23:12:55
++++ b/src/internal/lazyControl.ts	2026-10-07 12:56:39
+@@ -1,98 +1,92 @@
+-// Control objects are told apart from user items by the identity of this
+-// symbol, which no ordinary value carries: JSON can't produce one, and code has
+-// to ask the registry for this exact key. It is registered rather than
+-// module-private so that separate copies of Remeda in one program (two
+-// installed versions, or the ESM and CJS builds side by side) recognize each
+-// other's control objects. Change the key if the shape of the control objects
+-// ever changes, so that copies on different shapes ignore each other's control
+-// objects instead of misreading them. A plain string key is used on purpose:
+-// every computed (symbol) key in an object literal costs
+-// V8 a keyed store on top of the literal's boilerplate (four symbol keys
+-// measured 10% slower on flatMap pipelines), prototype-identity checks cost
+-// more than the lookup they replace (1.5x to 2.9x), and null-prototype objects
+-// fall into dictionary mode (5x). Reference equality on a string key measured
+-// fastest on every pipeline shape.
+-const LAZY_REF = Symbol.for("$$remedaLazyRef");
++import type { Writable } from "type-fest";
+ 
++// Controls are told apart from user items by identity alone, so `pipe` never
++// touches an item to classify it, and items that are proxies (e.g. reactive
++// stores) see no probe. Each control is a registered symbol, which no ordinary
++// value is: JSON can't produce one, and code has to ask the registry for these
++// exact keys. They are registered rather than module-private so that separate
++// copies of Remeda in one program (two installed versions, or the ESM and CJS
++// builds side by side) recognize each other's controls. Change the keys if the
++// protocol ever changes, so that copies on different protocols ignore each
++// other's controls instead of misreading them.
++
+ /**
+- * A lazy evaluator returns the (possibly transformed) item itself in the
+- * common case. Anything else it needs to tell `pipe` (skip, stop, expand) is
+- * carried by a `LazyControl` object, allocated only when needed.
++ * Skip the current item: nothing reaches the next step.
+  */
+-export type LazyResult<T = unknown> = T | LazyControl<T>;
++export const SKIP_ITEM: unique symbol = Symbol.for("$$remedaLazySkip");
+ 
+-type LazyControl<T = unknown> = LazySkip | LazyLast<T> | LazyMany<T>;
++/**
++ * Stop the pipe without emitting anything.
++ */
++export const STOP: unique symbol = Symbol.for("$$remedaLazyStop");
+ 
+-type LazyControlBase = {
+-  readonly $$remedaLazyRef: typeof LAZY_REF;
+-};
++/**
++ * Emit the slot's `value` and stop the pipe.
++ *
++ * @see lastLazyValue
++ */
++export const LAST: unique symbol = Symbol.for("$$remedaLazyLast");
+ 
+-type LazySkip = LazyControlBase & {
+-  readonly control: "skip";
+-  readonly isDone: boolean;
+-};
++/**
++ * Feed every element of the slot's `values` through the rest of the pipe, one
++ * by one.
++ *
++ * @see manyLazyValues
++ */
++export const MANY: unique symbol = Symbol.for("$$remedaLazyMany");
+ 
+-type LazyLast<T> = LazyControlBase & {
+-  readonly control: "last";
+-  readonly isDone: true;
+-  readonly value: T;
+-};
++/**
++ * A lazy evaluator returns the (possibly transformed) item itself in the
++ * common case, and one of the controls above for anything else it needs to
++ * tell `pipe` (skip, stop, expand).
++ */
++export type LazyResult<T = unknown> =
++  T | typeof LAST | typeof MANY | typeof SKIP_ITEM | typeof STOP;
+ 
+-type LazyMany<T> = LazyControlBase & {
+-  readonly control: "many";
+-  readonly isDone: boolean;
+-  readonly value: readonly T[];
+-};
+-
+ /**
+- * A singleton value for skipping an item in a lazy evaluator.
++ * Where an evaluator leaves the payload of a `LAST` or `MANY` result. The pipe
++ * that calls the evaluator owns it, one per run, so nested pipes and other
++ * copies of Remeda never share one, and reads it as soon as the evaluator
++ * returns. Evaluators only ever hand it to `lastLazyValue` and
++ * `manyLazyValues`.
+  */
+-export const SKIP_ITEM: LazySkip = {
+-  // Every control object lists its keys in this order, so V8 gives the two
+-  // singletons one hidden class and every `lastLazyValue`/`manyLazyValues`
+-  // result another, keeping the reads in `pipe` to two shapes.
+-  $$remedaLazyRef: LAZY_REF,
+-  control: "skip",
+-  isDone: false,
++export type LazySlot = {
++  readonly value: unknown;
++  readonly values: readonly unknown[];
+ };
+ 
+-const STOP: LazySkip = {
+-  $$remedaLazyRef: LAZY_REF,
+-  control: "skip",
+-  isDone: true,
+-};
++const NO_VALUES: readonly unknown[] = [];
+ 
++export const createLazySlot = (): LazySlot => ({
++  value: undefined,
++  values: NO_VALUES,
++});
++
+ /**
+- * A helper evaluator for stopping the pipe without emitting anything. Both the
+- * result and the evaluator are shared singletons.
++ * A helper evaluator for stopping the pipe without emitting anything.
+  */
+-export const lazyEmptyEvaluator = (): LazySkip => STOP;
++export const lazyEmptyEvaluator = (): typeof STOP => STOP;
+ 
+ /**
+  * Emits `value` and stops the pipe.
+  */
+-export const lastLazyValue = <T>(value: T): LazyLast<T> => ({
+-  $$remedaLazyRef: LAZY_REF,
+-  control: "last",
+-  isDone: true,
+-  value,
+-});
++export function lastLazyValue(
++  value: unknown,
++  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The slot exists to carry the payload back to the pipe; this is one of the two helpers that write it.
++  slot: Writable<LazySlot>,
++): typeof LAST {
++  slot.value = value;
++  return LAST;
++}
+ 
+ /**
+- * Feeds every element of `value` through the rest of the pipe, one by one.
++ * Feeds every element of `values` through the rest of the pipe, one by one.
+  */
+-export const manyLazyValues = <T>(value: readonly T[]): LazyMany<T> => ({
+-  $$remedaLazyRef: LAZY_REF,
+-  control: "many",
+-  isDone: false,
+-  value,
+-});
+-
+-export const isLazyControl = (result: unknown): result is LazyControl =>
+-  // The `typeof` guard is required because `in` throws on a primitive operand;
+-  // checking the key before reading it keeps the read off the path for the vast
+-  // majority of items.
+-  typeof result === "object" &&
+-  result !== null &&
+-  "$$remedaLazyRef" in result &&
+-  result.$$remedaLazyRef === LAZY_REF;
++export function manyLazyValues(
++  values: readonly unknown[],
++  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The slot exists to carry the payload back to the pipe; this is one of the two helpers that write it.
++  slot: Writable<LazySlot>,
++): typeof MANY {
++  slot.values = values;
++  return MANY;
++}
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/processSingleLazyStep.ts b/src/internal/processSingleLazyStep.ts
+--- a/src/internal/processSingleLazyStep.ts	2026-10-06 23:12:55
++++ b/src/internal/processSingleLazyStep.ts	2026-10-07 12:56:53
+@@ -1,9 +1,4 @@
+-/* eslint-disable unicorn/no-break-in-nested-loop --
+- * The `break`s inside the `switch` only end their case; the loop itself is
+- * left by the `isDone` check, which sits outside the `switch`.
+- */
+-
+-import { isLazyControl } from "./lazyControl";
++import { createLazySlot, LAST, MANY, SKIP_ITEM, STOP } from "./lazyControl";
+ import { UNEXPECTED_ACCESS_SENTINEL } from "./requireData";
+ import type { LazyDefinition } from "./types/LazyDefinition";
+ 
+@@ -31,41 +26,44 @@
+     : undefined;
+   const items = dataBuffer ?? UNEXPECTED_ACCESS_SENTINEL;
+ 
++  const slot = createLazySlot();
+   const accumulator: unknown[] = [];
+   let index = 0;
+ 
+   for (const value of iterable) {
+     dataBuffer?.push(value);
+ 
+-    const result = lazyEvaluator(value, index, items);
++    const result = lazyEvaluator(value, index, items, slot);
+     index += 1;
+ 
+-    if (isLazyControl(result)) {
+-      switch (result.control) {
+-        case "many":
+-          for (const subItem of result.value) {
+-            // Pushed one by one rather than spread, so a large fan-out can't
+-            // hit the argument-count limit.
+-            accumulator.push(subItem);
+-          }
+-          break;
++    // Every control is a symbol, so an item of any other type skips the
++    // comparisons below with this one check.
++    if (typeof result === "symbol") {
++      if (result === SKIP_ITEM) {
++        continue;
++      }
+ 
+-        case "last":
+-          accumulator.push(result.value);
+-          break;
++      if (result === MANY) {
++        for (const subItem of slot.values) {
++          // Pushed one by one rather than spread, so a large fan-out can't
++          // hit the argument-count limit.
++          accumulator.push(subItem);
++        }
++        continue;
++      }
+ 
+-        case "skip":
+-          // do nothing
+-          break;
++      if (result === LAST) {
++        accumulator.push(slot.value);
++        break;
+       }
+ 
+-      if (result.isDone) {
++      if (result === STOP) {
+         break;
+       }
+-    } else {
+-      // The common case: the evaluator emitted an item.
+-      accumulator.push(result);
+     }
++
++    // The common case: the evaluator emitted an item.
++    accumulator.push(result);
+   }
+ 
+   return lazy.single ? accumulator[0] : accumulator;
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/purryFromLazy.test.ts b/src/internal/purryFromLazy.test.ts
+--- a/src/internal/purryFromLazy.test.ts	2026-10-06 23:12:55
++++ b/src/internal/purryFromLazy.test.ts	2026-10-07 12:56:39
+@@ -2,6 +2,7 @@
+ import { lastLazyValue } from "./lazyControl";
+ import { purryFromLazy } from "./purryFromLazy";
+ import { toSingle } from "./toSingle";
++import type { LazyEvaluator } from "./types/LazyEvaluator";
+ 
+ describe("an implementation wrapped with `toSingle`", () => {
+   test("dataFirst", () => {
+@@ -25,4 +26,7 @@
+   (): (data: readonly number[]) => number | undefined;
+ } = (...args: readonly unknown[]) => purryFromLazy(firstLazyImpl, args);
+ 
+-const firstLazyImpl = toSingle(() => lastLazyValue);
++const firstLazyImpl = toSingle((): LazyEvaluator => emitAndStop);
++
++const emitAndStop: LazyEvaluator = (value, _index, _data, slot) =>
++  lastLazyValue(value, slot);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/types/LazyEvaluator.ts b/src/internal/types/LazyEvaluator.ts
+--- a/src/internal/types/LazyEvaluator.ts	2026-10-06 23:12:55
++++ b/src/internal/types/LazyEvaluator.ts	2026-10-07 12:56:39
+@@ -1,4 +1,4 @@
+-import type { LazyResult } from "../lazyControl";
++import type { LazyResult, LazySlot } from "../lazyControl";
+ 
+ /**
+  * Extra levers an evaluator gives `pipe` over how it runs the step.
+@@ -18,5 +18,8 @@
+   item: T,
+   index: number,
+   data: readonly T[],
++  // Only evaluators that stop with a value or fan out need it, and only to
++  // pass it to `lastLazyValue` or `manyLazyValues`.
++  slot: LazySlot,
+ ) => LazyResult<R>) &
+   LazyEvaluatorMetadata;
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/intersection.ts b/src/intersection.ts
+--- a/src/intersection.ts	2026-10-06 23:12:55
++++ b/src/intersection.ts	2026-10-07 12:56:39
+@@ -64,7 +64,7 @@
+     remaining.set(value, (remaining.get(value) ?? 0) + 1);
+   }
+ 
+-  return (value) => {
++  return (value, _index, _data, slot) => {
+     const copies = remaining.get(value);
+ 
+     if (copies === undefined || copies === 0) {
+@@ -87,6 +87,6 @@
+     const matched = value as S & T;
+ 
+     // We can stop the iteration if the remaining map is empty.
+-    return remaining.size === 0 ? lastLazyValue(matched) : matched;
++    return remaining.size === 0 ? lastLazyValue(matched, slot) : matched;
+   };
+ }
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/pipe.test.ts b/src/pipe.test.ts
+--- a/src/pipe.test.ts	2026-10-06 23:12:55
++++ b/src/pipe.test.ts	2026-10-07 12:57:30
+@@ -6,7 +6,7 @@
+ import { flatMap } from "./flatMap";
+ import { forEach } from "./forEach";
+ import { identity } from "./identity";
+-import { lazyEmptyEvaluator, manyLazyValues } from "./internal/lazyControl";
++import { lazyEmptyEvaluator } from "./internal/lazyControl";
+ import { purryFromLazy } from "./internal/purryFromLazy";
+ import type { LazyCallback } from "./internal/types/LazyCallback";
+ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+@@ -145,7 +145,7 @@
+     const mockMapper = vi.fn<(x: number) => number>();
+ 
+     expect(pipe([1, 2, 3, 4, 5], map(mockMapper), take(0))).toStrictEqual([]);
+-    // An element must be pulled before `take(0)` can report `isDone`, so the
++    // An element must be pulled before `take(0)` can stop the pipe, so the
+     // callback runs exactly once even though the result is empty.
+     expect(mockMapper).toHaveBeenCalledTimes(1);
+   });
+@@ -175,15 +175,6 @@
+     expect(result).toStrictEqual([1, 2]);
+   });
+ 
+-  test("early exit when done with many next values", () => {
+-    const mockMapper = vi.fn<(x: number) => number>(identity());
+-
+-    expect(pipe([1, 2, 3, 4, 5], map(mockMapper), firstTwice())).toStrictEqual([
+-      1, 1,
+-    ]);
+-    expect(mockMapper).toHaveBeenCalledTimes(1);
+-  });
+-
+   test("callbacks receive the items processed so far", () => {
+     const mapper = vi.fn<LazyCallback<unknown[], unknown>>(
+       (_value, _index, data) => [...data],
+@@ -348,14 +339,9 @@
+       expect(result).toStrictEqual([null, null]);
+     });
+ 
+-    test("items with string keys named like the control props pass through as data", () => {
+-      const lookalike = {
+-        // Same description as the real marker, but not the registered symbol.
+-        $$remedaLazyRef: Symbol("$$remedaLazyRef"),
+-        control: "last",
+-        isDone: true,
+-        value: 1,
+-      };
++    test("symbols described like the controls pass through as data", () => {
++      // Same description as a real control, but not the registered symbol.
++      const lookalike = Symbol("$$remedaLazySkip");
+ 
+       expect(
+         pipe(
+@@ -363,28 +349,48 @@
+           map(() => lookalike),
+         ),
+       ).toStrictEqual([lookalike]);
++
++      // A fused run checks controls in its own loop.
++      expect(
++        pipe(
++          [0],
++          map(() => lookalike),
++          map((x) => x),
++        ),
++      ).toStrictEqual([lookalike]);
+     });
+ 
+-    test("a Proxy whose `has` trap always answers true still passes through as data", () => {
+-      const trap = new Proxy({ value: 1 }, { has: () => true });
++    test("items are never probed", () => {
++      const has = vi.fn<() => boolean>(() => true);
++      const get = vi.fn<() => unknown>();
++      const item = new Proxy({}, { has, get });
+ 
+-      const result = pipe(
+-        [trap],
++      const single = pipe(
++        [item],
+         map((x) => x),
+       );
++      const fused = pipe(
++        [item],
++        map((x) => x),
++        filter(() => true),
++      );
+ 
+-      // The trap makes the `in` check pass, but control objects are told apart
+-      // by the identity of the marker and the read behind the trap answers
+-      // with the target's own (absent) prop, so a lying `has` can't forge one.
+-      expect(result).toStrictEqual([trap]);
++      // Checked before the results, which the matchers would probe themselves.
++      expect(has).not.toHaveBeenCalled();
++      expect(get).not.toHaveBeenCalled();
++      expect(single[0]).toBe(item);
++      expect(fused[0]).toBe(item);
+     });
+ 
+-    test("control objects from another copy of the library are recognized", async () => {
+-      // Re-evaluating the modules gives `otherFilter` its own `lazyControl`,
+-      // the way a second installed version, or the CJS build next to the ESM
+-      // one, would.
++    test("controls from another copy of the library are recognized", async () => {
++      // Re-evaluating the modules gives the utilities below their own
++      // `lazyControl`, the way a second installed version, or the CJS build
++      // next to the ESM one, would. The payloads of their controls land in
++      // the slot of the pipe that runs them.
+       vi.resetModules();
+       const { filter: otherFilter } = await import("./filter");
++      const { find: otherFind } = await import("./find");
++      const { flatMap: otherFlatMap } = await import("./flatMap");
+ 
+       expect(
+         pipe(
+@@ -392,6 +398,26 @@
+           otherFilter((x) => x % 2 === 0),
+         ),
+       ).toStrictEqual([2, 4]);
++      expect(
++        pipe(
++          [1, 2],
++          otherFlatMap((x) => [x, x * 10]),
++        ),
++      ).toStrictEqual([1, 10, 2, 20]);
++      expect(
++        pipe(
++          [1, 2, 3],
++          otherFind((x) => x > 1),
++        ),
++      ).toBe(2);
++      expect(
++        pipe(
++          [1, 2, 3],
++          map((x) => x * 10),
++          otherFlatMap((x) => [x, x + 1]),
++          otherFind((x) => x > 20),
++        ),
++      ).toBe(21);
+     });
+ 
+     test("index continues across two consecutive fan-outs", () => {
+@@ -501,10 +527,6 @@
+       ]);
+     });
+ 
+-    test("fan-out that is also done emits its sub-items and stops", () => {
+-      expect(pipe([1, 2, 3], firstTwice())).toStrictEqual([1, 1]);
+-    });
+-
+     test("callbacks receive the items processed so far", () => {
+       const mock = vi.fn<LazyCallback<unknown[], unknown>>(
+         (_value, _index, data) => [...data],
+@@ -566,17 +588,6 @@
+ 
+     expect(result).toBe("10,20,30");
+   });
+-});
+-
+-// We want to test a lazy evaluator that is both `isDone` and a "many" control
+-// at the same time but don't have any utility that does it.
+-const firstTwice: () => (data: readonly number[]) => number[] = () =>
+-  // @ts-expect-error [ts2322] -- Our purry functions don't infer the correct return type, we explicit casting to force it.
+-  purryFromLazy(() => firstTwiceEvaluator, []);
+-
+-const firstTwiceEvaluator: LazyEvaluator = (value) => ({
+-  ...manyLazyValues([value, value]),
+-  isDone: true,
+ });
+ 
+ describe("known issues!", () => {
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/pipe.ts b/src/pipe.ts
+--- a/src/pipe.ts	2026-10-06 23:12:55
++++ b/src/pipe.ts	2026-10-07 12:56:53
+@@ -2,7 +2,14 @@
+  * We document pipe's function params as a single parameter entry in the docs.
+  */
+ 
+-import { isLazyControl } from "./internal/lazyControl";
++import {
++  createLazySlot,
++  LAST,
++  MANY,
++  SKIP_ITEM,
++  STOP,
++  type LazySlot,
++} from "./internal/lazyControl";
+ import { processSingleLazyStep } from "./internal/processSingleLazyStep";
+ import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/requireData";
+ import type { LazyDefinition } from "./internal/types/LazyDefinition";
+@@ -383,12 +390,14 @@
+   lazySequence: readonly LazyStep[],
+ ): unknown[] {
+   const accumulator: unknown[] = [];
++  const slot = createLazySlot();
+ 
+   for (const value of iterable) {
+     const shouldExitEarly = processItem(
+       value,
+       accumulator,
+       lazySequence,
++      slot,
+       0 /* startIndex */,
+     );
+     if (shouldExitEarly) {
+@@ -405,6 +414,7 @@
+   accumulator: unknown[],
+   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
+   lazySequence: readonly LazyStep[],
++  slot: LazySlot,
+   startIndex: number,
+ ): boolean {
+   let currentItem = item;
+@@ -418,41 +428,56 @@
+     if (step.requiresData) {
+       step.items.push(currentItem);
+     }
+-    const result = step.lazyEvaluator(currentItem, step.index, step.items);
++    const result = step.lazyEvaluator(
++      currentItem,
++      step.index,
++      step.items,
++      slot,
++    );
+     step.index += 1;
+ 
+-    if (isLazyControl(result)) {
+-      if (result.isDone) {
+-        isDone = true;
++    // Every control is a symbol, so an item of any other type skips the
++    // comparisons below with this one check.
++    if (typeof result === "symbol") {
++      if (result === SKIP_ITEM) {
++        // Nothing reaches the next step.
++        return isDone;
+       }
+ 
+-      switch (result.control) {
+-        case "skip":
+-          // Skipped, or stopped without a value; nothing reaches the next step.
+-          return isDone;
+-
+-        case "many":
+-          for (const subItem of result.value) {
+-            const shouldExitEarly = processItem(
+-              subItem,
+-              accumulator,
+-              lazySequence,
+-              stepIndex + 1,
+-            );
+-            if (shouldExitEarly) {
+-              return true;
+-            }
++      if (result === MANY) {
++        // Read before the steps below run, as they leave their own payloads
++        // in the same slot.
++        const { values } = slot;
++        for (const subItem of values) {
++          const shouldExitEarly = processItem(
++            subItem,
++            accumulator,
++            lazySequence,
++            slot,
++            stepIndex + 1,
++          );
++          if (shouldExitEarly) {
++            return true;
+           }
+-          return isDone;
++        }
++        return isDone;
++      }
+ 
+-        case "last":
+-          currentItem = result.value;
++      if (result === LAST) {
++        currentItem = slot.value;
++        isDone = true;
++        continue;
+       }
+-    } else {
+-      // The common case: the evaluator emitted an item, hand it to the next
+-      // step as-is.
+-      currentItem = result;
++
++      if (result === STOP) {
++        // Stopped without a value; nothing reaches the next step.
++        return true;
++      }
+     }
++
++    // The common case: the evaluator emitted an item, hand it to the next
++    // step as-is.
++    currentItem = result;
+   }
+ 
+   accumulator.push(currentItem);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/take.ts b/src/take.ts
+--- a/src/take.ts	2026-10-06 23:12:55
++++ b/src/take.ts	2026-10-07 12:56:39
+@@ -62,8 +62,8 @@
+   }
+ 
+   let remaining = n;
+-  return (value) => {
++  return (value, _index, _data, slot) => {
+     remaining -= 1;
+-    return remaining <= 0 ? lastLazyValue(value) : value;
++    return remaining <= 0 ? lastLazyValue(value, slot) : value;
+   };
+ }
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/zip.ts b/src/zip.ts
+--- a/src/zip.ts	2026-10-06 23:12:55
++++ b/src/zip.ts	2026-10-07 12:56:39
+@@ -84,7 +84,7 @@
+ ): LazyEvaluator<F[number], [F[number], S[number]]> =>
+   second.length === 0
+     ? lazyEmptyEvaluator
+-    : (value, index) => {
++    : (value, index, _data, slot) => {
+         const pair: [F[number], S[number]] = [value, second[index]];
+-        return index >= second.length - 1 ? lastLazyValue(pair) : pair;
++        return index >= second.length - 1 ? lastLazyValue(pair, slot) : pair;
+       };
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/zipWith.ts b/src/zipWith.ts
+--- a/src/zipWith.ts	2026-10-06 23:12:55
++++ b/src/zipWith.ts	2026-10-07 12:56:39
+@@ -132,9 +132,11 @@
+     ? lazyEmptyEvaluator
+     : requireDataByArity(
+         fn,
+-        (value, index, data) => {
++        (value, index, data, slot) => {
+           const zipped = fn(value, second[index], index, [data, second]);
+-          return index >= second.length - 1 ? lastLazyValue(zipped) : zipped;
++          return index >= second.length - 1
++            ? lastLazyValue(zipped, slot)
++            : zipped;
+         },
+         { dataParameterIndex: 3 },
+       );

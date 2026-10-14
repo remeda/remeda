@@ -1,0 +1,782 @@
+{
+  "rows": [
+    {
+      "entry": "import { map }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 350,
+        "gzip": 249,
+        "brotli": 209,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 337,
+        "gzip": 231,
+        "brotli": 202,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { map }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 351,
+        "gzip": 247,
+        "brotli": 211,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 334,
+        "gzip": 229,
+        "brotli": 201,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { filter, map }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 500,
+        "gzip": 289,
+        "brotli": 241,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 523,
+        "gzip": 325,
+        "brotli": 291,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { filter, map }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 505,
+        "gzip": 293,
+        "brotli": 253,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 522,
+        "gzip": 324,
+        "brotli": 289,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { unique }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 1248,
+        "gzip": 671,
+        "brotli": 609,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 439,
+        "gzip": 276,
+        "brotli": 250,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { unique }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 1249,
+        "gzip": 661,
+        "brotli": 602,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 438,
+        "gzip": 271,
+        "brotli": 241,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { uniqueBy }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 1284,
+        "gzip": 688,
+        "brotli": 624,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 599,
+        "gzip": 381,
+        "brotli": 344,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { uniqueBy }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 1285,
+        "gzip": 679,
+        "brotli": 628,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 594,
+        "gzip": 366,
+        "brotli": 331,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { difference }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 1394,
+        "gzip": 726,
+        "brotli": 660,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 587,
+        "gzip": 332,
+        "brotli": 300,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { difference }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 1391,
+        "gzip": 708,
+        "brotli": 653,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 586,
+        "gzip": 328,
+        "brotli": 294,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { intersection }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 1414,
+        "gzip": 738,
+        "brotli": 679,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 772,
+        "gzip": 406,
+        "brotli": 366,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { intersection }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 1415,
+        "gzip": 723,
+        "brotli": 667,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 767,
+        "gzip": 398,
+        "brotli": 361,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { mapWithFeedback }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 1251,
+        "gzip": 675,
+        "brotli": 611,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 511,
+        "gzip": 321,
+        "brotli": 283,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { mapWithFeedback }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 1254,
+        "gzip": 668,
+        "brotli": 603,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 510,
+        "gzip": 319,
+        "brotli": 279,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { pick }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 345,
+        "gzip": 240,
+        "brotli": 202,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 218,
+        "gzip": 168,
+        "brotli": 148,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { pick }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 344,
+        "gzip": 239,
+        "brotli": 200,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 215,
+        "gzip": 167,
+        "brotli": 146,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { omit }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 463,
+        "gzip": 288,
+        "brotli": 239,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 336,
+        "gzip": 211,
+        "brotli": 182,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { omit }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 464,
+        "gzip": 286,
+        "brotli": 242,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 335,
+        "gzip": 208,
+        "brotli": 180,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { mapValues }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 362,
+        "gzip": 247,
+        "brotli": 207,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 235,
+        "gzip": 182,
+        "brotli": 152,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { mapValues }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 361,
+        "gzip": 248,
+        "brotli": 205,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 232,
+        "gzip": 181,
+        "brotli": 152,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { groupBy }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 478,
+        "gzip": 306,
+        "brotli": 252,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 351,
+        "gzip": 244,
+        "brotli": 210,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { groupBy }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 479,
+        "gzip": 305,
+        "brotli": 254,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 350,
+        "gzip": 241,
+        "brotli": 212,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { clamp }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 340,
+        "gzip": 239,
+        "brotli": 203,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 213,
+        "gzip": 168,
+        "brotli": 153,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { clamp }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 341,
+        "gzip": 239,
+        "brotli": 208,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 212,
+        "gzip": 169,
+        "brotli": 143,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { clone }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 761,
+        "gzip": 392,
+        "brotli": 340,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 648,
+        "gzip": 339,
+        "brotli": 298,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { clone }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 760,
+        "gzip": 395,
+        "brotli": 341,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 647,
+        "gzip": 335,
+        "brotli": 303,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { add }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 292,
+        "gzip": 214,
+        "brotli": 179,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 165,
+        "gzip": 140,
+        "brotli": 125,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { add }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 293,
+        "gzip": 216,
+        "brotli": 184,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 164,
+        "gzip": 138,
+        "brotli": 111,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { purry }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 246,
+        "gzip": 193,
+        "brotli": 161,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 119,
+        "gzip": 108,
+        "brotli": 99,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { purry }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 245,
+        "gzip": 193,
+        "brotli": 156,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 116,
+        "gzip": 112,
+        "brotli": 95,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { sortBy }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 615,
+        "gzip": 365,
+        "brotli": 343,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 614,
+        "gzip": 366,
+        "brotli": 341,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { sortBy }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 620,
+        "gzip": 358,
+        "brotli": 334,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 619,
+        "gzip": 359,
+        "brotli": 334,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "import { pipe }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 921,
+        "gzip": 520,
+        "brotli": 473,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 2120,
+        "gzip": 976,
+        "brotli": 862,
+        "hasProxy": true,
+        "hasSentinelMessage": true
+      }
+    },
+    {
+      "entry": "import { pipe }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 922,
+        "gzip": 517,
+        "brotli": 466,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 2117,
+        "gzip": 964,
+        "brotli": 860,
+        "hasProxy": true,
+        "hasSentinelMessage": true
+      }
+    },
+    {
+      "entry": "import { pipe, map, filter, take }",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 1577,
+        "gzip": 783,
+        "brotli": 714,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 2792,
+        "gzip": 1285,
+        "brotli": 1147,
+        "hasProxy": true,
+        "hasSentinelMessage": true
+      }
+    },
+    {
+      "entry": "import { pipe, map, filter, take }",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 1584,
+        "gzip": 770,
+        "brotli": 698,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 2789,
+        "gzip": 1275,
+        "brotli": 1141,
+        "hasProxy": true,
+        "hasSentinelMessage": true
+      }
+    },
+    {
+      "entry": "top 15 functions, no pipe",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 5005,
+        "gzip": 1857,
+        "brotli": 1706,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 4106,
+        "gzip": 1539,
+        "brotli": 1422,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "top 15 functions, no pipe",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 5002,
+        "gzip": 1838,
+        "brotli": 1678,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 4105,
+        "gzip": 1532,
+        "brotli": 1419,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      }
+    },
+    {
+      "entry": "pipe + top 15 functions",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 5015,
+        "gzip": 1862,
+        "brotli": 1703,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 6214,
+        "gzip": 2339,
+        "brotli": 2132,
+        "hasProxy": true,
+        "hasSentinelMessage": true
+      }
+    },
+    {
+      "entry": "pipe + top 15 functions",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 5012,
+        "gzip": 1842,
+        "brotli": 1684,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 6205,
+        "gzip": 2335,
+        "brotli": 2131,
+        "hasProxy": true,
+        "hasSentinelMessage": true
+      }
+    },
+    {
+      "entry": "whole library",
+      "bundler": "esbuild",
+      "main": {
+        "minified": 28146,
+        "gzip": 9118,
+        "brotli": 8221,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 29917,
+        "gzip": 9813,
+        "brotli": 8815,
+        "hasProxy": true,
+        "hasSentinelMessage": true
+      }
+    },
+    {
+      "entry": "whole library",
+      "bundler": "rolldown",
+      "main": {
+        "minified": 28166,
+        "gzip": 9088,
+        "brotli": 8189,
+        "hasProxy": false,
+        "hasSentinelMessage": false
+      },
+      "branch": {
+        "minified": 29941,
+        "gzip": 9769,
+        "brotli": 8729,
+        "hasProxy": true,
+        "hasSentinelMessage": true
+      }
+    }
+  ],
+  "declarations": [
+    {
+      "lib": "branch",
+      "file": "index.d.ts",
+      "identical": false,
+      "declarationsIdentical": false,
+      "mainBytes": 582348,
+      "otherBytes": 582133,
+      "declarationDiff": "--- /Users/eranhirsch/code/remeda/.tmp/claude-501/-Users-eranhirsch-code-remeda/3731fd26-f43e-476d-be89-b29b3f9626ed/scratchpad/perf/.bundle-work/main.index.d.ts\t2026-10-14 20:50:54\n+++ /Users/eranhirsch/code/remeda/.tmp/claude-501/-Users-eranhirsch-code-remeda/3731fd26-f43e-476d-be89-b29b3f9626ed/scratchpad/perf/.bundle-work/branch.index.d.ts\t2026-10-14 20:50:54\n@@ -840,12 +840,12 @@\n declare function identity(): IdentityFunction;\n declare function indexBy<T, K extends PropertyKey>(data: readonly T[], mapper: (item: T, index: number, data: readonly T[]) => K): BoundedPartial<Record<K, T>>;\n declare function indexBy<T, K extends PropertyKey>(mapper: (item: T, index: number, data: readonly T[]) => K): (data: readonly T[]) => BoundedPartial<Record<K, T>>;\n-declare function intersection<T, S>(data: readonly T[], other: readonly S[]): (S & T)[];\n-declare function intersection<S>(other: readonly S[]): <T>(data: readonly T[]) => (S & T)[];\n-type IsEqual<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;\n-declare function intersectionWith<TFirst, TSecond>(array: readonly TFirst[], other: readonly TSecond[], isEqual: IsEqual<TFirst, TSecond>): TFirst[];\n-declare function intersectionWith<TFirst, TSecond>(other: readonly TSecond[],\n-isEqual: IsEqual<TFirst, TSecond>): (array: readonly TFirst[]) => TFirst[];\n+declare function intersection<T, S>(data: readonly T[], other: readonly S[]): (T & S)[];\n+declare function intersection<S>(other: readonly S[]): <T>(data: readonly T[]) => (T & S)[];\n+type IsEqual<T, S> = (a: T, b: S) => boolean;\n+declare function intersectionWith<T, S>(data: readonly T[], other: readonly S[], isEqual: IsEqual<T, S>): T[];\n+declare function intersectionWith<T, S>(other: readonly S[],\n+isEqual: IsEqual<T, S>): (data: readonly T[]) => T[];\n type Inverted<T extends object> = Simplify<{ -readonly [K in keyof T as K extends number | string ? Required<T>[K] extends PropertyKey ? Required<T>[K] : never : never]: ToString<K>; }>;\n declare function invert<T extends object>(object: T): Inverted<T>;\n declare function invert<T extends object>(): (object: T) => Inverted<T>;\n@@ -937,9 +937,9 @@\n type MappedValues<T extends object, Value> = Simplify<{ -readonly [P in keyof T as P extends number | string ? P : never]: Value; }>;\n declare function mapValues<T extends object, Value>(data: T, valueMapper: (value: EnumerableStringKeyedValueOf<T>, key: EnumerableStringKeyOf<T>, data: T) => Value): MappedValues<T, Value>;\n declare function mapValues<T extends object, Value>(valueMapper: (value: EnumerableStringKeyedValueOf<T>, key: EnumerableStringKeyOf<T>, data: T) => Value): (data: T) => MappedValues<T, Value>;\n-type LazyFeedbackCallback<T extends IterableContainer, U> = (previousValue: U, currentValue: T[number], currentIndex: number, data: Readonly<NonEmptyPrefix<T>>) => U;\n-declare function mapWithFeedback<T extends IterableContainer, U>(data: T, callbackfn: LazyFeedbackCallback<T, U>, initialValue: U): Mapped<T, U>;\n-declare function mapWithFeedback<T extends IterableContainer, U>(callbackfn: LazyFeedbackCallback<T, U>, initialValue: U): (data: T) => Mapped<T, U>;\n+type FeedbackCallback<T extends IterableContainer, U, Data = T> = (previousValue: U, currentValue: T[number], currentIndex: number, data: Readonly<Data>) => U;\n+declare function mapWithFeedback<T extends IterableContainer, U>(data: T, callbackfn: FeedbackCallback<T, U>, initialValue: U): Mapped<T, U>;\n+declare function mapWithFeedback<T extends IterableContainer, U>(callbackfn: FeedbackCallback<T, U, NonEmptyPrefix<T>>, initialValue: U): (data: T) => Mapped<T, U>;\n type Mean<T extends IterableContainer<number>> = (T extends readonly [] ? never : number) | (T extends readonly [unknown, ...unknown[]] ? never : undefined);\n declare function mean<T extends IterableContainer<number>>(data: T): Mean<T>;\n declare function mean(): <T extends IterableContainer<number>>(data: T) => Mean<T>;\n@@ -1149,27 +1149,9 @@\n declare function prop<K extends PropertyKey>(key: K): <T extends Partial<Record<K, unknown>>>(data: T) => T[K];\n declare function pullObject<T extends IterableContainer, K extends PropertyKey, V>(data: T, keyExtractor: (item: T[number], index: number, data: T) => K, valueExtractor: (item: T[number], index: number, data: T) => V): BoundedPartial<Record<K, V>>;\n declare function pullObject<T extends IterableContainer, K extends PropertyKey, V>(keyExtractor: (item: T[number], index: number, data: T) => K, valueExtractor: (item: T[number], index: number, data: T) => V): (data: T) => BoundedPartial<Record<K, V>>;\n-type LazyResult<T = unknown> = LazyEmpty | LazyMany<T> | LazyNext<T>;\n-type LazyEmpty = {\n-  done: boolean;\n-  hasNext: false;\n-  hasMany?: false | undefined;\n-  next?: undefined;\n-};\n-type LazyNext<T> = {\n-  done: boolean;\n-  hasNext: true;\n-  hasMany?: false | undefined;\n-  next: T;\n-};\n-type LazyMany<T> = {\n-  done: boolean;\n-  hasNext: true;\n-  hasMany: true;\n-  next: readonly T[];\n-};\n-type LazyEvaluator<T = unknown, R = T> = (item: T, index: number, data: readonly T[]) => LazyResult<R>;\n-declare function purry(fn: StrictFunction, args: readonly unknown[], lazy?: (...args: any) => LazyEvaluator): unknown;\n+type DataFirst<T, P extends readonly unknown[], R> = (data: T, ...args: P) => R;\n+type UnaryFunction<T = unknown, R = unknown> = (data: T) => R;\n+declare const purry: <T, P extends readonly unknown[], R>(dataFirst: DataFirst<T, P, R>, args: readonly unknown[]) => R | UnaryFunction<T, R>;\n declare function randomBigInt(from: bigint, to: bigint): bigint;\n type MaxLiteral = 1000;\n type RandomInteger<From extends number, To extends number> = IsNever<NonNegativeInteger<From>> extends true ? number : IsNever<NonNegativeInteger<To>> extends true ? number : IsEqual$2<From, To> extends true ? From : GreaterThan<From, To> extends true ? never : GreaterThanOrEqual<To, MaxLiteral> extends true ? number : IntRangeInclusive<From, To>;\n@@ -1362,7 +1344,7 @@\n type Deduped<T extends IterableContainer> = T extends readonly [] ? [] : T extends readonly [infer Head, ...infer Rest] ? [Head, ...Rest[number][]] : T extends readonly [...unknown[], unknown] ? NonEmptyArray<T[number]> : T[number][];\n declare function unique<T extends IterableContainer>(data: T): Deduped<T>;\n declare function unique(): <T extends IterableContainer>(data: T) => Deduped<T>;\n-declare function uniqueBy<T extends IterableContainer>(data: T, keyFunction: LazyCallback<T, unknown>): Deduped<T>;\n+declare function uniqueBy<T extends IterableContainer>(data: T, keyFunction: (value: T[number], index: number, data: Readonly<T>) => unknown): Deduped<T>;\n declare function uniqueBy<T extends IterableContainer>(keyFunction: LazyCallback<T, unknown>): (data: T) => Deduped<T>;\n type IsEquals<T> = (a: T, b: T) => boolean;\n declare function uniqueWith<T extends IterableContainer>(data: T, isEquals: IsEquals<T[number]>): Deduped<T>;\n",
+      "fullDiff": "--- /Users/eranhirsch/code/remeda/.tmp/claude-501/-Users-eranhirsch-code-remeda/3731fd26-f43e-476d-be89-b29b3f9626ed/scratchpad/perf/libs/main/packages/remeda/dist/index.d.ts\t2026-10-07 10:05:12\n+++ /Users/eranhirsch/code/remeda/.tmp/claude-501/-Users-eranhirsch-code-remeda/3731fd26-f43e-476d-be89-b29b3f9626ed/scratchpad/perf/libs/branch/packages/remeda/dist/index.d.ts\t2026-10-14 15:18:50\n@@ -6113,7 +6113,7 @@\n  * @example\n  *    pipe([1, 2, 3, 4], difference([2, 5, 3])); // => [1, 4]\n  *    pipe([1, 1, 2, 2], difference([1])); // => [1, 2, 2]\n- * @dataFirst\n+ * @dataLast\n  * @lazy\n  * @category Array\n  */\n@@ -6749,10 +6749,9 @@\n  * a required first item (e.g., the array is not empty), similar to calling\n  * `hasAtLeast(1)` on the shape we computed.\n  *\n- * Use this type for any callback that `pipe` invokes lazily. That is always\n- * the data-last overload, and for utilities built on `purryFromLazy` (which\n- * routes data-first calls through `pipe` as well) it is the data-first overload\n- * too. This is a low-level type, prefer `LazyCallback` and\n+ * Use this type for any callback that is invoked lazily, which is the\n+ * data-last overload; the data-first overload runs eagerly over the complete\n+ * input. This is a low-level type, prefer `LazyCallback` and\n  * `LazyTypePredicate` over direct usage.\n  *\n  * When the type is used for a callback used in `pipe` it should be wrapped in\n@@ -6760,7 +6759,7 @@\n  * and can corrupt future iterations.\n  *\n  * @example\n- *   // data-first (eager, via `purry`)\n+ *   // data-first (eager)\n  *   function map<T extends IterableContainer, U>(\n  *     data: T,\n  *     callbackfn: (value: T[number], index: number, data: T) => U,\n@@ -8080,7 +8079,7 @@\n  * @lazy\n  * @category Array\n  */\n-declare function intersection<T, S>(data: readonly T[], other: readonly S[]): (S & T)[];\n+declare function intersection<T, S>(data: readonly T[], other: readonly S[]): (T & S)[];\n /**\n  * Returns a list of elements that exist in both array. The output maintains the\n  * same order as the input. The inputs are treated as multi-sets/bags (multiple\n@@ -8096,19 +8095,19 @@\n  * @lazy\n  * @category Array\n  */\n-declare function intersection<S>(other: readonly S[]): <T>(data: readonly T[]) => (S & T)[];\n+declare function intersection<S>(other: readonly S[]): <T>(data: readonly T[]) => (T & S)[];\n //#endregion\n //#region src/intersectionWith.d.ts\n-type IsEqual<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;\n+type IsEqual<T, S> = (a: T, b: S) => boolean;\n /**\n  * Returns a list of intersecting values based on a custom\n  * comparator function that compares elements of both arrays.\n  *\n- * @param array - The source array.\n- * @param other - The second array.\n+ * @param data - The source data.\n+ * @param other - The other data.\n  * @param isEqual - The custom comparator.\n  * @signature\n- *    intersectionWith(array, other, isEqual)\n+ *    intersectionWith(data, other, isEqual)\n  * @example\n  *    intersectionWith(\n  *      [\n@@ -8122,15 +8121,15 @@\n  * @lazy\n  * @category Array\n  */\n-declare function intersectionWith<TFirst, TSecond>(array: readonly TFirst[], other: readonly TSecond[], isEqual: IsEqual<TFirst, TSecond>): TFirst[];\n+declare function intersectionWith<T, S>(data: readonly T[], other: readonly S[], isEqual: IsEqual<T, S>): T[];\n /**\n  * Returns a list of intersecting values based on a custom\n  * comparator function that compares elements of both arrays.\n  *\n- * @param other - The second array.\n+ * @param other - The other data.\n  * @param isEqual - The custom comparator.\n  * @signature\n- *    intersectionWith(other, isEqual)(array)\n+ *    intersectionWith(other, isEqual)(data)\n  * @example\n  *    intersectionWith(\n  *      [3, 5],\n@@ -8143,12 +8142,12 @@\n  * @lazy\n  * @category Array\n  */\n-declare function intersectionWith<TFirst, TSecond>(other: readonly TSecond[],\n+declare function intersectionWith<T, S>(other: readonly S[],\n /**\n  * Type inference doesn't work properly for the comparator's first parameter\n  * in data last variant.\n  */\n-isEqual: IsEqual<TFirst, TSecond>): (array: readonly TFirst[]) => TFirst[];\n+isEqual: IsEqual<T, S>): (data: readonly T[]) => T[];\n //#endregion\n //#region src/invert.d.ts\n type Inverted<T extends object> = Simplify<{ -readonly [K in keyof T as K extends number | string ? Required<T>[K] extends PropertyKey ? Required<T>[K] : never : never]: ToString<K>; }>;\n@@ -9253,7 +9252,7 @@\n declare function mapValues<T extends object, Value>(valueMapper: (value: EnumerableStringKeyedValueOf<T>, key: EnumerableStringKeyOf<T>, data: T) => Value): (data: T) => MappedValues<T, Value>;\n //#endregion\n //#region src/mapWithFeedback.d.ts\n-type LazyFeedbackCallback<T extends IterableContainer, U> = (previousValue: U, currentValue: T[number], currentIndex: number, data: Readonly<NonEmptyPrefix<T>>) => U;\n+type FeedbackCallback<T extends IterableContainer, U, Data = T> = (previousValue: U, currentValue: T[number], currentIndex: number, data: Readonly<Data>) => U;\n /**\n  * Applies a function on each element of the array, using the result of the\n  * previous application, and returns an array of the successively computed\n@@ -9277,7 +9276,7 @@\n  * @lazy\n  * @category Array\n  */\n-declare function mapWithFeedback<T extends IterableContainer, U>(data: T, callbackfn: LazyFeedbackCallback<T, U>, initialValue: U): Mapped<T, U>;\n+declare function mapWithFeedback<T extends IterableContainer, U>(data: T, callbackfn: FeedbackCallback<T, U>, initialValue: U): Mapped<T, U>;\n /**\n  * Applies a function on each element of the array, using the result of the\n  * previous application, and returns an array of the successively computed\n@@ -9299,7 +9298,7 @@\n  * @lazy\n  * @category Array\n  */\n-declare function mapWithFeedback<T extends IterableContainer, U>(callbackfn: LazyFeedbackCallback<T, U>, initialValue: U): (data: T) => Mapped<T, U>;\n+declare function mapWithFeedback<T extends IterableContainer, U>(callbackfn: FeedbackCallback<T, U, NonEmptyPrefix<T>>, initialValue: U): (data: T) => Mapped<T, U>;\n //#endregion\n //#region src/mean.d.ts\n type Mean<T extends IterableContainer<number>> = (T extends readonly [] ? never : number) | (T extends readonly [unknown, ...unknown[]] ? never : undefined);\n@@ -10194,8 +10193,8 @@\n  * arrow functions: `($) => map($, callback)` instead of `map(callback)`.\n  *\n  * Any function can be used in pipes, not just Remeda utilities. For creating\n- * custom functions with currying and lazy evaluation support, see the `purry`\n- * utility.\n+ * custom functions that support both data-first and data-last calls, see the\n+ * `purry` utility.\n  *\n  * A \"headless\" variant `piped` is available for creating reusable pipe\n  * functions without initial data.\n@@ -10255,7 +10254,7 @@\n  *    }); //=> \"[1, 2, 3, 4]\" logged 4 times\n  *\n  *    // But with `pipe` data would only contain the items up to the current\n- *    // index\n+ *    // index.\n  *    pipe([1, 2, 3, 4], forEach((_item, _index, data) => {\n  *      console.log(data);\n  *    })); //=> \"[1]\", \"[1, 2]\", \"[1, 2, 3]\", \"[1, 2, 3, 4]\"\n@@ -10517,71 +10516,59 @@\n  */\n declare function pullObject<T extends IterableContainer, K extends PropertyKey, V>(keyExtractor: (item: T[number], index: number, data: T) => K, valueExtractor: (item: T[number], index: number, data: T) => V): (data: T) => BoundedPartial<Record<K, V>>;\n //#endregion\n-//#region src/internal/types/LazyResult.d.ts\n-type LazyResult<T = unknown> = LazyEmpty | LazyMany<T> | LazyNext<T>;\n-type LazyEmpty = {\n-  done: boolean;\n-  hasNext: false;\n-  hasMany?: false | undefined;\n-  next?: undefined;\n-};\n-type LazyNext<T> = {\n-  done: boolean;\n-  hasNext: true;\n-  hasMany?: false | undefined;\n-  next: T;\n-};\n-type LazyMany<T> = {\n-  done: boolean;\n-  hasNext: true;\n-  hasMany: true;\n-  next: readonly T[];\n-};\n+//#region src/internal/dataLastImplementation.d.ts\n+type DataFirst<T, P extends readonly unknown[], R> = (data: T, ...args: P) => R;\n+type UnaryFunction<T = unknown, R = unknown> = (data: T) => R;\n //#endregion\n-//#region src/internal/types/LazyEvaluator.d.ts\n-type LazyEvaluator<T = unknown, R = T> = (item: T, index: number, data: readonly T[]) => LazyResult<R>;\n-//#endregion\n //#region src/purry.d.ts\n /**\n- * Creates a function with `dataFirst` and `dataLast` signatures.\n+ * Wraps a `dataFirst` implementation and dynamically curries it at runtime\n+ * based on the number of arguments it was called with.\n  *\n- * `purry` is a dynamic function and it's not type safe. It should be wrapped by\n- * a function that have proper typings. Refer to the example below for correct\n- * usage.\n+ * When `args` has at least `dataFirst.length` items (`Function.length` counts\n+ * the parameters before the first defaulted or rest one), `dataFirst` is\n+ * called with all of them, extra ones included. Otherwise `purry` returns a\n+ * function that takes the data and calls `dataFirst(data, ...args)`.\n  *\n- * !IMPORTANT: functions that simply call `purry` and return the result (like\n- * almost all functions in this library) should return `unknown` themselves if\n- * an explicit return type is required. This is because we currently don't\n- * provide a generic return type that is built from the input function, and\n- * crafting one manually isn't worthwhile as we rely on function declaration\n- * overloading to combine the types for dataFirst and dataLast invocations!\n+ * The return type is not dynamically routed via the same runtime logic, and\n+ * therefore is a union of both data-first and data-last return types. The\n+ * return type also ignores any generic type parameters of `dataFirst`, and in\n+ * most cases would end up widening the return type to `unknown`. See the\n+ * examples below for a structured template for coupling the return types to\n+ * specific overloaded signatures. Almost all Remeda utilities are built using\n+ * `purry` via this template.\n  *\n- * @param fn - The function to purry.\n+ * @param dataFirst - The function to purry.\n  * @param args - The arguments.\n- * @param lazy - A lazy version of the function to purry.\n- * @signature purry(fn, args);\n+ * @signature\n+ *   purry(dataFirst, args);\n  * @example\n- *    function _findIndex(array, fn) {\n+ *    // data-first\n+ *    function findIndex<T>(\n+ *      data: readonly T[],\n+ *      predicate: (item: T) => boolean,\n+ *    ): number;\n+ *\n+ *    // data-last\n+ *    function findIndex<T>(\n+ *      predicate: (item: T) => boolean,\n+ *    ): (data: readonly T[]) => number;\n+ *\n+ *    function findIndex(...args: unknown[]) {\n+ *      return purry(findIndexImplementation, args);\n+ *    }\n+ *\n+ *    function findIndexImplementation(data, predicate): number {\n  *      for (let i = 0; i < array.length; i++) {\n- *        if (fn(array[i])) {\n+ *        if (predicate(array[i])) {\n  *          return i;\n  *        }\n  *      }\n  *      return -1;\n- *    }\n- *\n- *    // data-first\n- *    function findIndex<T>(array: T[], fn: (item: T) => boolean): number;\n- *\n- *    // data-last\n- *    function findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;\n- *\n- *    function findIndex(...args: unknown[]) {\n- *      return purry(_findIndex, args);\n  *    }\n  * @category Function\n  */\n-declare function purry(fn: StrictFunction, args: readonly unknown[], lazy?: (...args: any) => LazyEvaluator): unknown;\n+declare const purry: <T, P extends readonly unknown[], R>(dataFirst: DataFirst<T, P, R>, args: readonly unknown[]) => R | UnaryFunction<T, R>;\n //#endregion\n //#region src/randomBigInt.d.ts\n /**\n@@ -12863,7 +12850,7 @@\n  * @lazy\n  * @category Array\n  */\n-declare function uniqueBy<T extends IterableContainer>(data: T, keyFunction: LazyCallback<T, unknown>): Deduped<T>;\n+declare function uniqueBy<T extends IterableContainer>(data: T, keyFunction: (value: T[number], index: number, data: Readonly<T>) => unknown): Deduped<T>;\n /**\n  * Returns a new array containing only one copy of each element in the original\n  * list transformed by a function. Elements are compared by reference using Set.\n"
+    },
+    {
+      "lib": "branch",
+      "file": "index.d.cts",
+      "identical": false,
+      "declarationsIdentical": false,
+      "mainBytes": 582349,
+      "otherBytes": 582134,
+      "declarationDiff": "--- /Users/eranhirsch/code/remeda/.tmp/claude-501/-Users-eranhirsch-code-remeda/3731fd26-f43e-476d-be89-b29b3f9626ed/scratchpad/perf/.bundle-work/main.index.d.cts\t2026-10-14 20:50:54\n+++ /Users/eranhirsch/code/remeda/.tmp/claude-501/-Users-eranhirsch-code-remeda/3731fd26-f43e-476d-be89-b29b3f9626ed/scratchpad/perf/.bundle-work/branch.index.d.cts\t2026-10-14 20:50:54\n@@ -840,12 +840,12 @@\n declare function identity(): IdentityFunction;\n declare function indexBy<T, K extends PropertyKey>(data: readonly T[], mapper: (item: T, index: number, data: readonly T[]) => K): BoundedPartial<Record<K, T>>;\n declare function indexBy<T, K extends PropertyKey>(mapper: (item: T, index: number, data: readonly T[]) => K): (data: readonly T[]) => BoundedPartial<Record<K, T>>;\n-declare function intersection<T, S>(data: readonly T[], other: readonly S[]): (S & T)[];\n-declare function intersection<S>(other: readonly S[]): <T>(data: readonly T[]) => (S & T)[];\n-type IsEqual<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;\n-declare function intersectionWith<TFirst, TSecond>(array: readonly TFirst[], other: readonly TSecond[], isEqual: IsEqual<TFirst, TSecond>): TFirst[];\n-declare function intersectionWith<TFirst, TSecond>(other: readonly TSecond[],\n-isEqual: IsEqual<TFirst, TSecond>): (array: readonly TFirst[]) => TFirst[];\n+declare function intersection<T, S>(data: readonly T[], other: readonly S[]): (T & S)[];\n+declare function intersection<S>(other: readonly S[]): <T>(data: readonly T[]) => (T & S)[];\n+type IsEqual<T, S> = (a: T, b: S) => boolean;\n+declare function intersectionWith<T, S>(data: readonly T[], other: readonly S[], isEqual: IsEqual<T, S>): T[];\n+declare function intersectionWith<T, S>(other: readonly S[],\n+isEqual: IsEqual<T, S>): (data: readonly T[]) => T[];\n type Inverted<T extends object> = Simplify<{ -readonly [K in keyof T as K extends number | string ? Required<T>[K] extends PropertyKey ? Required<T>[K] : never : never]: ToString<K>; }>;\n declare function invert<T extends object>(object: T): Inverted<T>;\n declare function invert<T extends object>(): (object: T) => Inverted<T>;\n@@ -937,9 +937,9 @@\n type MappedValues<T extends object, Value> = Simplify<{ -readonly [P in keyof T as P extends number | string ? P : never]: Value; }>;\n declare function mapValues<T extends object, Value>(data: T, valueMapper: (value: EnumerableStringKeyedValueOf<T>, key: EnumerableStringKeyOf<T>, data: T) => Value): MappedValues<T, Value>;\n declare function mapValues<T extends object, Value>(valueMapper: (value: EnumerableStringKeyedValueOf<T>, key: EnumerableStringKeyOf<T>, data: T) => Value): (data: T) => MappedValues<T, Value>;\n-type LazyFeedbackCallback<T extends IterableContainer, U> = (previousValue: U, currentValue: T[number], currentIndex: number, data: Readonly<NonEmptyPrefix<T>>) => U;\n-declare function mapWithFeedback<T extends IterableContainer, U>(data: T, callbackfn: LazyFeedbackCallback<T, U>, initialValue: U): Mapped<T, U>;\n-declare function mapWithFeedback<T extends IterableContainer, U>(callbackfn: LazyFeedbackCallback<T, U>, initialValue: U): (data: T) => Mapped<T, U>;\n+type FeedbackCallback<T extends IterableContainer, U, Data = T> = (previousValue: U, currentValue: T[number], currentIndex: number, data: Readonly<Data>) => U;\n+declare function mapWithFeedback<T extends IterableContainer, U>(data: T, callbackfn: FeedbackCallback<T, U>, initialValue: U): Mapped<T, U>;\n+declare function mapWithFeedback<T extends IterableContainer, U>(callbackfn: FeedbackCallback<T, U, NonEmptyPrefix<T>>, initialValue: U): (data: T) => Mapped<T, U>;\n type Mean<T extends IterableContainer<number>> = (T extends readonly [] ? never : number) | (T extends readonly [unknown, ...unknown[]] ? never : undefined);\n declare function mean<T extends IterableContainer<number>>(data: T): Mean<T>;\n declare function mean(): <T extends IterableContainer<number>>(data: T) => Mean<T>;\n@@ -1149,27 +1149,9 @@\n declare function prop<K extends PropertyKey>(key: K): <T extends Partial<Record<K, unknown>>>(data: T) => T[K];\n declare function pullObject<T extends IterableContainer, K extends PropertyKey, V>(data: T, keyExtractor: (item: T[number], index: number, data: T) => K, valueExtractor: (item: T[number], index: number, data: T) => V): BoundedPartial<Record<K, V>>;\n declare function pullObject<T extends IterableContainer, K extends PropertyKey, V>(keyExtractor: (item: T[number], index: number, data: T) => K, valueExtractor: (item: T[number], index: number, data: T) => V): (data: T) => BoundedPartial<Record<K, V>>;\n-type LazyResult<T = unknown> = LazyEmpty | LazyMany<T> | LazyNext<T>;\n-type LazyEmpty = {\n-  done: boolean;\n-  hasNext: false;\n-  hasMany?: false | undefined;\n-  next?: undefined;\n-};\n-type LazyNext<T> = {\n-  done: boolean;\n-  hasNext: true;\n-  hasMany?: false | undefined;\n-  next: T;\n-};\n-type LazyMany<T> = {\n-  done: boolean;\n-  hasNext: true;\n-  hasMany: true;\n-  next: readonly T[];\n-};\n-type LazyEvaluator<T = unknown, R = T> = (item: T, index: number, data: readonly T[]) => LazyResult<R>;\n-declare function purry(fn: StrictFunction, args: readonly unknown[], lazy?: (...args: any) => LazyEvaluator): unknown;\n+type DataFirst<T, P extends readonly unknown[], R> = (data: T, ...args: P) => R;\n+type UnaryFunction<T = unknown, R = unknown> = (data: T) => R;\n+declare const purry: <T, P extends readonly unknown[], R>(dataFirst: DataFirst<T, P, R>, args: readonly unknown[]) => R | UnaryFunction<T, R>;\n declare function randomBigInt(from: bigint, to: bigint): bigint;\n type MaxLiteral = 1000;\n type RandomInteger<From extends number, To extends number> = IsNever<NonNegativeInteger<From>> extends true ? number : IsNever<NonNegativeInteger<To>> extends true ? number : IsEqual$2<From, To> extends true ? From : GreaterThan<From, To> extends true ? never : GreaterThanOrEqual<To, MaxLiteral> extends true ? number : IntRangeInclusive<From, To>;\n@@ -1362,7 +1344,7 @@\n type Deduped<T extends IterableContainer> = T extends readonly [] ? [] : T extends readonly [infer Head, ...infer Rest] ? [Head, ...Rest[number][]] : T extends readonly [...unknown[], unknown] ? NonEmptyArray<T[number]> : T[number][];\n declare function unique<T extends IterableContainer>(data: T): Deduped<T>;\n declare function unique(): <T extends IterableContainer>(data: T) => Deduped<T>;\n-declare function uniqueBy<T extends IterableContainer>(data: T, keyFunction: LazyCallback<T, unknown>): Deduped<T>;\n+declare function uniqueBy<T extends IterableContainer>(data: T, keyFunction: (value: T[number], index: number, data: Readonly<T>) => unknown): Deduped<T>;\n declare function uniqueBy<T extends IterableContainer>(keyFunction: LazyCallback<T, unknown>): (data: T) => Deduped<T>;\n type IsEquals<T> = (a: T, b: T) => boolean;\n declare function uniqueWith<T extends IterableContainer>(data: T, isEquals: IsEquals<T[number]>): Deduped<T>;\n",
+      "fullDiff": "--- /Users/eranhirsch/code/remeda/.tmp/claude-501/-Users-eranhirsch-code-remeda/3731fd26-f43e-476d-be89-b29b3f9626ed/scratchpad/perf/libs/main/packages/remeda/dist/index.d.cts\t2026-10-07 10:05:12\n+++ /Users/eranhirsch/code/remeda/.tmp/claude-501/-Users-eranhirsch-code-remeda/3731fd26-f43e-476d-be89-b29b3f9626ed/scratchpad/perf/libs/branch/packages/remeda/dist/index.d.cts\t2026-10-14 15:18:50\n@@ -6113,7 +6113,7 @@\n  * @example\n  *    pipe([1, 2, 3, 4], difference([2, 5, 3])); // => [1, 4]\n  *    pipe([1, 1, 2, 2], difference([1])); // => [1, 2, 2]\n- * @dataFirst\n+ * @dataLast\n  * @lazy\n  * @category Array\n  */\n@@ -6749,10 +6749,9 @@\n  * a required first item (e.g., the array is not empty), similar to calling\n  * `hasAtLeast(1)` on the shape we computed.\n  *\n- * Use this type for any callback that `pipe` invokes lazily. That is always\n- * the data-last overload, and for utilities built on `purryFromLazy` (which\n- * routes data-first calls through `pipe` as well) it is the data-first overload\n- * too. This is a low-level type, prefer `LazyCallback` and\n+ * Use this type for any callback that is invoked lazily, which is the\n+ * data-last overload; the data-first overload runs eagerly over the complete\n+ * input. This is a low-level type, prefer `LazyCallback` and\n  * `LazyTypePredicate` over direct usage.\n  *\n  * When the type is used for a callback used in `pipe` it should be wrapped in\n@@ -6760,7 +6759,7 @@\n  * and can corrupt future iterations.\n  *\n  * @example\n- *   // data-first (eager, via `purry`)\n+ *   // data-first (eager)\n  *   function map<T extends IterableContainer, U>(\n  *     data: T,\n  *     callbackfn: (value: T[number], index: number, data: T) => U,\n@@ -8080,7 +8079,7 @@\n  * @lazy\n  * @category Array\n  */\n-declare function intersection<T, S>(data: readonly T[], other: readonly S[]): (S & T)[];\n+declare function intersection<T, S>(data: readonly T[], other: readonly S[]): (T & S)[];\n /**\n  * Returns a list of elements that exist in both array. The output maintains the\n  * same order as the input. The inputs are treated as multi-sets/bags (multiple\n@@ -8096,19 +8095,19 @@\n  * @lazy\n  * @category Array\n  */\n-declare function intersection<S>(other: readonly S[]): <T>(data: readonly T[]) => (S & T)[];\n+declare function intersection<S>(other: readonly S[]): <T>(data: readonly T[]) => (T & S)[];\n //#endregion\n //#region src/intersectionWith.d.ts\n-type IsEqual<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;\n+type IsEqual<T, S> = (a: T, b: S) => boolean;\n /**\n  * Returns a list of intersecting values based on a custom\n  * comparator function that compares elements of both arrays.\n  *\n- * @param array - The source array.\n- * @param other - The second array.\n+ * @param data - The source data.\n+ * @param other - The other data.\n  * @param isEqual - The custom comparator.\n  * @signature\n- *    intersectionWith(array, other, isEqual)\n+ *    intersectionWith(data, other, isEqual)\n  * @example\n  *    intersectionWith(\n  *      [\n@@ -8122,15 +8121,15 @@\n  * @lazy\n  * @category Array\n  */\n-declare function intersectionWith<TFirst, TSecond>(array: readonly TFirst[], other: readonly TSecond[], isEqual: IsEqual<TFirst, TSecond>): TFirst[];\n+declare function intersectionWith<T, S>(data: readonly T[], other: readonly S[], isEqual: IsEqual<T, S>): T[];\n /**\n  * Returns a list of intersecting values based on a custom\n  * comparator function that compares elements of both arrays.\n  *\n- * @param other - The second array.\n+ * @param other - The other data.\n  * @param isEqual - The custom comparator.\n  * @signature\n- *    intersectionWith(other, isEqual)(array)\n+ *    intersectionWith(other, isEqual)(data)\n  * @example\n  *    intersectionWith(\n  *      [3, 5],\n@@ -8143,12 +8142,12 @@\n  * @lazy\n  * @category Array\n  */\n-declare function intersectionWith<TFirst, TSecond>(other: readonly TSecond[],\n+declare function intersectionWith<T, S>(other: readonly S[],\n /**\n  * Type inference doesn't work properly for the comparator's first parameter\n  * in data last variant.\n  */\n-isEqual: IsEqual<TFirst, TSecond>): (array: readonly TFirst[]) => TFirst[];\n+isEqual: IsEqual<T, S>): (data: readonly T[]) => T[];\n //#endregion\n //#region src/invert.d.ts\n type Inverted<T extends object> = Simplify<{ -readonly [K in keyof T as K extends number | string ? Required<T>[K] extends PropertyKey ? Required<T>[K] : never : never]: ToString<K>; }>;\n@@ -9253,7 +9252,7 @@\n declare function mapValues<T extends object, Value>(valueMapper: (value: EnumerableStringKeyedValueOf<T>, key: EnumerableStringKeyOf<T>, data: T) => Value): (data: T) => MappedValues<T, Value>;\n //#endregion\n //#region src/mapWithFeedback.d.ts\n-type LazyFeedbackCallback<T extends IterableContainer, U> = (previousValue: U, currentValue: T[number], currentIndex: number, data: Readonly<NonEmptyPrefix<T>>) => U;\n+type FeedbackCallback<T extends IterableContainer, U, Data = T> = (previousValue: U, currentValue: T[number], currentIndex: number, data: Readonly<Data>) => U;\n /**\n  * Applies a function on each element of the array, using the result of the\n  * previous application, and returns an array of the successively computed\n@@ -9277,7 +9276,7 @@\n  * @lazy\n  * @category Array\n  */\n-declare function mapWithFeedback<T extends IterableContainer, U>(data: T, callbackfn: LazyFeedbackCallback<T, U>, initialValue: U): Mapped<T, U>;\n+declare function mapWithFeedback<T extends IterableContainer, U>(data: T, callbackfn: FeedbackCallback<T, U>, initialValue: U): Mapped<T, U>;\n /**\n  * Applies a function on each element of the array, using the result of the\n  * previous application, and returns an array of the successively computed\n@@ -9299,7 +9298,7 @@\n  * @lazy\n  * @category Array\n  */\n-declare function mapWithFeedback<T extends IterableContainer, U>(callbackfn: LazyFeedbackCallback<T, U>, initialValue: U): (data: T) => Mapped<T, U>;\n+declare function mapWithFeedback<T extends IterableContainer, U>(callbackfn: FeedbackCallback<T, U, NonEmptyPrefix<T>>, initialValue: U): (data: T) => Mapped<T, U>;\n //#endregion\n //#region src/mean.d.ts\n type Mean<T extends IterableContainer<number>> = (T extends readonly [] ? never : number) | (T extends readonly [unknown, ...unknown[]] ? never : undefined);\n@@ -10194,8 +10193,8 @@\n  * arrow functions: `($) => map($, callback)` instead of `map(callback)`.\n  *\n  * Any function can be used in pipes, not just Remeda utilities. For creating\n- * custom functions with currying and lazy evaluation support, see the `purry`\n- * utility.\n+ * custom functions that support both data-first and data-last calls, see the\n+ * `purry` utility.\n  *\n  * A \"headless\" variant `piped` is available for creating reusable pipe\n  * functions without initial data.\n@@ -10255,7 +10254,7 @@\n  *    }); //=> \"[1, 2, 3, 4]\" logged 4 times\n  *\n  *    // But with `pipe` data would only contain the items up to the current\n- *    // index\n+ *    // index.\n  *    pipe([1, 2, 3, 4], forEach((_item, _index, data) => {\n  *      console.log(data);\n  *    })); //=> \"[1]\", \"[1, 2]\", \"[1, 2, 3]\", \"[1, 2, 3, 4]\"\n@@ -10517,71 +10516,59 @@\n  */\n declare function pullObject<T extends IterableContainer, K extends PropertyKey, V>(keyExtractor: (item: T[number], index: number, data: T) => K, valueExtractor: (item: T[number], index: number, data: T) => V): (data: T) => BoundedPartial<Record<K, V>>;\n //#endregion\n-//#region src/internal/types/LazyResult.d.ts\n-type LazyResult<T = unknown> = LazyEmpty | LazyMany<T> | LazyNext<T>;\n-type LazyEmpty = {\n-  done: boolean;\n-  hasNext: false;\n-  hasMany?: false | undefined;\n-  next?: undefined;\n-};\n-type LazyNext<T> = {\n-  done: boolean;\n-  hasNext: true;\n-  hasMany?: false | undefined;\n-  next: T;\n-};\n-type LazyMany<T> = {\n-  done: boolean;\n-  hasNext: true;\n-  hasMany: true;\n-  next: readonly T[];\n-};\n+//#region src/internal/dataLastImplementation.d.ts\n+type DataFirst<T, P extends readonly unknown[], R> = (data: T, ...args: P) => R;\n+type UnaryFunction<T = unknown, R = unknown> = (data: T) => R;\n //#endregion\n-//#region src/internal/types/LazyEvaluator.d.ts\n-type LazyEvaluator<T = unknown, R = T> = (item: T, index: number, data: readonly T[]) => LazyResult<R>;\n-//#endregion\n //#region src/purry.d.ts\n /**\n- * Creates a function with `dataFirst` and `dataLast` signatures.\n+ * Wraps a `dataFirst` implementation and dynamically curries it at runtime\n+ * based on the number of arguments it was called with.\n  *\n- * `purry` is a dynamic function and it's not type safe. It should be wrapped by\n- * a function that have proper typings. Refer to the example below for correct\n- * usage.\n+ * When `args` has at least `dataFirst.length` items (`Function.length` counts\n+ * the parameters before the first defaulted or rest one), `dataFirst` is\n+ * called with all of them, extra ones included. Otherwise `purry` returns a\n+ * function that takes the data and calls `dataFirst(data, ...args)`.\n  *\n- * !IMPORTANT: functions that simply call `purry` and return the result (like\n- * almost all functions in this library) should return `unknown` themselves if\n- * an explicit return type is required. This is because we currently don't\n- * provide a generic return type that is built from the input function, and\n- * crafting one manually isn't worthwhile as we rely on function declaration\n- * overloading to combine the types for dataFirst and dataLast invocations!\n+ * The return type is not dynamically routed via the same runtime logic, and\n+ * therefore is a union of both data-first and data-last return types. The\n+ * return type also ignores any generic type parameters of `dataFirst`, and in\n+ * most cases would end up widening the return type to `unknown`. See the\n+ * examples below for a structured template for coupling the return types to\n+ * specific overloaded signatures. Almost all Remeda utilities are built using\n+ * `purry` via this template.\n  *\n- * @param fn - The function to purry.\n+ * @param dataFirst - The function to purry.\n  * @param args - The arguments.\n- * @param lazy - A lazy version of the function to purry.\n- * @signature purry(fn, args);\n+ * @signature\n+ *   purry(dataFirst, args);\n  * @example\n- *    function _findIndex(array, fn) {\n+ *    // data-first\n+ *    function findIndex<T>(\n+ *      data: readonly T[],\n+ *      predicate: (item: T) => boolean,\n+ *    ): number;\n+ *\n+ *    // data-last\n+ *    function findIndex<T>(\n+ *      predicate: (item: T) => boolean,\n+ *    ): (data: readonly T[]) => number;\n+ *\n+ *    function findIndex(...args: unknown[]) {\n+ *      return purry(findIndexImplementation, args);\n+ *    }\n+ *\n+ *    function findIndexImplementation(data, predicate): number {\n  *      for (let i = 0; i < array.length; i++) {\n- *        if (fn(array[i])) {\n+ *        if (predicate(array[i])) {\n  *          return i;\n  *        }\n  *      }\n  *      return -1;\n- *    }\n- *\n- *    // data-first\n- *    function findIndex<T>(array: T[], fn: (item: T) => boolean): number;\n- *\n- *    // data-last\n- *    function findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;\n- *\n- *    function findIndex(...args: unknown[]) {\n- *      return purry(_findIndex, args);\n  *    }\n  * @category Function\n  */\n-declare function purry(fn: StrictFunction, args: readonly unknown[], lazy?: (...args: any) => LazyEvaluator): unknown;\n+declare const purry: <T, P extends readonly unknown[], R>(dataFirst: DataFirst<T, P, R>, args: readonly unknown[]) => R | UnaryFunction<T, R>;\n //#endregion\n //#region src/randomBigInt.d.ts\n /**\n@@ -12863,7 +12850,7 @@\n  * @lazy\n  * @category Array\n  */\n-declare function uniqueBy<T extends IterableContainer>(data: T, keyFunction: LazyCallback<T, unknown>): Deduped<T>;\n+declare function uniqueBy<T extends IterableContainer>(data: T, keyFunction: (value: T[number], index: number, data: Readonly<T>) => unknown): Deduped<T>;\n /**\n  * Returns a new array containing only one copy of each element in the original\n  * list transformed by a function. Elements are compared by reference using Set.\n"
+    }
+  ]
+}

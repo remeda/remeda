@@ -1,0 +1,330 @@
+{
+  "generatedAt": "2026-10-09T10:42:15.963Z",
+  "dir": "results/noarity",
+  "confirmationRuns": [
+    {
+      "name": "noarity/conf-r0",
+      "order": ["main", "branch", "main-aa", "branch-v-noarity"]
+    },
+    {
+      "name": "noarity/conf-r1",
+      "order": ["branch", "main-aa", "branch-v-noarity", "main"]
+    },
+    {
+      "name": "noarity/conf-r2",
+      "order": ["main-aa", "branch-v-noarity", "main", "branch"]
+    },
+    {
+      "name": "noarity/conf-r3",
+      "order": ["branch-v-noarity", "main", "branch", "main-aa"]
+    },
+    {
+      "name": "noarity/conf-r4",
+      "order": ["main", "branch", "main-aa", "branch-v-noarity"]
+    },
+    {
+      "name": "noarity/conf-r5",
+      "order": ["branch", "main-aa", "branch-v-noarity", "main"]
+    }
+  ],
+  "floors": {
+    "1": 0.04417886231626114,
+    "2": 0.029687724664869613,
+    "3": 0.02810143402693316
+  },
+  "target": {
+    "n": 97,
+    "perRun": [
+      1.0147536464706097, 1.0099273119242032, 1.0135909949519457,
+      1.0159136871899828, 1.0134853043800836, 1.0118119796281424
+    ],
+    "overall": 1.013245291492919,
+    "fasterRuns": 0,
+    "slowerRuns": 6,
+    "runs": 6,
+    "fasterFires": false,
+    "slowerFires": true,
+    "aaRate": 0
+  },
+  "lossesVsBranch": [
+    "T1 G3 pipe(x, add(1)) x64 1.069 (1.070 / 1.069)",
+    "T1 G3 pipe(x, add(1)) x1 1.070 (1.091 / 1.070)",
+    "T1 G3 scalar purry depth-3 x64 1.120 (1.119 / 1.120)",
+    "T1 G3 scalar purry depth-3 x1 1.059 (1.062 / 1.057)",
+    "T1 G3 scalar purry depth-10 x64 1.065 (1.061 / 1.069)",
+    "T1 G3 scalar purry depth-10 x1 1.075 (1.067 / 1.075)",
+    "T1 G5 data-first difference XS 1.046 (1.057 / 1.046)",
+    "T2 G7 clamp data-last XS 1.055 (1.060 / 1.055)",
+    "T2 G7 mapToObj data-last XS 1.152 (1.109 / 1.169)"
+  ],
+  "barsVsMain": {
+    "branch": [],
+    "noarity": []
+  },
+  "clamp": [
+    [
+      "noarity",
+      "0.999m, 1.000c, 1.000c, 1.000c, 0.999m, 0.967c",
+      "1.000",
+      "0.994m, 0.997c, 1.005c, 0.999c, 0.989m, 0.999c",
+      "0.998",
+      "neutral"
+    ],
+    [
+      "branch",
+      "0.964m, 0.965c, 0.965m, 0.964m, 0.964m, 0.934c",
+      "0.964",
+      "0.941m, 0.960c, 0.948m, 0.947m, 0.937m, 0.947c",
+      "0.947",
+      "neutral"
+    ],
+    [
+      "main-aa",
+      "0.999m, 1.000c, 1.000c, 1.000m, 1.000m, 0.967c",
+      "1.000",
+      "0.986m, 1.009c, 1.002c, 1.008m, 1.001m, 0.987c",
+      "1.001",
+      "neutral"
+    ]
+  ],
+  "lowerTiers": {
+    "jitless": {
+      "noarity/branch": {
+        "n": 82,
+        "perRun": [0.9650208625976961, 0.9732965846707025],
+        "overall": 0.9691498902142603,
+        "fasterRuns": 2,
+        "slowerRuns": 0,
+        "runs": 2,
+        "fasterFires": true,
+        "slowerFires": false,
+        "blocks": []
+      },
+      "noarity/main": {
+        "n": 82,
+        "perRun": [0.854090425445786, 0.8603594660470422],
+        "overall": 0.8572192148992155,
+        "fasterRuns": 2,
+        "slowerRuns": 0,
+        "runs": 2,
+        "fasterFires": true,
+        "slowerFires": false,
+        "blocks": []
+      },
+      "branch/main": {
+        "n": 82,
+        "perRun": [0.8850486642814109, 0.8839643327610457],
+        "overall": 0.8845063323586622,
+        "fasterRuns": 2,
+        "slowerRuns": 0,
+        "runs": 2,
+        "fasterFires": true,
+        "slowerFires": false,
+        "blocks": []
+      },
+      "main-aa/main": {
+        "n": 82,
+        "perRun": [1.0009015580198737, 1.0027258486561934],
+        "overall": 1.0018132880865496,
+        "fasterRuns": 0,
+        "slowerRuns": 2,
+        "runs": 2,
+        "fasterFires": false,
+        "slowerFires": false,
+        "blocks": []
+      }
+    },
+    "maxopt1": {
+      "noarity/branch": {
+        "n": 82,
+        "perRun": [0.9657751781609861, 0.965883123415995],
+        "overall": 0.9658291492804368,
+        "fasterRuns": 2,
+        "slowerRuns": 0,
+        "runs": 2,
+        "fasterFires": true,
+        "slowerFires": false,
+        "blocks": []
+      },
+      "noarity/main": {
+        "n": 82,
+        "perRun": [0.8479342205046054, 0.8487851982359242],
+        "overall": 0.8483596026697791,
+        "fasterRuns": 2,
+        "slowerRuns": 0,
+        "runs": 2,
+        "fasterFires": true,
+        "slowerFires": false,
+        "blocks": []
+      },
+      "branch/main": {
+        "n": 82,
+        "perRun": [0.8779830334004115, 0.8787659476169996],
+        "overall": 0.8783744032801505,
+        "fasterRuns": 2,
+        "slowerRuns": 0,
+        "runs": 2,
+        "fasterFires": true,
+        "slowerFires": false,
+        "blocks": []
+      },
+      "main-aa/main": {
+        "n": 82,
+        "perRun": [0.9977648327801618, 1.004150029847148],
+        "overall": 1.0009523398327385,
+        "fasterRuns": 1,
+        "slowerRuns": 1,
+        "runs": 2,
+        "fasterFires": false,
+        "slowerFires": false,
+        "blocks": []
+      }
+    }
+  },
+  "bundle": [
+    {
+      "entry": "import { map }",
+      "bundler": "esbuild",
+      "savedVsBranch": {
+        "minified": 137,
+        "gzip": 55,
+        "brotli": 39
+      }
+    },
+    {
+      "entry": "import { map }",
+      "bundler": "rolldown",
+      "savedVsBranch": {
+        "minified": 137,
+        "gzip": 58,
+        "brotli": 42
+      }
+    },
+    {
+      "entry": "import { filter, map }",
+      "bundler": "esbuild",
+      "savedVsBranch": {
+        "minified": 137,
+        "gzip": 51,
+        "brotli": 38
+      }
+    },
+    {
+      "entry": "import { filter, map }",
+      "bundler": "rolldown",
+      "savedVsBranch": {
+        "minified": 137,
+        "gzip": 57,
+        "brotli": 46
+      }
+    },
+    {
+      "entry": "import { add }",
+      "bundler": "esbuild",
+      "savedVsBranch": {
+        "minified": 137,
+        "gzip": 56,
+        "brotli": 26
+      }
+    },
+    {
+      "entry": "import { add }",
+      "bundler": "rolldown",
+      "savedVsBranch": {
+        "minified": 137,
+        "gzip": 61,
+        "brotli": 42
+      }
+    },
+    {
+      "entry": "import { sortBy }",
+      "bundler": "esbuild",
+      "savedVsBranch": {
+        "minified": 0,
+        "gzip": 0,
+        "brotli": 0
+      }
+    },
+    {
+      "entry": "import { sortBy }",
+      "bundler": "rolldown",
+      "savedVsBranch": {
+        "minified": 0,
+        "gzip": 0,
+        "brotli": 0
+      }
+    },
+    {
+      "entry": "import { pipe }",
+      "bundler": "esbuild",
+      "savedVsBranch": {
+        "minified": 0,
+        "gzip": 0,
+        "brotli": 0
+      }
+    },
+    {
+      "entry": "import { pipe }",
+      "bundler": "rolldown",
+      "savedVsBranch": {
+        "minified": 0,
+        "gzip": 0,
+        "brotli": 0
+      }
+    },
+    {
+      "entry": "import { pipe, map, filter, take }",
+      "bundler": "esbuild",
+      "savedVsBranch": {
+        "minified": 137,
+        "gzip": 50,
+        "brotli": 48
+      }
+    },
+    {
+      "entry": "import { pipe, map, filter, take }",
+      "bundler": "rolldown",
+      "savedVsBranch": {
+        "minified": 137,
+        "gzip": 60,
+        "brotli": 47
+      }
+    },
+    {
+      "entry": "import { unique }",
+      "bundler": "esbuild",
+      "savedVsBranch": {
+        "minified": 0,
+        "gzip": 0,
+        "brotli": 0
+      }
+    },
+    {
+      "entry": "import { unique }",
+      "bundler": "rolldown",
+      "savedVsBranch": {
+        "minified": 0,
+        "gzip": 0,
+        "brotli": 0
+      }
+    },
+    {
+      "entry": "whole library",
+      "bundler": "esbuild",
+      "savedVsBranch": {
+        "minified": 139,
+        "gzip": 41,
+        "brotli": 48
+      }
+    },
+    {
+      "entry": "whole library",
+      "bundler": "rolldown",
+      "savedVsBranch": {
+        "minified": 140,
+        "gzip": 45,
+        "brotli": 68
+      }
+    }
+  ]
+}

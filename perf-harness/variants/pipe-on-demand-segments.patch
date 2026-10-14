@@ -1,0 +1,57 @@
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/pipe.ts b/src/pipe.ts
+--- a/src/pipe.ts	2026-10-06 23:12:55
++++ b/src/pipe.ts	2026-10-07 09:58:09
+@@ -310,21 +310,19 @@
+   }
+ 
+   let output = input;
+-  const lazySteps = functions.map((op) =>
+-    "lazy" in op ? buildLazyStep(op) : undefined,
+-  );
+-
+   let functionIndex = 0;
+   while (functionIndex < functions.length) {
+-    const lazyStep = lazySteps[functionIndex];
+-    if (lazyStep === undefined || !isIterable(output)) {
+-      const func = functions[functionIndex]!;
++    const func = functions[functionIndex]!;
++    if (!("lazy" in func) || !isIterable(output)) {
+       output = func(output);
+       functionIndex += 1;
+       continue;
+     }
+ 
+-    const lazySequence = extractLazySequence(lazySteps, functionIndex);
++    // Steps are built when the loop reaches their run with iterable data, so
++    // a pipe without lazy functions, or whose lazy functions get non-iterable
++    // data, builds none.
++    const lazySequence = buildLazySequence(functions, functionIndex);
+     const accumulator = processIterable(output, lazySequence);
+ 
+     const { isSingle } = lazySequence.at(-1)!;
+@@ -355,19 +353,19 @@
+       };
+ }
+ 
+-function extractLazySequence(
+-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
+-  lazySteps: readonly (LazyStep | undefined)[],
++function buildLazySequence(
++  functions: readonly (LazyFunction | ((value: unknown) => unknown))[],
+   startIndex: number,
+ ): readonly LazyStep[] {
+   const lazySequence: LazyStep[] = [];
+ 
+-  for (let index = startIndex; index < lazySteps.length; index++) {
+-    const lazyStep = lazySteps[index];
+-    if (lazyStep === undefined) {
++  for (let index = startIndex; index < functions.length; index++) {
++    const func = functions[index]!;
++    if (!("lazy" in func)) {
+       break;
+     }
+ 
++    const lazyStep = buildLazyStep(func);
+     lazySequence.push(lazyStep);
+     if (lazyStep.isSingle) {
+       break;

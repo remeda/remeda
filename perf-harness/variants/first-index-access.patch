@@ -1,0 +1,11 @@
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/first.ts b/src/first.ts
+--- a/src/first.ts	2026-10-06 23:12:55
++++ b/src/first.ts	2026-10-07 10:10:51
+@@ -44,6 +44,6 @@
+   return purryWithLazy(firstImplementation, args, lazyImplementation);
+ }
+ 
+-const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;
++const firstImplementation = <T>(data: readonly T[]): T | undefined => data[0];
+ 
+ const lazyImplementation = toSingle((): LazyEvaluator => lastLazyValue);

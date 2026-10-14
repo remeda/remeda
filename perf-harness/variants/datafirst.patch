@@ -1,0 +1,1005 @@
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/difference.test-prop.ts b/src/difference.test-prop.ts
+--- a/src/difference.test-prop.ts	1970-01-01 02:00:00
++++ b/src/difference.test-prop.ts	2026-10-10 13:19:12
+@@ -0,0 +1,30 @@
++import { fc, test } from "@fast-check/vitest";
++import { expect } from "vitest";
++import { difference } from "./difference";
++import { pipe } from "./pipe";
++
++// Few distinct values, so duplicates within an input and overlaps between the
++// inputs are common, among them the ones equality treats specially: `NaN`,
++// `-0` next to `0`, and two objects of the same shape that only their
++// reference tells apart.
++const item = fc.oneof(
++  fc.integer({ min: 0, max: 3 }),
++  fc.constantFrom(NaN, -0, "0", { id: 0 }, { id: 0 }),
++);
++
++// Both calling styles read a hole as `undefined`.
++const items = fc.oneof(fc.array(item), fc.sparseArray(item));
++
++test.prop([items, items])(
++  "data-first and data-last produce the same result",
++  (data, other) => {
++    const dataFirst = difference(data, other);
++    const dataLast = pipe(data, difference(other));
++
++    // By identity: deep equality can't tell the two objects apart.
++    expect(dataFirst).toHaveLength(dataLast.length);
++    expect(
++      dataFirst.every((value, index) => Object.is(value, dataLast[index])),
++    ).toBe(true);
++  },
++);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/difference.test.ts b/src/difference.test.ts
+--- a/src/difference.test.ts	2026-10-10 10:59:28
++++ b/src/difference.test.ts	2026-10-10 13:23:31
+@@ -78,3 +78,11 @@
+   expect(mock).toHaveBeenCalledTimes(4);
+   expect(result).toStrictEqual([1, 4]);
+ });
++
++test("lazily removes nothing on empty other array", () => {
++  expect(pipe([1, 2, 3], difference([] as number[]))).toStrictEqual([1, 2, 3]);
++});
++
++test("lazily maintains multi-set semantics (removes only one copy)", () => {
++  expect(pipe([1, 1, 2, 2], difference([1]))).toStrictEqual([1, 2, 2]);
++});
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/difference.ts b/src/difference.ts
+--- a/src/difference.ts	2026-10-10 10:59:28
++++ b/src/difference.ts	2026-10-10 13:13:41
+@@ -1,5 +1,5 @@
+ import { SKIP_ITEM } from "./internal/lazyControl";
+-import { purryFromLazy } from "./internal/purryFromLazy";
++import { purryWithLazy } from "./internal/purryWithLazy";
+ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+ 
+ /**
+@@ -38,7 +38,30 @@
+ export function difference<T>(other: readonly T[]): (data: readonly T[]) => T[];
+ 
+ export function difference(...args: readonly unknown[]): unknown {
+-  return purryFromLazy(lazyImplementation, args);
++  return purryWithLazy(differenceImplementation, args, lazyImplementation);
++}
++
++function differenceImplementation<T>(
++  data: readonly T[],
++  other: readonly T[],
++): T[] {
++  // Each copy in `other` excludes a single occurrence from `data`, so the map
++  // counts the copies that are still unused.
++  const remaining = new Map<T, number>();
++  for (const value of other) {
++    remaining.set(value, (remaining.get(value) ?? 0) + 1);
++  }
++
++  const result: T[] = [];
++  for (const value of data) {
++    const copies = remaining.get(value);
++    if (copies === undefined || copies === 0) {
++      result.push(value);
++    } else {
++      remaining.set(value, copies - 1);
++    }
++  }
++  return result;
+ }
+ 
+ function lazyImplementation<T>(other: readonly T[]): LazyEvaluator<T> {
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/differenceWith.test-prop.ts b/src/differenceWith.test-prop.ts
+--- a/src/differenceWith.test-prop.ts	1970-01-01 02:00:00
++++ b/src/differenceWith.test-prop.ts	2026-10-10 13:19:12
+@@ -0,0 +1,32 @@
++import { fc, test } from "@fast-check/vitest";
++import { expect } from "vitest";
++import { differenceWith } from "./differenceWith";
++import { pipe } from "./pipe";
++
++// Few distinct values, so duplicates within an input and overlaps between the
++// inputs are common, among them the ones equality treats specially: `NaN`,
++// `-0` next to `0`, and two objects of the same shape that only their
++// reference tells apart.
++const item = fc.oneof(
++  fc.integer({ min: 0, max: 3 }),
++  fc.constantFrom(NaN, -0, "0", { id: 0 }, { id: 0 }),
++);
++
++// Both calling styles read a hole as `undefined`.
++const items = fc.oneof(fc.array(item), fc.sparseArray(item));
++
++// A generated comparator is neither symmetric nor transitive, so the result
++// depends on exactly which pairs are compared.
++test.prop([items, items, fc.func(fc.boolean())])(
++  "data-first and data-last produce the same result",
++  (data, other, isEqual) => {
++    const dataFirst = differenceWith(data, other, isEqual);
++    const dataLast = pipe(data, differenceWith(other, isEqual));
++
++    // By identity: deep equality can't tell the two objects apart.
++    expect(dataFirst).toHaveLength(dataLast.length);
++    expect(
++      dataFirst.every((value, index) => Object.is(value, dataLast[index])),
++    ).toBe(true);
++  },
++);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/differenceWith.ts b/src/differenceWith.ts
+--- a/src/differenceWith.ts	2026-10-10 10:59:28
++++ b/src/differenceWith.ts	2026-10-10 13:14:05
+@@ -1,5 +1,5 @@
+ import { SKIP_ITEM } from "./internal/lazyControl";
+-import { purryFromLazy } from "./internal/purryFromLazy";
++import { purryWithLazy } from "./internal/purryWithLazy";
+ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+ 
+ type IsEqual<T, Other> = (data: T, other: Other) => boolean;
+@@ -52,7 +52,21 @@
+ ): (data: readonly T[]) => T[];
+ 
+ export function differenceWith(...args: readonly unknown[]): unknown {
+-  return purryFromLazy(lazyImplementation, args);
++  return purryWithLazy(differenceWithImplementation, args, lazyImplementation);
++}
++
++function differenceWithImplementation<T, Other>(
++  data: readonly T[],
++  other: readonly Other[],
++  isEqual: IsEqual<T, Other>,
++): T[] {
++  const result: T[] = [];
++  for (const value of data) {
++    if (other.every((otherValue) => !isEqual(value, otherValue))) {
++      result.push(value);
++    }
++  }
++  return result;
+ }
+ 
+ const lazyImplementation =
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/purryFromLazy.test.ts b/src/internal/purryFromLazy.test.ts
+--- a/src/internal/purryFromLazy.test.ts	2026-10-10 10:59:28
++++ /dev/null
+@@ -1,32 +0,0 @@
+-import { describe, expect, test } from "vitest";
+-import { lastLazyValue } from "./lazyControl";
+-import { purryFromLazy } from "./purryFromLazy";
+-import { toSingle } from "./toSingle";
+-import type { LazyEvaluator } from "./types/LazyEvaluator";
+-
+-describe("an implementation wrapped with `toSingle`", () => {
+-  test("dataFirst", () => {
+-    expect(firstPurried([1, 2, 3])).toBe(1);
+-  });
+-
+-  test("dataLast", () => {
+-    expect(firstPurried()([1, 2, 3])).toBe(1);
+-  });
+-
+-  test("nothing to emit", () => {
+-    expect(firstPurried([])).toBeUndefined();
+-  });
+-});
+-
+-// Overloaded by hand the way the real utilities are, so that the data-last
+-// result is callable here.
+-// @ts-expect-error [ts2322] -- Our purry functions don't infer the correct return type, the overloads on this declaration are what force it.
+-const firstPurried: {
+-  (data: readonly number[]): number | undefined;
+-  (): (data: readonly number[]) => number | undefined;
+-} = (...args: readonly unknown[]) => purryFromLazy(firstLazyImpl, args);
+-
+-const firstLazyImpl = toSingle((): LazyEvaluator => emitAndStop);
+-
+-const emitAndStop: LazyEvaluator = (value, _index, _data, slot) =>
+-  lastLazyValue(value, slot);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/purryFromLazy.ts b/src/internal/purryFromLazy.ts
+--- a/src/internal/purryFromLazy.ts	2026-10-10 10:59:28
++++ /dev/null
+@@ -1,42 +0,0 @@
+-import { processSingleLazyStep } from "./processSingleLazyStep";
+-import type { LazyDefinition } from "./types/LazyDefinition";
+-
+-/**
+- * A version of `purry` for cases where the only meaningful implementation is a
+- * lazy one. This is useful for functions that don't have a built-in
+- * implementation already, and that can't be optimized to take advantage of
+- * having the complete array upfront.
+- *
+- * Both invocations run the lazy implementation item by item over the data, so
+- * the function works outside of pipes too. The data-last invocation also
+- * carries the lazy definition on the returned function, which is what lets
+- * `pipe` fuse it with the lazy steps around it.
+- *
+- * @param lazy - The main lazy implementation, it assumes that data is an
+- * iterable (array-like).
+- * @param args - The arguments passed to the overloaded invocation.
+- * @see purry
+- * @see pipe
+- */
+-export function purryFromLazy(
+-  lazy: LazyDefinition["lazy"],
+-  args: readonly unknown[],
+-): unknown {
+-  if (args.length === lazy.length) {
+-    // data-last
+-    const dataLast = (data: Iterable<unknown>): unknown =>
+-      processSingleLazyStep(data, lazy, args);
+-    dataLast.lazy = lazy;
+-    dataLast.lazyArgs = args;
+-    return dataLast;
+-  }
+-
+-  // data-first
+-  const [data, ...rest] = args;
+-  return processSingleLazyStep(
+-    // @ts-expect-error [ts2345] -- Lazy implementations assume their data is an iterable, and the overloads of the functions built on top of this one are what enforce it; a single generic helper can't see them.
+-    data,
+-    lazy,
+-    rest,
+-  );
+-}
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/internal/types/NonEmptyPrefix.ts b/src/internal/types/NonEmptyPrefix.ts
+--- a/src/internal/types/NonEmptyPrefix.ts	2026-10-10 10:59:28
++++ b/src/internal/types/NonEmptyPrefix.ts	2026-10-10 13:14:35
+@@ -19,10 +19,9 @@
+  * a required first item (e.g., the array is not empty), similar to calling
+  * `hasAtLeast(1)` on the shape we computed.
+  *
+- * Use this type for any callback that is invoked lazily. That is always the
+- * data-last overload, and for utilities built on `purryFromLazy` (which runs
+- * the lazy evaluator item by item for data-first calls as well) it is the
+- * data-first overload too. This is a low-level type, prefer `LazyCallback` and
++ * Use this type for any callback that is invoked lazily, which is the
++ * data-last overload; the data-first overload runs eagerly over the complete
++ * input. This is a low-level type, prefer `LazyCallback` and
+  * `LazyTypePredicate` over direct usage.
+  *
+  * When the type is used for a callback used in `pipe` it should be wrapped in
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/intersection.test-prop.ts b/src/intersection.test-prop.ts
+--- a/src/intersection.test-prop.ts	1970-01-01 02:00:00
++++ b/src/intersection.test-prop.ts	2026-10-10 13:19:12
+@@ -0,0 +1,30 @@
++import { fc, test } from "@fast-check/vitest";
++import { expect } from "vitest";
++import { intersection } from "./intersection";
++import { pipe } from "./pipe";
++
++// Few distinct values, so duplicates within an input and overlaps between the
++// inputs are common, among them the ones equality treats specially: `NaN`,
++// `-0` next to `0`, and two objects of the same shape that only their
++// reference tells apart.
++const item = fc.oneof(
++  fc.integer({ min: 0, max: 3 }),
++  fc.constantFrom(NaN, -0, "0", { id: 0 }, { id: 0 }),
++);
++
++// Both calling styles read a hole as `undefined`.
++const items = fc.oneof(fc.array(item), fc.sparseArray(item));
++
++test.prop([items, items])(
++  "data-first and data-last produce the same result",
++  (data, other) => {
++    const dataFirst = intersection(data, other);
++    const dataLast = pipe(data, intersection(other));
++
++    // By identity: deep equality can't tell the two objects apart.
++    expect(dataFirst).toHaveLength(dataLast.length);
++    expect(
++      dataFirst.every((value, index) => Object.is(value, dataLast[index])),
++    ).toBe(true);
++  },
++);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/intersection.test.ts b/src/intersection.test.ts
+--- a/src/intersection.test.ts	2026-10-10 10:59:28
++++ b/src/intersection.test.ts	2026-10-10 13:22:26
+@@ -57,4 +57,12 @@
+     expect(mock).toHaveBeenCalledTimes(4);
+     expect(result).toStrictEqual([2, 4]);
+   });
++
++  test("returns empty array on empty other array", () => {
++    expect(pipe([1, 2, 3], intersection([]))).toStrictEqual([]);
++  });
++
++  test("maintains multi-set semantics (returns as many copies as available)", () => {
++    expect(pipe([1, 1, 1, 1, 1], intersection([1, 1]))).toStrictEqual([1, 1]);
++  });
+ });
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/intersection.ts b/src/intersection.ts
+--- a/src/intersection.ts	2026-10-10 10:59:28
++++ b/src/intersection.ts	2026-10-10 13:13:58
+@@ -3,7 +3,7 @@
+   lazyEmptyEvaluator,
+   SKIP_ITEM,
+ } from "./internal/lazyControl";
+-import { purryFromLazy } from "./internal/purryFromLazy";
++import { purryWithLazy } from "./internal/purryWithLazy";
+ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+ 
+ /**
+@@ -47,7 +47,38 @@
+ ): <T>(data: readonly T[]) => (S & T)[];
+ 
+ export function intersection(...args: readonly unknown[]): unknown {
+-  return purryFromLazy(lazyImplementation, args);
++  return purryWithLazy(intersectionImplementation, args, lazyImplementation);
++}
++
++function intersectionImplementation<T>(
++  data: readonly T[],
++  other: readonly unknown[],
++): T[] {
++  // Each copy in `other` matches a single occurrence in `data`, so the map
++  // counts the copies that are still unmatched. A value leaves the map once
++  // all its copies are matched, so an empty map ends the search early.
++  const remaining = new Map<unknown, number>();
++  for (const value of other) {
++    remaining.set(value, (remaining.get(value) ?? 0) + 1);
++  }
++
++  const result: T[] = [];
++  for (const value of data) {
++    if (remaining.size === 0) {
++      break;
++    }
++
++    const copies = remaining.get(value);
++    if (copies !== undefined) {
++      result.push(value);
++      if (copies === 1) {
++        remaining.delete(value);
++      } else {
++        remaining.set(value, copies - 1);
++      }
++    }
++  }
++  return result;
+ }
+ 
+ function lazyImplementation<T, S>(
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/intersectionWith.test-prop.ts b/src/intersectionWith.test-prop.ts
+--- a/src/intersectionWith.test-prop.ts	1970-01-01 02:00:00
++++ b/src/intersectionWith.test-prop.ts	2026-10-10 13:19:12
+@@ -0,0 +1,32 @@
++import { fc, test } from "@fast-check/vitest";
++import { expect } from "vitest";
++import { intersectionWith } from "./intersectionWith";
++import { pipe } from "./pipe";
++
++// Few distinct values, so duplicates within an input and overlaps between the
++// inputs are common, among them the ones equality treats specially: `NaN`,
++// `-0` next to `0`, and two objects of the same shape that only their
++// reference tells apart.
++const item = fc.oneof(
++  fc.integer({ min: 0, max: 3 }),
++  fc.constantFrom(NaN, -0, "0", { id: 0 }, { id: 0 }),
++);
++
++// Both calling styles read a hole as `undefined`.
++const items = fc.oneof(fc.array(item), fc.sparseArray(item));
++
++// A generated comparator is neither symmetric nor transitive, so the result
++// depends on exactly which pairs are compared.
++test.prop([items, items, fc.func(fc.boolean())])(
++  "data-first and data-last produce the same result",
++  (data, other, isEqual) => {
++    const dataFirst = intersectionWith(data, other, isEqual);
++    const dataLast = pipe(data, intersectionWith(other, isEqual));
++
++    // By identity: deep equality can't tell the two objects apart.
++    expect(dataFirst).toHaveLength(dataLast.length);
++    expect(
++      dataFirst.every((value, index) => Object.is(value, dataLast[index])),
++    ).toBe(true);
++  },
++);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/intersectionWith.ts b/src/intersectionWith.ts
+--- a/src/intersectionWith.ts	2026-10-10 10:59:28
++++ b/src/intersectionWith.ts	2026-10-10 13:14:11
+@@ -1,5 +1,5 @@
+ import { SKIP_ITEM } from "./internal/lazyControl";
+-import { purryFromLazy } from "./internal/purryFromLazy";
++import { purryWithLazy } from "./internal/purryWithLazy";
+ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+ 
+ type IsEqual<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
+@@ -62,7 +62,25 @@
+ ): (array: readonly TFirst[]) => TFirst[];
+ 
+ export function intersectionWith(...args: readonly unknown[]): unknown {
+-  return purryFromLazy(lazyImplementation, args);
++  return purryWithLazy(
++    intersectionWithImplementation,
++    args,
++    lazyImplementation,
++  );
++}
++
++function intersectionWithImplementation<TFirst, TSecond>(
++  array: readonly TFirst[],
++  other: readonly TSecond[],
++  isEqual: IsEqual<TFirst, TSecond>,
++): TFirst[] {
++  const result: TFirst[] = [];
++  for (const value of array) {
++    if (other.some((otherValue) => isEqual(value, otherValue))) {
++      result.push(value);
++    }
++  }
++  return result;
+ }
+ 
+ const lazyImplementation =
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/mapWithFeedback.test-d.ts b/src/mapWithFeedback.test-d.ts
+--- a/src/mapWithFeedback.test-d.ts	2026-10-10 10:59:28
++++ b/src/mapWithFeedback.test-d.ts	2026-10-10 13:16:55
+@@ -43,11 +43,11 @@
+   expectTypeOf(result).toEqualTypeOf<number[]>();
+ });
+ 
+-test("data param is lazily reconstructed in data-first", () => {
++test("data param is complete in data-first", () => {
+   mapWithFeedback(
+     [1, 2, 3] as const,
+     (_previousValue, _currentValue, _currentIndex, data) => {
+-      expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
++      expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
+ 
+       return 0;
+     },
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/mapWithFeedback.test-prop.ts b/src/mapWithFeedback.test-prop.ts
+--- a/src/mapWithFeedback.test-prop.ts	1970-01-01 02:00:00
++++ b/src/mapWithFeedback.test-prop.ts	2026-10-10 13:19:22
+@@ -0,0 +1,24 @@
++import { fc, test } from "@fast-check/vitest";
++import { expect } from "vitest";
++import { mapWithFeedback } from "./mapWithFeedback";
++import { pipe } from "./pipe";
++
++// Both calling styles read a hole as `undefined`.
++const items = fc.oneof(fc.array(fc.anything()), fc.sparseArray(fc.anything()));
++
++test.prop([items, fc.func(fc.integer()), fc.integer()])(
++  "data-first and data-last produce the same result",
++  (data, reducerOf, initialValue) => {
++    // The reducer ignores `data`, which differs between the calling styles on
++    // purpose: the whole input data-first, the items so far in `pipe`.
++    const reducer = (
++      previousValue: number,
++      currentValue: unknown,
++      index: number,
++    ): number => reducerOf(previousValue, currentValue, index);
++
++    expect(mapWithFeedback(data, reducer, initialValue)).toStrictEqual(
++      pipe(data, mapWithFeedback(reducer, initialValue)),
++    );
++  },
++);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/mapWithFeedback.test.ts b/src/mapWithFeedback.test.ts
+--- a/src/mapWithFeedback.test.ts	2026-10-10 10:59:28
++++ b/src/mapWithFeedback.test.ts	2026-10-10 13:20:26
+@@ -38,7 +38,8 @@
+     expect(result).not.toBe(data);
+   });
+ 
+-  test("should provide the items processed so far", () => {
++  test("should provide the whole input", () => {
++    const data = [1, 2, 3, 4, 5];
+     const mock = vi.fn<
+       (
+         acc: unknown,
+@@ -48,13 +49,13 @@
+       ) => unknown
+     >((_acc, _x, _index, items) => [...items]);
+ 
+-    mapWithFeedback([1, 2, 3, 4, 5], mock, []);
++    mapWithFeedback(data, mock, []);
+ 
+-    expect(mock).toHaveNthReturnedWith(1, [1]);
+-    expect(mock).toHaveNthReturnedWith(2, [1, 2]);
+-    expect(mock).toHaveNthReturnedWith(3, [1, 2, 3]);
+-    expect(mock).toHaveNthReturnedWith(4, [1, 2, 3, 4]);
+-    expect(mock).toHaveNthReturnedWith(5, [1, 2, 3, 4, 5]);
++    expect(mock).toHaveNthReturnedWith(1, data);
++    expect(mock).toHaveNthReturnedWith(2, data);
++    expect(mock).toHaveNthReturnedWith(3, data);
++    expect(mock).toHaveNthReturnedWith(4, data);
++    expect(mock).toHaveNthReturnedWith(5, data);
+   });
+ });
+ 
+@@ -104,19 +105,22 @@
+ });
+ 
+ describe("known issues!", () => {
+-  test("a trailing rest parameter hides `data` from the arity check, data-first too", () => {
++  test("a trailing rest parameter hides `data` from the arity check", () => {
+     expect(() =>
+-      mapWithFeedback(
++      pipe(
+         [1, 2, 3],
+-        (
+-          accumulator: number,
+-          _value: number,
+-          _index: number,
+-          // this callback reports a `length` of 3 and `rest[0]` is
+-          // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so far.
+-          ...rest: readonly [readonly unknown[]]
+-        ) => accumulator + rest[0].length,
+-        0,
++        mapWithFeedback(
++          (
++            accumulator: number,
++            _value: number,
++            _index: number,
++            // this callback reports a `length` of 3 and `rest[0]` is
++            // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so
++            // far.
++            ...rest: readonly [readonly unknown[]]
++          ) => accumulator + rest[0].length,
++          0,
++        ),
+       ),
+     ).toThrow(/^Remeda: /u);
+   });
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/mapWithFeedback.ts b/src/mapWithFeedback.ts
+--- a/src/mapWithFeedback.ts	2026-10-10 10:59:28
++++ b/src/mapWithFeedback.ts	2026-10-10 13:14:27
+@@ -1,10 +1,19 @@
+-import { purryFromLazy } from "./internal/purryFromLazy";
++import { purryWithLazy } from "./internal/purryWithLazy";
+ import { requireDataByArity } from "./internal/requireData";
+ import type { IterableContainer } from "./internal/types/IterableContainer";
+ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+ import type { Mapped } from "./internal/types/Mapped";
+ import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
+ 
++type FeedbackCallback<T extends IterableContainer, U> = (
++  previousValue: U,
++  currentValue: T[number],
++  currentIndex: number,
++  data: T,
++) => U;
++
++// Inside `pipe` the data flows through lazily, so the callback only sees the
++// items processed so far.
+ type LazyFeedbackCallback<T extends IterableContainer, U> = (
+   previousValue: U,
+   currentValue: T[number],
+@@ -37,7 +46,7 @@
+  */
+ export function mapWithFeedback<T extends IterableContainer, U>(
+   data: T,
+-  callbackfn: LazyFeedbackCallback<T, U>,
++  callbackfn: FeedbackCallback<T, U>,
+   initialValue: U,
+ ): Mapped<T, U>;
+ 
+@@ -68,7 +77,28 @@
+ ): (data: T) => Mapped<T, U>;
+ 
+ export function mapWithFeedback(...args: readonly unknown[]): unknown {
+-  return purryFromLazy(lazyImplementation, args);
++  return purryWithLazy(mapWithFeedbackImplementation, args, lazyImplementation);
++}
++
++function mapWithFeedbackImplementation<T, U>(
++  data: readonly T[],
++  reducer: (
++    previousValue: U,
++    currentValue: T,
++    index: number,
++    data: readonly T[],
++  ) => U,
++  initialValue: U,
++): U[] {
++  const result: U[] = [];
++  let previousValue = initialValue;
++  let index = 0;
++  for (const currentValue of data) {
++    previousValue = reducer(previousValue, currentValue, index, data);
++    result.push(previousValue);
++    index += 1;
++  }
++  return result;
+ }
+ 
+ const lazyImplementation = <T, U>(
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/pipe.test.ts b/src/pipe.test.ts
+--- a/src/pipe.test.ts	2026-10-10 10:59:28
++++ b/src/pipe.test.ts	2026-10-10 13:15:13
+@@ -7,7 +7,7 @@
+ import { forEach } from "./forEach";
+ import { identity } from "./identity";
+ import { lazyEmptyEvaluator } from "./internal/lazyControl";
+-import { purryFromLazy } from "./internal/purryFromLazy";
++import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
+ import type { LazyCallback } from "./internal/types/LazyCallback";
+ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+ import { map } from "./map";
+@@ -314,8 +314,8 @@
+       pipe(
+         [1, 2, 3],
+         map((x) => x),
+-        // @ts-expect-error [ts2345] -- `purryFromLazy` returns `unknown`; the step only exists to expose what `pipe` hands its evaluator.
+-        purryFromLazy(() => evaluator, []),
++        // @ts-expect-error [ts2345] -- `lazyDataLastImpl` returns `unknown`; the step only exists to expose what `pipe` hands its evaluator.
++        lazyDataLastImpl(identity(), [], () => evaluator),
+       );
+ 
+       // Asserting identity with `toBe` would make the matcher format the
+@@ -573,8 +573,8 @@
+ 
+       pipe(
+         [1, 2, 3],
+-        // @ts-expect-error [ts2345] -- `purryFromLazy` returns `unknown`; the overloads of the utilities built on it are what make the result a function.
+-        purryFromLazy(() => evaluator, []),
++        // @ts-expect-error [ts2345] -- `lazyDataLastImpl` returns `unknown`; the overloads of the utilities built on it are what make the result a function.
++        lazyDataLastImpl(identity(), [], () => evaluator),
+       );
+ 
+       expect(evaluator).toHaveBeenCalledTimes(1);
+@@ -649,8 +649,8 @@
+       const evaluator = vi.fn<LazyEvaluator>((value) => value);
+       pipe(
+         [1, 2, 3],
+-        // @ts-expect-error [ts2345] -- `purryFromLazy` returns `unknown`; the step only exists to expose what `pipe` hands its evaluator.
+-        purryFromLazy(() => evaluator, []),
++        // @ts-expect-error [ts2345] -- `lazyDataLastImpl` returns `unknown`; the step only exists to expose what `pipe` hands its evaluator.
++        lazyDataLastImpl(identity(), [], () => evaluator),
+       );
+ 
+       const data = evaluator.mock.calls[0]?.[2];
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/unique.test-prop.ts b/src/unique.test-prop.ts
+--- a/src/unique.test-prop.ts	1970-01-01 02:00:00
++++ b/src/unique.test-prop.ts	2026-10-10 13:19:12
+@@ -0,0 +1,29 @@
++import { fc, test } from "@fast-check/vitest";
++import { expect } from "vitest";
++import { pipe } from "./pipe";
++import { unique } from "./unique";
++
++// Few distinct values, so duplicates are common, among them the ones equality
++// treats specially: `NaN`, `-0` next to `0`, and two objects of the same shape
++// that only their reference tells apart.
++const item = fc.oneof(
++  fc.integer({ min: 0, max: 3 }),
++  fc.constantFrom(NaN, -0, "0", { id: 0 }, { id: 0 }),
++);
++
++// Both calling styles read a hole as `undefined`.
++const items = fc.oneof(fc.array(item), fc.sparseArray(item));
++
++test.prop([items])(
++  "data-first and data-last produce the same result",
++  (data) => {
++    const dataFirst = unique(data);
++    const dataLast = pipe(data, unique());
++
++    // By identity: deep equality can't tell the two objects apart.
++    expect(dataFirst).toHaveLength(dataLast.length);
++    expect(
++      dataFirst.every((value, index) => Object.is(value, dataLast[index])),
++    ).toBe(true);
++  },
++);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/unique.ts b/src/unique.ts
+--- a/src/unique.ts	2026-10-10 10:59:28
++++ b/src/unique.ts	2026-10-10 13:13:10
+@@ -1,5 +1,5 @@
+ import { SKIP_ITEM } from "./internal/lazyControl";
+-import { purryFromLazy } from "./internal/purryFromLazy";
++import { purryWithLazy } from "./internal/purryWithLazy";
+ import type { Deduped } from "./internal/types/Deduped";
+ import type { IterableContainer } from "./internal/types/IterableContainer";
+ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+@@ -38,7 +38,24 @@
+ export function unique(): <T extends IterableContainer>(data: T) => Deduped<T>;
+ 
+ export function unique(...args: readonly unknown[]): unknown {
+-  return purryFromLazy(lazyImplementation, args);
++  return purryWithLazy(uniqueImplementation, args, lazyImplementation);
++}
++
++function uniqueImplementation<T>(data: readonly T[]): T[] {
++  // The items are collected from `data` rather than spread out of the set,
++  // which would turn a `-0` into `0`.
++  const seen = new Set<T>();
++  const result: T[] = [];
++  for (const value of data) {
++    // `add` leaves the set unchanged for a value it already holds, so the size
++    // tells duplicates apart with a single hash lookup per item.
++    const sizeBefore = seen.size;
++    seen.add(value);
++    if (seen.size > sizeBefore) {
++      result.push(value);
++    }
++  }
++  return result;
+ }
+ 
+ function lazyImplementation<T>(): LazyEvaluator<T> {
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/uniqueBy.test-d.ts b/src/uniqueBy.test-d.ts
+--- a/src/uniqueBy.test-d.ts	2026-10-10 10:59:28
++++ b/src/uniqueBy.test-d.ts	2026-10-10 13:16:52
+@@ -3,9 +3,9 @@
+ import { uniqueBy } from "./uniqueBy";
+ 
+ describe("callback data param", () => {
+-  test("lazily reconstructed in data-first", () => {
++  test("complete in data-first", () => {
+     uniqueBy([1, 2, 3] as const, (_item, _index, data) => {
+-      expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
++      expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
+ 
+       return 0;
+     });
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/uniqueBy.test-prop.ts b/src/uniqueBy.test-prop.ts
+--- a/src/uniqueBy.test-prop.ts	1970-01-01 02:00:00
++++ b/src/uniqueBy.test-prop.ts	2026-10-10 13:19:12
+@@ -0,0 +1,34 @@
++import { fc, test } from "@fast-check/vitest";
++import { expect } from "vitest";
++import { pipe } from "./pipe";
++import { uniqueBy } from "./uniqueBy";
++
++// Few distinct values, so duplicates are common, among them the ones equality
++// treats specially: `NaN`, `-0` next to `0`, and two objects of the same shape
++// that only their reference tells apart.
++const item = fc.oneof(
++  fc.integer({ min: 0, max: 3 }),
++  fc.constantFrom(NaN, -0, "0", { id: 0 }, { id: 0 }),
++);
++
++// Both calling styles read a hole as `undefined`.
++const items = fc.oneof(fc.array(item), fc.sparseArray(item));
++
++test.prop([items, fc.func(fc.integer({ min: 0, max: 3 }))])(
++  "data-first and data-last produce the same result",
++  (data, keyOf) => {
++    // The key ignores `data`, which differs between the calling styles on
++    // purpose: the whole input data-first, the items so far in `pipe`.
++    const keyFunction = (value: unknown, index: number): number =>
++      keyOf(value, index);
++
++    const dataFirst = uniqueBy(data, keyFunction);
++    const dataLast = pipe(data, uniqueBy(keyFunction));
++
++    // By identity: deep equality can't tell the two objects apart.
++    expect(dataFirst).toHaveLength(dataLast.length);
++    expect(
++      dataFirst.every((value, index) => Object.is(value, dataLast[index])),
++    ).toBe(true);
++  },
++);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/uniqueBy.test.ts b/src/uniqueBy.test.ts
+--- a/src/uniqueBy.test.ts	2026-10-10 10:59:28
++++ b/src/uniqueBy.test.ts	2026-10-10 13:20:26
+@@ -51,20 +51,33 @@
+   ]);
+ });
+ 
+-test("provides the items processed so far to the key function", () => {
+-  const mock = vi.fn<LazyCallback<unknown[], unknown>>(
+-    (_item, _index, data) => [...data],
+-  );
+-  uniqueBy([1, 2, 2, 3], mock);
++test("provides the whole input to the key function", () => {
++  const data = [1, 2, 2, 3];
++  const mock = vi.fn<
++    (item: unknown, index: number, items: readonly unknown[]) => unknown
++  >((_item, _index, items) => [...items]);
++  uniqueBy(data, mock);
+ 
+-  expect(mock).toHaveNthReturnedWith(1, [1]);
+-  expect(mock).toHaveNthReturnedWith(2, [1, 2]);
+-  expect(mock).toHaveNthReturnedWith(3, [1, 2, 2]);
+-  expect(mock).toHaveNthReturnedWith(4, [1, 2, 2, 3]);
++  expect(mock).toHaveNthReturnedWith(1, data);
++  expect(mock).toHaveNthReturnedWith(2, data);
++  expect(mock).toHaveNthReturnedWith(3, data);
++  expect(mock).toHaveNthReturnedWith(4, data);
+ });
+ 
+ // eslint-disable-next-line vitest/valid-title -- This seems to be a bug in the rule, @see https://github.com/vitest-dev/eslint-plugin-vitest/issues/692
+ describe(pipe, () => {
++  test("provides the items processed so far to the key function", () => {
++    const mock = vi.fn<LazyCallback<unknown[], unknown>>(
++      (_item, _index, data) => [...data],
++    );
++    pipe([1, 2, 2, 3], uniqueBy(mock));
++
++    expect(mock).toHaveNthReturnedWith(1, [1]);
++    expect(mock).toHaveNthReturnedWith(2, [1, 2]);
++    expect(mock).toHaveNthReturnedWith(3, [1, 2, 2]);
++    expect(mock).toHaveNthReturnedWith(4, [1, 2, 2, 3]);
++  });
++
+   test("gets executed until target length is reached", () => {
+     const counter = createLazyInvocationCounter();
+     const result = pipe(
+@@ -93,14 +106,17 @@
+ });
+ 
+ describe("known issues!", () => {
+-  test("a trailing rest parameter hides `data` from the arity check, data-first too", () => {
++  test("a trailing rest parameter hides `data` from the arity check", () => {
+     expect(() =>
+-      uniqueBy(
++      pipe(
+         [1, 2, 3],
+-        (_item, _index, ...rest) =>
+-          // this callback reports a `length` of 2 and `rest[0]` is
+-          // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so far.
+-          rest[0].length,
++        uniqueBy(
++          (_item, _index, ...rest) =>
++            // this callback reports a `length` of 2 and `rest[0]` is
++            // `UNEXPECTED_ACCESS_SENTINEL` instead of the items processed so
++            // far.
++            rest[0].length,
++        ),
+       ),
+     ).toThrow(/^Remeda: /u);
+   });
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/uniqueBy.ts b/src/uniqueBy.ts
+--- a/src/uniqueBy.ts	2026-10-10 10:59:28
++++ b/src/uniqueBy.ts	2026-10-10 13:13:03
+@@ -1,5 +1,5 @@
+ import { SKIP_ITEM } from "./internal/lazyControl";
+-import { purryFromLazy } from "./internal/purryFromLazy";
++import { purryWithLazy } from "./internal/purryWithLazy";
+ import { requireDataByArity } from "./internal/requireData";
+ import type { BrandedReturn } from "./internal/types/BrandedReturn";
+ import type { Deduped } from "./internal/types/Deduped";
+@@ -26,7 +26,7 @@
+  */
+ export function uniqueBy<T extends IterableContainer>(
+   data: T,
+-  keyFunction: LazyCallback<T, unknown>,
++  keyFunction: (value: T[number], index: number, data: T) => unknown,
+ ): Deduped<T>;
+ 
+ /**
+@@ -51,7 +51,27 @@
+ ): (data: T) => Deduped<T>;
+ 
+ export function uniqueBy(...args: readonly unknown[]): unknown {
+-  return purryFromLazy(lazyImplementation, args);
++  return purryWithLazy(uniqueByImplementation, args, lazyImplementation);
++}
++
++function uniqueByImplementation<T>(
++  data: readonly T[],
++  keyFunction: (value: T, index: number, data: readonly T[]) => unknown,
++): T[] {
++  const seenKeys = new Set<unknown>();
++  const result: T[] = [];
++  let index = 0;
++  for (const value of data) {
++    // `add` leaves the set unchanged for a key it already holds, so the size
++    // tells duplicates apart with a single hash lookup per item.
++    const sizeBefore = seenKeys.size;
++    seenKeys.add(keyFunction(value, index, data));
++    if (seenKeys.size > sizeBefore) {
++      result.push(value);
++    }
++    index += 1;
++  }
++  return result;
+ }
+ 
+ function lazyImplementation<T>(
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/uniqueWith.test-prop.ts b/src/uniqueWith.test-prop.ts
+--- a/src/uniqueWith.test-prop.ts	1970-01-01 02:00:00
++++ b/src/uniqueWith.test-prop.ts	2026-10-10 13:19:12
+@@ -0,0 +1,31 @@
++import { fc, test } from "@fast-check/vitest";
++import { expect } from "vitest";
++import { pipe } from "./pipe";
++import { uniqueWith } from "./uniqueWith";
++
++// Few distinct values, so duplicates are common, among them the ones equality
++// treats specially: `NaN`, `-0` next to `0`, and two objects of the same shape
++// that only their reference tells apart.
++const item = fc.oneof(
++  fc.integer({ min: 0, max: 3 }),
++  fc.constantFrom(NaN, -0, "0", { id: 0 }, { id: 0 }),
++);
++
++// Both calling styles read a hole as `undefined`.
++const items = fc.oneof(fc.array(item), fc.sparseArray(item));
++
++// A generated comparator is neither symmetric nor transitive, so the result
++// depends on exactly which pairs are compared.
++test.prop([items, fc.func(fc.boolean())])(
++  "data-first and data-last produce the same result",
++  (data, isEquals) => {
++    const dataFirst = uniqueWith(data, isEquals);
++    const dataLast = pipe(data, uniqueWith(isEquals));
++
++    // By identity: deep equality can't tell the two objects apart.
++    expect(dataFirst).toHaveLength(dataLast.length);
++    expect(
++      dataFirst.every((value, index) => Object.is(value, dataLast[index])),
++    ).toBe(true);
++  },
++);
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/uniqueWith.test.ts b/src/uniqueWith.test.ts
+--- a/src/uniqueWith.test.ts	2026-10-10 10:59:28
++++ b/src/uniqueWith.test.ts	2026-10-10 13:22:36
+@@ -56,6 +56,34 @@
+     expect(uniqueWith(isDeepEqual)(source)).toStrictEqual(expected);
+   });
+ 
++  test("should return items that are not equal to themselves", () => {
++    // test case based on https://github.com/remeda/remeda/issues/999
++    const data = [
++      { id: 1, reason: "No name" },
++      { id: 1, reason: "No name" },
++      { reason: "No name" },
++      { reason: "No name" },
++    ];
++    const expectedResult = [
++      { id: 1, reason: "No name" },
++      { reason: "No name" },
++      { reason: "No name" },
++    ];
++
++    const result = pipe(
++      data,
++      uniqueWith((errorA, errorB) => {
++        // the objects with no ids should effectively be ignored from removal of duplicates
++        if (errorA.id === undefined || errorB.id === undefined) {
++          return false;
++        }
++        return errorA.id === errorB.id;
++      }),
++    );
++
++    expect(result).toStrictEqual(expectedResult);
++  });
++
+   test("lazy", () => {
+     const counter = createLazyInvocationCounter();
+     const result = pipe(
+diff -ruN -x node_modules -x coverage -x .DS_Store -x dist -x .vscode -x .tmp a/src/uniqueWith.ts b/src/uniqueWith.ts
+--- a/src/uniqueWith.ts	2026-10-10 10:59:28
++++ b/src/uniqueWith.ts	2026-10-10 13:13:20
+@@ -1,5 +1,5 @@
+ import { SKIP_ITEM } from "./internal/lazyControl";
+-import { purryFromLazy } from "./internal/purryFromLazy";
++import { purryWithLazy } from "./internal/purryWithLazy";
+ import { requireData } from "./internal/requireData";
+ import type { Deduped } from "./internal/types/Deduped";
+ import type { IterableContainer } from "./internal/types/IterableContainer";
+@@ -53,7 +53,26 @@
+ ): (data: T) => Deduped<T>;
+ 
+ export function uniqueWith(...args: readonly unknown[]): unknown {
+-  return purryFromLazy(lazyImplementation, args);
++  return purryWithLazy(uniqueWithImplementation, args, lazyImplementation);
++}
++
++function uniqueWithImplementation<T>(
++  data: readonly T[],
++  isEquals: IsEquals<T>,
++): T[] {
++  const result: T[] = [];
++  for (const [index, value] of data.entries()) {
++    // Every earlier item is compared, not just the ones kept, so a comparator
++    // that isn't transitive dedupes the same way it does in `pipe`.
++    const firstEqualIndex = data.findIndex(
++      (otherValue, otherIndex) =>
++        index === otherIndex || isEquals(value, otherValue),
++    );
++    if (firstEqualIndex === index) {
++      result.push(value);
++    }
++  }
++  return result;
+ }
+ 
+ const lazyImplementation = <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>

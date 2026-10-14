@@ -1,0 +1,602 @@
+{
+  "generatedAt": "2026-10-08T08:44:27.588Z",
+  "dir": "results/prepub",
+  "confirmationRuns": [
+    {
+      "name": "prepub/conf-r0",
+      "order": [
+        "main",
+        "main-aa",
+        "branch-v-cand-base",
+        "branch-v-cand-map",
+        "branch-v-cand-forof",
+        "branch-v-cand-full"
+      ]
+    },
+    {
+      "name": "prepub/conf-r1",
+      "order": [
+        "main-aa",
+        "branch-v-cand-base",
+        "branch-v-cand-map",
+        "branch-v-cand-forof",
+        "branch-v-cand-full",
+        "main"
+      ]
+    },
+    {
+      "name": "prepub/conf-r2",
+      "order": [
+        "branch-v-cand-base",
+        "branch-v-cand-map",
+        "branch-v-cand-forof",
+        "branch-v-cand-full",
+        "main",
+        "main-aa"
+      ]
+    },
+    {
+      "name": "prepub/conf-r3",
+      "order": [
+        "branch-v-cand-map",
+        "branch-v-cand-forof",
+        "branch-v-cand-full",
+        "main",
+        "main-aa",
+        "branch-v-cand-base"
+      ]
+    },
+    {
+      "name": "prepub/conf-r4",
+      "order": [
+        "branch-v-cand-forof",
+        "branch-v-cand-full",
+        "main",
+        "main-aa",
+        "branch-v-cand-base",
+        "branch-v-cand-map"
+      ]
+    },
+    {
+      "name": "prepub/conf-r5",
+      "order": [
+        "branch-v-cand-full",
+        "main",
+        "main-aa",
+        "branch-v-cand-base",
+        "branch-v-cand-map",
+        "branch-v-cand-forof"
+      ]
+    }
+  ],
+  "floors": {
+    "1": 0.03920625954336482,
+    "2": 0.039465320586510914,
+    "3": 0.037728941796397866
+  },
+  "aaFalseCalls": {
+    "1": [],
+    "2": [],
+    "3": []
+  },
+  "variantRule": {
+    "cand-map": {
+      "flowSize": 71,
+      "sign": {
+        "runs": 6,
+        "fasterRuns": 6,
+        "perRun": [
+          0.9220199967511072, 0.9242262995977908, 0.9211115844655413,
+          0.9224522639448485, 0.922225790962752, 0.9215407536693161
+        ],
+        "overall": 0.9222622580236485,
+        "fires": true
+      },
+      "losses": [],
+      "newVsMain": [],
+      "aaRate": 0,
+      "passes": true,
+      "reasons": []
+    },
+    "cand-forof": {
+      "flowSize": 178,
+      "sign": {
+        "runs": 6,
+        "fasterRuns": 6,
+        "perRun": [
+          0.9690723047070465, 0.9705084012042546, 0.9598751069866707,
+          0.9633918677920548, 0.9620975915316656, 0.9677347638022855
+        ],
+        "overall": 0.9654388607520731,
+        "fires": true
+      },
+      "losses": [],
+      "newVsMain": [],
+      "aaRate": 0,
+      "vue": {
+        "ok": true,
+        "detail": "pipe(items, filter, map, take(10)): 31 (main 31); pipe(items, find(id === 20)): 23 (main 23); pipe(items, take(10)): 2 (main 2); reactive probe: 31 (main 31)"
+      },
+      "passes": true,
+      "reasons": []
+    }
+  },
+  "composition": "cand-full",
+  "reactive": [
+    {
+      "framework": "vue",
+      "copy": "main",
+      "medianUs": 5.959000000018477,
+      "p75Us": 9.000000000014552,
+      "meanUs": 6.96864900000071,
+      "dependencies": 31,
+      "dependenciesOnControlKey": 0,
+      "onTrackEvents": 31,
+      "onTrackControlKey": 0,
+      "footprintKiB": -2.0703125,
+      "heapGrowthKiB": 48.3671875
+    },
+    {
+      "framework": "vue",
+      "copy": "main-aa",
+      "medianUs": 5.790999999987889,
+      "p75Us": 8.209000000022115,
+      "meanUs": 6.764950999999314,
+      "dependencies": 31,
+      "dependenciesOnControlKey": 0,
+      "onTrackEvents": 31,
+      "onTrackControlKey": 0,
+      "footprintKiB": -2.0546875,
+      "heapGrowthKiB": 46.5078125
+    },
+    {
+      "framework": "vue",
+      "copy": "branch-v-cand-base",
+      "medianUs": 5.33300000000736,
+      "p75Us": 7.041000000015174,
+      "meanUs": 5.95257600000042,
+      "dependencies": 31,
+      "dependenciesOnControlKey": 0,
+      "onTrackEvents": 31,
+      "onTrackControlKey": 0,
+      "footprintKiB": 4.046875,
+      "heapGrowthKiB": 43.8359375
+    },
+    {
+      "framework": "vue",
+      "copy": "branch-v-cand-map",
+      "medianUs": 5.375000000015007,
+      "p75Us": 8.042000000045846,
+      "meanUs": 6.454410999999311,
+      "dependencies": 31,
+      "dependenciesOnControlKey": 0,
+      "onTrackEvents": 31,
+      "onTrackControlKey": 0,
+      "footprintKiB": 2.3671875,
+      "heapGrowthKiB": 48.0078125
+    },
+    {
+      "framework": "vue",
+      "copy": "branch-v-cand-forof",
+      "medianUs": 5.5000000000404725,
+      "p75Us": 8.29199999998309,
+      "meanUs": 6.618782999999155,
+      "dependencies": 31,
+      "dependenciesOnControlKey": 0,
+      "onTrackEvents": 31,
+      "onTrackControlKey": 0,
+      "footprintKiB": 6.2578125,
+      "heapGrowthKiB": 44.5234375
+    },
+    {
+      "framework": "vue",
+      "copy": "branch-v-cand-full",
+      "medianUs": 5.458999999973457,
+      "p75Us": 8.041999999989002,
+      "meanUs": 6.5421009999996045,
+      "dependencies": 31,
+      "dependenciesOnControlKey": 0,
+      "onTrackEvents": 31,
+      "onTrackControlKey": 0,
+      "footprintKiB": 6.109375,
+      "heapGrowthKiB": 44.453125
+    },
+    {
+      "framework": "mobx",
+      "copy": "main",
+      "medianUs": 5.375000000015007,
+      "p75Us": 6.416000000001532,
+      "meanUs": 6.017575999999735,
+      "dependencies": 31,
+      "dependenciesOnControlKey": 0,
+      "absentKeyDependencies": 0,
+      "footprintKiB": 889.78125,
+      "heapGrowthKiB": 73.265625
+    },
+    {
+      "framework": "mobx",
+      "copy": "main-aa",
+      "medianUs": 5.208999999979369,
+      "p75Us": 6.166999999948075,
+      "meanUs": 5.859337999998388,
+      "dependencies": 31,
+      "dependenciesOnControlKey": 0,
+      "absentKeyDependencies": 0,
+      "footprintKiB": 885.40625,
+      "heapGrowthKiB": 55.6796875
+    },
+    {
+      "framework": "mobx",
+      "copy": "branch-v-cand-base",
+      "medianUs": 4.87500000002683,
+      "p75Us": 5.667000000016742,
+      "meanUs": 5.522453999999243,
+      "dependencies": 31,
+      "dependenciesOnControlKey": 0,
+      "absentKeyDependencies": 0,
+      "footprintKiB": 885.40625,
+      "heapGrowthKiB": 60.5859375
+    },
+    {
+      "framework": "mobx",
+      "copy": "branch-v-cand-map",
+      "medianUs": 4.833000000019183,
+      "p75Us": 5.583999999998923,
+      "meanUs": 5.409940999999435,
+      "dependencies": 31,
+      "dependenciesOnControlKey": 0,
+      "absentKeyDependencies": 0,
+      "footprintKiB": 884.140625,
+      "heapGrowthKiB": 61.6171875
+    },
+    {
+      "framework": "mobx",
+      "copy": "branch-v-cand-forof",
+      "medianUs": 4.666999999983545,
+      "p75Us": 5.583000000001448,
+      "meanUs": 5.352349999998694,
+      "dependencies": 31,
+      "dependenciesOnControlKey": 0,
+      "absentKeyDependencies": 0,
+      "footprintKiB": 889.78125,
+      "heapGrowthKiB": 75.15625
+    },
+    {
+      "framework": "mobx",
+      "copy": "branch-v-cand-full",
+      "medianUs": 4.7089999999911925,
+      "p75Us": 5.417000000022654,
+      "meanUs": 5.339752999999234,
+      "dependencies": 31,
+      "dependenciesOnControlKey": 0,
+      "absentKeyDependencies": 0,
+      "footprintKiB": 889.90625,
+      "heapGrowthKiB": 75.15625
+    }
+  ],
+  "vueShapes": [
+    {
+      "copy": "main",
+      "dependencies": {
+        "pipe(items, filter, map, take(10))": 31,
+        "pipe(items, find(id === 20))": 23,
+        "pipe(items, take(10))": 2,
+        "find(items, id === 20) data-first": 23,
+        "filter(items, active) data-first": 1002
+      },
+      "matchesMain": {
+        "pipe(items, filter, map, take(10))": true,
+        "pipe(items, find(id === 20))": true,
+        "pipe(items, take(10))": true,
+        "find(items, id === 20) data-first": true,
+        "filter(items, active) data-first": true
+      }
+    },
+    {
+      "copy": "main-aa",
+      "dependencies": {
+        "pipe(items, filter, map, take(10))": 31,
+        "pipe(items, find(id === 20))": 23,
+        "pipe(items, take(10))": 2,
+        "find(items, id === 20) data-first": 23,
+        "filter(items, active) data-first": 1002
+      },
+      "matchesMain": {
+        "pipe(items, filter, map, take(10))": true,
+        "pipe(items, find(id === 20))": true,
+        "pipe(items, take(10))": true,
+        "find(items, id === 20) data-first": true,
+        "filter(items, active) data-first": true
+      }
+    },
+    {
+      "copy": "branch-v-cand-base",
+      "dependencies": {
+        "pipe(items, filter, map, take(10))": 31,
+        "pipe(items, find(id === 20))": 23,
+        "pipe(items, take(10))": 2,
+        "find(items, id === 20) data-first": 23,
+        "filter(items, active) data-first": 1002
+      },
+      "matchesMain": {
+        "pipe(items, filter, map, take(10))": true,
+        "pipe(items, find(id === 20))": true,
+        "pipe(items, take(10))": true,
+        "find(items, id === 20) data-first": true,
+        "filter(items, active) data-first": true
+      }
+    },
+    {
+      "copy": "branch-v-cand-map",
+      "dependencies": {
+        "pipe(items, filter, map, take(10))": 31,
+        "pipe(items, find(id === 20))": 23,
+        "pipe(items, take(10))": 2,
+        "find(items, id === 20) data-first": 23,
+        "filter(items, active) data-first": 1002
+      },
+      "matchesMain": {
+        "pipe(items, filter, map, take(10))": true,
+        "pipe(items, find(id === 20))": true,
+        "pipe(items, take(10))": true,
+        "find(items, id === 20) data-first": true,
+        "filter(items, active) data-first": true
+      }
+    },
+    {
+      "copy": "branch-v-cand-forof",
+      "dependencies": {
+        "pipe(items, filter, map, take(10))": 31,
+        "pipe(items, find(id === 20))": 23,
+        "pipe(items, take(10))": 2,
+        "find(items, id === 20) data-first": 23,
+        "filter(items, active) data-first": 1002
+      },
+      "matchesMain": {
+        "pipe(items, filter, map, take(10))": true,
+        "pipe(items, find(id === 20))": true,
+        "pipe(items, take(10))": true,
+        "find(items, id === 20) data-first": true,
+        "filter(items, active) data-first": true
+      }
+    },
+    {
+      "copy": "branch-v-cand-full",
+      "dependencies": {
+        "pipe(items, filter, map, take(10))": 31,
+        "pipe(items, find(id === 20))": 23,
+        "pipe(items, take(10))": 2,
+        "find(items, id === 20) data-first": 23,
+        "filter(items, active) data-first": 1002
+      },
+      "matchesMain": {
+        "pipe(items, filter, map, take(10))": true,
+        "pipe(items, find(id === 20))": true,
+        "pipe(items, take(10))": true,
+        "find(items, id === 20) data-first": true,
+        "filter(items, active) data-first": true
+      }
+    }
+  ],
+  "traps": [
+    {
+      "key": "G8 | pass-through Proxy items | C | traps",
+      "counts": {
+        "main": {
+          "has": 0,
+          "get": 10240
+        },
+        "main-aa": {
+          "has": 0,
+          "get": 10240
+        },
+        "branch-v-cand-base": {
+          "has": 0,
+          "get": 10240
+        },
+        "branch-v-cand-map": {
+          "has": 0,
+          "get": 10240
+        },
+        "branch-v-cand-forof": {
+          "has": 0,
+          "get": 10240
+        },
+        "branch-v-cand-full": {
+          "has": 0,
+          "get": 10240
+        },
+        "native": {
+          "has": 0,
+          "get": 10240
+        }
+      }
+    },
+    {
+      "key": "G8 | pass-through Proxy items | M | traps",
+      "counts": {
+        "main": {
+          "has": 0,
+          "get": 1600
+        },
+        "main-aa": {
+          "has": 0,
+          "get": 1600
+        },
+        "branch-v-cand-base": {
+          "has": 0,
+          "get": 1600
+        },
+        "branch-v-cand-map": {
+          "has": 0,
+          "get": 1600
+        },
+        "branch-v-cand-forof": {
+          "has": 0,
+          "get": 1600
+        },
+        "branch-v-cand-full": {
+          "has": 0,
+          "get": 1600
+        },
+        "native": {
+          "has": 0,
+          "get": 1600
+        }
+      }
+    }
+  ],
+  "extras": {
+    "x-p0": {
+      "floors": {
+        "1": 0.023022650573263956,
+        "2": 0.1557663924201035,
+        "3": 0.23890883543502447
+      },
+      "tiers": {
+        "1": {
+          "n": 5,
+          "geomean": 0.658594013712024,
+          "counts": {
+            "faster": 5
+          }
+        },
+        "2": {
+          "n": 7,
+          "geomean": 0.6959330586479062,
+          "counts": {
+            "faster": 6,
+            "neutral": 1
+          }
+        },
+        "3": {
+          "n": 6,
+          "geomean": 0.4767080442685668,
+          "counts": {
+            "faster": 6
+          }
+        }
+      },
+      "bars": []
+    },
+    "x-p1": {
+      "floors": {
+        "1": 0.0293037126954378,
+        "2": 0.011385740822897549,
+        "3": 0.00928011587890643
+      },
+      "tiers": {
+        "1": {
+          "n": 5,
+          "geomean": 0.658143008837812,
+          "counts": {
+            "faster": 5
+          }
+        },
+        "2": {
+          "n": 7,
+          "geomean": 0.7002905837035114,
+          "counts": {
+            "faster": 7
+          }
+        },
+        "3": {
+          "n": 6,
+          "geomean": 0.509978182944516,
+          "counts": {
+            "faster": 6
+          }
+        }
+      },
+      "bars": []
+    },
+    "x-node24": {
+      "floors": {
+        "1": 0.025475859906907754,
+        "2": 0.021993962310412906
+      },
+      "tiers": {
+        "1": {
+          "n": 57,
+          "geomean": 0.7529428738839852,
+          "counts": {
+            "faster": 29,
+            "neutral": 27,
+            "regression": 1
+          }
+        },
+        "2": {
+          "n": 7,
+          "geomean": 0.6170024323710517,
+          "counts": {
+            "faster": 4,
+            "neutral": 3
+          }
+        },
+        "3": {
+          "n": 0,
+          "counts": {}
+        }
+      },
+      "bars": ["T1 G7 isDeepEqual data-first C 1.063 (1.033 / 1.092)"]
+    },
+    "x-bun": {
+      "floors": {
+        "1": 0.045794278219032356,
+        "2": 0.022224770156406257
+      },
+      "tiers": {
+        "1": {
+          "n": 57,
+          "geomean": 0.7034562408438878,
+          "counts": {
+            "faster": 35,
+            "neutral": 22
+          }
+        },
+        "2": {
+          "n": 7,
+          "geomean": 0.5647707982385602,
+          "counts": {
+            "faster": 4,
+            "neutral": 3
+          }
+        },
+        "3": {
+          "n": 0,
+          "counts": {}
+        }
+      },
+      "bars": []
+    },
+    "x-isolated": {
+      "floors": {
+        "1": 0.035463151970264624,
+        "2": 0.05139121230797237
+      },
+      "tiers": {
+        "1": {
+          "n": 16,
+          "geomean": 0.5945185753163598,
+          "counts": {
+            "faster": 11,
+            "neutral": 5
+          }
+        },
+        "2": {
+          "n": 7,
+          "geomean": 0.6079411982040642,
+          "counts": {
+            "faster": 4,
+            "neutral": 3
+          }
+        },
+        "3": {
+          "n": 0,
+          "counts": {}
+        }
+      },
+      "bars": []
+    }
+  }
+}
