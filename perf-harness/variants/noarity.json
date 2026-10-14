@@ -1,5 +1,0 @@
-{
-  "comment": "Stage noarity: the branch at 2fab5832 (final PR 1444) with the per-arity data-last closures of lazyDataLastImpl reverted to main's single spread closure (direct lazy/lazyArgs writes kept). Consumed by scripts/prepare.mjs --variants (stages/noarity.steps). Verdict: results/noarity/verdict.md.",
-  "sha": "2fab5832528d2a9103dbd635d4c4cc9f0826e723",
-  "survivors": ["noarity"]
-}

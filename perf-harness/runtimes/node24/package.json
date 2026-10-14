@@ -1,6 +1,0 @@
-{
-  "private": true,
-  "dependencies": {
-    "node": "^24.21.0"
-  }
-}

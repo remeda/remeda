@@ -1,6 +1,0 @@
-{
-  "private": true,
-  "dependencies": {
-    "bun": "^1.4.2"
-  }
-}

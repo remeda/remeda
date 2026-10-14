@@ -1,6 +1,0 @@
-{
-  "comment": "Pre-publication candidates (maintainer decision 2026-10-08: design B). Consumed by scripts/prepare.mjs --variants (stage prepub). cand-base = identity-controls-v2 + the adopted and near-miss variants without indexed loops; cand-map adds the map shortcut, cand-forof the array-only for...of rework, cand-full both. Final composition: results/prepub/verdicts.md.",
-  "sha": "144fdc8b6208b40b7fc1f0690ecc99dd17c2a5a6",
-  "survivors": ["cand-map", "cand-forof", "cand-full"],
-  "separate": ["cand-base"]
-}

@@ -1,5 +1,0 @@
-{
-  "comment": "Stage datafirst: the branch at 3065f5be (PR 1444 HEAD) with eager data-first implementations for the 8 utilities that only had lazy code (unique, uniqueBy, uniqueWith, difference, differenceWith, intersection, intersectionWith, mapWithFeedback) and purryFromLazy deleted (variants/datafirst.patch). Consumed by scripts/prepare.mjs --variants (stages/datafirst.steps). Verdict: results/datafirst/verdict.md.",
-  "sha": "3065f5bedca381851f24e8f62faf1262b2f935e3",
-  "survivors": ["datafirst"]
-}

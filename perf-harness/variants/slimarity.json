@@ -1,6 +1,0 @@
-{
-  "comment": "Stage slimarity: the branch at 2fab5832 (final PR 1444) with lazyDataLastImpl slimmed to dedicated closures for one stored argument (slim1) or for none and one (slim01), spread otherwise. Consumed by scripts/prepare.mjs --variants (stages/slimarity.steps). noarity is prepared too (separate) so the bundle step can compare it; it isn't measured. Verdict: results/slimarity/verdict.md.",
-  "sha": "2fab5832528d2a9103dbd635d4c4cc9f0826e723",
-  "survivors": ["slim1", "slim01"],
-  "separate": ["noarity"]
-}

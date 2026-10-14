@@ -137,7 +137,7 @@ Tabulate the mode per (run, position, copy), and confirm it on a minimal repro w
 
 ## The harness
 
-The harness from PR #1444 is preserved at [`perf-harness/` in `849849a2c90016745ffb178955b3c5759114f2a7`](https://github.com/remeda/remeda/tree/849849a2c90016745ffb178955b3c5759114f2a7/perf-harness). The commit is reachable through PR #1444's refs, so `git fetch origin pull/1444/head` may be needed first. Restore it outside the package (`git archive 849849a2c90016745ffb178955b3c5759114f2a7 perf-harness | tar -x -C <scratch-dir>`) and follow its README, which lists every command and the SHAs it measured. It holds:
+The harness from PR #1444 is preserved at [`perf-harness/` in `8e2ceb3c82986e4bc8f72c92986645797a78acb7`](https://github.com/remeda/remeda/tree/8e2ceb3c82986e4bc8f72c92986645797a78acb7/perf-harness). The commit is reachable through PR #1444's refs, so `git fetch origin pull/1444/head` may be needed first. Restore it outside the package (`git archive 8e2ceb3c82986e4bc8f72c92986645797a78acb7 perf-harness | tar -x -C <scratch-dir>`) and follow its README, which lists every command and the SHAs it measured. It holds:
 
 - `harness/`: copy loading per source mode, the scenario matrix as data (groups G1-G10, from lazy pipe shapes to interleaved pipes, at 0 to 100k items), fixtures, the pollution profiles, the tiers, and the verdict statistics;
 - `bench/` and `scripts/`: the vitest bench project and the vitest-free runner, snapshot preparation and builds, aggregation into per-tier reports, and the allocation, peak-heap, bundle-size, cold-start and reactive-store probes;
@@ -145,6 +145,6 @@ The harness from PR #1444 is preserved at [`perf-harness/` in `849849a2c90016745
 - `variants/`: every patch measured, with its target flow, and the screening and confirmation verdicts;
 - `research/popularity.json` and `tier-overrides.json`: the popularity table and the tier pins;
 - `stages/` and `watch-and-run.sh`: the stage files and the runner that waits for AC power and an idle machine;
-- the final aggregates and the PR's performance summary.
+- the final aggregates (the performance summary itself is in the PR description).
 
 The commit carries code and final results; the README rebuilds the snapshots and dependencies.
