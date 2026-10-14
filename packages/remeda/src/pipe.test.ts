@@ -513,6 +513,48 @@ describe("lazy", () => {
     },
   );
 
+  // A lone step next to non-lazy steps runs from the main loop of `pipe`, not
+  // from the path for a pipe of a single function.
+  describe.each([
+    ["an array", (): readonly number[] => [1, 2, 3, 4]],
+    // @ts-expect-error [ts2740] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
+    ["a generator", (): readonly number[] => upTo(4)],
+  ])(
+    "a lone step after a non-lazy step gets each item's index and the items so far, with %s as input",
+    (_name, input) => {
+      test("as the last step", () => {
+        expect(
+          pipe(
+            input(),
+            identity(),
+            map((x, index, data) => [x, index, [...data]]),
+          ),
+        ).toStrictEqual([
+          [1, 0, [1]],
+          [2, 1, [1, 2]],
+          [3, 2, [1, 2, 3]],
+          [4, 3, [1, 2, 3, 4]],
+        ]);
+      });
+
+      test("before another non-lazy step", () => {
+        expect(
+          pipe(
+            input(),
+            identity(),
+            map((x, index, data) => [x, index, [...data]]),
+            identity(),
+          ),
+        ).toStrictEqual([
+          [1, 0, [1]],
+          [2, 1, [1, 2]],
+          [3, 2, [1, 2, 3]],
+          [4, 3, [1, 2, 3, 4]],
+        ]);
+      });
+    },
+  );
+
   describe("a generator input is closed when the pipe stops early", () => {
     test("by a lone step", () => {
       const onClose = vi.fn<() => void>();

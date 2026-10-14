@@ -34,29 +34,38 @@ describe(canReadData, () => {
 describe("known issues!", () => {
   describe("`canReadData` known foot guns", () => {
     test("a trailing rest parameter", () => {
-      expect(
-        canReadData(
-          (_value, _index, ...rest: readonly [readonly number[]]) =>
-            rest[0].length,
-        ),
-      ).not.toBe(true);
+      const canRead = canReadData(
+        (_value, _index, ...rest: readonly [readonly number[]]) =>
+          rest[0].length,
+      );
+
+      expect(canRead).not.toBe(true);
+
+      // Actual
+      expect(canRead).toBe(false);
     });
 
     test("default parameters", () => {
-      expect(
-        canReadData(
-          (_value, _index = 0, data: readonly number[] = []) => data.length,
-        ),
-      ).not.toBe(true);
+      const canRead = canReadData(
+        (_value, _index = 0, data: readonly number[] = []) => data.length,
+      );
+
+      expect(canRead).not.toBe(true);
+
+      // Actual
+      expect(canRead).toBe(false);
     });
 
     test("`arguments` access", () => {
-      expect(
-        canReadData(function readsArguments(_) {
-          // eslint-disable-next-line prefer-rest-params -- The point of this test is that arguments-based access is invisible to the arity check.
-          return arguments[2];
-        }),
-      ).not.toBe(true);
+      const canRead = canReadData(function readsArguments(_) {
+        // eslint-disable-next-line prefer-rest-params -- The point of this test is that arguments-based access is invisible to the arity check.
+        return arguments[2];
+      });
+
+      expect(canRead).not.toBe(true);
+
+      // Actual
+      expect(canRead).toBe(false);
     });
   });
 });

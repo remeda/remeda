@@ -87,6 +87,15 @@ describe(pipe, () => {
     expect(anyItems2).toStrictEqual([[1], [1, 3], [1, 3, 5]]);
   });
 
+  test("doesn't collect the items processed so far for a callback without `data`", () => {
+    const callbackfn = vi.fn<
+      (value: number, index: number, data: readonly number[]) => number
+    >((value, index) => value + index);
+    pipe([1, 2, 3], map(callbackfn));
+
+    expect(() => callbackfn.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
+  });
+
   test("never marks the callback itself", () => {
     pipe([1, 2, 3], map(double), map(addDataLength));
 

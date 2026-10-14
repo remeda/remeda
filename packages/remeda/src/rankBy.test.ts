@@ -43,7 +43,7 @@ describe("known issues!", () => {
     // causes our purrying logic to fail to detect this as a data-first call.
     expect(result).not.toBe(0);
 
-    // It is curried as a data-last call instead.
+    // Actual
     expect(result).toBeTypeOf("function");
   });
 });
