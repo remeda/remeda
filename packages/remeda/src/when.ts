@@ -143,7 +143,7 @@ export function when(...args: readonly unknown[]): unknown {
   return args.length === 2
     ? (
         // We take advantage of `canReadData`'s conservative handling of
-        // functions that only take variadic arguments: they bypass the check
+        // functions that only declare a rest parameter: they bypass the check
         // and always have `data` computed for them. `when` forwards its
         // arguments to the user's functions and can't know if they read `data`.
         ...[data, ...extraArgs]: readonly unknown[]

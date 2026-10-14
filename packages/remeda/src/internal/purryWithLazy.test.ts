@@ -23,7 +23,7 @@ describe("data-last (curried)", () => {
       expect(curried).toBeTypeOf("function");
     });
 
-    test("curried function takes a single argument", () => {
+    test("curried function declares a single parameter", () => {
       expect(curried).toHaveLength(1);
     });
 
@@ -52,7 +52,7 @@ describe("data-last (curried)", () => {
       expect(curried).toBeTypeOf("function");
     });
 
-    test("curried function takes a single argument", () => {
+    test("curried function declares a single parameter", () => {
       expect(curried).toHaveLength(1);
     });
 

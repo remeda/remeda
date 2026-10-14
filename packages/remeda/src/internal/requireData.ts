@@ -72,14 +72,14 @@ export const canReadData = (
   // (e.g., 2 for `foo(a, b, ...c)`), or defaulted one (e.g., 1 for
   // `foo(a, b = 0)`); which means it is 0 both for callbacks that take no
   // parameters (e.g., `foo()`) which obviously won't read `data`, but *also*
-  // in many cases which handle functions generically via argument spreading
+  // in many cases which handle functions generically via a rest parameter
   // (e.g., `foo(...args)`) or that use `arguments` (e.g., `memoize`,
   // `debounce`) which *might* need data. To err on the safe side we consider
   // these cases as requiring data.
   length === 0 ||
-  // For all other functions we assume that if the function takes an argument
-  // at the index *it itself* defined is the data parameter index, then it most
-  // likely wants to handle it and we should provide it.
+  // For all other functions we assume that if the function *itself* declares a
+  // parameter at the data parameter index, then it most likely wants to handle
+  // it and we should provide it.
   // This does have its drawbacks due to the same issues mentioned above; if
   // the function uses default params, uses a rest element, or accesses the
   // data via the `arguments` keyword.
