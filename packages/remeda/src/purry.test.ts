@@ -24,7 +24,7 @@ describe("data-first (delegated)", () => {
 
 describe("data-last (curried)", () => {
   describe("missing a single argument", () => {
-    // @ts-expect-error [ts2322] -- purry returns `unknown` by design; the tests in this block assert the runtime shape this type describes.
+    // @ts-expect-error [ts2322] -- `purriedFn` returns `unknown`, like the implementation signature of a utility built on `purry`; the tests in this block assert the runtime shape this type describes.
     const curried: RestArgsFunction = purriedFn(37);
 
     test("returns a function", () => {
@@ -49,7 +49,7 @@ describe("data-last (curried)", () => {
   });
 
   describe("missing more than one argument", () => {
-    // @ts-expect-error [ts2322] -- purry returns `unknown` by design; the tests in this block assert the runtime shape this type describes.
+    // @ts-expect-error [ts2322] -- `purriedFn` returns `unknown`, like the implementation signature of a utility built on `purry`; the tests in this block assert the runtime shape this type describes.
     const curried: RestArgsFunction = purriedFn();
 
     test("returns a function", () => {

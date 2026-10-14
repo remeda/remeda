@@ -1,6 +1,10 @@
-import { lazyDataLastImplementation } from "./lazyDataLastImplementation";
-import type { LazyDefinition } from "./types/LazyDefinition";
-import type { StrictFunction } from "./types/StrictFunction";
+import type { DataFirst } from "./dataLastImplementation";
+import {
+  lazyDataLastImplementation,
+  type LazyDefinition,
+  type LazyUnaryFunction,
+} from "./lazyDataLastImplementation";
+import type { IterableContainer } from "./types/IterableContainer";
 
 /**
  * An internal-only re-implementation of `purry` that allows passing a lazy
@@ -10,17 +14,23 @@ import type { StrictFunction } from "./types/StrictFunction";
  * that are not lazy don't end up importing the whole lazy machinery they don't
  * use or need.
  */
-export const purryWithLazy = (
-  dataFirst: StrictFunction,
+export const purryWithLazy = <
+  T extends IterableContainer,
+  P extends readonly unknown[],
+  R,
+>(
+  dataFirst: DataFirst<T, P, R>,
   args: readonly unknown[],
-  lazy: LazyDefinition["lazy"],
-): unknown =>
+  lazy: LazyDefinition<T, P>["lazy"],
+): R | LazyUnaryFunction<T, P, R> =>
   args.length >= dataFirst.length
     ? dataFirst(
-        // @ts-expect-error [ts2345] -- This error is accurate because we don't
-        // know anything about `fn` so can't ensure that we are passing the
-        // correct arguments to it, we just have to trust that the caller knows
-        // what they are doing.
+        // @ts-expect-error [ts2556] -- the whole point of currying is that `args` are polymorphic and can either fit the data-first pattern, like here, or the data-last pattern as below. The length check that is used to pick between them can't narrow it!
         ...args,
       )
-    : lazyDataLastImplementation(dataFirst, args, lazy);
+    : lazyDataLastImplementation(
+        dataFirst,
+        // @ts-expect-error [ts2345] -- the whole point of currying is that `args` are polymorphic and can either fit the data-first pattern, as above, or the data-last pattern, like here. The length check that is used to pick between them can't narrow it!
+        args,
+        lazy,
+      );

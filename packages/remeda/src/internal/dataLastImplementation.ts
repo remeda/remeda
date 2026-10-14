@@ -1,31 +1,25 @@
-import type { StrictFunction } from "./types/StrictFunction";
+export type DataFirst<T, P extends readonly unknown[], R> = (
+  data: T,
+  ...args: P
+) => R;
+
+export type UnaryFunction<T = unknown, R = unknown> = (data: T) => R;
 
 /**
  * Builds the data-last function for a `dataFirst` implementation.
  */
-export const dataLastImplementation = (
-  dataFirst: StrictFunction,
-  args: readonly unknown[],
-): ((data: unknown) => unknown) =>
+export const dataLastImplementation = <T, P extends readonly unknown[], R>(
+  dataFirst: DataFirst<T, P, R>,
+  args: P,
+): UnaryFunction<T, R> =>
   args.length === 1
-    ? // Spreading `args` into the call goes through a generic builtin on
-      // every invocation of the data-last function, so the most common
-      // data-last arity, a single argument, is passed directly.
+    ? // Spreading `args` into the call goes through a generic builtin on every
+      // invocation of the data-last function, so the most common data-last
+      // arity, a single argument, is passed directly.
       (data) =>
         dataFirst(
-          // @ts-expect-error [ts2345] -- This error is accurate because we
-          // don't know anything about `fn` so can't ensure that we are
-          // passing the correct arguments to it, we just have to trust that
-          // the caller knows what they are doing.
           data,
+          // @ts-expect-error [ts2345] -- TypeScript can't bind a runtime concern (`args.length === 1`) with the type for args. Even if we use our `hasAtLeast` it won't be able to couple the expected type with the actual one.
           args[0],
         )
-    : (data) =>
-        dataFirst(
-          // @ts-expect-error [ts2345] -- This error is accurate because we
-          // don't know anything about `fn` so can't ensure that we are
-          // passing the correct arguments to it, we just have to trust that
-          // the caller knows what they are doing.
-          data,
-          ...args,
-        );
+    : (data) => dataFirst(data, ...args);

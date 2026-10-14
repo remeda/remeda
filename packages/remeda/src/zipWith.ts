@@ -101,7 +101,11 @@ export function zipWith(
     // dataLast
     return lazyDataLastImplementation(
       zipWithImplementation,
-      [arg0, arg1],
+      [
+        arg0,
+        // @ts-expect-error [ts2322] -- Outside a pipe the data-last function hands the implementation the full first list, which is a valid non-empty prefix whenever `fn` is invoked (it never is for an empty list); TypeScript can't relate `T1` to `NonEmptyPrefix<T1>`.
+        arg1,
+      ],
       lazyImplementation,
     );
   }

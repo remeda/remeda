@@ -181,7 +181,6 @@ describe("lazy", () => {
       pipe(
         [1, 2, 3],
         map(identity()),
-        // @ts-expect-error [ts2345] -- `lazyDataLastImplementation` returns `unknown`; the step only exists to expose what `pipe` hands its evaluator.
         lazyDataLastImplementation(identity(), [], () => evaluator),
       );
 
@@ -411,7 +410,6 @@ describe("lazy", () => {
       const evaluator = vi.fn<LazyEvaluator>(lazyEmptyEvaluator);
       pipe(
         [1, 2, 3],
-        // @ts-expect-error [ts2345] -- `lazyDataLastImplementation` returns `unknown`; the overloads of the utilities built on it are what make the result a function.
         lazyDataLastImplementation(identity(), [], () => evaluator),
       );
 
@@ -465,7 +463,6 @@ describe("lazy", () => {
       const evaluator = vi.fn<LazyEvaluator>(identity());
       pipe(
         [1, 2, 3],
-        // @ts-expect-error [ts2345] -- `lazyDataLastImplementation` returns `unknown`; the step only exists to expose what `pipe` hands its evaluator.
         lazyDataLastImplementation(identity(), [], () => evaluator),
       );
 

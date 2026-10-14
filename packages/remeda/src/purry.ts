@@ -1,40 +1,31 @@
-import { dataLastImplementation } from "./internal/dataLastImplementation";
-import type { StrictFunction } from "./internal/types/StrictFunction";
+import {
+  dataLastImplementation,
+  type DataFirst,
+  type UnaryFunction,
+} from "./internal/dataLastImplementation";
 
 /**
- * Creates a function with `dataFirst` and `dataLast` signatures.
+ * Wraps a `dataFirst` implementation and dynamically curries it at runtime
+ * based on the number of arguments it was called with.
  *
  * When `args` has at least `dataFirst.length` items (`Function.length` counts
  * the parameters before the first defaulted or rest one), `dataFirst` is
- * called with all of them, extra ones included (data-first). Otherwise `purry`
- * returns a function that takes the data and calls `fn(data, ...args)`
- * (data-last).
+ * called with all of them, extra ones included. Otherwise `purry` returns a
+ * function that takes the data and calls `fn(data, ...args)`.
  *
- * `purry` is a dynamic function and it's not type safe. It should be wrapped by
- * a function that have proper typings. Refer to the example below for correct
- * usage.
- *
- * !IMPORTANT: functions that simply call `purry` and return the result (like
- * almost all functions in this library) should return `unknown` themselves if
- * an explicit return type is required. This is because we currently don't
- * provide a generic return type that is built from the input function, and
- * crafting one manually isn't worthwhile as we rely on function declaration
- * overloading to combine the types for dataFirst and dataLast invocations!
+ * The return type is not dynamically routed via the same runtime logic, and
+ * therefore is a union of both data-first and data-last return types. The
+ * return type also ignores any generic type parameters of `dataFirst`, and in
+ * most cases would end up widening the return type to `unknown`. See the
+ * examples below for a structured template for coupling the return types to
+ * specific overloaded signatures. Almost all Remeda utilities are built using
+ * `purry` via this template.
  *
  * @param dataFirst - The function to purry.
  * @param args - The arguments.
  * @signature
  *   purry(dataFirst, args);
  * @example
- *    function _findIndex(array, fn) {
- *      for (let i = 0; i < array.length; i++) {
- *        if (fn(array[i])) {
- *          return i;
- *        }
- *      }
- *      return -1;
- *    }
- *
  *    // data-first
  *    function findIndex<T>(array: T[], fn: (item: T) => boolean): number;
  *
@@ -42,17 +33,30 @@ import type { StrictFunction } from "./internal/types/StrictFunction";
  *    function findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;
  *
  *    function findIndex(...args: unknown[]) {
- *      return purry(_findIndex, args);
+ *      return purry(findIndexImplementation, args);
+ *    }
+ *
+ *    function findIndexImplementation(array, fn) {
+ *      for (let i = 0; i < array.length; i++) {
+ *        if (fn(array[i])) {
+ *          return i;
+ *        }
+ *      }
+ *      return -1;
  *    }
  * @category Function
  */
-export const purry = (
-  dataFirst: StrictFunction,
+export const purry = <T, P extends readonly unknown[], R>(
+  dataFirst: DataFirst<T, P, R>,
   args: readonly unknown[],
-): unknown =>
+): R | UnaryFunction<T, R> =>
   args.length >= dataFirst.length
     ? dataFirst(
-        // @ts-expect-error [ts2345] -- This error is accurate because we don't know anything about `dataFirst` so can't ensure that we are passing the correct arguments to it, we just have to trust that the caller knows what they are doing.
+        // @ts-expect-error [ts2556] -- the whole point of currying is that `args` are polymorphic and can either fit the data-first pattern, like here, or the data-last pattern as below. The length check that is used to pick between them can't narrow it!
         ...args,
       )
-    : dataLastImplementation(dataFirst, args);
+    : dataLastImplementation(
+        dataFirst,
+        // @ts-expect-error [ts2345] -- the whole point of currying is that `args` are polymorphic and can either fit the data-first pattern, as above, or the data-last pattern, like here. The length check that is used to pick between them can't narrow it!
+        args,
+      );

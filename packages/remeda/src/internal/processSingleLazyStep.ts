@@ -6,7 +6,7 @@ import {
   STOP,
   type LazySlot,
 } from "./lazyControl";
-import type { LazyDefinition } from "./types/LazyDefinition";
+import type { LazyDefinition } from "./lazyDataLastImplementation";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
 
 /**
@@ -18,10 +18,10 @@ import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
  * @param lazyArgs - The arguments the evaluator is built with.
  * @see pipe
  */
-export function processSingleLazyStep(
+export function processSingleLazyStep<P extends readonly unknown[]>(
   iterable: Iterable<unknown>,
-  lazy: LazyDefinition["lazy"],
-  lazyArgs: LazyDefinition["lazyArgs"],
+  lazy: LazyDefinition<readonly unknown[], P>["lazy"],
+  lazyArgs: LazyDefinition<readonly unknown[], P>["lazyArgs"],
 ): unknown {
   const lazyEvaluator = lazy(...lazyArgs);
 

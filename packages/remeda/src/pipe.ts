@@ -2,6 +2,7 @@
  * We document pipe's function params as a single parameter entry in the docs.
  */
 
+import type { UnaryFunction } from "./internal/dataLastImplementation";
 import {
   createLazySlot,
   LAST,
@@ -10,8 +11,8 @@ import {
   STOP,
   type LazySlot,
 } from "./internal/lazyControl";
+import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
 import { processSingleLazyStep } from "./internal/processSingleLazyStep";
-import type { LazyDefinition } from "./internal/types/LazyDefinition";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/unexpectedAccessSentinel";
 
@@ -30,8 +31,6 @@ type LazyStep = {
       readonly items: typeof UNEXPECTED_ACCESS_SENTINEL;
     }
 );
-
-type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
 
 /**
  * Performs left-to-right function composition, passing data through functions
@@ -300,7 +299,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
 
 export function pipe(
   input: unknown,
-  ...functions: readonly (LazyFunction | ((value: unknown) => unknown))[]
+  ...functions: readonly (UnaryFunction | LazyUnaryFunction)[]
 ): unknown {
   if (functions.length === 0) {
     return input;
@@ -350,7 +349,7 @@ export function pipe(
     functionIndex += lazySequence.length;
 
     // @ts-expect-error [ts2322] -- TypeScript fails to follow the logic that `functionIndex` is pointing to the last function in `lazySequence`.
-    const lastLazyFunction: LazyFunction = functions[functionIndex - 1];
+    const lastLazyFunction: LazyUnaryFunction = functions[functionIndex - 1];
     if (lastLazyFunction.lazy.single) {
       // @ts-expect-error [ts18046] -- output is always an array when the last lazy function in the sequence was single.
       output = output[0];
@@ -361,7 +360,7 @@ export function pipe(
 }
 
 function buildLazySequence(
-  functions: readonly (LazyFunction | ((value: unknown) => unknown))[],
+  functions: readonly (UnaryFunction | LazyUnaryFunction)[],
   startIndex: number,
 ): readonly LazyStep[] {
   const lazySequence: LazyStep[] = [];
