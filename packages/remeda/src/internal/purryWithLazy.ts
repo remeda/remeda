@@ -10,9 +10,9 @@ import type { IterableContainer } from "./types/IterableContainer";
  * An internal-only re-implementation of `purry` that allows passing a lazy
  * function to the `lazyDataLastImplementation`.
  *
- * This is done as a copy instead of having `purry` call it so that utilities
- * that are not lazy don't end up importing the whole lazy machinery they don't
- * use or need.
+ * This is done as a copy instead of having `purry` call it to keep the
+ * execution stack and the bundle lean for the vast majority of functions that
+ * don't have lazy semantics.
  */
 export const purryWithLazy = <
   T extends IterableContainer,

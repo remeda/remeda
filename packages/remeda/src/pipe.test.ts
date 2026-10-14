@@ -262,23 +262,21 @@ describe("lazy", () => {
   });
 
   test("items are never probed by a lone step", () => {
-    const has = vi.fn<() => boolean>(constant(true));
-    const get = vi.fn<() => unknown>();
-    const item = new Proxy({}, { has, get });
+    // A revoked proxy throws on every trap, so the item survives the pipe only
+    // if nothing but its identity was used.
+    const { proxy: item, revoke } = Proxy.revocable({}, {});
+    revoke();
 
     expect(pipe([item], map(identity()))[0]).toBe(item);
-    expect(has).not.toHaveBeenCalled();
-    expect(get).not.toHaveBeenCalled();
   });
 
   test("items are never probed by fused steps", () => {
-    const has = vi.fn<() => boolean>(constant(true));
-    const get = vi.fn<() => unknown>();
-    const item = new Proxy({}, { has, get });
+    // A revoked proxy throws on every trap, so the item survives the pipe only
+    // if nothing but its identity was used.
+    const { proxy: item, revoke } = Proxy.revocable({}, {});
+    revoke();
 
     expect(pipe([item], map(identity()), filter(constant(true)))[0]).toBe(item);
-    expect(has).not.toHaveBeenCalled();
-    expect(get).not.toHaveBeenCalled();
   });
 
   test("an array input is iterated, not indexed, by a lone step", () => {

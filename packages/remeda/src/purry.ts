@@ -11,7 +11,7 @@ import {
  * When `args` has at least `dataFirst.length` items (`Function.length` counts
  * the parameters before the first defaulted or rest one), `dataFirst` is
  * called with all of them, extra ones included. Otherwise `purry` returns a
- * function that takes the data and calls `fn(data, ...args)`.
+ * function that takes the data and calls `dataFirst(data, ...args)`.
  *
  * The return type is not dynamically routed via the same runtime logic, and
  * therefore is a union of both data-first and data-last return types. The
@@ -27,18 +27,23 @@ import {
  *   purry(dataFirst, args);
  * @example
  *    // data-first
- *    function findIndex<T>(array: T[], fn: (item: T) => boolean): number;
+ *    function findIndex<T>(
+ *      data: readonly T[],
+ *      predicate: (item: T) => boolean,
+ *    ): number;
  *
  *    // data-last
- *    function findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;
+ *    function findIndex<T>(
+ *      predicate: (item: T) => boolean,
+ *    ): (data: readonly T[]) => number;
  *
  *    function findIndex(...args: unknown[]) {
  *      return purry(findIndexImplementation, args);
  *    }
  *
- *    function findIndexImplementation(array, fn) {
+ *    function findIndexImplementation(data, predicate): number {
  *      for (let i = 0; i < array.length; i++) {
- *        if (fn(array[i])) {
+ *        if (predicate(array[i])) {
  *          return i;
  *        }
  *      }

@@ -1,9 +1,12 @@
-import { lastLazyValue } from "./internal/lazyControl";
+import {
+  lastLazyValue,
+  type LazyResult,
+  type LazySlot,
+} from "./internal/lazyControl";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import { toSingle } from "./internal/toSingle";
 import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Gets the first element of `array`.
@@ -48,5 +51,9 @@ const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;
 
 const lazyImplementation = toSingle(() => emitAndStop);
 
-const emitAndStop: LazyEvaluator = (value, _index, _data, slot) =>
-  lastLazyValue(value, slot);
+const emitAndStop = <T>(
+  value: T,
+  _index: number,
+  _data: readonly T[],
+  slot: LazySlot,
+): LazyResult<T> => lastLazyValue(value, slot);

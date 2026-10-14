@@ -1,5 +1,6 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { purry } from "./purry";
+import { sum } from "./sum";
 
 // @ts-expect-error [ts6133] -- The assertions are on the helpers themselves: one compiles, the other's mismatched overload fails (see its `@ts-expect-error`). These references only keep them from being unused.
 // eslint-disable-next-line no-underscore-dangle -- See above.
@@ -31,6 +32,17 @@ describe("known issues!", () => {
     expectTypeOf([1, 2, 3].map(dataFirstDeclaredLast)).toEqualTypeOf<
       number[]
     >();
+  });
+
+  test("remeda's own utilities passed by reference are typed by their data-last overload", () => {
+    // Every utility declares its data-last overload last, so the limitation
+    // above applies to all of them: at runtime this returns `[3, 3]`.
+    const result = [[1, 2], [3]].map(sum);
+
+    expectTypeOf(result).not.toEqualTypeOf<number[]>();
+
+    // Actual
+    expectTypeOf(result).items.toBeFunction();
   });
 
   test("declaring the data-first overload last doesn't fix generic functions", () => {

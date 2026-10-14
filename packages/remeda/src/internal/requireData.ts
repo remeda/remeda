@@ -80,7 +80,7 @@ export const canReadData = (
   // For all other functions we assume that if the function *itself* declares a
   // parameter at the data parameter index, then it most likely wants to handle
   // it and we should provide it.
-  // This does have its drawbacks due to the same issues mentioned above; if
+  // This does have its drawbacks due to the same issues mentioned above, if
   // the function uses default params, uses a rest element, or accesses the
   // data via the `arguments` keyword.
   length > dataParameterIndex;

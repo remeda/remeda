@@ -61,7 +61,10 @@ export type LazyResult<T> =
 
 // The payload travels in the slot, so the tag is what ties its type to the
 // control: `LAST` and `MANY` only typecheck as the result of the helpers that
-// write a payload of the evaluator's declared result type.
+// write a payload of the evaluator's declared result type. That needs a result
+// type other than `unknown`, which absorbs the rest of the union and so accepts
+// a bare control too (e.g., `flat`'s evaluators, whose item type changes with
+// depth).
 type LazyLast<T> = Tagged<typeof LAST, "RemedaLazyLast", T>;
 type LazyMany<T> = Tagged<typeof MANY, "RemedaLazyMany", readonly T[]>;
 
@@ -76,7 +79,7 @@ export const createLazySlot = (): LazySlot => ({
 export const lazyEmptyEvaluator = (): typeof STOP => STOP;
 
 /**
- * Emits `value` and stops the pipe.
+ * Emits `value` and ends the fused lazy sequence it is part of.
  */
 export function lastLazyValue<T>(
   value: T,

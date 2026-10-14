@@ -35,7 +35,7 @@ const SENTINEL_RUNTIME_TARGET = [
  * result of a known limitation to our heuristics in `canReadData`, or a case
  * we haven't considered yet.
  *
- *! **IMPORTANT**: This should never happen in user's code, and users are encouraged to open an issue whenever they encounter it. As a workaround, users should try to change the function signature that caused it either by removing optional/defaults, rest params, or by wrapping the function with an arrow function that lists the function's params explicitly and delegates them one-by-one!
+ *! **IMPORTANT**: It is highly likely to never happen in user's code, and users are encouraged to open an issue whenever they encounter it. As a workaround, users should try to change the function signature that caused it either by removing defaults, rest params, or by wrapping the function with an arrow function that lists the function's params explicitly and delegates them one-by-one!
  */
 // @ts-expect-error [ts2322] -- Intentional! the target's first item is an error object so that it is surfaced to users in cases where they bypass the proxy and reach the target object itself. We don't use `unknown` for the item types (and use an empty tuple instead) so that if anything tries to use the sentinel it would be blocked at the type level too.
 export const UNEXPECTED_ACCESS_SENTINEL: Tagged<

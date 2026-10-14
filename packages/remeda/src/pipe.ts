@@ -348,7 +348,7 @@ export function pipe(
     output = runLazySequence(output, lazySequence);
     functionIndex += lazySequence.length;
 
-    // @ts-expect-error [ts2322] -- TypeScript fails to follow the logic that `functionIndex` is pointing to the last function in `lazySequence`.
+    // @ts-expect-error [ts2322] -- TypeScript can't follow the logic that `functionIndex - 1` is pointing to the last function in `lazySequence`.
     const lastLazyFunction: LazyUnaryFunction = functions[functionIndex - 1];
     if (lastLazyFunction.lazy.single) {
       // @ts-expect-error [ts18046] -- output is always an array when the last lazy function in the sequence was single.
@@ -402,14 +402,14 @@ function runLazySequence(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
   lazySequence: readonly LazyStep[],
 ): unknown[] {
-  const output: unknown[] = [];
+  const accumulator: unknown[] = [];
   const slot = createLazySlot();
 
   if (Array.isArray(input)) {
     // Iterated rather than indexed, so a reactive array that instruments
     // iteration tracks one dependency instead of one per index.
     for (const item of input) {
-      const isDone = processItem(lazySequence, output, item, slot, 0);
+      const isDone = processItem(lazySequence, accumulator, item, slot, 0);
       if (isDone) {
         break;
       }
@@ -417,23 +417,23 @@ function runLazySequence(
 
     // eslint-disable-next-line unicorn/no-duplicate-if-branches -- Intentional! Identical on purpose. In V8, a `for...of` that has only ever seen arrays skips the iterator protocol; each loop is its own iteration site, which is what lets the compiler specialize the first one for arrays, that sets, strings and generators never reach.
   } else {
-    // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
+    // @ts-expect-error [ts18046] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
     for (const item of input) {
-      const isDone = processItem(lazySequence, output, item, slot, 0);
+      const isDone = processItem(lazySequence, accumulator, item, slot, 0);
       if (isDone) {
         break;
       }
     }
   }
 
-  return output;
+  return accumulator;
 }
 
 function processItem(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
   lazySequence: readonly LazyStep[],
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use `output` directly to accumulate the results.
-  output: unknown[],
+  accumulator: unknown[],
   item: unknown,
   slot: LazySlot,
   startIndex: number,
@@ -464,7 +464,9 @@ function processItem(
 
       if (result === MANY) {
         for (const subItem of slot.values) {
-          if (processItem(lazySequence, output, subItem, slot, stepIndex + 1)) {
+          if (
+            processItem(lazySequence, accumulator, subItem, slot, stepIndex + 1)
+          ) {
             return true;
           }
         }
@@ -488,7 +490,7 @@ function processItem(
     currentItem = result;
   }
 
-  output.push(currentItem);
+  accumulator.push(currentItem);
 
   return isDone;
 }
