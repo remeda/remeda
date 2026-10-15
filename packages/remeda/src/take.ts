@@ -1,7 +1,7 @@
+import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
+import { purryWithLazy } from "./internal/purryWithLazy";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { lazyEmptyEvaluator } from "./internal/utilityEvaluators";
-import { purry } from "./purry";
 
 /**
  * Returns the first `n` elements of `array`.
@@ -48,7 +48,7 @@ export function take(
 ): <T extends IterableContainer>(array: T) => T[number][];
 
 export function take(...args: readonly unknown[]): unknown {
-  return purry(takeImplementation, args, lazyImplementation);
+  return purryWithLazy(takeImplementation, args, lazyImplementation);
 }
 
 const takeImplementation = <T extends IterableContainer>(
@@ -62,8 +62,8 @@ function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   }
 
   let remaining = n;
-  return (value) => {
+  return (value, _index, _data, slot) => {
     remaining -= 1;
-    return { done: remaining <= 0, hasNext: true, next: value };
+    return remaining <= 0 ? lastLazyValue(value, slot) : value;
   };
 }

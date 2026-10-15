@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { filter } from "./filter";
 import { pipe } from "./pipe";
 import { zipWith } from "./zipWith";
 
@@ -88,7 +89,7 @@ describe("data second with initial arg", () => {
 
   test("provides the first items processed so far", () => {
     const other = ["a", "b", "c"];
-    const mock = vi.fn<
+    const zipper = vi.fn<
       (
         first: unknown,
         second: unknown,
@@ -96,11 +97,25 @@ describe("data second with initial arg", () => {
         data: readonly [readonly unknown[], readonly unknown[]],
       ) => unknown
     >((_first, _second, _index, data) => structuredClone(data));
-    pipe([1, 2, 3], zipWith(other, mock));
+    pipe([1, 2, 3], zipWith(other, zipper));
 
-    expect(mock).toHaveNthReturnedWith(1, [[1], other]);
-    expect(mock).toHaveNthReturnedWith(2, [[1, 2], other]);
-    expect(mock).toHaveNthReturnedWith(3, [[1, 2, 3], other]);
+    expect(zipper).toHaveNthReturnedWith(1, [[1], other]);
+    expect(zipper).toHaveNthReturnedWith(2, [[1, 2], other]);
+    expect(zipper).toHaveNthReturnedWith(3, [[1, 2, 3], other]);
+  });
+
+  test("doesn't collect the first items processed so far for a zipper without `data`", () => {
+    const zipper = vi.fn<
+      (
+        first: number,
+        second: string,
+        index: number,
+        data: readonly [readonly number[], readonly string[]],
+      ) => string
+    >((first, second, index) => `${first}${second}${index}`);
+    pipe([1, 2, 3], zipWith(["a", "b", "c"], zipper));
+
+    expect(() => zipper.mock.calls[0]?.[3]?.[0]?.at(0)).toThrow(/^Remeda: /u);
   });
 
   test("should return empty when first is empty", () => {
@@ -110,5 +125,15 @@ describe("data second with initial arg", () => {
         zipWith(["a", "b"], (a, b) => `${a}${b}`),
       ),
     ).toStrictEqual([]);
+  });
+
+  test("pairs by the step's own count after an upstream filter", () => {
+    expect(
+      pipe(
+        [1, 2, 3, 4, 5, 6],
+        filter((x) => x % 2 === 0),
+        zipWith(["a", "b", "c"], (n, s) => `${n}${s}`),
+      ),
+    ).toStrictEqual(["2a", "4b", "6c"]);
   });
 });

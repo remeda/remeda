@@ -23,6 +23,14 @@ describe("data first", () => {
       expected,
     );
   });
+
+  test("returns a shallow clone when every item matches", () => {
+    const data = [1, 2, 3];
+    const result = intersectionWith(data, [3, 2, 1], (a, b) => a === b);
+
+    expect(result).toStrictEqual(data);
+    expect(result).not.toBe(data);
+  });
 });
 
 describe("data last", () => {

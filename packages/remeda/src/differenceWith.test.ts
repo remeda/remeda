@@ -19,6 +19,14 @@ describe("data_first", () => {
       differenceWith([1, 2, 3, 4], ["2", "3"], (a, b) => a.toString() === b),
     ).toStrictEqual([1, 4]);
   });
+
+  test("returns a shallow clone when `other` is empty", () => {
+    const data = [1, 2, 3];
+    const result = differenceWith(data, [], (a, b) => a === b);
+
+    expect(result).toStrictEqual(data);
+    expect(result).not.toBe(data);
+  });
 });
 
 describe("data_last", () => {

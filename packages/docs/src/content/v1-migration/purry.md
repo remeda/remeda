@@ -1,8 +1,9 @@
 #### Runtime
 
-The function no longer looks for a `lazy` prop on the dataFirst function
-implementation itself, and will only use the lazy impl provided as the third
-argument to the `purry` call itself.
+Lazy implementations are no longer supported: the function doesn't look for a
+`lazy` prop on the dataFirst function implementation, and doesn't take a lazy
+implementation as a third argument. Functions built with `purry` run eagerly
+inside `pipe`.
 
 ##### Examples
 
@@ -14,15 +15,15 @@ function myFunc(...args: readonly unknown[]): unknown {
   return purry(withLazy, args);
 
   // Now:
-  return purry(dataFirstImpl, args, lazyImpl);
+  return purry(dataFirstImpl, args);
 }
-
-// This can be removed now:
-function withLazy = Object.assign(dataFirstImpl, { lazy: lazyImpl });
 
 function dataFirstImpl(...) {
   // ...
 }
+
+// These can be removed now:
+const withLazy = Object.assign(dataFirstImpl, { lazy: lazyImpl });
 
 function lazyImpl(...): LazyEvaluator {
   // ...
@@ -33,11 +34,33 @@ function lazyImpl(...): LazyEvaluator {
 
 ```ts
 function myFunc(...args: readonly unknown[]): unknown {
-  // Was:
+  // Unchanged:
   return purry(dataFirstImpl, args);
+}
+
+function dataFirstImpl(...) {
+  // ...
+}
+
+// These can be removed now:
+namespace dataFirstImpl {
+  export const lazy = lazyImpl;
+}
+
+function lazyImpl(...): LazyEvaluator {
+  // ...
+}
+```
+
+###### Explicit lazy removed
+
+```ts
+function myFunc(...args: readonly unknown[]): unknown {
+  // Was:
+  return purry(dataFirstImpl, args, lazyImpl);
 
   // Now:
-  return purry(dataFirstImpl, args, lazyImpl);
+  return purry(dataFirstImpl, args);
 }
 
 function dataFirstImpl(...) {
@@ -45,10 +68,6 @@ function dataFirstImpl(...) {
 }
 
 // This can be removed now:
-namespace dataFirstImpl {
-  export const lazy = lazyImpl;
-}
-
 function lazyImpl(...): LazyEvaluator {
   // ...
 }

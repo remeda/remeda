@@ -504,6 +504,11 @@ export default defineConfig(
   {
     // Runtime Tests
     files: ["src/**/*.test.ts"],
+    settings: {
+      vitest: {
+        typecheck: true,
+      },
+    },
     rules: {
       // The range of things that are acceptable for truthy and falsy is wider
       // than just the boolean `true` and `false`. We prefer our tests only pass
