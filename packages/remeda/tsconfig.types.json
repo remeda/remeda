@@ -3,12 +3,5 @@
 
   "extends": "./tsconfig.json",
 
-  // The type tests don't need the config files at the package root, and their
-  // dependencies' types might not even parse on the older TypeScript versions
-  // we test against (e.g., `vitest/config` pulls in jsdom's types, which need
-  // TypeScript 5.3 or later). A parse error anywhere in the program stops tsc
-  // from reporting type errors at all, so the type tests would pass without
-  // checking anything. We keep all of `src`, and not only the type tests, for
-  // global declarations such as `NoInfer.d.ts`.
   "include": ["src", "test"]
 }
