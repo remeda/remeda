@@ -236,6 +236,15 @@ describe("nested mixed objects", () => {
 });
 
 describe("edge cases", () => {
+  test("point-free in a callback", () => {
+    const data = [{ a: 1 }, { b: [2] }];
+
+    const result = data.map(clone);
+
+    expect(result).toStrictEqual(data);
+    expect(result[0]).not.toBe(data[0]);
+  });
+
   test("undefined", () => {
     expect(clone(undefined)).toBeUndefined();
   });
