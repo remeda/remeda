@@ -1,8 +1,11 @@
 import { describe, expect, test } from "vitest";
+import { constant } from "./constant";
+import { isNullish } from "./isNullish";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
 import { sortBy } from "./sortBy";
+import { when } from "./when";
 
 const DATA = [
   { id: 1, color: "red", weight: 2, active: true, date: new Date(2021, 1, 1) },
@@ -97,5 +100,11 @@ describe("data last", () => {
         map(prop("color")),
       ),
     ).toStrictEqual(["purple", "green", "red", "blue"]);
+  });
+
+  test("a projection with a `length` of 0", () => {
+    expect(
+      pipe([3, null, 1, 2], sortBy(when(isNullish, constant(Infinity)))),
+    ).toStrictEqual([1, 2, 3, null]);
   });
 });
