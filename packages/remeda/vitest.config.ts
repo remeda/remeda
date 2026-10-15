@@ -31,7 +31,7 @@ export default defineConfig({
             enabled: true,
             only: true,
             ignoreSourceErrors: true,
-            tsconfig: "./tsconfig.types.json",
+            tsconfig: "./tsconfig.test-d.json",
           },
         },
       },
