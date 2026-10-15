@@ -35,8 +35,6 @@ Conventions that apply across all three kinds:
 - Input data needs enough variation to produce distinct outputs — `[1, 1, 1]` hides bugs that `[1, 2, 3]` catches.
 - Known issues and limitations (an accepted wrong result, an upstream TypeScript bug, a case the types can't express) are pinned in a `describe("known issues!", ...)` block at the end of the file, in every test kind where the issue is observable. Each test pins both outcomes: the desired one negated with `.not.` (`expect(result).not.toBe(0)`, `expectTypeOf(result).not.toEqualTypeOf<number[]>()`), followed by the **current** one under an `// Actual` comment. When the code or TypeScript changes, a red `.not.` assertion means the limitation lifted, and a red `// Actual` assertion alone means a third outcome that needs examining. `// @ts-expect-error [tsNNNN] -- <why, linking the upstream issue when one exists>` is reserved for desired code that doesn't compile yet (e.g., a call the types should accept). The test name states the limitation; why it exists goes in a comment inside the test body, without restating what the assertions show.
 
-**Performance claims** - a change justified by speed, allocations or bundle size needs measurements. Read `reference/benchmarking.md` before taking them: it holds the bar, the method and the harness.
-
 # 3. JSDoc
 
 Each overload needs its own JSDoc block. Required tags:
