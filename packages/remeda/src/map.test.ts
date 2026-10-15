@@ -33,7 +33,6 @@ describe("data-last", () => {
   });
 });
 
-// eslint-disable-next-line vitest/valid-title -- This seems to be a bug in the rule, @see https://github.com/vitest-dev/eslint-plugin-vitest/issues/692
 describe(pipe, () => {
   test("invoked lazily", () => {
     const count = vi.fn<(x: number) => number>(multiply(10));
@@ -87,6 +86,39 @@ describe(pipe, () => {
     ]);
     expect(anyItems2).toStrictEqual([[1], [1, 3], [1, 3, 5]]);
   });
+
+  test("doesn't collect the items processed so far for a callback without `data`", () => {
+    const callbackfn = vi.fn<
+      (value: number, index: number, data: readonly number[]) => number
+    >((value, index) => value + index);
+    pipe([1, 2, 3], map(callbackfn));
+
+    expect(() => callbackfn.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
+  });
+
+  test("never marks the callback itself", () => {
+    pipe([1, 2, 3], map(double), map(addDataLength));
+
+    expect(double).not.toHaveProperty("requiresData");
+    expect(addDataLength).not.toHaveProperty("requiresData");
+  });
+
+  test("calls the callback without a receiver", () => {
+    const receivers: unknown[] = [];
+
+    pipe(
+      [1, 2],
+      map(function recordReceiver(this: unknown, x: number) {
+        receivers.push(this);
+        return x;
+      }),
+      // A lone lazy step runs its evaluator from a local; only a run of steps
+      // keeps it on a step object it could be called as a method of.
+      map((x) => x),
+    );
+
+    expect(receivers).toStrictEqual([undefined, undefined]);
+  });
 });
 
 test("number array", () => {
@@ -121,3 +153,11 @@ describe("indexed", () => {
     expect(map([1, "2", true], (_, index) => index)).toStrictEqual([0, 1, 2]);
   });
 });
+
+const double = (x: number): number => x * 2;
+
+const addDataLength = (
+  x: number,
+  _index: number,
+  data: readonly number[],
+): number => x + data.length;

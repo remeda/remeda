@@ -141,9 +141,19 @@ export function when<
 
 export function when(...args: readonly unknown[]): unknown {
   return args.length === 2
-    ? (data: unknown, ...extraArgs: readonly unknown[]) =>
-        // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
-        whenImplementation(data, ...args, ...extraArgs)
+    ? (
+        // We take advantage of `canReadData`'s conservative handling of
+        // functions that only declare a rest parameter: they bypass the check
+        // and always have `data` computed for them. `when` forwards its
+        // arguments to the user's functions and can't know if they read `data`.
+        ...[data, ...extraArgs]: readonly unknown[]
+      ) =>
+        whenImplementation(
+          data,
+          // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
+          ...args,
+          ...extraArgs,
+        )
     : // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
       whenImplementation(...args);
 }
