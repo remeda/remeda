@@ -1,14 +1,15 @@
-import { purryFromLazy } from "./internal/purryFromLazy";
+import { purryWithLazy } from "./internal/purryWithLazy";
+import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
 
-type LazyFeedbackCallback<T extends IterableContainer, U> = (
+type FeedbackCallback<T extends IterableContainer, U, Data = T> = (
   previousValue: U,
   currentValue: T[number],
   currentIndex: number,
-  data: Readonly<NonEmptyPrefix<T>>,
+  data: Readonly<Data>,
 ) => U;
 
 /**
@@ -36,7 +37,7 @@ type LazyFeedbackCallback<T extends IterableContainer, U> = (
  */
 export function mapWithFeedback<T extends IterableContainer, U>(
   data: T,
-  callbackfn: LazyFeedbackCallback<T, U>,
+  callbackfn: FeedbackCallback<T, U>,
   initialValue: U,
 ): Mapped<T, U>;
 
@@ -62,26 +63,47 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  * @category Array
  */
 export function mapWithFeedback<T extends IterableContainer, U>(
-  callbackfn: LazyFeedbackCallback<T, U>,
+  callbackfn: FeedbackCallback<T, U, NonEmptyPrefix<T>>,
   initialValue: U,
 ): (data: T) => Mapped<T, U>;
 
 export function mapWithFeedback(...args: readonly unknown[]): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return purryWithLazy(mapWithFeedbackImplementation, args, lazyImplementation);
 }
 
-const lazyImplementation = <T, U>(
-  reducer: (
-    previousValue: U,
-    currentValue: T,
-    index: number,
-    data: readonly T[],
-  ) => U,
+function mapWithFeedbackImplementation<T, U>(
+  data: readonly T[],
+  callbackfn: FeedbackCallback<readonly T[], U>,
   initialValue: U,
-): LazyEvaluator<T, U> => {
+): U[] {
   let previousValue = initialValue;
-  return (currentValue, index, data) => {
-    previousValue = reducer(previousValue, currentValue, index, data);
-    return { done: false, hasNext: true, next: previousValue };
-  };
-};
+
+  const result: U[] = [];
+  for (const currentValue of data) {
+    previousValue = callbackfn(
+      previousValue,
+      currentValue,
+      result.length,
+      data,
+    );
+    result.push(previousValue);
+  }
+
+  return result;
+}
+
+function lazyImplementation<T, U>(
+  callbackfn: FeedbackCallback<readonly T[], U>,
+  initialValue: U,
+): LazyEvaluator<T, U> {
+  let previousValue = initialValue;
+
+  return requireDataByArity(
+    callbackfn,
+    (currentValue, index, data) => {
+      previousValue = callbackfn(previousValue, currentValue, index, data);
+      return previousValue;
+    },
+    { dataParameterIndex: 3 },
+  );
+}

@@ -1,8 +1,9 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { add } from "./add";
 import { find } from "./find";
 import { flatMap } from "./flatMap";
+import type { LazyCallback } from "./internal/types/LazyCallback";
 import { pipe } from "./pipe";
 
 describe("dataFirst", () => {
@@ -38,7 +39,6 @@ describe("dataLast", () => {
     expect(pipe([1, 2, 3], flatMap(add(1)))).toStrictEqual([2, 3, 4]);
   });
 
-  // eslint-disable-next-line vitest/valid-title -- This seems to be a bug in the rule, @see https://github.com/vitest-dev/eslint-plugin-vitest/issues/692
   describe(pipe, () => {
     test("with find", () => {
       const counter1 = createLazyInvocationCounter();
@@ -54,6 +54,26 @@ describe("dataLast", () => {
       expect(counter1.count).toHaveBeenCalledTimes(2);
       expect(counter2.count).toHaveBeenCalledTimes(7);
       expect(result).toBe(22);
+    });
+
+    test("provides the items processed so far to the callback", () => {
+      const mapper = vi.fn<LazyCallback<unknown[], unknown>>(
+        (_value, _index, data) => [...data],
+      );
+      pipe([1, 2, 3], flatMap(mapper));
+
+      expect(mapper).toHaveNthReturnedWith(1, [1]);
+      expect(mapper).toHaveNthReturnedWith(2, [1, 2]);
+      expect(mapper).toHaveNthReturnedWith(3, [1, 2, 3]);
+    });
+
+    test("doesn't collect the items processed so far for a callback without `data`", () => {
+      const callback = vi.fn<
+        (value: number, index: number, data: readonly number[]) => number[]
+      >((value, index) => [value + index]);
+      pipe([1, 2, 3], flatMap(callback));
+
+      expect(() => callback.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
     });
   });
 });

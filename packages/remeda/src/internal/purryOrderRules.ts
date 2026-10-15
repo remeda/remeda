@@ -174,4 +174,6 @@ function isOrderRule<T>(x: unknown): x is OrderRule<T> {
 }
 
 const isProjection = <T>(x: unknown): x is Projection<T> =>
-  typeof x === "function" && x.length === 1;
+  // `Function.length` is 0 when every parameter is a rest or defaulted one
+  // (e.g., `when`'s data-last form), which still makes for a valid projection.
+  typeof x === "function" && x.length <= 1;

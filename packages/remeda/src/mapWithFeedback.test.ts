@@ -38,8 +38,9 @@ describe("data first", () => {
     expect(result).not.toBe(data);
   });
 
-  test("should provide the items processed so far", () => {
-    const mock = vi.fn<
+  test("should provide the whole input", () => {
+    const data = [1, 2, 3, 4, 5];
+    const callback = vi.fn<
       (
         acc: unknown,
         x: unknown,
@@ -48,13 +49,13 @@ describe("data first", () => {
       ) => unknown
     >((_acc, _x, _index, items) => [...items]);
 
-    mapWithFeedback([1, 2, 3, 4, 5], mock, []);
+    mapWithFeedback(data, callback, []);
 
-    expect(mock).toHaveNthReturnedWith(1, [1]);
-    expect(mock).toHaveNthReturnedWith(2, [1, 2]);
-    expect(mock).toHaveNthReturnedWith(3, [1, 2, 3]);
-    expect(mock).toHaveNthReturnedWith(4, [1, 2, 3, 4]);
-    expect(mock).toHaveNthReturnedWith(5, [1, 2, 3, 4, 5]);
+    expect(callback).toHaveNthReturnedWith(1, data);
+    expect(callback).toHaveNthReturnedWith(2, data);
+    expect(callback).toHaveNthReturnedWith(3, data);
+    expect(callback).toHaveNthReturnedWith(4, data);
+    expect(callback).toHaveNthReturnedWith(5, data);
   });
 });
 
@@ -100,5 +101,19 @@ describe("data last", () => {
       [1, 2, 3, 4],
       [1, 2, 3, 4, 5],
     ]);
+  });
+
+  test("doesn't collect the items processed so far for a reducer without `data`", () => {
+    const reducer = vi.fn<
+      (
+        accumulator: number,
+        value: number,
+        index: number,
+        data: readonly number[],
+      ) => number
+    >((accumulator, value, index) => accumulator + value + index);
+    pipe([1, 2, 3], mapWithFeedback(reducer, 0));
+
+    expect(() => reducer.mock.calls[0]?.[3]?.at(0)).toThrow(/^Remeda: /u);
   });
 });
