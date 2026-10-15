@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types, unicorn/consistent-function-scoping */
 import { describe, expectTypeOf, test } from "vitest";
+import { $missingPropertyType } from "../test/$missingPropertyType";
 import { partialBind } from "./partialBind";
 
 describe("simple case (all required, no rest params)", () => {
@@ -96,6 +97,15 @@ describe("simple rest param case", () => {
     expectTypeOf(partialBind(fn, ...([] as string[]))).toEqualTypeOf<
       (...parts: readonly string[]) => string
     >();
+  });
+
+  test("rest param typed with TypeScript's internal `missing` type", () => {
+    const values = $missingPropertyType();
+
+    // `missing` is indistinguishable from `undefined` in the expected type.
+    expectTypeOf(
+      partialBind((...{ length }: typeof values) => length, ...values),
+    ).toEqualTypeOf<(...parts: readonly (string | undefined)[]) => number>();
   });
 
   test("should accept tuple typed partial arg with prefix", () => {

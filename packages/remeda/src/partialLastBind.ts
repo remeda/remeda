@@ -25,12 +25,10 @@ type RemoveSuffix<
     : // T has an optional or rest parameter last. If T is a parameter list,
       // this can only happen if we have optional arguments or a rest param;
       // both cases are similar.
-      T extends readonly [...infer TRest, (infer _TLast)?]
+      T extends readonly [...infer TRest, unknown?]
       ? Suffix extends readonly [...infer SuffixRest, infer _SuffixLast]
-        ? // SuffixLast extends TLast.
-          RemoveSuffix<TRest, SuffixRest>
-        : // Suffix (as a whole) extends [...TRest, TLast?].
-          TRest
+        ? RemoveSuffix<TRest, SuffixRest>
+        : TRest
       : // We got passed a parameter list that isn't what we expected; this
         // is an internal error.
         PartialLastBindError<"Function parameter list has unexpected shape", T>;
