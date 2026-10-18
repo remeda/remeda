@@ -418,14 +418,10 @@ function endOfStepByStepRun(
       return index;
     }
 
-    const { lazy } = func;
-    if (lazy.canStop) {
+    // Any `single` value marks a step that can stop the pipe early. Steps
+    // that end the run carry `true`, so the scan never reaches past one.
+    if (func.lazy.single !== undefined) {
       return startIndex;
-    }
-
-    if (lazy.single) {
-      // Functions that generate a single value always end the run.
-      return index + 1;
     }
   }
 
