@@ -2,6 +2,40 @@ import { fc, test } from "@fast-check/vitest";
 import { expect } from "vitest";
 import { groupBy } from "./groupBy";
 import { pipe } from "./pipe";
+import { take } from "./take";
+
+const SYMBOL_KEY = Symbol("key");
+
+// Few distinct values, so groups often hold several items, among them the
+// ones equality treats specially: `NaN`, `-0` next to `0`, and two objects of
+// the same shape that only their reference tells apart.
+const element = fc.oneof(
+  fc.integer({ min: 0, max: 3 }),
+  fc.constantFrom(NaN, -0, "0", { id: 0 }, { id: 0 }),
+);
+
+// Both calling styles read a hole as `undefined`.
+const elements = fc.oneof(fc.array(element), fc.sparseArray(element));
+
+// The keys an object stores in its own way: `__proto__`, a name its prototype
+// already has, numbers that share a property with a string (`-0` with `0`),
+// and a symbol; `undefined` leaves the item out.
+const groupKey = fc.constantFrom(
+  "__proto__",
+  "toString",
+  "a",
+  0,
+  -0,
+  "0",
+  10,
+  "10",
+  SYMBOL_KEY,
+  undefined,
+);
+
+// Whole counts only: in `pipe`, `take` keeps `Math.ceil(count)` items, and all
+// of them for `NaN`, while data-first `take` truncates the count.
+const count = fc.oneof(fc.integer({ min: -1, max: 12 }), fc.constant(Infinity));
 
 test.prop([fc.array(fc.anything()), fc.func(fc.string()).map(pureGrouper)])(
   "all elements are preserved across groups",
@@ -34,12 +68,57 @@ test.prop([fc.array(fc.anything()), fc.func(fc.string()).map(pureGrouper)])(
   },
 );
 
-test.prop([fc.array(fc.anything()), fc.func(fc.string()).map(pureGrouper)])(
+test.prop([elements, fc.func(groupKey)])(
   "data-first and data-last produce the same result",
-  (data, grouper) => {
-    const result = groupBy(data, grouper);
+  (data, keyOf) => {
+    // The grouper ignores `data`, which differs between the calling styles on
+    // purpose: the whole input data-first, the items so far in `pipe`.
+    const grouper = (value: unknown, index: number): PropertyKey | undefined =>
+      keyOf(value, index);
 
-    expect(result).toStrictEqual(pipe(data, groupBy(grouper)));
+    const dataFirst = groupBy(data, grouper);
+
+    expectSameGroups(pipe(data, groupBy(grouper)), dataFirst);
+    expectSameGroups(pipe(data, take(Infinity), groupBy(grouper)), dataFirst);
+  },
+);
+
+test.prop([elements, fc.func(groupKey), count])(
+  "data-last after `take` groups the taken prefix",
+  (data, keyOf, takeCount) => {
+    const grouper = (value: unknown, index: number): PropertyKey | undefined =>
+      keyOf(value, index);
+
+    expectSameGroups(
+      pipe(data, take(takeCount), groupBy(grouper)),
+      groupBy(take(data, takeCount), grouper),
+    );
+  },
+);
+
+test.prop([elements, fc.func(groupKey), fc.func(fc.boolean())])(
+  "data-last throws what data-first throws",
+  (data, keyOf, throwsAt) => {
+    // The message names the item, so the first item to throw must match too.
+    const grouper = (
+      value: unknown,
+      index: number,
+    ): PropertyKey | undefined => {
+      if (throwsAt(value, index)) {
+        throw new RangeError(`No group for the item at ${index}`);
+      }
+
+      return keyOf(value, index);
+    };
+
+    const expected = thrownBy(() => groupBy(data, grouper));
+
+    expect(thrownBy(() => pipe(data, groupBy(grouper)))).toStrictEqual(
+      expected,
+    );
+    expect(
+      thrownBy(() => pipe(data, take(Infinity), groupBy(grouper))),
+    ).toStrictEqual(expected);
   },
 );
 
@@ -111,4 +190,31 @@ function pureGrouper<Ret extends string | undefined>(
   // Only depend on the item, ignoring index and array. This ensures calling
   // grouper(item) in tests matches what groupBy computed.
   return (item: unknown) => arbitrary(item);
+}
+
+type Groups = Readonly<Record<PropertyKey, readonly unknown[] | undefined>>;
+
+// Deep equality skips the prototype and the key order, and it can't tell the
+// two objects of the same shape apart.
+function expectSameGroups(actual: Groups, expected: Groups): void {
+  expect(actual).toStrictEqual(expected);
+  expect(Object.getPrototypeOf(actual)).toBe(Object.getPrototypeOf(expected));
+  expect(Reflect.ownKeys(actual)).toStrictEqual(Reflect.ownKeys(expected));
+  expect(
+    Reflect.ownKeys(expected).every((ownKey) =>
+      (expected[ownKey] ?? []).every((value, index) =>
+        Object.is(value, actual[ownKey]?.[index]),
+      ),
+    ),
+  ).toBe(true);
+}
+
+// A list, so that a call that returns compares too, as an empty one.
+function thrownBy(run: () => unknown): readonly unknown[] {
+  try {
+    run();
+    return [];
+  } catch (error) {
+    return [error];
+  }
 }
