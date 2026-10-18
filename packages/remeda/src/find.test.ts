@@ -77,6 +77,48 @@ describe("data last", () => {
     expect(actual).toStrictEqual({ a: 1, b: 2 });
   });
 
+  test("not found", () => {
+    expect(
+      pipe(
+        [1, 2, 3],
+        find((x) => x > 3),
+      ),
+    ).toBeUndefined();
+  });
+
+  test("not found after a lazy step", () => {
+    expect(
+      pipe(
+        [1, 2, 3],
+        map((x) => x * 2),
+        find((x) => x > 6),
+      ),
+    ).toBeUndefined();
+  });
+
+  test("empty array", () => {
+    const data: number[] = [];
+
+    expect(
+      pipe(
+        data,
+        find((x) => x > 3),
+      ),
+    ).toBeUndefined();
+  });
+
+  test("empty array after a lazy step", () => {
+    const data: number[] = [];
+
+    expect(
+      pipe(
+        data,
+        map((x) => x * 2),
+        find((x) => x > 6),
+      ),
+    ).toBeUndefined();
+  });
+
   test("provides the items processed so far to the predicate", () => {
     const dataSnapshots: number[][] = [];
     pipe(
