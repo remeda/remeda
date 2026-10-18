@@ -39,7 +39,7 @@ type FunnelTimingOptions =
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript has some quirks with generic function types, and works best with `any` and not `unknown`. This follows the typing of built-in utilities like `ReturnType` and `Parameters`.
 type RestArguments = any[];
 
-type Funnel<Args extends RestArguments = [], R = never> = {
+type Funnel<Args extends RestArguments, R> = {
   /**
    * Call the function. This might result in the `execute` function being called
    * now or later, depending on it's configuration and it's current state.
@@ -69,8 +69,7 @@ type Funnel<Args extends RestArguments = [], R = never> = {
 
   /**
    * The data from the current state as prepared by the `reducer` function.
-   * Will be `undefined` if `reducer` is not passed. Marked as `readonly` as
-   * it's a direct reference - copy/clone the value if you need to modify it
+   * It's a direct reference - copy/clone the value if you need to modify it
    * for use outside of the funnel.
    */
   readonly pendingData: R | undefined;
@@ -158,6 +157,8 @@ type Funnel<Args extends RestArguments = [], R = never> = {
  * - `flush` - Triggers an invocation even if there are active timeouts, and
  * then resets the funnel to it's initial state.
  * - `isIdle` - Checks if there are any active timeouts.
+ * - `pendingData` - The data from the current state as prepared by the
+ * `reducer` function.
  * @signature
  *   funnel(callback, options);
  * @example
@@ -180,7 +181,7 @@ type Funnel<Args extends RestArguments = [], R = never> = {
  *   throttle.call();
  * @category Function
  */
-export function funnel<Args extends RestArguments = [], R = never>(
+export function funnel<Args extends RestArguments = [], R = unknown>(
   callback: (data: R) => void,
   {
     triggerAt = "end",
@@ -215,9 +216,9 @@ export function funnel<Args extends RestArguments = [], R = never>(
     preparedData = undefined;
 
     if (param === VOID_REDUCER_SYMBOL) {
-      // @ts-expect-error [ts2554] -- R is typed as `never` because we hide the
-      // symbol that `voidReducer` returns; there's no way to make TypeScript
-      // aware of this.
+      // @ts-expect-error [ts2554] -- R is typed as `unknown` because we hide
+      // the symbol that `voidReducer` returns; there's no way to make
+      // TypeScript aware of this.
       callback();
     } else {
       callback(param);

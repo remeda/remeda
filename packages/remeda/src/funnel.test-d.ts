@@ -104,6 +104,38 @@ describe("derive the reducer accumulator type from the executor param", () => {
   });
 });
 
+describe("pendingData", () => {
+  test("typed as the reducer's return type", () => {
+    const foo = funnel(doNothing(), {
+      reducer: (_: "test" | undefined) => "test" as const,
+      triggerAt: "start",
+    });
+
+    expectTypeOf(foo.pendingData).toEqualTypeOf<"test" | undefined>();
+  });
+
+  test("unknown when no reducer is defined", () => {
+    const foo = funnel(doNothing(), { triggerAt: "start" });
+
+    expectTypeOf(foo.pendingData).toEqualTypeOf<unknown>();
+  });
+
+  test("assignable to the documented `ReturnType` typing route", () => {
+    // The funnel type isn't exported; the JSDoc documents
+    // `ReturnType<typeof funnel<...>>` (without providing `R`) as the way to
+    // reference it explicitly, which requires `R`'s default to be a supertype
+    // of every reducer's return type. See
+    // https://github.com/remeda/remeda/pull/1411#discussion_r4306034883.
+    const foo = funnel(doNothing(), {
+      // @ts-expect-error [ts(6133)] -- We want to use explicit names, not prefixed with _
+      reducer: (_: "test" | undefined, a: string) => "test" as const,
+      triggerAt: "start",
+    });
+
+    expectTypeOf(foo).toExtend<ReturnType<typeof funnel<[string]>>>();
+  });
+});
+
 describe("prevent bad options", () => {
   test("minGapMs cannot be the only option with timing: end", () => {
     funnel(
