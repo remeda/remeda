@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { countBy } from "./countBy";
 import { identity } from "./identity";
 import { isString } from "./isString";
@@ -68,6 +68,65 @@ describe("dataFirst", () => {
       ),
     ).toStrictEqual({ even: 3, odd: 2 });
   });
+
+  test("single item", () => {
+    expect(countBy(["a"], identity())).toStrictEqual({ a: 1 });
+  });
+
+  test("prototype is Object.prototype", () => {
+    expect(Object.getPrototypeOf(countBy(["a"], identity()))).toBe(
+      Object.prototype,
+    );
+  });
+
+  test("`__proto__` category is an own property", () => {
+    expect(
+      Object.entries(countBy(["__proto__", "__proto__"], identity())),
+    ).toStrictEqual([["__proto__", 2]]);
+  });
+
+  test("number and string categories of the same key overwrite each other", () => {
+    // The categories are counted apart, as distinct `Map` keys, and only then
+    // become the same property, so the count of the one first seen last wins.
+    expect(countBy([1, 1, "1"], identity())).toStrictEqual({ 1: 1 });
+  });
+
+  test("key order", () => {
+    const mySymbol = Symbol("mySymbol");
+
+    expect(
+      Reflect.ownKeys(
+        countBy(["b", "10", mySymbol, "a", "2", "b"], identity()),
+      ),
+    ).toStrictEqual(["2", "10", "b", "a", mySymbol]);
+  });
+
+  test("falsy categories other than undefined", () => {
+    expect(countBy(["", 0, ""], identity())).toStrictEqual({ "": 2, 0: 1 });
+  });
+
+  test("holes are counted as undefined", () => {
+    expect(
+      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
+      countBy([1, , 3], (item) => item ?? "hole"),
+    ).toStrictEqual({ 1: 1, 3: 1, hole: 1 });
+  });
+
+  test("calls the categorizer once per item, in order, with the whole input", () => {
+    const data = ["a", "b", "c"];
+    const categorizer =
+      vi.fn<(value: string, index: number, data: readonly string[]) => string>(
+        identity(),
+      );
+
+    countBy(data, categorizer);
+
+    expect(categorizer.mock.calls).toStrictEqual([
+      ["a", 0, data],
+      ["b", 1, data],
+      ["c", 2, data],
+    ]);
+  });
 });
 
 describe("dataLast", () => {
@@ -126,6 +185,16 @@ describe("dataLast", () => {
         countBy((_, index) => (index % 2 === 0 ? "even" : "odd")),
       ),
     ).toStrictEqual({ even: 3, odd: 2 });
+  });
+
+  test("empty array", () => {
+    expect(pipe([], countBy(constant("a")))).toStrictEqual({});
+  });
+
+  test("prototype is Object.prototype", () => {
+    expect(Object.getPrototypeOf(pipe(["a"], countBy(identity())))).toBe(
+      Object.prototype,
+    );
   });
 });
 
