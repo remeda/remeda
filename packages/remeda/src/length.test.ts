@@ -19,6 +19,40 @@ describe("data first", () => {
       }),
     ).toBe(4);
   });
+
+  test("empty array", () => {
+    expect(length([])).toBe(0);
+  });
+
+  test("counts holes", () => {
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+    expect(length([1, , 3])).toBe(3);
+  });
+
+  test("an ArrayLike that isn't iterable", () => {
+    expect(length({ 0: "a", 1: "b", length: 2 })).toBe(2);
+  });
+
+  test("reads an ArrayLike's length rather than counting its items", () => {
+    expect(length({ 0: "a", length: 3 })).toBe(3);
+  });
+
+  test("reads an iterable's length rather than iterating it", () => {
+    expect(
+      length({
+        length: 5,
+        *[Symbol.iterator]() {
+          yield 1;
+        },
+      }),
+    ).toBe(5);
+  });
+
+  test("throws on a string", () => {
+    expect(() => length("abc")).toThrow(
+      new TypeError("Cannot use 'in' operator to search for 'length' in abc"),
+    );
+  });
 });
 
 describe("curried", () => {
@@ -40,5 +74,33 @@ describe("curried", () => {
         length(),
       ),
     ).toBe(4);
+  });
+
+  test("empty array", () => {
+    expect(pipe([], length())).toBe(0);
+  });
+
+  test("an ArrayLike that isn't iterable", () => {
+    expect(pipe({ 0: "a", 1: "b", length: 2 }, length())).toBe(2);
+  });
+
+  test("reads an iterable's length like data-first", () => {
+    expect(
+      pipe(
+        {
+          length: 5,
+          *[Symbol.iterator]() {
+            yield 1;
+          },
+        },
+        length(),
+      ),
+    ).toBe(5);
+  });
+
+  test("throws like data-first on a string", () => {
+    expect(() => pipe("abc", length())).toThrow(
+      new TypeError("Cannot use 'in' operator to search for 'length' in abc"),
+    );
   });
 });
