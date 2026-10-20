@@ -4,7 +4,6 @@ import {
   type LazyResult,
 } from "./internal/lazyControl";
 import { purryWithLazy } from "./internal/purryWithLazy";
-import { toCanStop } from "./internal/toCanStop";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
@@ -81,18 +80,22 @@ const zipImplementation = <
     ? first.map((item, index) => [item, second[index]])
     : second.map((item, index) => [first[index], item])) as Zipped<F, S>;
 
-const lazyImplementation = toCanStop(
-  <F extends IterableContainer, S extends IterableContainer>(
-    second: S,
-  ): LazyEvaluator<F[number], [F[number], S[number]]> =>
-    second.length === 0
-      ? lazyEmptyEvaluator
-      : (value, index, _data, slot): LazyResult<[F[number], S[number]]> => {
-          const pair = [value, second[index]];
-          return index >= second.length - 1
-            ? // @ts-expect-error [ts2322] -- TypeScript widens fixed tuple literals as arrays of a union of all their items. For us this means it considers pair to be `unknown[]`, but we know better...
-              lastLazyValue(pair, slot)
-            : // @ts-expect-error [ts2322] -- TypeScript widens fixed tuple literals as arrays of a union of all their items. For us this means it considers pair to be `unknown[]`, but we know better...
-              pair;
-        },
-);
+const lazyImplementation = <
+  F extends IterableContainer,
+  S extends IterableContainer,
+>(
+  second: S,
+): LazyEvaluator<F[number], [F[number], S[number]]> =>
+  second.length === 0
+    ? lazyEmptyEvaluator
+    : (value, index, _data, slot): LazyResult<[F[number], S[number]]> => {
+        const pair = [value, second[index]];
+        return index >= second.length - 1
+          ? // @ts-expect-error [ts2322] -- TypeScript widens fixed tuple literals as arrays of a union of all their items. For us this means it considers pair to be `unknown[]`, but we know better...
+            lastLazyValue(pair, slot)
+          : // @ts-expect-error [ts2322] -- TypeScript widens fixed tuple literals as arrays of a union of all their items. For us this means it considers pair to be `unknown[]`, but we know better...
+            pair;
+      };
+
+// eslint-disable-next-line unicorn/no-null -- `null` is a value of its own here, telling a step that can stop apart from one that never set `single`; `LazyMeta` explains why it isn't `false`.
+lazyImplementation.single = null;

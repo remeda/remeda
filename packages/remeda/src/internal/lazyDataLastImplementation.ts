@@ -26,7 +26,8 @@ type LazyMeta = {
    * How the step can end the iteration early, folded into one property so
    * that `pipe` reads a single one per step to plan a run:
    * - absent: it can't, every item goes through it (e.g., `map`, `filter`);
-   * - `null`: it can stop the pipe (e.g., `take`, `zip`), via `toCanStop`;
+   * - `null`: it can stop the pipe (e.g., `take`, `zip`), set with a direct
+   *   write on the factory (`lazyImplementation.single = null`);
    * - `true`: it emits a single result, stopping the pipe there, and ends
    *   the run, via `toSingle`.
    * Only `true` is truthy, so a truthiness read still asks whether the step
