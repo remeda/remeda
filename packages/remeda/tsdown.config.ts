@@ -58,10 +58,6 @@ export default defineConfig({
   entry: `${SOURCE_DIR}/index.ts`,
 
   dts: {
-    // Declaration maps point into `src/`, which isn't published, so IDEs can't
-    // follow them and stay in the declaration file anyway.
-    sourcemap: false,
-
     // Only emit DTS files, skip JS output
     emitDtsOnly: true,
   },
@@ -114,15 +110,6 @@ export default defineConfig({
 
       //! Types are built in the previous step!
       dts: false,
-
-      // Consumers minify as part of their own build (bundlers, and CDNs like
-      // esm.sh and jsDelivr's `+esm`), so minifying here wouldn't shrink what
-      // reaches end users. Unminified output is readable on its own (function
-      // names, stack traces, "Go to Source Definition"), so it doesn't need
-      // source maps either, which made up almost half of the package's install
-      // size.
-      minify: false,
-      sourcemap: false,
 
       // Validate the final package artifacts.
       attw: true,
