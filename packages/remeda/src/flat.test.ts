@@ -138,14 +138,26 @@ describe("dataLast", () => {
   });
 
   test("truncates a fractional depth", () => {
-    expect(pipe([[1]], flat(0.5))).toStrictEqual([[1]]);
+    expect(
+      pipe(
+        [[1]],
+        // @ts-expect-error [ts2345, ts2769] -- `flat` types only integer depths, so `flat(0.5)` matches no overload (ts2769) and `pipe` rejects the fallback's return type (ts2345); a computed `number` cast past the types still reaches the lazy path at runtime.
+        flat(0.5),
+      ),
+    ).toStrictEqual([[1]]);
   });
 
   test("truncates a fractional depth in a fused run", () => {
     // The trailing `take` can stop the run early, so `pipe` has to run it lazily.
-    expect(pipe([[1]], map(identity()), flat(0.5), take(1))).toStrictEqual([
-      [1],
-    ]);
+    expect(
+      pipe(
+        [[1]],
+        map(identity()),
+        // @ts-expect-error [ts2345, ts2769] -- `flat` types only integer depths, so `flat(0.5)` matches no overload (ts2769) and `pipe` rejects the fallback's return type (ts2345); a computed `number` cast past the types still reaches the lazy path at runtime.
+        flat(0.5),
+        take(1),
+      ),
+    ).toStrictEqual([[1]]);
   });
 
   test("reads a NaN depth as 0", () => {
