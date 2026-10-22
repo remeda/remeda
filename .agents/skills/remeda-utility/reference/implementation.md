@@ -101,6 +101,12 @@ These three "empty-ish" values are not interchangeable in Remeda:
 
 The vast majority of users pass plain objects: arbitrarily deep, but plain. Correctness for that case is enough. When an implementation choice trades off between behavior that is better for plain objects and behavior that supports prototype chains or class instances, always take the plain-object side (e.g., `Object.hasOwn` over `in` for key-existence checks).
 
+## Readable over tuned
+
+Remeda is a utility library whose code is read and copied, so each implementation is the natural code for its algorithm. When several readable candidates exist (a native method, a plain loop, a composition of existing utilities), the one that measures best wins, and the tuning stops there: one code path per behavior, constants only where the algorithm defines them, every line there for the algorithm rather than for the engine running it. Users who need more speed than that write their own code.
+
+Precedent: data-first `flat` and `flatMap` call the native methods. A hand-written loop measured 2-3x faster in optimized code, but it had to mirror the spec (holes, depth coercion) and needed a size cutoff to stay fast without a JIT.
+
 ## Type System
 
 ### Inputs
