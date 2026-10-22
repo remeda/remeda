@@ -61,9 +61,10 @@ describe("data last", () => {
     [1.5, [2, 3, 4, 5]],
     [0.5, [1, 2, 3, 4, 5]],
   ])("truncates a count of %s in a fused run", (n, expected) => {
-    expect(pipe([1, 2, 3, 4, 5], map(identity()), drop(n))).toStrictEqual(
-      expected,
-    );
+    // The trailing `take` can stop the run early, so `pipe` has to run it lazily.
+    expect(
+      pipe([1, 2, 3, 4, 5], map(identity()), drop(n), take(5)),
+    ).toStrictEqual(expected);
   });
 
   test("reads a NaN count as 0", () => {
@@ -71,9 +72,9 @@ describe("data last", () => {
   });
 
   test("reads a NaN count as 0 in a fused run", () => {
-    expect(pipe([1, 2, 3, 4, 5], map(identity()), drop(NaN))).toStrictEqual([
-      1, 2, 3, 4, 5,
-    ]);
+    expect(
+      pipe([1, 2, 3, 4, 5], map(identity()), drop(NaN), take(5)),
+    ).toStrictEqual([1, 2, 3, 4, 5]);
   });
 
   test("lazy impl", () => {

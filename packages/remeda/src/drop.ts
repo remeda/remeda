@@ -147,7 +147,7 @@ const dropImplementation = <T extends IterableContainer>(
 ): T[number][] => (n < 0 ? [...array] : array.slice(n));
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
-  // `slice` truncates its count and reads NaN as 0; the counter has to agree.
+  // The data-first `slice` truncates `n` and reads NaN as 0; the counter has to agree.
   let left = Number.isNaN(n) ? 0 : Math.trunc(n);
   if (left <= 0) {
     return (value) => value;

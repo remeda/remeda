@@ -57,7 +57,7 @@ const takeImplementation = <T extends IterableContainer>(
 ): T[number][] => (n < 0 ? [] : array.slice(0, n));
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
-  // `slice` truncates its count and reads NaN as 0; the counter has to agree.
+  // The data-first `slice` truncates `n` and reads NaN as 0; the counter has to agree.
   let remaining = Number.isNaN(n) ? 0 : Math.trunc(n);
   if (remaining <= 0) {
     return lazyEmptyEvaluator;

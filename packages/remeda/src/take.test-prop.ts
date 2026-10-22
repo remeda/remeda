@@ -13,7 +13,7 @@ const count = fc.oneof(
   fc.double(),
 );
 
-// Dense arrays: data-first `slice` keeps holes, the lazy path does not.
+// Dense only: data-first `slice` keeps holes, `pipe` reads them as `undefined`.
 const items = fc.array(fc.integer());
 
 test.prop([items, count])(

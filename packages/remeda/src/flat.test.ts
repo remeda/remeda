@@ -5,6 +5,7 @@ import { flat } from "./flat";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
+import { take } from "./take";
 
 describe("dataFirst", () => {
   test("works on empty arrays", () => {
@@ -141,14 +142,17 @@ describe("dataLast", () => {
   });
 
   test("truncates a fractional depth in a fused run", () => {
-    expect(pipe([[1]], map(identity()), flat(0.5))).toStrictEqual([[1]]);
+    // The trailing `take` can stop the run early, so `pipe` has to run it lazily.
+    expect(pipe([[1]], map(identity()), flat(0.5), take(1))).toStrictEqual([
+      [1],
+    ]);
   });
 
   test("reads a NaN depth as 0", () => {
     expect(
       pipe(
         [[1]],
-        // @ts-expect-error [ts2345, ts2769] -- `NaN` is a non-literal `number`, which the depth parameter rejects, but it can still reach the lazy path at runtime.
+        // @ts-expect-error [ts2345, ts2769] -- `flat` types only literal depths, so `flat(NaN)` matches no overload (ts2769) and `pipe` rejects the fallback's return type (ts2345); a `number` depth still reaches the lazy path at runtime.
         flat(NaN),
       ),
     ).toStrictEqual([[1]]);
@@ -159,8 +163,9 @@ describe("dataLast", () => {
       pipe(
         [[1]],
         map(identity()),
-        // @ts-expect-error [ts2345, ts2769] -- `NaN` is a non-literal `number`, which the depth parameter rejects, but it can still reach the lazy path at runtime.
+        // @ts-expect-error [ts2345, ts2769] -- `flat` types only literal depths, so `flat(NaN)` matches no overload (ts2769) and `pipe` rejects the fallback's return type (ts2345); a `number` depth still reaches the lazy path at runtime.
         flat(NaN),
+        take(1),
       ),
     ).toStrictEqual([[1]]);
   });
