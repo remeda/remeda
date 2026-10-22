@@ -107,6 +107,8 @@ Remeda is a utility library whose code is read and copied, so each implementatio
 
 Precedent: data-first `flat` and `flatMap` call the native methods. A hand-written loop measured 2-3x faster in optimized code, but it had to mirror the spec (holes, depth coercion) and needed a size cutoff to stay fast without a JIT.
 
+Each utility reads on its own, and its effect inside `pipe` follows from its own code, for a reader who doesn't know how `pipe` works. `pipe` and other utilities handle every utility through the same generic protocol. A shared abstraction earns its place by serving many utilities; one that only one or two utilities need, together with the skeleton code it would require, stays out.
+
 ## Type System
 
 ### Inputs
