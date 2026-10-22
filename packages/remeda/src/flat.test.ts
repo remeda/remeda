@@ -135,6 +135,35 @@ describe("dataLast", () => {
     expect(result).toStrictEqual(data);
     expect(result).not.toBe(data);
   });
+
+  test("truncates a fractional depth", () => {
+    expect(pipe([[1]], flat(0.5))).toStrictEqual([[1]]);
+  });
+
+  test("truncates a fractional depth in a fused run", () => {
+    expect(pipe([[1]], map(identity()), flat(0.5))).toStrictEqual([[1]]);
+  });
+
+  test("reads a NaN depth as 0", () => {
+    expect(
+      pipe(
+        [[1]],
+        // @ts-expect-error [ts2345, ts2769] -- `NaN` is a non-literal `number`, which the depth parameter rejects, but it can still reach the lazy path at runtime.
+        flat(NaN),
+      ),
+    ).toStrictEqual([[1]]);
+  });
+
+  test("reads a NaN depth as 0 in a fused run", () => {
+    expect(
+      pipe(
+        [[1]],
+        map(identity()),
+        // @ts-expect-error [ts2345, ts2769] -- `NaN` is a non-literal `number`, which the depth parameter rejects, but it can still reach the lazy path at runtime.
+        flat(NaN),
+      ),
+    ).toStrictEqual([[1]]);
+  });
 });
 
 test("can go very very deep", () => {

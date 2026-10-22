@@ -124,15 +124,17 @@ const flatImplementation = (
   depth?: number,
 ): IterableContainer => (depth === undefined ? data.flat() : data.flat(depth));
 
+// Native `flat` truncates the depth and reads NaN as 0, so only a depth of at
+// least 1 flattens anything.
 const lazyImplementation = (depth?: number): LazyEvaluator =>
   depth === undefined || depth === 1
     ? lazyShallow
-    : depth <= 0
-      ? (value) => value
-      : (value, _index, _data, slot) =>
+    : depth >= 1
+      ? (value, _index, _data, slot) =>
           Array.isArray(value)
             ? manyLazyValues(value.flat(depth - 1), slot)
-            : value;
+            : value
+      : (value) => value;
 
 // Pulled out to module scope because, unlike the deeper-than-one branch, it
 // doesn't close over `depth`, so one function serves every `flat()` /
