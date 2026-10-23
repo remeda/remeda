@@ -78,6 +78,16 @@ describe("data last", () => {
     ).toStrictEqual([1, 2, 3, 4, 5]);
   });
 
+  test("drops everything for an Infinity count", () => {
+    expect(pipe([1, 2, 3, 4, 5], drop(Infinity))).toStrictEqual([]);
+  });
+
+  test("drops everything for an Infinity count in a fused run", () => {
+    expect(
+      pipe([1, 2, 3, 4, 5], map(identity()), drop(Infinity), take(5)),
+    ).toStrictEqual([]);
+  });
+
   test("lazy impl", () => {
     const mockFunc = vi.fn<(x: number) => number>();
     pipe([1, 2, 3, 4, 5], map(mockFunc), drop(2), take(2));
