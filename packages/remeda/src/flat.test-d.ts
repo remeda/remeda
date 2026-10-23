@@ -162,6 +162,7 @@ test("doesn't accept built-in 'infinite' numbers", () => {
   flat([], Infinity);
 });
 
+// https://github.com/remeda/remeda/pull/1469
 test("doesn't accept non-integer depths", () => {
   // @ts-expect-error [ts2345] -- The runtime truncates a fractional depth, which the result type can't follow, so only integers are accepted.
   flat([[1]], 0.5);

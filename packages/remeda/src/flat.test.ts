@@ -137,6 +137,7 @@ describe("dataLast", () => {
     expect(result).not.toBe(data);
   });
 
+  // https://github.com/remeda/remeda/pull/1469
   test("truncates a fractional depth", () => {
     expect(
       pipe(
