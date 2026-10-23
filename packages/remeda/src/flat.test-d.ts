@@ -1,6 +1,7 @@
 import { expectTypeOf, test } from "vitest";
 import { flat } from "./flat";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
+import { pipe } from "./pipe";
 
 test("works on empty arrays", () => {
   const result = flat([], 1);
@@ -159,4 +160,18 @@ test("doesn't accept built-in 'infinite' numbers", () => {
 
   // @ts-expect-error [ts2345] - Infinity is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L597
   flat([], Infinity);
+});
+
+// https://github.com/remeda/remeda/pull/1469
+test("doesn't accept non-integer depths", () => {
+  // @ts-expect-error [ts2345] -- The runtime truncates a fractional depth, which the result type can't follow, so only integers are accepted.
+  flat([[1]], 0.5);
+});
+
+test("doesn't accept non-integer depths in pipe", () => {
+  pipe(
+    [[1]],
+    // @ts-expect-error [ts2345, ts2769] -- The runtime truncates a fractional depth, which the result type can't follow, so `flat(0.5)` matches no overload (ts2769) and `pipe` rejects the fallback's return type (ts2345).
+    flat(0.5),
+  );
 });

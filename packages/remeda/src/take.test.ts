@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { take } from "./take";
@@ -46,9 +47,55 @@ describe("data last", () => {
     expect(pipe([1, 2, 3, 4, 5], take(10))).toStrictEqual([1, 2, 3, 4, 5]);
   });
 
+  // https://github.com/remeda/remeda/pull/1469
+  test.each([
+    [2.5, [1, 2]],
+    [1.5, [1]],
+    [0.5, []],
+  ])("truncates a count of %s", (n, expected) => {
+    expect(pipe([1, 2, 3, 4, 5], take(n))).toStrictEqual(expected);
+  });
+
+  test.each([
+    [2.5, [1, 2]],
+    [1.5, [1]],
+    [0.5, []],
+  ])("truncates a count of %s in a fused run", (n, expected) => {
+    expect(pipe([1, 2, 3, 4, 5], map(identity()), take(n))).toStrictEqual(
+      expected,
+    );
+  });
+
+  test("reads a NaN count as 0", () => {
+    expect(pipe([1, 2, 3, 4, 5], take(NaN))).toStrictEqual([]);
+  });
+
+  test("reads a NaN count as 0 in a fused run", () => {
+    expect(pipe([1, 2, 3, 4, 5], map(identity()), take(NaN))).toStrictEqual([]);
+  });
+
+  test("takes everything for an Infinity count", () => {
+    expect(pipe([1, 2, 3, 4, 5], take(Infinity))).toStrictEqual([
+      1, 2, 3, 4, 5,
+    ]);
+  });
+
+  test("takes everything for an Infinity count in a fused run", () => {
+    expect(
+      pipe([1, 2, 3, 4, 5], map(identity()), take(Infinity)),
+    ).toStrictEqual([1, 2, 3, 4, 5]);
+  });
+
   test("lazy implementation", () => {
     const mockFunc = vi.fn<(x: number) => number>();
     pipe([1, 2, 3, 4, 5], map(mockFunc), take(2));
+
+    expect(mockFunc).toHaveBeenCalledTimes(2);
+  });
+
+  test("lazy implementation with a fractional count", () => {
+    const mockFunc = vi.fn<(x: number) => number>();
+    pipe([1, 2, 3, 4, 5], map(mockFunc), take(2.5));
 
     expect(mockFunc).toHaveBeenCalledTimes(2);
   });
