@@ -946,6 +946,45 @@ describe("utility functions", () => {
       expect(foo.isIdle).toBe(true);
     });
   });
+
+   describe("pendingData", () => {
+    test("pendingData reflects preparedData when reducer passed", () => {
+      const mockFn = vi.fn<(x: readonly string[]) => void>();
+      const foo = funnel(mockFn, {
+        reducer: ARGS_COLLECTOR,
+        triggerAt: "end",
+        minQuietPeriodMs: UT,
+      });
+
+      expect(foo.pendingData).toBeUndefined();
+
+      foo.call("a");
+      foo.call("b");
+      foo.call("c");
+
+      expect(foo.pendingData).toStrictEqual(["a", "b", "c"]);
+
+      foo.flush();
+
+      expect(foo.pendingData).toBeUndefined();
+    });
+
+    test("pendingData is undefined when reducer omitted", () => {
+      const mockFn = vi.fn<(x: readonly string[]) => void>();
+      const foo = funnel(mockFn, {
+        triggerAt: "end",
+        minQuietPeriodMs: UT,
+      });
+
+      expect(foo.pendingData).toBeUndefined();
+
+      foo.call("a");
+      foo.call("b");
+      foo.call("c");
+
+      expect(foo.pendingData).toBeUndefined();
+    });
+  });
 });
 
 describe("edge-cases", () => {
