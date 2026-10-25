@@ -58,7 +58,9 @@ type LazyStep = {
  *
  * IMPORTANT: During lazy evaluation, callbacks using the third parameter (the
  * input array) receive only items processed up to that point, not the complete
- * array.
+ * array. A lazy function that isn't evaluated together with other lazy
+ * functions runs on arrays the same as its data-first call, so its callbacks
+ * receive the complete array.
  *
  * @param data - The input data.
  * @param functions - A sequence of functions that take one argument and
@@ -105,16 +107,20 @@ type LazyStep = {
  *
  *    // = Using the 3rd param of a callback =
  *    // The following would print out `data` in its entirety for each value
- *    // of `data`.
+ *    // of `data`, and so would the same `forEach` alone in a `pipe`.
  *    forEach([1, 2, 3, 4], (_item, _index, data) => {
  *      console.log(data);
  *    }); //=> "[1, 2, 3, 4]" logged 4 times
  *
- *    // But with `pipe` data would only contain the items up to the current
- *    // index.
- *    pipe([1, 2, 3, 4], forEach((_item, _index, data) => {
- *      console.log(data);
- *    })); //=> "[1]", "[1, 2]", "[1, 2, 3]", "[1, 2, 3, 4]"
+ *    // But when evaluated lazily together with other lazy functions, data
+ *    // would only contain the items up to the current index.
+ *    pipe(
+ *      [1, 2, 3, 4],
+ *      forEach((_item, _index, data) => {
+ *        console.log(data);
+ *      }),
+ *      map(multiply(2)),
+ *    ); //=> "[1]", "[1, 2]", "[1, 2, 3]", "[1, 2, 3, 4]"
  * @dataFirst
  * @category Function
  */
@@ -306,16 +312,21 @@ export function pipe(
   }
 
   if (functions.length === 1) {
-    // The most common pipe, a single function, skips the loop below.
+    // The most common pipe, a single function, skips the loop below. A lone
+    // lazy function has nothing to fuse with, so an array is passed to it
+    // directly, which runs its data-first implementation; only the other
+    // iterables, which those implementations don't accept, need the lazy
+    // runner.
     const func = functions[0]!;
-    return "lazy" in func
+    return "lazy" in func && !Array.isArray(input)
       ? processSingleLazyStep(
           // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
           input,
           func.lazy,
           func.lazyArgs,
         )
-      : func(input);
+      : // @ts-expect-error [ts2345] -- A lazy function only gets here with an array, which every lazy function accepts, but TypeScript can't narrow `func` from a check on `input`.
+        func(input);
   }
 
   let output = input;
@@ -330,15 +341,19 @@ export function pipe(
 
     const nextFunc = functions[functionIndex + 1];
     if (nextFunc === undefined || !("lazy" in nextFunc) || func.lazy.single) {
-      // A run of one lazy function is a lazy sequence of one step, which has
-      // no cross-step bookkeeping to set up: the step array, the step object,
+      // A run of one lazy function has nothing to fuse with, so an array is
+      // passed to it directly, which runs its data-first implementation. Any
+      // other iterable runs as a lazy sequence of one step, which has no
+      // cross-step bookkeeping to set up: the step array, the step object,
       // and the hand-off through them are all overhead.
-      output = processSingleLazyStep(
-        // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
-        output,
-        func.lazy,
-        func.lazyArgs,
-      );
+      output = Array.isArray(output)
+        ? func(output)
+        : processSingleLazyStep(
+            // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
+            output,
+            func.lazy,
+            func.lazyArgs,
+          );
       functionIndex += 1;
       continue;
     }

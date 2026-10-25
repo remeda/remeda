@@ -1,6 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { filter } from "./filter";
 import { first } from "./first";
+import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { zip } from "./zip";
@@ -54,6 +55,10 @@ describe("dataLast", () => {
 
   test("should return empty when second is empty", () => {
     expect(pipe([1, 2], zip([]))).toStrictEqual([]);
+  });
+
+  test("lazily returns empty when second is empty", () => {
+    expect(pipe([1, 2], map(identity()), zip([]))).toStrictEqual([]);
   });
 
   test("should return empty when first is empty", () => {

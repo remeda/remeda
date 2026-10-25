@@ -11,7 +11,9 @@ import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
 
 /**
  * Runs an iterable through a single lazy step, skipping the step objects and
- * the fan-out recursion that the general path in `pipe` needs.
+ * the fan-out recursion that the general path in `pipe` needs. `pipe` never
+ * calls it for an array: a lone step on an array runs the data-first
+ * implementation instead.
  *
  * @param input - The data to run through the step.
  * @param lazy - The lazy implementation the step's evaluator is built from.
@@ -34,36 +36,17 @@ export function processSingleLazyStep<P extends readonly unknown[]>(
   const accumulator: unknown[] = [];
   let index = 0;
 
-  if (Array.isArray(input)) {
-    // Iterated rather than indexed, so a reactive array that instruments
-    // iteration tracks one dependency instead of one per index.
-    for (const value of input) {
-      dataBuffer?.push(value);
+  for (const value of input) {
+    dataBuffer?.push(value);
 
-      const isDone = collect(
-        lazyEvaluator(value, index, items, slot),
-        accumulator,
-        slot,
-      );
-      index += 1;
-      if (isDone) {
-        break;
-      }
-    }
-    // eslint-disable-next-line unicorn/no-duplicate-if-branches -- Intentional! Identical on purpose. In V8, a `for...of` that has only ever seen arrays skips the iterator protocol; each loop is its own iteration site, which is what lets the compiler specialize the first one for arrays, that sets, strings and generators never reach.
-  } else {
-    for (const value of input) {
-      dataBuffer?.push(value);
-
-      const isDone = collect(
-        lazyEvaluator(value, index, items, slot),
-        accumulator,
-        slot,
-      );
-      index += 1;
-      if (isDone) {
-        break;
-      }
+    const isDone = collect(
+      lazyEvaluator(value, index, items, slot),
+      accumulator,
+      slot,
+    );
+    index += 1;
+    if (isDone) {
+      break;
     }
   }
 

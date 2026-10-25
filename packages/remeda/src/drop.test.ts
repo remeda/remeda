@@ -87,6 +87,12 @@ describe("data last", () => {
     ).toStrictEqual([]);
   });
 
+  test("lazily drops nothing for a negative `n`", () => {
+    expect(pipe([1, 2, 3, 4, 5], map(identity()), drop(-1))).toStrictEqual([
+      1, 2, 3, 4, 5,
+    ]);
+  });
+
   test("lazy impl", () => {
     const mapper = vi.fn<(x: number) => number>();
     pipe([1, 2, 3, 4, 5], map(mapper), drop(2), take(2));

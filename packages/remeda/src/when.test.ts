@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { constant } from "./constant";
+import { identity } from "./identity";
 import { isDefined } from "./isDefined";
 import { isNot } from "./isNot";
 import { isNullish } from "./isNullish";
@@ -132,6 +133,8 @@ describe("dataLast", () => {
     expect(
       pipe(
         [3, 1, 4, 1, 5],
+        // Keeps the step lazy: alone, it would run eagerly on the array.
+        map(identity()),
         map(
           when(
             // In a lazy step `data` is the items processed so far, so this

@@ -228,23 +228,18 @@ describe("runtime (dataLast)", () => {
       ),
     ).toStrictEqual(["aa", "b", "a"]);
   });
-});
 
-describe("known issues!", () => {
-  test("a lazy step before it reads holes as undefined", () => {
+  test("keeps holes after a lone lazy step", () => {
     const result = pipe(
       // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
       [, 5, 3],
+      // With no lazy function to fuse with, `take` runs its data-first
+      // implementation, a `slice`, which keeps the hole.
       take(Infinity),
       takeFirstBy(2, (value: number | undefined) => value ?? NaN),
     );
 
-    // The heap is a slice of the input, which keeps holes, but a lazy step
-    // iterates its input, which reads a hole as `undefined`.
     // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(result).not.toStrictEqual([, 5]);
-
-    // Actual
-    expect(result).toStrictEqual([undefined, 5]);
+    expect(result).toStrictEqual([, 5]);
   });
 });

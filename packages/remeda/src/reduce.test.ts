@@ -113,25 +113,20 @@ describe("data last", () => {
       ),
     ).toStrictEqual([0, 2]);
   });
-});
 
-describe("known issues!", () => {
-  test("a lazy step before it reads holes as undefined", () => {
-    const result = pipe(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      [1, , 3],
-      take(Infinity),
-      reduce(
-        (indices: readonly number[], _item, index) => [...indices, index],
-        [],
+  test("skips holes after a lone lazy step", () => {
+    expect(
+      pipe(
+        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+        [1, , 3],
+        // With no lazy function to fuse with, `take` runs its data-first
+        // implementation, a `slice`, which keeps the hole.
+        take(Infinity),
+        reduce(
+          (indices: readonly number[], _item, index) => [...indices, index],
+          [],
+        ),
       ),
-    );
-
-    // Native `reduce` skips holes, but a lazy step iterates its input, which
-    // reads a hole as `undefined`.
-    expect(result).not.toStrictEqual([0, 2]);
-
-    // Actual
-    expect(result).toStrictEqual([0, 1, 2]);
+    ).toStrictEqual([0, 2]);
   });
 });

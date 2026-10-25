@@ -1,5 +1,7 @@
 import { fc, test } from "@fast-check/vitest";
 import { expect } from "vitest";
+import { identity } from "./identity";
+import { map } from "./map";
 import { pipe } from "./pipe";
 import { unique } from "./unique";
 
@@ -18,7 +20,8 @@ test.prop([items])(
   "data-first and data-last produce the same result",
   (data) => {
     const dataFirst = unique(data);
-    const dataLast = pipe(data, unique());
+    // Keeps the step lazy: alone, it would run eagerly on the array.
+    const dataLast = pipe(data, map(identity()), unique());
 
     // By identity: deep equality can't tell the two objects apart.
     expect(dataFirst).toHaveLength(dataLast.length);

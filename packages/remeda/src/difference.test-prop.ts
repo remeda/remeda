@@ -1,6 +1,8 @@
 import { fc, test } from "@fast-check/vitest";
 import { expect } from "vitest";
 import { difference } from "./difference";
+import { identity } from "./identity";
+import { map } from "./map";
 import { pipe } from "./pipe";
 
 // Few distinct values, so duplicates within an input and overlaps between the
@@ -19,7 +21,8 @@ test.prop([items, items])(
   "data-first and data-last produce the same result",
   (data, other) => {
     const dataFirst = difference(data, other);
-    const dataLast = pipe(data, difference(other));
+    // Keeps the step lazy: alone, it would run eagerly on the array.
+    const dataLast = pipe(data, map(identity()), difference(other));
 
     // By identity: deep equality can't tell the two objects apart.
     expect(dataFirst).toHaveLength(dataLast.length);

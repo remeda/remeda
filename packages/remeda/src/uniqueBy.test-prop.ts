@@ -1,5 +1,7 @@
 import { fc, test } from "@fast-check/vitest";
 import { expect } from "vitest";
+import { identity } from "./identity";
+import { map } from "./map";
 import { pipe } from "./pipe";
 import { uniqueBy } from "./uniqueBy";
 
@@ -23,7 +25,8 @@ test.prop([items, fc.func(fc.integer({ min: 0, max: 3 }))])(
       keyOf(value, index);
 
     const dataFirst = uniqueBy(data, keyFunction);
-    const dataLast = pipe(data, uniqueBy(keyFunction));
+    // Keeps the step lazy: alone, it would run eagerly on the array.
+    const dataLast = pipe(data, map(identity()), uniqueBy(keyFunction));
 
     // By identity: deep equality can't tell the two objects apart.
     expect(dataFirst).toHaveLength(dataLast.length);

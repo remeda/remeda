@@ -3,7 +3,9 @@ import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { add } from "./add";
 import { find } from "./find";
 import { flatMap } from "./flatMap";
+import { identity } from "./identity";
 import type { LazyCallback } from "./internal/types/LazyCallback";
+import { map } from "./map";
 import { pipe } from "./pipe";
 
 describe("dataFirst", () => {
@@ -56,11 +58,27 @@ describe("dataLast", () => {
       expect(result).toBe(22);
     });
 
+    test("works with non array outputs", () => {
+      expect(
+        pipe(
+          [1, 2, 3],
+          // Keeps the step lazy: alone, it would run eagerly on the array.
+          map(identity()),
+          flatMap(add(1)),
+        ),
+      ).toStrictEqual([2, 3, 4]);
+    });
+
     test("provides the items processed so far to the callback", () => {
       const mapper = vi.fn<LazyCallback<unknown[], unknown>>(
         (_value, _index, data) => [...data],
       );
-      pipe([1, 2, 3], flatMap(mapper));
+      pipe(
+        [1, 2, 3],
+        // Keeps the step lazy: alone, it would run eagerly on the array.
+        map(identity()),
+        flatMap(mapper),
+      );
 
       expect(mapper).toHaveNthReturnedWith(1, [1]);
       expect(mapper).toHaveNthReturnedWith(2, [1, 2]);
@@ -71,7 +89,12 @@ describe("dataLast", () => {
       const callback = vi.fn<
         (value: number, index: number, data: readonly number[]) => number[]
       >((value, index) => [value + index]);
-      pipe([1, 2, 3], flatMap(callback));
+      pipe(
+        [1, 2, 3],
+        // Keeps the step lazy: alone, it would run eagerly on the array.
+        map(identity()),
+        flatMap(callback),
+      );
 
       expect(() => callback.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
     });

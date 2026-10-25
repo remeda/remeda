@@ -91,7 +91,12 @@ describe(pipe, () => {
     const callbackfn = vi.fn<
       (value: number, index: number, data: readonly number[]) => number
     >((value, index) => value + index);
-    pipe([1, 2, 3], map(callbackfn));
+    pipe(
+      [1, 2, 3],
+      // Keeps the step lazy: alone, it would run eagerly on the array.
+      map(identity()),
+      map(callbackfn),
+    );
 
     expect(() => callbackfn.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
   });

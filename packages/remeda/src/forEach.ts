@@ -10,9 +10,10 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  * `Array.prototype.forEach`.
  *
  * The dataLast version returns the original array (instead of not returning
- * anything (`void`)) to allow using it in a pipe. When not used in a `pipe` the
- * returned array is equal to the input array (by reference), and not a shallow
- * copy of it!
+ * anything (`void`)) to allow using it in a pipe. The returned array is the
+ * same reference as the input array, and not a shallow copy of it, except when
+ * `pipe` evaluates it lazily together with other lazy functions, which builds a
+ * new array.
  *
  * @param data - The values that would be iterated on.
  * @param callbackfn - A function to execute for each element in the array.
@@ -37,7 +38,9 @@ export function forEach<T extends IterableContainer>(
  *
  * The dataLast version returns the original array (instead of not returning
  * anything (`void`)) to allow using it in a pipe. The returned array is the
- * same reference as the input array, and not a shallow copy of it!
+ * same reference as the input array, and not a shallow copy of it, except when
+ * `pipe` evaluates it lazily together with other lazy functions, which builds a
+ * new array.
  *
  * @param callbackfn - A function to execute for each element in the array.
  * @returns The original array (the ref itself, not a shallow copy of it).

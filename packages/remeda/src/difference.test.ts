@@ -80,9 +80,13 @@ test("lazy", () => {
 });
 
 test("lazily removes nothing on empty other array", () => {
-  expect(pipe([1, 2, 3], difference([] as number[]))).toStrictEqual([1, 2, 3]);
+  expect(
+    pipe([1, 2, 3], map(identity()), difference([] as number[])),
+  ).toStrictEqual([1, 2, 3]);
 });
 
 test("lazily maintains multi-set semantics (removes only one copy)", () => {
-  expect(pipe([1, 1, 2, 2], difference([1]))).toStrictEqual([1, 2, 2]);
+  expect(pipe([1, 1, 2, 2], map(identity()), difference([1]))).toStrictEqual([
+    1, 2, 2,
+  ]);
 });

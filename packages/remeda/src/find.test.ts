@@ -1,6 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { find } from "./find";
 import { identity } from "./identity";
+import { isStrictEqual } from "./isStrictEqual";
 import { map } from "./map";
 import { pipe } from "./pipe";
 
@@ -123,6 +124,8 @@ describe("data last", () => {
     const dataSnapshots: number[][] = [];
     pipe(
       [1, 2, 3],
+      // Keeps the step lazy: alone, it would run eagerly on the array.
+      map(identity()),
       find((_value, _index, data) => {
         dataSnapshots.push([...data]);
         return false;
@@ -136,8 +139,20 @@ describe("data last", () => {
     const predicate = vi.fn<
       (value: number, index: number, data: readonly number[]) => boolean
     >((value, index) => value > index);
-    pipe([1, 2, 3], find(predicate));
+    pipe(
+      [1, 2, 3],
+      // Keeps the step lazy: alone, it would run eagerly on the array.
+      map(identity()),
+      find(predicate),
+    );
 
     expect(() => predicate.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
+  });
+
+  test("a lone step stops calling the predicate at the first match", () => {
+    const predicate = vi.fn<(x: number) => boolean>(isStrictEqual(2));
+    pipe([1, 2, 3], find(predicate));
+
+    expect(predicate).toHaveBeenCalledTimes(2);
   });
 });

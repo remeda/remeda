@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { expect, test } from "vitest";
 import { pipe } from "./pipe";
 import { take } from "./take";
 import { takeLast } from "./takeLast";
@@ -77,17 +77,9 @@ test("data-last", () => {
   expect(pipe([1, 2, 3, 4, 5], takeLast(2))).toStrictEqual([4, 5]);
 });
 
-describe("known issues!", () => {
-  test("a lazy step before it reads holes as undefined", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    const result = pipe([1, , 3], take(Infinity), takeLast(2));
-
-    // `slice` keeps holes, but a lazy step iterates its input, which reads a
-    // hole as `undefined`.
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(result).not.toStrictEqual([, 3]);
-
-    // Actual
-    expect(result).toStrictEqual([undefined, 3]);
-  });
+test("data-last keeps holes after a lone lazy step", () => {
+  // With no lazy function to fuse with, `take` runs its data-first
+  // implementation, a `slice`, which keeps the hole.
+  // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
+  expect(pipe([1, , 3], take(Infinity), takeLast(2))).toStrictEqual([, 3]);
 });

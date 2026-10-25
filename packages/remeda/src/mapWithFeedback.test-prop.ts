@@ -1,5 +1,7 @@
 import { fc, test } from "@fast-check/vitest";
 import { expect } from "vitest";
+import { identity } from "./identity";
+import { map } from "./map";
 import { mapWithFeedback } from "./mapWithFeedback";
 import { pipe } from "./pipe";
 
@@ -18,7 +20,12 @@ test.prop([items, fc.func(fc.integer()), fc.integer()])(
     ): number => reducerOf(previousValue, currentValue, index);
 
     expect(mapWithFeedback(data, reducer, initialValue)).toStrictEqual(
-      pipe(data, mapWithFeedback(reducer, initialValue)),
+      pipe(
+        data,
+        // Keeps the step lazy: alone, it would run eagerly on the array.
+        map(identity()),
+        mapWithFeedback(reducer, initialValue),
+      ),
     );
   },
 );
