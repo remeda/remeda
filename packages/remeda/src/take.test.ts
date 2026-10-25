@@ -94,9 +94,9 @@ describe("data last", () => {
   });
 
   test("lazy implementation with a fractional count", () => {
-    const mockFunc = vi.fn<(x: number) => number>();
-    pipe([1, 2, 3, 4, 5], map(mockFunc), take(2.5));
+    const mapper = vi.fn<(x: number) => number>();
+    pipe([1, 2, 3, 4, 5], map(mapper), take(2.5));
 
-    expect(mockFunc).toHaveBeenCalledTimes(2);
+    expect(mapper).toHaveBeenCalledTimes(2);
   });
 });
