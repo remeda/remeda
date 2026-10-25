@@ -8,6 +8,7 @@ import { flatMap } from "./flatMap";
 import { identity } from "./identity";
 import { lazyEmptyEvaluator } from "./internal/lazyControl";
 import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
+import { toSingle } from "./internal/toSingle";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { isStrictEqual } from "./isStrictEqual";
@@ -125,18 +126,29 @@ describe("lazy", () => {
     const mapper = vi.fn<LazyCallback<unknown[], unknown>>(
       (_value, _index, data) => [...data],
     );
-    pipe([1, 2, 3], map(multiply(10)), map(mapper));
+    pipe(
+      [1, 2, 3],
+      // Keeps the steps lazy: on an array, a run fuses only when one of its
+      // steps can stop early, as `take` can.
+      take(Infinity),
+      map(multiply(10)),
+      map(mapper),
+    );
 
     expect(mapper).toHaveNthReturnedWith(1, [10]);
     expect(mapper).toHaveNthReturnedWith(2, [10, 20]);
     expect(mapper).toHaveNthReturnedWith(3, [10, 20, 30]);
   });
 
+  // On an array, a run fuses only when one of its steps can stop early, so
+  // the runs below that exercise the fused steps include a `take`.
+
   describe("step index", () => {
     test("counts items the step consumed, not input positions", () => {
       expect(
         pipe(
           [1, 2, 3, 4],
+          take(Infinity),
           filter((x) => x % 2 === 0),
           map((_value, index) => index),
         ),
@@ -147,6 +159,7 @@ describe("lazy", () => {
       expect(
         pipe(
           [[1, 2], [3]],
+          take(Infinity),
           flat(),
           map((_value, index) => index),
         ),
@@ -157,6 +170,7 @@ describe("lazy", () => {
       expect(
         pipe(
           [[1, 2], [3]],
+          take(Infinity),
           flat(),
           flatMap((x) => [x, x + 100]),
           map((_, index) => index),
@@ -168,7 +182,7 @@ describe("lazy", () => {
       expect(
         pipe(
           ["a", "b"],
-          map(identity()),
+          take(Infinity),
           flatMap((value, index) => [value, index]),
         ),
       ).toStrictEqual(["a", 0, "b", 1]);
@@ -180,7 +194,7 @@ describe("lazy", () => {
       const evaluator = vi.fn<LazyEvaluator>(identity());
       pipe(
         [1, 2, 3],
-        map(identity()),
+        take(Infinity),
         lazyDataLastImplementation(identity(), [], () => evaluator),
       );
 
@@ -193,6 +207,7 @@ describe("lazy", () => {
       expect(
         pipe(
           [[1, 2], [3]],
+          take(Infinity),
           flat(),
           map((_value, _index, data) => [...data]),
         ),
@@ -205,6 +220,7 @@ describe("lazy", () => {
       expect(
         pipe(
           [1, 2, 3],
+          take(Infinity),
           flatMap((x) => (x === 2 ? [] : [x])),
           map(multiply(10)),
         ),
@@ -258,7 +274,7 @@ describe("lazy", () => {
       pipe(
         [0],
         map(() => item),
-        map(identity()),
+        take(Infinity),
       ),
     ).toStrictEqual([item]);
   });
@@ -283,7 +299,9 @@ describe("lazy", () => {
     const { proxy: item, revoke } = Proxy.revocable({}, {});
     revoke();
 
-    expect(pipe([item], map(identity()), filter(constant(true)))[0]).toBe(item);
+    expect(
+      pipe([item], take(Infinity), map(identity()), filter(constant(true)))[0],
+    ).toBe(item);
   });
 
   test("an array input is read by a lone step the way its data-first call reads it", () => {
@@ -325,6 +343,7 @@ describe("lazy", () => {
             : Reflect.get(target, key, receiver);
         },
       }),
+      take(Infinity),
       map(identity()),
       filter(constant(true)),
     );
@@ -345,7 +364,7 @@ describe("lazy", () => {
       expect(
         pipe(
           [1, 2, 3, 4],
-          map(identity()),
+          take(Infinity),
           otherFilter((x) => x % 2 === 0),
         ),
       ).toStrictEqual([2, 4]);
@@ -541,9 +560,177 @@ describe("lazy", () => {
     const mapper =
       vi.fn<(x: number | undefined) => number | undefined>(identity());
     // eslint-disable-next-line no-sparse-arrays -- The hole is what this test exercises.
-    pipe([1, , 3], map(identity()), map(mapper));
+    pipe([1, , 3], take(Infinity), map(mapper));
 
     expect(mapper).toHaveBeenCalledTimes(3);
+  });
+
+  // A run fuses when one of its steps can stop the pipe early. Without one,
+  // every item goes through every step anyway, so on an array each function
+  // runs its data-first implementation in turn instead.
+  describe("run order", () => {
+    test("a run on an array that can't stop early runs step by step", () => {
+      const calls: string[] = [];
+      pipe(
+        [1, 2],
+        map((x) => {
+          calls.push("map");
+          return x;
+        }),
+        filter(() => {
+          calls.push("filter");
+          return true;
+        }),
+      );
+
+      expect(calls).toStrictEqual(["map", "map", "filter", "filter"]);
+    });
+
+    test("a run with a step that can stop early runs item by item", () => {
+      const calls: string[] = [];
+      pipe(
+        [1, 2],
+        map((x) => {
+          calls.push("map");
+          return x;
+        }),
+        filter(() => {
+          calls.push("filter");
+          return true;
+        }),
+        take(Infinity),
+      );
+
+      expect(calls).toStrictEqual(["map", "filter", "map", "filter"]);
+    });
+
+    test("a run on another iterable runs item by item", () => {
+      const calls: string[] = [];
+      pipe(
+        [1, 2].values(),
+        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
+        map((x: number) => {
+          calls.push("map");
+          return x;
+        }),
+        filter(() => {
+          calls.push("filter");
+          return true;
+        }),
+      );
+
+      expect(calls).toStrictEqual(["map", "filter", "map", "filter"]);
+    });
+  });
+
+  describe("a run on an array that can't stop early", () => {
+    test("the first step's callbacks get the input array", () => {
+      const data = [1, 2, 3];
+      const mapper = vi.fn<
+        (value: number, index: number, data: readonly number[]) => number
+      >((value, index, items) => value + index + items.length);
+      pipe(data, map(mapper), filter(constant(true)));
+
+      expect(mapper.mock.calls[0]?.[2]).toBe(data);
+    });
+
+    test("a later step's callbacks get the previous step's complete output", () => {
+      const mapper = vi.fn<LazyCallback<unknown[], unknown>>(
+        (_value, _index, data) => [...data],
+      );
+      pipe([1, 2, 3], map(multiply(10)), map(mapper));
+
+      expect(mapper).toHaveNthReturnedWith(1, [10, 20, 30]);
+      expect(mapper).toHaveNthReturnedWith(2, [10, 20, 30]);
+      expect(mapper).toHaveNthReturnedWith(3, [10, 20, 30]);
+    });
+
+    test("a callback that doesn't declare `data` gets the array, not the sentinel", () => {
+      const mapper = vi.fn<
+        (value: number, index: number, data: readonly number[]) => number
+      >((value, index) => value + index);
+      pipe([1, 2, 3], map(multiply(10)), map(mapper));
+
+      expect(mapper.mock.calls[0]?.[2]).toStrictEqual([10, 20, 30]);
+    });
+
+    test("skips holes the way its data-first calls do", () => {
+      const mapper =
+        vi.fn<(x: number | undefined) => number | undefined>(identity());
+      // eslint-disable-next-line no-sparse-arrays -- The hole is what this test exercises.
+      pipe([1, , 3], map(identity()), map(mapper));
+
+      expect(mapper).toHaveBeenCalledTimes(2);
+    });
+
+    test("the input is read the way the first step's data-first call reads it", () => {
+      const pipeKeys: (string | symbol)[] = [];
+      pipe(
+        new Proxy([1, 2, 3], {
+          get: (target, key, receiver): unknown => {
+            pipeKeys.push(key);
+            return Reflect.get(target, key, receiver);
+          },
+        }),
+        map(identity()),
+        filter(constant(true)),
+      );
+
+      const dataFirstKeys: (string | symbol)[] = [];
+      map(
+        new Proxy([1, 2, 3], {
+          get: (target, key, receiver): unknown => {
+            dataFirstKeys.push(key);
+            return Reflect.get(target, key, receiver);
+          },
+        }),
+        identity(),
+      );
+
+      expect(pipeKeys).toStrictEqual(dataFirstKeys);
+    });
+
+    test("ends at a non-lazy function", () => {
+      const calls: string[] = [];
+      pipe(
+        [1, 2],
+        map((x) => {
+          calls.push("map");
+          return x;
+        }),
+        filter(() => {
+          calls.push("filter");
+          return true;
+        }),
+        identity(),
+        take(1),
+      );
+
+      expect(calls).toStrictEqual(["map", "map", "filter", "filter"]);
+    });
+
+    test("ends after a single-result step", () => {
+      // A single-result step that can't stop early, which no utility is. Were
+      // the run to go on past it, it would reach `take`, which can stop early,
+      // and fuse.
+      const firstItem = lazyDataLastImplementation(
+        (data: readonly (readonly number[])[]) => data[0] ?? [],
+        [],
+        toSingle(() => identity()),
+      );
+      const dataLengths: number[] = [];
+      pipe(
+        [[1, 2], [3]],
+        map((value, _index, data) => {
+          dataLengths.push(data.length);
+          return value;
+        }),
+        firstItem,
+        take(1),
+      );
+
+      expect(dataLengths).toStrictEqual([2, 2]);
+    });
   });
 
   test("a run of one lazy function between two non-lazy ones", () => {

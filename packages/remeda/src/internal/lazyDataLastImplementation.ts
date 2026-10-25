@@ -23,6 +23,7 @@ export type LazyDefinition<
 
 type LazyMeta = {
   readonly single?: true;
+  readonly canStop?: true;
 };
 
 // Allows us to build the lazy definition dynamically at runtime.

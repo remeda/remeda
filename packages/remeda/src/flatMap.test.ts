@@ -3,10 +3,9 @@ import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { add } from "./add";
 import { find } from "./find";
 import { flatMap } from "./flatMap";
-import { identity } from "./identity";
 import type { LazyCallback } from "./internal/types/LazyCallback";
-import { map } from "./map";
 import { pipe } from "./pipe";
+import { take } from "./take";
 
 describe("dataFirst", () => {
   test("flatMap", () => {
@@ -62,8 +61,9 @@ describe("dataLast", () => {
       expect(
         pipe(
           [1, 2, 3],
-          // Keeps the step lazy: alone, it would run eagerly on the array.
-          map(identity()),
+          // Keeps the step lazy: on an array, a run fuses only when one of its
+          // steps can stop early, as `take` can.
+          take(Infinity),
           flatMap(add(1)),
         ),
       ).toStrictEqual([2, 3, 4]);
@@ -75,8 +75,9 @@ describe("dataLast", () => {
       );
       pipe(
         [1, 2, 3],
-        // Keeps the step lazy: alone, it would run eagerly on the array.
-        map(identity()),
+        // Keeps the step lazy: on an array, a run fuses only when one of its
+        // steps can stop early, as `take` can.
+        take(Infinity),
         flatMap(mapper),
       );
 
@@ -91,8 +92,9 @@ describe("dataLast", () => {
       >((value, index) => [value + index]);
       pipe(
         [1, 2, 3],
-        // Keeps the step lazy: alone, it would run eagerly on the array.
-        map(identity()),
+        // Keeps the step lazy: on an array, a run fuses only when one of its
+        // steps can stop early, as `take` can.
+        take(Infinity),
         flatMap(callback),
       );
 

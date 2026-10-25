@@ -61,6 +61,9 @@ describe(pipe, () => {
     expect(
       pipe(
         [1, 2, 3, 4, 5],
+        // Keeps the steps lazy: on an array, a run fuses only when one of its
+        // steps can stop early, as `take` can.
+        take(Infinity),
         map((x, i, items) => {
           anyItems1.push([...items]);
           indexes1.push(i);
@@ -93,8 +96,9 @@ describe(pipe, () => {
     >((value, index) => value + index);
     pipe(
       [1, 2, 3],
-      // Keeps the step lazy: alone, it would run eagerly on the array.
-      map(identity()),
+      // Keeps the step lazy: on an array, a run fuses only when one of its
+      // steps can stop early, as `take` can.
+      take(Infinity),
       map(callbackfn),
     );
 
@@ -102,7 +106,14 @@ describe(pipe, () => {
   });
 
   test("never marks the callback itself", () => {
-    pipe([1, 2, 3], map(double), map(addDataLength));
+    pipe(
+      [1, 2, 3],
+      // Keeps the steps lazy: on an array, a run fuses only when one of its
+      // steps can stop early, as `take` can.
+      take(Infinity),
+      map(double),
+      map(addDataLength),
+    );
 
     expect(double).not.toHaveProperty("requiresData");
     expect(addDataLength).not.toHaveProperty("requiresData");
@@ -117,9 +128,10 @@ describe(pipe, () => {
         receivers.push(this);
         return x;
       }),
-      // A lone lazy step runs its evaluator from a local; only a run of steps
-      // keeps it on a step object it could be called as a method of.
-      map((x) => x),
+      // Only a fused run keeps the evaluator on a step object it could be
+      // called as a method of, and this run fuses because `take` can stop
+      // early.
+      take(Infinity),
     );
 
     expect(receivers).toStrictEqual([undefined, undefined]);

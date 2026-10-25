@@ -1,6 +1,7 @@
 import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
 import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
+import { toCanStop } from "./internal/toCanStop";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
@@ -128,19 +129,21 @@ function zipWithImplementation<
     : second.map((item, index) => fn(first[index], item, index, datum));
 }
 
-const lazyImplementation = <T1, T2 extends IterableContainer, Value>(
-  second: T2,
-  fn: ZippingFunction<readonly T1[], T2, Value>,
-): LazyEvaluator<T1, Value> =>
-  second.length === 0
-    ? lazyEmptyEvaluator
-    : requireDataByArity(
-        fn,
-        (value, index, data, slot) => {
-          const zipped = fn(value, second[index], index, [data, second]);
-          return index >= second.length - 1
-            ? lastLazyValue(zipped, slot)
-            : zipped;
-        },
-        { dataParameterIndex: 3 },
-      );
+const lazyImplementation = toCanStop(
+  <T1, T2 extends IterableContainer, Value>(
+    second: T2,
+    fn: ZippingFunction<readonly T1[], T2, Value>,
+  ): LazyEvaluator<T1, Value> =>
+    second.length === 0
+      ? lazyEmptyEvaluator
+      : requireDataByArity(
+          fn,
+          (value, index, data, slot) => {
+            const zipped = fn(value, second[index], index, [data, second]);
+            return index >= second.length - 1
+              ? lastLazyValue(zipped, slot)
+              : zipped;
+          },
+          { dataParameterIndex: 3 },
+        ),
+);

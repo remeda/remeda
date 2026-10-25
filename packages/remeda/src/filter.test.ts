@@ -3,6 +3,7 @@ import { filter } from "./filter";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
+import { take } from "./take";
 
 describe("data_first", () => {
   test("filter", () => {
@@ -65,8 +66,9 @@ describe("data_last", () => {
     const dataSnapshots: number[][] = [];
     pipe(
       [1, 2, 3],
-      // Keeps the step lazy: alone, it would run eagerly on the array.
-      map(identity()),
+      // Keeps the step lazy: on an array, a run fuses only when one of its
+      // steps can stop early, as `take` can.
+      take(Infinity),
       filter((_value, _index, data) => {
         dataSnapshots.push([...data]);
         return true;
@@ -82,8 +84,9 @@ describe("data_last", () => {
     >((value, index) => value > index);
     pipe(
       [1, 2, 3],
-      // Keeps the step lazy: alone, it would run eagerly on the array.
-      map(identity()),
+      // Keeps the step lazy: on an array, a run fuses only when one of its
+      // steps can stop early, as `take` can.
+      take(Infinity),
       filter(predicate),
     );
 

@@ -1,9 +1,8 @@
 import { fc, test } from "@fast-check/vitest";
 import { expect } from "vitest";
-import { identity } from "./identity";
 import { intersectionWith } from "./intersectionWith";
-import { map } from "./map";
 import { pipe } from "./pipe";
+import { take } from "./take";
 
 // Few distinct values, so duplicates within an input and overlaps between the
 // inputs are common, among them the ones equality treats specially: `NaN`,
@@ -23,10 +22,11 @@ test.prop([items, items, fc.func(fc.boolean())])(
   "data-first and data-last produce the same result",
   (data, other, isEqual) => {
     const dataFirst = intersectionWith(data, other, isEqual);
-    // Keeps the step lazy: alone, it would run eagerly on the array.
+    // Keeps the step lazy: on an array, a run fuses only when one of its
+    // steps can stop early, as `take` can.
     const dataLast = pipe(
       data,
-      map(identity()),
+      take(Infinity),
       intersectionWith(other, isEqual),
     );
 

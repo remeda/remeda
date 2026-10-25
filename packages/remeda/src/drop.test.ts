@@ -88,7 +88,7 @@ describe("data last", () => {
   });
 
   test("lazily drops nothing for a negative `n`", () => {
-    expect(pipe([1, 2, 3, 4, 5], map(identity()), drop(-1))).toStrictEqual([
+    expect(pipe([1, 2, 3, 4, 5], take(Infinity), drop(-1))).toStrictEqual([
       1, 2, 3, 4, 5,
     ]);
   });

@@ -6,13 +6,15 @@ import type { TupleParts } from "./TupleParts";
 
 /**
  * For utilities that support lazy evaluation (like `map`, `filter`, etc...)
- * `pipe` builds the callback's `data` parameter (which in the standard library
- * is the array reference itself) lazily too, item by item, as the items flow
- * through the pipe. This means that unlike the standard library, we can't type
- * the parameter as the plain input array T. Instead, we need to compute a shape
- * that represents a partial prefix of the input T, and we want to maintain as
- * much of the input shape as possible. This will prevent unchecked array access
- * for items which haven't been computed and added to the array yet.
+ * `pipe` can build the callback's `data` parameter (which in the standard
+ * library is the array reference itself) lazily too, item by item, as the items
+ * flow through a fused run of lazy functions. Whether a step fuses depends on
+ * the rest of the pipe, which the callback's type can't see. This means that
+ * unlike the standard library, we can't type the parameter as the plain input
+ * array T. Instead, we need to compute a shape that represents a partial prefix
+ * of the input T, and we want to maintain as much of the input shape as
+ * possible. This will prevent unchecked array access for items which haven't
+ * been computed and added to the array yet.
  *
  * Additionally, because the callback is always called when at least the first
  * item is already being processed we can further refine our type so that it has

@@ -131,7 +131,7 @@ describe("dataLast", () => {
 
   test("works lazily with trivial depth === 0", () => {
     const data = [1, [2, 3], [4, [5, 6], [7, [8, 9], [[10]]]]];
-    const result = pipe(data, map(identity()), flat(0));
+    const result = pipe(data, take(Infinity), flat(0));
 
     expect(result).toStrictEqual(data);
     expect(result).not.toBe(data);

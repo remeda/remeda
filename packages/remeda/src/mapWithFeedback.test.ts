@@ -1,5 +1,4 @@
 import { describe, expect, test, vi } from "vitest";
-import { identity } from "./identity";
 import { map } from "./map";
 import { mapWithFeedback } from "./mapWithFeedback";
 import { pipe } from "./pipe";
@@ -87,8 +86,9 @@ describe("data last", () => {
     const indices: number[] = [];
     pipe(
       [1, 2, 3, 4, 5],
-      // Keeps the step lazy: alone, it would run eagerly on the array.
-      map(identity()),
+      // Keeps the step lazy: on an array, a run fuses only when one of its
+      // steps can stop early, as `take` can.
+      take(Infinity),
       mapWithFeedback((acc, x, index, items) => {
         indices.push(index);
         lazyItems.push([...items]);
@@ -117,8 +117,9 @@ describe("data last", () => {
     >((accumulator, value, index) => accumulator + value + index);
     pipe(
       [1, 2, 3],
-      // Keeps the step lazy: alone, it would run eagerly on the array.
-      map(identity()),
+      // Keeps the step lazy: on an array, a run fuses only when one of its
+      // steps can stop early, as `take` can.
+      take(Infinity),
       mapWithFeedback(reducer, 0),
     );
 

@@ -1,8 +1,7 @@
 import { fc, test } from "@fast-check/vitest";
 import { expect } from "vitest";
-import { identity } from "./identity";
-import { map } from "./map";
 import { pipe } from "./pipe";
+import { take } from "./take";
 import { uniqueBy } from "./uniqueBy";
 
 // Few distinct values, so duplicates are common, among them the ones equality
@@ -25,8 +24,9 @@ test.prop([items, fc.func(fc.integer({ min: 0, max: 3 }))])(
       keyOf(value, index);
 
     const dataFirst = uniqueBy(data, keyFunction);
-    // Keeps the step lazy: alone, it would run eagerly on the array.
-    const dataLast = pipe(data, map(identity()), uniqueBy(keyFunction));
+    // Keeps the step lazy: on an array, a run fuses only when one of its
+    // steps can stop early, as `take` can.
+    const dataLast = pipe(data, take(Infinity), uniqueBy(keyFunction));
 
     // By identity: deep equality can't tell the two objects apart.
     expect(dataFirst).toHaveLength(dataLast.length);

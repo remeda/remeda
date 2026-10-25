@@ -40,10 +40,13 @@ type LazyStep = {
  * calls into clear, sequential steps without temporary variables.
  *
  * When consecutive functions with a `lazy` tag (e.g., `map`, `filter`, `take`,
- * `drop`, `forEach`, etc...) are used together, they process data item-by-item
- * rather than creating intermediate arrays. This enables early termination
- * when only partial results are needed, improving performance for large
- * datasets and expensive operations.
+ * `drop`, `forEach`, etc...) are used together and one of them can end the
+ * iteration early (`take`, `find`, `first`, `intersection`, `zip`, `zipWith`),
+ * they process data item-by-item rather than creating intermediate arrays.
+ * This enables early termination when only partial results are needed,
+ * improving performance for large datasets and expensive operations. On
+ * arrays, consecutive lazy functions without one of those run one after the
+ * other, each the same as its data-first call.
  *
  * Functions are only evaluated lazily when their data-last form is used
  * directly in the pipe. To disable lazy evaluation, use data-first calls via
@@ -58,9 +61,11 @@ type LazyStep = {
  *
  * IMPORTANT: During lazy evaluation, callbacks using the third parameter (the
  * input array) receive only items processed up to that point, not the complete
- * array. A lazy function that isn't evaluated together with other lazy
- * functions runs on arrays the same as its data-first call, so its callbacks
- * receive the complete array.
+ * array, and each item goes through all the lazy functions before the next
+ * one is read. On arrays, a lazy function that isn't evaluated together with
+ * one that can end the iteration early runs the same as its data-first call:
+ * its callbacks receive the complete array, and run for every item before the
+ * next function starts.
  *
  * @param data - The input data.
  * @param functions - A sequence of functions that take one argument and
@@ -107,20 +112,22 @@ type LazyStep = {
  *
  *    // = Using the 3rd param of a callback =
  *    // The following would print out `data` in its entirety for each value
- *    // of `data`, and so would the same `forEach` alone in a `pipe`.
+ *    // of `data`, and so would the same `forEach` in a `pipe`, alone or with
+ *    // lazy functions that can't end the iteration early (e.g., `map`).
  *    forEach([1, 2, 3, 4], (_item, _index, data) => {
  *      console.log(data);
  *    }); //=> "[1, 2, 3, 4]" logged 4 times
  *
- *    // But when evaluated lazily together with other lazy functions, data
- *    // would only contain the items up to the current index.
+ *    // But when evaluated lazily together with a function that can end the
+ *    // iteration early, data would only contain the items up to the current
+ *    // index.
  *    pipe(
  *      [1, 2, 3, 4],
  *      forEach((_item, _index, data) => {
  *        console.log(data);
  *      }),
- *      map(multiply(2)),
- *    ); //=> "[1]", "[1, 2]", "[1, 2, 3]", "[1, 2, 3, 4]"
+ *      take(3),
+ *    ); //=> "[1]", "[1, 2]", "[1, 2, 3]"
  * @dataFirst
  * @category Function
  */
@@ -358,6 +365,24 @@ export function pipe(
       continue;
     }
 
+    // Fusing a run pays off only when one of its steps can stop the pipe
+    // early, which skips the work of the remaining items. Without one, every
+    // item goes through every step anyway, so an array goes through each
+    // function's data-first implementation in turn instead, trading the
+    // per-item step bookkeeping for an intermediate array per step. Other
+    // iterables always fuse, as those implementations only accept arrays.
+    const stepByStepEnd = Array.isArray(output)
+      ? endOfStepByStepRun(functions, functionIndex)
+      : functionIndex;
+    if (stepByStepEnd > functionIndex) {
+      do {
+        // @ts-expect-error [ts2345] -- Every function before `stepByStepEnd` is lazy and gets the array the previous one returned, but TypeScript can't narrow the functions from the scan that found them.
+        output = functions[functionIndex]!(output);
+        functionIndex += 1;
+      } while (functionIndex < stepByStepEnd);
+      continue;
+    }
+
     const lazySequence = buildLazySequence(functions, functionIndex);
 
     output = runLazySequence(output, lazySequence);
@@ -372,6 +397,39 @@ export function pipe(
   }
 
   return output;
+}
+
+/**
+ * Plans the run of lazy functions that starts at `startIndex`, the same run
+ * `buildLazySequence` would build: the consecutive lazy functions, ending after
+ * the first single-result one.
+ *
+ * @returns The index after the run when none of its functions can stop the
+ * pipe early, so they should run one after the other; `startIndex` when one of
+ * them can, so the whole run should fuse.
+ */
+function endOfStepByStepRun(
+  functions: readonly (UnaryFunction | LazyUnaryFunction)[],
+  startIndex: number,
+): number {
+  for (let index = startIndex; index < functions.length; index++) {
+    const func = functions[index]!;
+    if (!("lazy" in func)) {
+      return index;
+    }
+
+    const { lazy } = func;
+    if (lazy.canStop) {
+      return startIndex;
+    }
+
+    if (lazy.single) {
+      // Functions that generate a single value always end the run.
+      return index + 1;
+    }
+  }
+
+  return functions.length;
 }
 
 function buildLazySequence(

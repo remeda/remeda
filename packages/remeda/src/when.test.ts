@@ -1,6 +1,5 @@
 import { describe, expect, test } from "vitest";
 import { constant } from "./constant";
-import { identity } from "./identity";
 import { isDefined } from "./isDefined";
 import { isNot } from "./isNot";
 import { isNullish } from "./isNullish";
@@ -8,6 +7,7 @@ import { isStrictEqual } from "./isStrictEqual";
 import { isString } from "./isString";
 import { map } from "./map";
 import { pipe } from "./pipe";
+import { take } from "./take";
 import { when } from "./when";
 
 describe("dataFirst", () => {
@@ -133,8 +133,9 @@ describe("dataLast", () => {
     expect(
       pipe(
         [3, 1, 4, 1, 5],
-        // Keeps the step lazy: alone, it would run eagerly on the array.
-        map(identity()),
+        // Keeps the step lazy: on an array, a run fuses only when one of its
+        // steps can stop early, as `take` can.
+        take(Infinity),
         map(
           when(
             // In a lazy step `data` is the items processed so far, so this

@@ -1,9 +1,8 @@
 import { fc, test } from "@fast-check/vitest";
 import { expect } from "vitest";
-import { identity } from "./identity";
-import { map } from "./map";
 import { mapWithFeedback } from "./mapWithFeedback";
 import { pipe } from "./pipe";
+import { take } from "./take";
 
 // Both calling styles read a hole as `undefined`.
 const items = fc.oneof(fc.array(fc.anything()), fc.sparseArray(fc.anything()));
@@ -22,8 +21,9 @@ test.prop([items, fc.func(fc.integer()), fc.integer()])(
     expect(mapWithFeedback(data, reducer, initialValue)).toStrictEqual(
       pipe(
         data,
-        // Keeps the step lazy: alone, it would run eagerly on the array.
-        map(identity()),
+        // Keeps the step lazy: on an array, a run fuses only when one of its
+        // steps can stop early, as `take` can.
+        take(Infinity),
         mapWithFeedback(reducer, initialValue),
       ),
     );
