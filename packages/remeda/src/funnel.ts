@@ -70,7 +70,7 @@ type Funnel<Args extends RestArguments, R> = {
   /**
    * The data accumulated via `call` that hasn't been passed to `callback` yet.
    * This is the funnel's own state, not a copy, so mutating it affects the next
-   * invocation. Will be `undefined` if `reducer` is not passed.
+   * invocation.
    */
   readonly pendingData: R | undefined;
 };
