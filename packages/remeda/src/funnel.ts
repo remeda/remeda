@@ -68,8 +68,9 @@ type Funnel<Args extends RestArguments, R> = {
   readonly isIdle: boolean;
 
   /**
-   * The data from the current state as prepared by the `reducer` function.
-   * Will be `undefined` if `reducer` is not passed.
+   * The data accumulated via `call` that hasn't been passed to `callback` yet.
+   * This is the funnel's own state, not a copy, so mutating it affects the next
+   * invocation. Will be `undefined` if `reducer` is not passed.
    */
   readonly pendingData: R | undefined;
 };
@@ -156,8 +157,9 @@ type Funnel<Args extends RestArguments, R> = {
  * - `flush` - Triggers an invocation even if there are active timeouts, and
  * then resets the funnel to it's initial state.
  * - `isIdle` - Checks if there are any active timeouts.
- * - `pendingData` - The accumulated data provided via `call` that hasn't been
- * processed by `callback` yet.
+ * - `pendingData` - The data accumulated via `call` that hasn't been passed to
+ * `callback` yet. This is the funnel's own state, not a copy, so mutating it
+ * affects the next invocation.
  * @signature
  *   funnel(callback, options);
  * @example
