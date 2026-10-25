@@ -39,7 +39,7 @@ type FunnelTimingOptions =
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript has some quirks with generic function types, and works best with `any` and not `unknown`. This follows the typing of built-in utilities like `ReturnType` and `Parameters`.
 type RestArguments = any[];
 
-type Funnel<Args extends RestArguments = []> = {
+type Funnel<Args extends RestArguments, R> = {
   /**
    * Call the function. This might result in the `execute` function being called
    * now or later, depending on it's configuration and it's current state.
@@ -66,6 +66,13 @@ type Funnel<Args extends RestArguments = []> = {
    * The funnel is in it's initial state (there are no active timeouts).
    */
   readonly isIdle: boolean;
+
+  /**
+   * The data accumulated via `call` that hasn't been passed to `callback` yet.
+   * This is the funnel's own state, not a copy, so mutating it affects the next
+   * invocation.
+   */
+  readonly pendingData: R | undefined;
 };
 
 /**
@@ -150,6 +157,9 @@ type Funnel<Args extends RestArguments = []> = {
  * - `flush` - Triggers an invocation even if there are active timeouts, and
  * then resets the funnel to it's initial state.
  * - `isIdle` - Checks if there are any active timeouts.
+ * - `pendingData` - The data accumulated via `call` that hasn't been passed to
+ * `callback` yet. This is the funnel's own state, not a copy, so mutating it
+ * affects the next invocation.
  * @signature
  *   funnel(callback, options);
  * @example
@@ -172,7 +182,7 @@ type Funnel<Args extends RestArguments = []> = {
  *   throttle.call();
  * @category Function
  */
-export function funnel<Args extends RestArguments = [], R = never>(
+export function funnel<Args extends RestArguments = [], R = unknown>(
   callback: (data: R) => void,
   {
     triggerAt = "end",
@@ -181,7 +191,7 @@ export function funnel<Args extends RestArguments = [], R = never>(
     minGapMs,
     reducer = voidReducer,
   }: FunnelOptions<Args, R>,
-): Funnel<Args> {
+): Funnel<Args, R> {
   // We manage execution via 2 timeouts, one to track bursts of calls, and one
   // to track the interval between invocations. Together we refer to the period
   // where any of these are active as a "cool-down period".
@@ -320,6 +330,10 @@ export function funnel<Args extends RestArguments = [], R = never>(
 
     get isIdle() {
       return burstTimeoutId === undefined && intervalTimeoutId === undefined;
+    },
+
+    get pendingData() {
+      return preparedData === VOID_REDUCER_SYMBOL ? undefined : preparedData;
     },
   };
 }
