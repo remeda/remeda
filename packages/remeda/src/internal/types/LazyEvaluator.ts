@@ -1,4 +1,31 @@
-import type { LazyResult, LazySlot } from "../lazyControl";
+import type { LazyResult, LazySlot, StoppableLazyResult } from "../lazyControl";
+
+// Exists only in types. Tells the two kinds of evaluator apart where their
+// result types can't: `LazyDefinition`'s `lazy` prop types its evaluator's
+// result as `unknown`, which absorbs every control. The stoppable kind takes
+// `boolean` because an evaluator that may stop doesn't have to, which makes
+// every `LazyEvaluator` a `StoppableLazyEvaluator` too.
+declare const stopsPipe: unique symbol;
+
+export type LazyEvaluator<T = unknown, R = T> = BaseEvaluator<
+  T,
+  LazyResult<R>
+> & {
+  readonly [stopsPipe]?: false;
+};
+
+/**
+ * An evaluator that can also use pipe short-circuiting controls to stop
+ * pipe evaluations in the middle.
+ *
+ * @see makeStoppable
+ */
+export type StoppableLazyEvaluator<T = unknown, R = T> = BaseEvaluator<
+  T,
+  StoppableLazyResult<R>
+> & {
+  readonly [stopsPipe]?: boolean;
+};
 
 /**
  * Extra levers an evaluator gives `pipe` over how it runs the step.
@@ -15,12 +42,12 @@ type LazyEvaluatorMetadata = {
   readonly requiresData?: true;
 };
 
-export type LazyEvaluator<T = unknown, R = T> = ((
+type BaseEvaluator<T, Result> = ((
   item: T,
   index: number,
   data: readonly T[],
   // Only evaluators that stop with a value or fan out need it, and only to
   // pass it to `lastLazyValue` or `manyLazyValues`.
   slot: LazySlot,
-) => LazyResult<R>) &
+) => Result) &
   LazyEvaluatorMetadata;

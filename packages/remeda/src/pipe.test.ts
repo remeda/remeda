@@ -9,8 +9,12 @@ import { identity } from "./identity";
 import { lazyEmptyEvaluator } from "./internal/lazyControl";
 import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
 import { makeReducing } from "./internal/makeReducing";
+import { makeStoppable } from "./internal/makeStoppable";
 import type { LazyCallback } from "./internal/types/LazyCallback";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type {
+  LazyEvaluator,
+  StoppableLazyEvaluator,
+} from "./internal/types/LazyEvaluator";
 import { isStrictEqual } from "./isStrictEqual";
 import { join } from "./join";
 import { map } from "./map";
@@ -448,11 +452,15 @@ describe("lazy", () => {
     });
 
     test("stopping without a value ends the iteration", () => {
-      const evaluator = vi.fn<LazyEvaluator>(lazyEmptyEvaluator);
+      const evaluator = vi.fn<StoppableLazyEvaluator>(lazyEmptyEvaluator);
       pipe(
         // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
         [1, 2, 3].values(),
-        lazyDataLastImplementation(identity(), [], () => evaluator),
+        lazyDataLastImplementation(
+          identity(),
+          [],
+          makeStoppable(() => evaluator),
+        ),
       );
 
       expect(evaluator).toHaveBeenCalledTimes(1);

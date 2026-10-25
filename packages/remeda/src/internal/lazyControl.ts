@@ -11,6 +11,7 @@
 // the protocol keeps a future shape change from being read as this one.
 
 import type { Tagged, Writable } from "type-fest";
+import type { StoppableLazyEvaluator } from "./types/LazyEvaluator";
 
 /**
  * Skip the current item: nothing reaches the next step.
@@ -53,11 +54,17 @@ export type LazySlot = {
 
 /**
  * A lazy evaluator returns the (possibly transformed) item itself in the
- * common case, and one of the controls above for anything else it needs to
- * tell `pipe` (skip, stop, expand).
+ * common case, `SKIP_ITEM` to skip it, or `MANY` (via `manyLazyValues`) to
+ * expand it.
  */
-export type LazyResult<T> =
-  T | LazyLast<T> | LazyMany<T> | typeof SKIP_ITEM | typeof STOP;
+export type LazyResult<T> = T | LazyMany<T> | typeof SKIP_ITEM;
+
+/**
+ * The results of an evaluator that can also stop the pipe.
+ *
+ * @see StoppableLazyEvaluator
+ */
+export type StoppableLazyResult<T> = LazyResult<T> | LazyLast<T> | typeof STOP;
 
 // The payload travels in the slot, so the tag is what ties its type to the
 // control: `LAST` and `MANY` only typecheck as the result of the helpers that
@@ -76,7 +83,10 @@ export const createLazySlot = (): LazySlot => ({
 /**
  * A helper evaluator for stopping the pipe without emitting anything.
  */
-export const lazyEmptyEvaluator = (): typeof STOP => STOP;
+export const lazyEmptyEvaluator: StoppableLazyEvaluator<
+  unknown,
+  never
+> = (): typeof STOP => STOP;
 
 /**
  * Emits `value` and ends the fused lazy sequence it is part of.

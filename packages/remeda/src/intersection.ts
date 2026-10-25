@@ -2,11 +2,11 @@ import {
   lastLazyValue,
   lazyEmptyEvaluator,
   SKIP_ITEM,
-  type LazyResult,
+  type StoppableLazyResult,
 } from "./internal/lazyControl";
 import { makeStoppable } from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the
@@ -89,7 +89,7 @@ function intersectionImplementation<T, S>(
 }
 
 const lazyImplementation = makeStoppable(
-  <T, S>(other: readonly S[]): LazyEvaluator<T, T & S> => {
+  <T, S>(other: readonly S[]): StoppableLazyEvaluator<T, T & S> => {
     if (other.length === 0) {
       return lazyEmptyEvaluator;
     }
@@ -102,7 +102,7 @@ const lazyImplementation = makeStoppable(
       remaining.set(value, (remaining.get(value) ?? 0) + 1);
     }
 
-    return (value, _index, _data, slot): LazyResult<T & S> => {
+    return (value, _index, _data, slot): StoppableLazyResult<T & S> => {
       const copies = remaining.get(value);
 
       if (copies === undefined) {

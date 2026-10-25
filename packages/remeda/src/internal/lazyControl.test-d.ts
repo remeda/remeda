@@ -1,17 +1,28 @@
 import { describe, test } from "vitest";
-import { LAST, MANY, lastLazyValue, manyLazyValues } from "./lazyControl";
-import type { LazyEvaluator } from "./types/LazyEvaluator";
+import { LAST, MANY, STOP, lastLazyValue, manyLazyValues } from "./lazyControl";
+import type {
+  LazyEvaluator,
+  StoppableLazyEvaluator,
+} from "./types/LazyEvaluator";
 
-// Stands in for a lazy implementation's declared result type, which is what
-// checks the evaluator it returns.
+// Both stand in for the evaluator type a lazy implementation declares as its
+// return type, which is what checks the evaluator it returns.
 declare function numberEvaluator(evaluator: LazyEvaluator<number>): void;
+declare function stoppableNumberEvaluator(
+  evaluator: StoppableLazyEvaluator<number>,
+): void;
 
-// Stands in for a lazy implementation that is generic over its items, which is
-// how most utilities declare their evaluator's result type.
+// Both stand in for a lazy implementation that is generic over its items,
+// which is how most utilities declare their evaluator's result type.
 declare function genericEvaluator(
   evaluator: <T>(
     ...args: Readonly<Parameters<LazyEvaluator<T>>>
   ) => ReturnType<LazyEvaluator<T>>,
+): void;
+declare function stoppableGenericEvaluator(
+  evaluator: <T>(
+    ...args: Readonly<Parameters<StoppableLazyEvaluator<T>>>
+  ) => ReturnType<StoppableLazyEvaluator<T>>,
 ): void;
 
 // Stands in for an evaluator declared without a result type, which
@@ -20,13 +31,19 @@ declare function unknownEvaluator(evaluator: LazyEvaluator): void;
 
 describe("accepted", () => {
   test("last with a value of the result type", () => {
-    numberEvaluator((value, _index, _data, slot) => lastLazyValue(value, slot));
+    stoppableNumberEvaluator((value, _index, _data, slot) =>
+      lastLazyValue(value, slot),
+    );
   });
 
   test("last with a value of a generic result type", () => {
-    genericEvaluator((value, _index, _data, slot) =>
+    stoppableGenericEvaluator((value, _index, _data, slot) =>
       lastLazyValue(value, slot),
     );
+  });
+
+  test("stop", () => {
+    stoppableNumberEvaluator(() => STOP);
   });
 
   test("many with values of the result type", () => {
@@ -38,7 +55,7 @@ describe("accepted", () => {
 
 describe("rejected", () => {
   test("a bare last", () => {
-    numberEvaluator(
+    stoppableNumberEvaluator(
       () =>
         // @ts-expect-error [ts2322] -- The payload travels in the slot, so only
         // `lastLazyValue`, which writes one, may produce the control.
@@ -47,7 +64,7 @@ describe("rejected", () => {
   });
 
   test("a bare last with a generic result type", () => {
-    genericEvaluator(
+    stoppableGenericEvaluator(
       () =>
         // @ts-expect-error [ts2322] -- The payload travels in the slot, so only
         // `lastLazyValue`, which writes one, may produce the control.
@@ -74,7 +91,7 @@ describe("rejected", () => {
   });
 
   test("last with a value of another type", () => {
-    numberEvaluator((_value, _index, _data, slot) =>
+    stoppableNumberEvaluator((_value, _index, _data, slot) =>
       // @ts-expect-error [ts2322] -- The control's tag carries the payload's
       // type, so the pipe never reads a value the evaluator didn't declare.
       lastLazyValue("x", slot),
@@ -88,13 +105,55 @@ describe("rejected", () => {
       manyLazyValues(["x"], slot),
     );
   });
+
+  test("last from an evaluator that can't stop", () => {
+    numberEvaluator((value, _index, _data, slot) =>
+      // @ts-expect-error [ts2322] -- Stopping takes a `StoppableLazyEvaluator`,
+      // which only a lazy implementation marked by `makeStoppable` may return.
+      lastLazyValue(value, slot),
+    );
+  });
+
+  test("last from a generic evaluator that can't stop", () => {
+    genericEvaluator((value, _index, _data, slot) =>
+      // @ts-expect-error [ts2322] -- Stopping takes a `StoppableLazyEvaluator`,
+      // which only a lazy implementation marked by `makeStoppable` may return.
+      lastLazyValue(value, slot),
+    );
+  });
+
+  test("stop from an evaluator that can't stop", () => {
+    numberEvaluator(
+      () =>
+        // @ts-expect-error [ts2322] -- Stopping takes a
+        // `StoppableLazyEvaluator`, which only a lazy implementation marked by
+        // `makeStoppable` may return.
+        STOP,
+    );
+  });
+
+  test("stop from a generic evaluator that can't stop", () => {
+    genericEvaluator(
+      () =>
+        // @ts-expect-error [ts2322] -- Stopping takes a
+        // `StoppableLazyEvaluator`, which only a lazy implementation marked by
+        // `makeStoppable` may return.
+        STOP,
+    );
+  });
 });
 
 describe("known issues!", () => {
   test("a bare last with an unknown result type", () => {
     // `LazyResult<unknown>` collapses to `unknown`, which accepts any value,
-    // including a control without its payload. `flat`'s evaluators are typed
-    // this way because their item type changes with depth.
+    // including a control without its payload, and, since `LAST` stops, a stop
+    // from an evaluator that can't stop. `flat`'s evaluators are typed this way
+    // because their item type changes with depth.
     unknownEvaluator(() => LAST);
+  });
+
+  test("stop from an evaluator that can't stop, with an unknown result type", () => {
+    // The same collapse accepts a stop from an evaluator that can't stop.
+    unknownEvaluator(() => STOP);
   });
 });

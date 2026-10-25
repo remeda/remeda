@@ -1,12 +1,12 @@
 import {
   lastLazyValue,
   lazyEmptyEvaluator,
-  type LazyResult,
+  type StoppableLazyResult,
 } from "./internal/lazyControl";
 import { makeStoppable } from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
   // If the array is empty the output is empty, no surprises
@@ -84,10 +84,15 @@ const zipImplementation = <
 const lazyImplementation = makeStoppable(
   <F extends IterableContainer, S extends IterableContainer>(
     second: S,
-  ): LazyEvaluator<F[number], [F[number], S[number]]> =>
+  ): StoppableLazyEvaluator<F[number], [F[number], S[number]]> =>
     second.length === 0
       ? lazyEmptyEvaluator
-      : (value, index, _data, slot): LazyResult<[F[number], S[number]]> => {
+      : (
+          value,
+          index,
+          _data,
+          slot,
+        ): StoppableLazyResult<[F[number], S[number]]> => {
           const pair = [value, second[index]];
           return index >= second.length - 1
             ? // @ts-expect-error [ts2322] -- TypeScript widens fixed tuple literals as arrays of a union of all their items. For us this means it considers pair to be `unknown[]`, but we know better...

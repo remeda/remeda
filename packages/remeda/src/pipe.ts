@@ -13,11 +13,11 @@ import {
 } from "./internal/lazyControl";
 import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
 import { processSingleLazyStep } from "./internal/processSingleLazyStep";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/unexpectedAccessSentinel";
 
 type LazyStep = {
-  readonly lazyEvaluator: LazyEvaluator;
+  readonly lazyEvaluator: StoppableLazyEvaluator;
   index: number;
 } & (
   | {

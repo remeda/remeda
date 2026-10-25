@@ -10,7 +10,7 @@ import type {
   LazyCallback,
   LazyTypePredicate,
 } from "./internal/types/LazyCallback";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
 
@@ -168,7 +168,7 @@ const lazyImplementation = makeReducing(
   makeStoppable(
     <T, S extends T>(
       predicate: (value: T, index: number, data: readonly T[]) => value is S,
-    ): LazyEvaluator<T, S> =>
+    ): StoppableLazyEvaluator<T, S> =>
       requireDataByArity(predicate, (value, index, data, slot) =>
         predicate(value, index, data) ? lastLazyValue(value, slot) : SKIP_ITEM,
       ),
