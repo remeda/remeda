@@ -1,7 +1,7 @@
 import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
 import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
+import { makeStoppable } from "./internal/makeStoppable";
 import { requireDataByArity } from "./internal/requireData";
-import { toCanStop } from "./internal/toCanStop";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
@@ -129,7 +129,7 @@ function zipWithImplementation<
     : second.map((item, index) => fn(first[index], item, index, datum));
 }
 
-const lazyImplementation = toCanStop(
+const lazyImplementation = makeStoppable(
   <T1, T2 extends IterableContainer, Value>(
     second: T2,
     fn: ZippingFunction<readonly T1[], T2, Value>,

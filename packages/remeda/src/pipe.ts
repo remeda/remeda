@@ -347,7 +347,11 @@ export function pipe(
     }
 
     const nextFunc = functions[functionIndex + 1];
-    if (nextFunc === undefined || !("lazy" in nextFunc) || func.lazy.single) {
+    if (
+      nextFunc === undefined ||
+      !("lazy" in nextFunc) ||
+      func.lazy.isReducing
+    ) {
       // A run of one lazy function has nothing to fuse with, so an array is
       // passed to it directly, which runs its data-first implementation. Any
       // other iterable runs as a lazy sequence of one step, which has no
@@ -390,8 +394,8 @@ export function pipe(
 
     // @ts-expect-error [ts2322] -- TypeScript can't follow the logic that `functionIndex - 1` is pointing to the last function in `lazySequence`.
     const lastLazyFunction: LazyUnaryFunction = functions[functionIndex - 1];
-    if (lastLazyFunction.lazy.single) {
-      // @ts-expect-error [ts18046] -- output is always an array when the last lazy function in the sequence was single.
+    if (lastLazyFunction.lazy.isReducing) {
+      // @ts-expect-error [ts18046] -- output is always an array when the last lazy function in the sequence was reducing.
       output = output[0];
     }
   }
@@ -402,7 +406,7 @@ export function pipe(
 /**
  * Plans the run of lazy functions that starts at `startIndex`, the same run
  * `buildLazySequence` would build: the consecutive lazy functions, ending after
- * the first single-result one.
+ * the first reducing one.
  *
  * @returns The index after the run when none of its functions can stop the
  * pipe early, so they should run one after the other; `startIndex` when one of
@@ -419,12 +423,12 @@ function endOfStepByStepRun(
     }
 
     const { lazy } = func;
-    if (lazy.canStop) {
+    if (lazy.isStoppable) {
       return startIndex;
     }
 
-    if (lazy.single) {
-      // Functions that generate a single value always end the run.
+    if (lazy.isReducing) {
+      // Functions that reduce to a value always end the run.
       return index + 1;
     }
   }
@@ -461,8 +465,8 @@ function buildLazySequence(
           },
     );
 
-    if (func.lazy.single) {
-      // Functions that generate a single value always end the sequence.
+    if (func.lazy.isReducing) {
+      // Functions that reduce to a value always end the sequence.
       break;
     }
   }

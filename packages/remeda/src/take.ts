@@ -1,6 +1,6 @@
 import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
+import { makeStoppable } from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
-import { toCanStop } from "./internal/toCanStop";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
@@ -57,7 +57,7 @@ const takeImplementation = <T extends IterableContainer>(
   n: number,
 ): T[number][] => (n < 0 ? [] : array.slice(0, n));
 
-const lazyImplementation = toCanStop(<T>(n: number): LazyEvaluator<T> => {
+const lazyImplementation = makeStoppable(<T>(n: number): LazyEvaluator<T> => {
   if (Number.isNaN(n) || n < 1) {
     return lazyEmptyEvaluator;
   }

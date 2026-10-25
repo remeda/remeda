@@ -1,6 +1,5 @@
+import type { LazyMeta } from "./lazyDataLastImplementation";
 import type { StrictFunction } from "./types/StrictFunction";
-
-type CanStop<Func> = Func & { readonly canStop: true };
 
 /**
  * Marks a lazy implementation whose evaluators can stop the pipe early (they
@@ -9,6 +8,5 @@ type CanStop<Func> = Func & { readonly canStop: true };
  * item goes through every step anyway, so the functions run one after the
  * other on arrays, each through its data-first implementation.
  */
-export const toCanStop = <Func extends StrictFunction>(
-  fn: Func,
-): CanStop<Func> => Object.assign(fn, { canStop: true as const });
+export const makeStoppable = <Func extends StrictFunction>(fn: Func): Func =>
+  Object.assign(fn, { isStoppable: true } satisfies LazyMeta);

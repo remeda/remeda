@@ -4,8 +4,8 @@ import {
   SKIP_ITEM,
   type LazyResult,
 } from "./internal/lazyControl";
+import { makeStoppable } from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
-import { toCanStop } from "./internal/toCanStop";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
@@ -88,7 +88,7 @@ function intersectionImplementation<T, S>(
   return result;
 }
 
-const lazyImplementation = toCanStop(
+const lazyImplementation = makeStoppable(
   <T, S>(other: readonly S[]): LazyEvaluator<T, T & S> => {
     if (other.length === 0) {
       return lazyEmptyEvaluator;

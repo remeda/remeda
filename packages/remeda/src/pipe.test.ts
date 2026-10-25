@@ -8,7 +8,7 @@ import { flatMap } from "./flatMap";
 import { identity } from "./identity";
 import { lazyEmptyEvaluator } from "./internal/lazyControl";
 import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
-import { toSingle } from "./internal/toSingle";
+import { makeReducing } from "./internal/makeReducing";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { isStrictEqual } from "./isStrictEqual";
@@ -103,7 +103,7 @@ describe("lazy", () => {
     ).toStrictEqual([1, 2]);
   });
 
-  describe("a single-result step followed by a lazy step", () => {
+  describe("a reducing step followed by a lazy step", () => {
     test("at the start of a run", () => {
       expect(
         pipe([[1, 2], [3]] as const, first(), map(multiply(10))),
@@ -227,7 +227,7 @@ describe("lazy", () => {
       ).toStrictEqual([10, 30]);
     });
 
-    test("a downstream single-result step stops mid fan-out", () => {
+    test("a downstream reducing step stops mid fan-out", () => {
       const mapper = vi.fn<<T>(x: T) => T>(identity());
 
       expect(
@@ -709,14 +709,14 @@ describe("lazy", () => {
       expect(calls).toStrictEqual(["map", "map", "filter", "filter"]);
     });
 
-    test("ends after a single-result step", () => {
-      // A single-result step that can't stop early, which no utility is. Were
+    test("ends after a reducing step", () => {
+      // A reducing step that can't stop early, which no utility is. Were
       // the run to go on past it, it would reach `take`, which can stop early,
       // and fuse.
       const firstItem = lazyDataLastImplementation(
         (data: readonly (readonly number[])[]) => data[0] ?? [],
         [],
-        toSingle(() => identity()),
+        makeReducing(() => identity()),
       );
       const dataLengths: number[] = [];
       pipe(

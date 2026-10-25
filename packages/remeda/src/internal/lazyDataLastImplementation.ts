@@ -21,9 +21,9 @@ export type LazyDefinition<
   readonly lazyArgs: P;
 };
 
-type LazyMeta = {
-  readonly single?: true;
-  readonly canStop?: true;
+export type LazyMeta = {
+  readonly isReducing?: true;
+  readonly isStoppable?: true;
 };
 
 // Allows us to build the lazy definition dynamically at runtime.

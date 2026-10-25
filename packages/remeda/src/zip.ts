@@ -3,8 +3,8 @@ import {
   lazyEmptyEvaluator,
   type LazyResult,
 } from "./internal/lazyControl";
+import { makeStoppable } from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
-import { toCanStop } from "./internal/toCanStop";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
@@ -81,7 +81,7 @@ const zipImplementation = <
     ? first.map((item, index) => [item, second[index]])
     : second.map((item, index) => [first[index], item])) as Zipped<F, S>;
 
-const lazyImplementation = toCanStop(
+const lazyImplementation = makeStoppable(
   <F extends IterableContainer, S extends IterableContainer>(
     second: S,
   ): LazyEvaluator<F[number], [F[number], S[number]]> =>

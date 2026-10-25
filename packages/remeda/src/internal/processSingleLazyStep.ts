@@ -50,7 +50,7 @@ export function processSingleLazyStep<P extends readonly unknown[]>(
     }
   }
 
-  return lazy.single ? accumulator[0] : accumulator;
+  return lazy.isReducing ? accumulator[0] : accumulator;
 }
 
 /**
