@@ -947,7 +947,7 @@ describe("utility functions", () => {
     });
   });
 
-   describe("pendingData", () => {
+  describe("pendingData", () => {
     test("pendingData reflects preparedData when reducer passed", () => {
       const mockFn = vi.fn<(x: readonly string[]) => void>();
       const foo = funnel(mockFn, {
@@ -978,9 +978,9 @@ describe("utility functions", () => {
 
       expect(foo.pendingData).toBeUndefined();
 
-      foo.call("a");
-      foo.call("b");
-      foo.call("c");
+      foo.call();
+      foo.call();
+      foo.call();
 
       expect(foo.pendingData).toBeUndefined();
     });
