@@ -72,6 +72,13 @@ describe("dataLast", () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
+  test("stops the upstream steps once second is exhausted", () => {
+    const mapper = vi.fn<(x: number) => number>(identity());
+    pipe([1, 2, 3, 4, 5], map(mapper), zip(["a", "b"]));
+
+    expect(mapper).toHaveBeenCalledTimes(2);
+  });
+
   test("pairs by the step's own count after an upstream filter", () => {
     expect(
       pipe(
