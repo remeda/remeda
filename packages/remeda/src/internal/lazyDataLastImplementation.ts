@@ -22,20 +22,8 @@ export type LazyDefinition<
 };
 
 type LazyMeta = {
-  /**
-   * How the step can end the iteration early, folded into one property so
-   * that `pipe` reads a single one per step to plan a run:
-   * - absent: it can't, every item goes through it (e.g., `map`, `filter`);
-   * - `null`: it can stop the pipe (e.g., `take`, `zip`), set with a direct
-   *   write on the factory (`lazyImplementation.single = null`);
-   * - `true`: it emits a single result, stopping the pipe there, and ends
-   *   the run, via `toSingle`.
-   * Only `true` is truthy, so a truthiness read still asks whether the step
-   * ends the run with a single result. `null` rather than `false` keeps that
-   * read a valid condition under `strict-boolean-expressions`, which rejects
-   * `false | undefined` as ambiguous but accepts `true | null | undefined`.
-   */
-  readonly single?: true | null;
+  readonly single?: true;
+  readonly canStop?: true;
 };
 
 // Allows us to build the lazy definition dynamically at runtime.

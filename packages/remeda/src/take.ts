@@ -1,5 +1,6 @@
 import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
 import { purryWithLazy } from "./internal/purryWithLazy";
+import { toCanStop } from "./internal/toCanStop";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
@@ -56,7 +57,7 @@ const takeImplementation = <T extends IterableContainer>(
   n: number,
 ): T[number][] => (n < 0 ? [] : array.slice(0, n));
 
-const lazyImplementation = <T>(n: number): LazyEvaluator<T> => {
+const lazyImplementation = toCanStop(<T>(n: number): LazyEvaluator<T> => {
   if (Number.isNaN(n) || n < 1) {
     return lazyEmptyEvaluator;
   }
@@ -66,7 +67,4 @@ const lazyImplementation = <T>(n: number): LazyEvaluator<T> => {
     remaining -= 1;
     return remaining < 1 ? lastLazyValue(value, slot) : value;
   };
-};
-
-// eslint-disable-next-line unicorn/no-null -- `null` is a value of its own here, telling a step that can stop apart from one that never set `single`; `LazyMeta` explains why it isn't `false`.
-lazyImplementation.single = null;
+});

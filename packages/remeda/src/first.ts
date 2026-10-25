@@ -4,6 +4,7 @@ import {
   type LazySlot,
 } from "./internal/lazyControl";
 import { purryWithLazy } from "./internal/purryWithLazy";
+import { toCanStop } from "./internal/toCanStop";
 import { toSingle } from "./internal/toSingle";
 import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -49,7 +50,7 @@ export function first(...args: readonly unknown[]): unknown {
 
 const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;
 
-const lazyImplementation = toSingle(() => emitAndStop);
+const lazyImplementation = toSingle(toCanStop(() => emitAndStop));
 
 const emitAndStop = <T>(
   value: T,

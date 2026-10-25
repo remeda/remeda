@@ -8,6 +8,7 @@ import { flatMap } from "./flatMap";
 import { identity } from "./identity";
 import { lazyEmptyEvaluator } from "./internal/lazyControl";
 import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
+import { toSingle } from "./internal/toSingle";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { isStrictEqual } from "./isStrictEqual";
@@ -706,6 +707,29 @@ describe("lazy", () => {
       );
 
       expect(calls).toStrictEqual(["map", "map", "filter", "filter"]);
+    });
+
+    test("ends after a single-result step", () => {
+      // A single-result step that can't stop early, which no utility is. Were
+      // the run to go on past it, it would reach `take`, which can stop early,
+      // and fuse.
+      const firstItem = lazyDataLastImplementation(
+        (data: readonly (readonly number[])[]) => data[0] ?? [],
+        [],
+        toSingle(() => identity()),
+      );
+      const dataLengths: number[] = [];
+      pipe(
+        [[1, 2], [3]],
+        map((value, _index, data) => {
+          dataLengths.push(data.length);
+          return value;
+        }),
+        firstItem,
+        take(1),
+      );
+
+      expect(dataLengths).toStrictEqual([2, 2]);
     });
   });
 

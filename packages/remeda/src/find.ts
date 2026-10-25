@@ -1,6 +1,7 @@
 import { lastLazyValue, SKIP_ITEM } from "./internal/lazyControl";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
+import { toCanStop } from "./internal/toCanStop";
 import { toSingle } from "./internal/toSingle";
 import type { Assignability } from "./internal/types/Assignability";
 import type { First } from "./internal/types/First";
@@ -164,10 +165,12 @@ const findImplementation = <T, S extends T>(
 ): S | undefined => data.find(predicate);
 
 const lazyImplementation = toSingle(
-  <T, S extends T>(
-    predicate: (value: T, index: number, data: readonly T[]) => value is S,
-  ): LazyEvaluator<T, S> =>
-    requireDataByArity(predicate, (value, index, data, slot) =>
-      predicate(value, index, data) ? lastLazyValue(value, slot) : SKIP_ITEM,
-    ),
+  toCanStop(
+    <T, S extends T>(
+      predicate: (value: T, index: number, data: readonly T[]) => value is S,
+    ): LazyEvaluator<T, S> =>
+      requireDataByArity(predicate, (value, index, data, slot) =>
+        predicate(value, index, data) ? lastLazyValue(value, slot) : SKIP_ITEM,
+      ),
+  ),
 );
