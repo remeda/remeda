@@ -1,6 +1,7 @@
 import { expectTypeOf, test } from "vitest";
 import { flat } from "./flat";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
+import { pipe } from "./pipe";
 
 test("works on empty arrays", () => {
   const result = flat([], 1);
@@ -159,4 +160,20 @@ test("doesn't accept built-in 'infinite' numbers", () => {
 
   // @ts-expect-error [ts2345] - Infinity is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L597
   flat([], Infinity);
+});
+
+test("doesn't accept non-integer depths", () => {
+  // @ts-expect-error [ts2345] -- Intentional, this is what we're testing.
+  flat([[1]], 0.5);
+});
+
+test("doesn't accept non-integer depths in pipe", () => {
+  pipe(
+    [[1]],
+    // @ts-expect-error [ts2345] -- Intentional, this is what we're testing.
+    flat(
+      // @ts-expect-error [ts2769] -- Intentional, this is what we're testing.
+      0.5,
+    ),
+  );
 });

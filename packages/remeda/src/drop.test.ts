@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { drop } from "./drop";
+import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { take } from "./take";
@@ -47,10 +48,49 @@ describe("data last", () => {
     expect(pipe([1, 2, 3, 4, 5], drop(10))).toStrictEqual([]);
   });
 
-  test("lazy impl", () => {
-    const mockFunc = vi.fn<(x: number) => number>();
-    pipe([1, 2, 3, 4, 5], map(mockFunc), drop(2), take(2));
+  test.each([
+    [2.5, [3, 4, 5]],
+    [1.5, [2, 3, 4, 5]],
+    [0.5, [1, 2, 3, 4, 5]],
+  ])("truncates a count of %s", (n, expected) => {
+    expect(pipe([1, 2, 3, 4, 5], drop(n))).toStrictEqual(expected);
+  });
 
-    expect(mockFunc).toHaveBeenCalledTimes(4);
+  test.each([
+    [2.5, [3, 4, 5]],
+    [1.5, [2, 3, 4, 5]],
+    [0.5, [1, 2, 3, 4, 5]],
+  ])("truncates a count of %s in a fused run", (n, expected) => {
+    // The trailing `take` can stop the run early, so `pipe` has to run it lazily.
+    expect(
+      pipe([1, 2, 3, 4, 5], map(identity()), drop(n), take(5)),
+    ).toStrictEqual(expected);
+  });
+
+  test("reads a NaN count as 0", () => {
+    expect(pipe([1, 2, 3, 4, 5], drop(NaN))).toStrictEqual([1, 2, 3, 4, 5]);
+  });
+
+  test("reads a NaN count as 0 in a fused run", () => {
+    expect(
+      pipe([1, 2, 3, 4, 5], map(identity()), drop(NaN), take(5)),
+    ).toStrictEqual([1, 2, 3, 4, 5]);
+  });
+
+  test("drops everything for an Infinity count", () => {
+    expect(pipe([1, 2, 3, 4, 5], drop(Infinity))).toStrictEqual([]);
+  });
+
+  test("drops everything for an Infinity count in a fused run", () => {
+    expect(
+      pipe([1, 2, 3, 4, 5], map(identity()), drop(Infinity), take(5)),
+    ).toStrictEqual([]);
+  });
+
+  test("lazy impl", () => {
+    const mapper = vi.fn<(x: number) => number>();
+    pipe([1, 2, 3, 4, 5], map(mapper), drop(2), take(2));
+
+    expect(mapper).toHaveBeenCalledTimes(4);
   });
 });

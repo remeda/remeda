@@ -5,6 +5,7 @@ import { flat } from "./flat";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
+import { take } from "./take";
 
 describe("dataFirst", () => {
   test("works on empty arrays", () => {
@@ -134,6 +135,62 @@ describe("dataLast", () => {
 
     expect(result).toStrictEqual(data);
     expect(result).not.toBe(data);
+  });
+
+  test("truncates a fractional depth", () => {
+    expect(
+      pipe(
+        [[1]],
+        // @ts-expect-error [ts2345] -- Intentional!
+        flat(
+          // @ts-expect-error [ts2769] -- Intentional!
+          0.5,
+        ),
+      ),
+    ).toStrictEqual([[1]]);
+  });
+
+  test("truncates a fractional depth in a fused run", () => {
+    expect(
+      pipe(
+        [[1]],
+        map(identity()),
+        // @ts-expect-error [ts2345] -- Intentional!
+        flat(
+          // @ts-expect-error [ts2769] -- Intentional!
+          0.5,
+        ),
+        take(1),
+      ),
+    ).toStrictEqual([[1]]);
+  });
+
+  test("reads a NaN depth as 0", () => {
+    expect(
+      pipe(
+        [[1]],
+        // @ts-expect-error [ts2345] -- Intentional!
+        flat(
+          // @ts-expect-error [ts2769] -- Intentional!
+          NaN,
+        ),
+      ),
+    ).toStrictEqual([[1]]);
+  });
+
+  test("reads a NaN depth as 0 in a fused run", () => {
+    expect(
+      pipe(
+        [[1]],
+        map(identity()),
+        // @ts-expect-error [ts2345] -- Intentional!
+        flat(
+          // @ts-expect-error [ts2769] -- Intentional!
+          NaN,
+        ),
+        take(1),
+      ),
+    ).toStrictEqual([[1]]);
   });
 });
 

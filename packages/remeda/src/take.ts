@@ -57,13 +57,13 @@ const takeImplementation = <T extends IterableContainer>(
 ): T[number][] => (n < 0 ? [] : array.slice(0, n));
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
-  if (n <= 0) {
+  if (Number.isNaN(n) || n < 1) {
     return lazyEmptyEvaluator;
   }
 
   let remaining = n;
   return (value, _index, _data, slot) => {
     remaining -= 1;
-    return remaining <= 0 ? lastLazyValue(value, slot) : value;
+    return remaining < 1 ? lastLazyValue(value, slot) : value;
   };
 }
