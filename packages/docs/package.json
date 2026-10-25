@@ -20,7 +20,7 @@
     "@astrojs/react": "^6.0.4",
     "@astrojs/sitemap": "^3.7.4",
     "@docsearch/react": "^5.0.4",
-    "astro": "^7.2.9",
+    "astro": "^7.3.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.37.0",
