@@ -58,9 +58,6 @@ export default defineConfig({
   entry: `${SOURCE_DIR}/index.ts`,
 
   dts: {
-    // This enables "Go to Definition"-style features within IDEs.
-    sourcemap: true,
-
     // Only emit DTS files, skip JS output
     emitDtsOnly: true,
   },
@@ -113,11 +110,6 @@ export default defineConfig({
 
       //! Types are built in the previous step!
       dts: false,
-
-      minify: true,
-
-      // This makes debugging easier, and also makes stack traces more legible.
-      sourcemap: true,
 
       // Validate the final package artifacts.
       attw: true,
