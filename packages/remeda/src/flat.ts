@@ -124,8 +124,6 @@ const flatImplementation = (
   depth?: number,
 ): IterableContainer => (depth === undefined ? data.flat() : data.flat(depth));
 
-// Native `flat` truncates the depth and reads NaN as 0, so only a depth of at
-// least 1 flattens anything.
 const lazyImplementation = (depth?: number): LazyEvaluator =>
   depth === undefined || depth === 1
     ? lazyShallow
