@@ -17,7 +17,6 @@ const count = fc.oneof(
 // Dense only: data-first `slice` keeps holes, `pipe` reads them as `undefined`.
 const items = fc.array(fc.integer());
 
-// https://github.com/remeda/remeda/pull/1469
 test.prop([items, count])(
   "data-first and data-last produce the same result",
   (data, n) => {

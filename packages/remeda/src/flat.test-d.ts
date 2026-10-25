@@ -162,16 +162,18 @@ test("doesn't accept built-in 'infinite' numbers", () => {
   flat([], Infinity);
 });
 
-// https://github.com/remeda/remeda/pull/1469
 test("doesn't accept non-integer depths", () => {
-  // @ts-expect-error [ts2345] -- The runtime truncates a fractional depth, which the result type can't follow, so only integers are accepted.
+  // @ts-expect-error [ts2345] -- Intentional, this is what we're testing.
   flat([[1]], 0.5);
 });
 
 test("doesn't accept non-integer depths in pipe", () => {
   pipe(
     [[1]],
-    // @ts-expect-error [ts2345, ts2769] -- The runtime truncates a fractional depth, which the result type can't follow, so `flat(0.5)` matches no overload (ts2769) and `pipe` rejects the fallback's return type (ts2345).
-    flat(0.5),
+    // @ts-expect-error [ts2345] -- Intentional, this is what we're testing.
+    flat(
+      // @ts-expect-error [ts2769] -- Intentional, this is what we're testing.
+      0.5,
+    ),
   );
 });

@@ -69,7 +69,8 @@ type FlatSimpleArrayItems<
  * fractions (`0.5`) and values typed as `number` can't. `Infinity`,
  * `Number.POSITIVE_INFINITY` and `Number.MAX_VALUE` are all typed as `number`
  * and can't be used either. For "unlimited" depth use a literal value that
- * would exceed your expected practical maximum nesting level.
+ * would exceed your expected practical maximum nesting level (for TypeScript
+ * type checking efficiency the number should still be _small_, e.g., 10).
  * @signature
  *   flat(data)
  *   flat(data, depth)
@@ -91,7 +92,12 @@ export function flat<T extends IterableContainer, Depth extends number = 1>(
  * `Array.prototype.flat` method.
  *
  * @param depth - The depth level specifying how deep a nested array structure
- * should be flattened. Defaults to 1.
+ * should be flattened. Defaults to 1. Only integer literals can be used:
+ * fractions (`0.5`) and values typed as `number` can't. `Infinity`,
+ * `Number.POSITIVE_INFINITY` and `Number.MAX_VALUE` are all typed as `number`
+ * and can't be used either. For "unlimited" depth use a literal value that
+ * would exceed your expected practical maximum nesting level (for TypeScript
+ * type checking efficiency the number should still be _small_, e.g., 10).
  * @signature
  *   flat()(data)
  *   flat(depth)(data)

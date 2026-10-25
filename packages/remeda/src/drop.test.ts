@@ -48,7 +48,6 @@ describe("data last", () => {
     expect(pipe([1, 2, 3, 4, 5], drop(10))).toStrictEqual([]);
   });
 
-  // https://github.com/remeda/remeda/pull/1469
   test.each([
     [2.5, [3, 4, 5]],
     [1.5, [2, 3, 4, 5]],
@@ -89,9 +88,9 @@ describe("data last", () => {
   });
 
   test("lazy impl", () => {
-    const mockFunc = vi.fn<(x: number) => number>();
-    pipe([1, 2, 3, 4, 5], map(mockFunc), drop(2), take(2));
+    const mapper = vi.fn<(x: number) => number>();
+    pipe([1, 2, 3, 4, 5], map(mapper), drop(2), take(2));
 
-    expect(mockFunc).toHaveBeenCalledTimes(4);
+    expect(mapper).toHaveBeenCalledTimes(4);
   });
 });
