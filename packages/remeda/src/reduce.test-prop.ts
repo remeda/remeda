@@ -18,8 +18,6 @@ const items = fc.array(item);
 // Accumulators that only `Object.is` tells apart from a regular number.
 const accumulated = fc.oneof(fc.integer(), fc.constantFrom(-0, NaN));
 
-// Whole counts only: a lazy `take` rounds a fractional count up and takes
-// everything for `NaN`, while data-first `take` slices.
 const count = fc.integer({ min: -1, max: 32 });
 
 test.prop([items, fc.func(accumulated), accumulated])(

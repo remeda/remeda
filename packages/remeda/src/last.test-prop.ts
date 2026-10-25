@@ -15,8 +15,6 @@ const item = fc.oneof(
 // Both calling styles read a hole as `undefined`, a trailing one included.
 const items = fc.oneof(fc.array(item), fc.sparseArray(item));
 
-// Whole counts only: a lazy `take` rounds a fractional count up and takes
-// everything for `NaN`, while data-first `take` slices.
 const count = fc.integer({ min: -1, max: 32 });
 
 test.prop([items])(

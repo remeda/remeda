@@ -20,8 +20,6 @@ const items = fc.oneof(
   fc.sparseArray(item, { maxLength: 4 }),
 );
 
-// Whole counts only: in `pipe`, `take` rounds a fractional count up and keeps
-// everything for `NaN`, while data-first `take` slices.
 const takeCount = fc.oneof(
   fc.integer({ min: -1, max: 5 }),
   fc.constant(Infinity),

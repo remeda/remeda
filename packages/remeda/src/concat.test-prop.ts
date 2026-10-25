@@ -15,8 +15,6 @@ const item = fc.oneof(
 // Both calling styles read a hole as `undefined`, in `data` and in `other`.
 const items = fc.oneof(fc.array(item), fc.sparseArray(item));
 
-// Whole counts only: in `pipe`, `take` rounds a fractional count up and keeps
-// everything for `NaN`, while data-first `take` slices.
 const takeCount = fc.oneof(
   fc.integer({ min: -1, max: 12 }),
   fc.constant(Infinity),

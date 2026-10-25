@@ -16,8 +16,6 @@ const item = fc.oneof(
 // `undefined`.
 const items = fc.array(item);
 
-// Whole counts only: a lazy `take` rounds a fractional count up and takes
-// everything for `NaN`, while data-first `take` slices.
 const count = fc.integer({ min: -1, max: 12 });
 
 test.prop([items, fc.func(fc.boolean())])(

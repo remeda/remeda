@@ -28,8 +28,6 @@ const amountToTake = fc.oneof(
   fc.constantFrom(NaN, -0, Infinity, -Infinity),
 );
 
-// Whole counts only: a lazy `take` rounds a fractional count up and takes
-// everything for `NaN`, while data-first `take` slices.
 const count = fc.integer({ min: -1, max: 12 });
 
 test.prop([

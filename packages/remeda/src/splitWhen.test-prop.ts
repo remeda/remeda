@@ -12,8 +12,6 @@ const item = fc.oneof(
   fc.constantFrom(NaN, -0, "0", { id: 0 }, { id: 0 }),
 );
 
-// Whole counts only: in `pipe`, `take` keeps `Math.ceil(count)` items, and all
-// of them for `NaN`, while data-first `take` truncates the count.
 const count = fc.oneof(fc.integer({ min: -1, max: 12 }), fc.constant(Infinity));
 
 // Dense arrays only: in `pipe`, `take` reads a hole as `undefined`, while

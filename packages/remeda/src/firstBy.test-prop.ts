@@ -19,8 +19,6 @@ const items = fc.oneof(fc.array(item), fc.sparseArray(item));
 // everything, so the result depends on the order of the comparisons.
 const projected = fc.oneof(fc.integer({ min: 0, max: 3 }), fc.constant(NaN));
 
-// Whole counts only: a lazy `take` rounds a fractional count up and takes
-// everything for `NaN`, while data-first `take` slices.
 const count = fc.integer({ min: -1, max: 32 });
 
 test.prop([items, fc.func(projected), fc.constantFrom("asc", "desc")])(

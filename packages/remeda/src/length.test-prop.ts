@@ -7,8 +7,6 @@ import { take } from "./take";
 // Both calling styles count a hole as an item.
 const items = fc.oneof(fc.array(fc.anything()), fc.sparseArray(fc.anything()));
 
-// Whole counts only: a lazy `take` rounds a fractional count up and takes
-// everything for `NaN`, while data-first `take` slices.
 const count = fc.integer({ min: -1, max: 32 });
 
 test.prop([items])(

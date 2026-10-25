@@ -40,8 +40,6 @@ const entry = fc.tuple(key, fc.oneof(item, fc.constant(null)));
 // Destructuring each of them throws.
 const notIterable = fc.constantFrom(1, null, undefined, { 0: "a", 1: "b" });
 
-// Whole counts only: in `pipe`, `take` keeps `Math.ceil(count)` items, and all
-// of them for `NaN`, while data-first `take` truncates the count.
 const count = fc.oneof(fc.integer({ min: -1, max: 12 }), fc.constant(Infinity));
 
 test.prop([items, fc.func(entry)])(
