@@ -47,7 +47,6 @@ describe("data last", () => {
     expect(pipe([1, 2, 3, 4, 5], take(10))).toStrictEqual([1, 2, 3, 4, 5]);
   });
 
-  // https://github.com/remeda/remeda/pull/1469
   test.each([
     [2.5, [1, 2]],
     [1.5, [1]],
