@@ -318,9 +318,8 @@ export function pipe(
   }
 
   if (functions.length === 1) {
-    // The most common pipe, a single function, skips the loop below. A lone
-    // lazy function has nothing to fuse with, so an array is passed to it
-    // directly, which runs its data-first implementation; only the other
+    // A lone lazy function has nothing to fuse with, so an array is passed to
+    // it directly, which runs its data-first implementation; only the other
     // iterables, which those implementations don't accept, need the lazy
     // runner.
     const func = functions[0]!;
@@ -353,9 +352,9 @@ export function pipe(
     ) {
       // A run of one lazy function has nothing to fuse with, so an array is
       // passed to it directly, which runs its data-first implementation. Any
-      // other iterable runs as a lazy sequence of one step, which has no
-      // cross-step bookkeeping to set up: the step array, the step object,
-      // and the hand-off through them are all overhead.
+      // other iterable runs that one lazy step directly, without the
+      // cross-step bookkeeping of a fused sequence: the step array, the step
+      // object, and the hand-off through them are all overhead.
       output = Array.isArray(output)
         ? func(output)
         : processSingleLazyStep(
@@ -386,12 +385,12 @@ export function pipe(
       continue;
     }
 
-    const lazySequence = buildLazySequence(functions, functionIndex);
+    const fusedSequence = buildFusedSequence(functions, functionIndex);
 
-    output = runLazySequence(output, lazySequence);
-    functionIndex += lazySequence.length;
+    output = runFusedSequence(output, fusedSequence);
+    functionIndex += fusedSequence.length;
 
-    // @ts-expect-error [ts2322] -- TypeScript can't follow the logic that `functionIndex - 1` is pointing to the last function in `lazySequence`.
+    // @ts-expect-error [ts2322] -- TypeScript can't follow the logic that `functionIndex - 1` is pointing to the last function in `fusedSequence`.
     const lastLazyFunction: LazyUnaryFunction = functions[functionIndex - 1];
     if (lastLazyFunction.lazy.isReducing) {
       // @ts-expect-error [ts18046] -- output is always an array when the last lazy function in the sequence was reducing.
@@ -404,7 +403,7 @@ export function pipe(
 
 /**
  * Plans the run of lazy functions that starts at `startIndex`, the same run
- * `buildLazySequence` would build: the consecutive lazy functions, ending after
+ * `buildFusedSequence` would build: the consecutive lazy functions, ending after
  * the first reducing one.
  *
  * @returns The index after the run when none of its functions can stop the
@@ -417,29 +416,31 @@ function endOfStepByStepRun(
 ): number {
   for (let index = startIndex; index < functions.length; index++) {
     const func = functions[index]!;
-    if (!("lazy" in func)) {
+    if ("lazy" in func) {
+      if (func.lazy.isStoppable) {
+        // One function that can stop the pipe early is enough to fuse the
+        // whole run.
+        return startIndex;
+      }
+
+      if (func.lazy.isReducing) {
+        // Functions that reduce to a value always end the run.
+        return index + 1;
+      }
+    } else {
+      // A non-lazy function ends the run.
       return index;
-    }
-
-    const { lazy } = func;
-    if (lazy.isStoppable) {
-      return startIndex;
-    }
-
-    if (lazy.isReducing) {
-      // Functions that reduce to a value always end the run.
-      return index + 1;
     }
   }
 
   return functions.length;
 }
 
-function buildLazySequence(
+function buildFusedSequence(
   functions: readonly (UnaryFunction | LazyUnaryFunction)[],
   startIndex: number,
 ): readonly LazyStep[] {
-  const lazySequence: LazyStep[] = [];
+  const fusedSequence: LazyStep[] = [];
 
   for (let index = startIndex; index < functions.length; index++) {
     const func = functions[index]!;
@@ -448,7 +449,7 @@ function buildLazySequence(
     }
 
     const lazyEvaluator = func.lazy(...func.lazyArgs);
-    lazySequence.push(
+    fusedSequence.push(
       lazyEvaluator.requiresData
         ? {
             lazyEvaluator,
@@ -470,13 +471,13 @@ function buildLazySequence(
     }
   }
 
-  return lazySequence;
+  return fusedSequence;
 }
 
-function runLazySequence(
+function runFusedSequence(
   input: unknown,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
-  lazySequence: readonly LazyStep[],
+  fusedSequence: readonly LazyStep[],
 ): unknown[] {
   const accumulator: unknown[] = [];
   const slot = createLazySlot();
@@ -485,7 +486,7 @@ function runLazySequence(
     // Iterated rather than indexed, so a reactive array that instruments
     // iteration tracks one dependency instead of one per index.
     for (const item of input) {
-      const isDone = processItem(lazySequence, accumulator, item, slot, 0);
+      const isDone = processItem(fusedSequence, accumulator, item, slot, 0);
       if (isDone) {
         break;
       }
@@ -495,7 +496,7 @@ function runLazySequence(
   } else {
     // @ts-expect-error [ts18046] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
     for (const item of input) {
-      const isDone = processItem(lazySequence, accumulator, item, slot, 0);
+      const isDone = processItem(fusedSequence, accumulator, item, slot, 0);
       if (isDone) {
         break;
       }
@@ -507,7 +508,7 @@ function runLazySequence(
 
 function processItem(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
-  lazySequence: readonly LazyStep[],
+  fusedSequence: readonly LazyStep[],
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use `output` directly to accumulate the results.
   accumulator: unknown[],
   item: unknown,
@@ -518,10 +519,10 @@ function processItem(
   let isDone = false;
   for (
     let stepIndex = startIndex;
-    stepIndex < lazySequence.length;
+    stepIndex < fusedSequence.length;
     stepIndex++
   ) {
-    const step = lazySequence[stepIndex]!;
+    const step = fusedSequence[stepIndex]!;
 
     if (step.requiresData) {
       step.items.push(currentItem);
@@ -541,7 +542,13 @@ function processItem(
       if (result === MANY) {
         for (const subItem of slot.values) {
           if (
-            processItem(lazySequence, accumulator, subItem, slot, stepIndex + 1)
+            processItem(
+              fusedSequence,
+              accumulator,
+              subItem,
+              slot,
+              stepIndex + 1,
+            )
           ) {
             return true;
           }

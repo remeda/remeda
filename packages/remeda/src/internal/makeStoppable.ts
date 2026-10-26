@@ -56,7 +56,7 @@ export const lazyEmptyEvaluator: StoppableLazyEvaluator<
 > = (): typeof STOP => STOP;
 
 /**
- * Emits `value` and ends the fused lazy sequence it is part of.
+ * Emits `value` and ends the fused sequence it is part of.
  *
  * @see `makeStoppable` Only stoppable evaluators can use this helper.
  */
