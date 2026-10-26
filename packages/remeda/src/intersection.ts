@@ -19,7 +19,7 @@ import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
  *    intersection(data, other)
  * @example
  *    intersection([1, 2, 3], [2, 3, 5]); // => [2, 3]
- *    intersection([1, 1, ∏2, 2], [1]); // => [1]
+ *    intersection([1, 1, 2, 2], [1]); // => [1]
  * @dataFirst
  * @lazy
  * @category Array
