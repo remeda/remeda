@@ -3,6 +3,7 @@ import {
   type DataFirst,
   type UnaryFunction,
 } from "./dataLastImplementation";
+import type { ReducingMetadata } from "./makeReducing";
 import type { StoppableMetadata } from "./makeStoppable";
 import type { IterableContainer } from "./types/IterableContainer";
 import type {
@@ -21,18 +22,14 @@ export type LazyDefinition<
   T extends IterableContainer,
   P extends readonly unknown[],
 > = {
-  // `pipe` decides whether fusing a run can pay off from the marks alone,
-  // before it builds any evaluator, so an implementation whose evaluators can
-  // stop the pipe must carry one.
-  readonly lazy:
-    | (((...args: P) => LazyEvaluator<T[number], unknown>) & LazyMeta)
+  readonly lazy: (
+    | (((...args: P) => LazyEvaluator<T[number], unknown>) &
+        Partial<StoppableMetadata>)
     | (((...args: P) => StoppableLazyEvaluator<T[number], unknown>) &
-        LazyMeta & { readonly isStoppable: true });
+        StoppableMetadata)
+  ) &
+    Partial<ReducingMetadata>;
   readonly lazyArgs: P;
-};
-
-export type LazyMeta = Partial<StoppableMetadata> & {
-  readonly isReducing?: true;
 };
 
 // Allows us to build the lazy definition dynamically at runtime.

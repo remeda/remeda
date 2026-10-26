@@ -1,5 +1,6 @@
 import { describe, test } from "vitest";
-import { LAST, MANY, STOP, lastLazyValue, manyLazyValues } from "./lazyControl";
+import { MANY, manyLazyValues } from "./lazyControl";
+import { LAST, lastLazyValue, STOP } from "./makeStoppable";
 import type {
   LazyEvaluator,
   StoppableLazyEvaluator,

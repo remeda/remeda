@@ -5,13 +5,12 @@
 import type { UnaryFunction } from "./internal/dataLastImplementation";
 import {
   createLazySlot,
-  LAST,
   MANY,
   SKIP_ITEM,
-  STOP,
   type LazySlot,
 } from "./internal/lazyControl";
 import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
+import { LAST, STOP } from "./internal/makeStoppable";
 import { processSingleLazyStep } from "./internal/processSingleLazyStep";
 import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/unexpectedAccessSentinel";

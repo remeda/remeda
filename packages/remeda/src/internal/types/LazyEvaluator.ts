@@ -1,31 +1,13 @@
-import type { LazyResult, LazySlot, StoppableLazyResult } from "../lazyControl";
+import type { LazyResult, LazySlot } from "../lazyControl";
+import type { StoppableResult } from "../makeStoppable";
 
-// Exists only in types. Tells the two kinds of evaluator apart where their
-// result types can't: `LazyDefinition`'s `lazy` prop types its evaluator's
-// result as `unknown`, which absorbs every control. The stoppable kind takes
-// `boolean` because an evaluator that may stop doesn't have to, which makes
-// every `LazyEvaluator` a `StoppableLazyEvaluator` too.
-declare const stopsPipe: unique symbol;
-
-export type LazyEvaluator<T = unknown, R = T> = BaseEvaluator<
-  T,
-  LazyResult<R>
-> & {
-  readonly [stopsPipe]?: false;
-};
-
-/**
- * An evaluator that can also use pipe short-circuiting controls to stop
- * pipe evaluations in the middle.
- *
- * @see makeStoppable
- */
-export type StoppableLazyEvaluator<T = unknown, R = T> = BaseEvaluator<
-  T,
-  StoppableLazyResult<R>
-> & {
-  readonly [stopsPipe]?: boolean;
-};
+// `LazyDefinition` checks evaluators with an `unknown` result, which absorbs
+// `StoppableResult`, so the result type alone can't tell the two evaluator
+// types apart there. The brand carries the kinds of results an evaluator was
+// declared with, so a `StoppableLazyEvaluator` is only accepted together with
+// the `makeStoppable` mark. It exists only in the type system.
+declare const BRAND_RESULT_KINDS: unique symbol;
+type ResultKind = "lazy" | "stoppable";
 
 /**
  * Extra levers an evaluator gives `pipe` over how it runs the step.
@@ -42,7 +24,7 @@ type LazyEvaluatorMetadata = {
   readonly requiresData?: true;
 };
 
-type BaseEvaluator<T, Result> = ((
+type BaseEvaluator<T, Result, ResultKinds extends ResultKind> = (((
   item: T,
   index: number,
   data: readonly T[],
@@ -50,4 +32,24 @@ type BaseEvaluator<T, Result> = ((
   // pass it to `lastLazyValue` or `manyLazyValues`.
   slot: LazySlot,
 ) => Result) &
-  LazyEvaluatorMetadata;
+  LazyEvaluatorMetadata) & {
+  readonly [BRAND_RESULT_KINDS]?: ResultKinds;
+};
+
+export type LazyEvaluator<T = unknown, R = T> = BaseEvaluator<
+  T,
+  LazyResult<R>,
+  "lazy"
+>;
+
+/**
+ * An evaluator that can also use pipe short-circuiting controls to stop
+ * pipe evaluations in the middle.
+ *
+ * @see makeStoppable
+ */
+export type StoppableLazyEvaluator<T = unknown, R = T> = BaseEvaluator<
+  T,
+  LazyResult<R> | StoppableResult<R>,
+  "lazy" | "stoppable"
+>;

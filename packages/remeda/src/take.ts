@@ -1,5 +1,8 @@
-import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
-import { makeStoppable } from "./internal/makeStoppable";
+import {
+  lastLazyValue,
+  lazyEmptyEvaluator,
+  makeStoppable,
+} from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";

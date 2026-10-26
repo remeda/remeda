@@ -1,6 +1,9 @@
-import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
 import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
-import { makeStoppable } from "./internal/makeStoppable";
+import {
+  lastLazyValue,
+  lazyEmptyEvaluator,
+  makeStoppable,
+} from "./internal/makeStoppable";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";

@@ -6,10 +6,9 @@ import { first } from "./first";
 import { flat } from "./flat";
 import { flatMap } from "./flatMap";
 import { identity } from "./identity";
-import { lazyEmptyEvaluator } from "./internal/lazyControl";
 import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
 import { makeReducing } from "./internal/makeReducing";
-import { makeStoppable } from "./internal/makeStoppable";
+import { lazyEmptyEvaluator, makeStoppable } from "./internal/makeStoppable";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type {
   LazyEvaluator,

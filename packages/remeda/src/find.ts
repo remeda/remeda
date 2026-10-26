@@ -1,6 +1,6 @@
-import { lastLazyValue, SKIP_ITEM } from "./internal/lazyControl";
+import { SKIP_ITEM } from "./internal/lazyControl";
 import { makeReducing } from "./internal/makeReducing";
-import { makeStoppable } from "./internal/makeStoppable";
+import { lastLazyValue, makeStoppable } from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
 import type { Assignability } from "./internal/types/Assignability";

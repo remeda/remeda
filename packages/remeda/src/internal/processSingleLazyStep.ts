@@ -1,12 +1,6 @@
-import {
-  createLazySlot,
-  LAST,
-  MANY,
-  SKIP_ITEM,
-  STOP,
-  type LazySlot,
-} from "./lazyControl";
+import { createLazySlot, MANY, SKIP_ITEM, type LazySlot } from "./lazyControl";
 import type { LazyDefinition } from "./lazyDataLastImplementation";
+import { LAST, STOP } from "./makeStoppable";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
 
 /**

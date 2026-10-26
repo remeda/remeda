@@ -1,9 +1,10 @@
+import type { LazyResult } from "./internal/lazyControl";
 import {
   lastLazyValue,
   lazyEmptyEvaluator,
-  type StoppableLazyResult,
-} from "./internal/lazyControl";
-import { makeStoppable } from "./internal/makeStoppable";
+  makeStoppable,
+  type StoppableResult,
+} from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -92,7 +93,9 @@ const lazyImplementation = makeStoppable(
           index,
           _data,
           slot,
-        ): StoppableLazyResult<[F[number], S[number]]> => {
+        ):
+          | LazyResult<[F[number], S[number]]>
+          | StoppableResult<[F[number], S[number]]> => {
           const pair = [value, second[index]];
           return index >= second.length - 1
             ? // @ts-expect-error [ts2322] -- TypeScript widens fixed tuple literals as arrays of a union of all their items. For us this means it considers pair to be `unknown[]`, but we know better...

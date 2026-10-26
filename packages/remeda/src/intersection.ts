@@ -1,10 +1,10 @@
+import { SKIP_ITEM, type LazyResult } from "./internal/lazyControl";
 import {
   lastLazyValue,
   lazyEmptyEvaluator,
-  SKIP_ITEM,
-  type StoppableLazyResult,
-} from "./internal/lazyControl";
-import { makeStoppable } from "./internal/makeStoppable";
+  makeStoppable,
+  type StoppableResult,
+} from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
 
@@ -19,7 +19,7 @@ import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
  *    intersection(data, other)
  * @example
  *    intersection([1, 2, 3], [2, 3, 5]); // => [2, 3]
- *    intersection([1, 1, 2, 2], [1]); // => [1]
+ *    intersection([1, 1, ∏2, 2], [1]); // => [1]
  * @dataFirst
  * @lazy
  * @category Array
@@ -102,7 +102,12 @@ const lazyImplementation = makeStoppable(
       remaining.set(value, (remaining.get(value) ?? 0) + 1);
     }
 
-    return (value, _index, _data, slot): StoppableLazyResult<T & S> => {
+    return (
+      value,
+      _index,
+      _data,
+      slot,
+    ): LazyResult<T & S> | StoppableResult<T & S> => {
       const copies = remaining.get(value);
 
       if (copies === undefined) {

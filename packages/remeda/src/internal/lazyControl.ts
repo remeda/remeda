@@ -11,24 +11,11 @@
 // the protocol keeps a future shape change from being read as this one.
 
 import type { Tagged, Writable } from "type-fest";
-import type { StoppableLazyEvaluator } from "./types/LazyEvaluator";
 
 /**
  * Skip the current item: nothing reaches the next step.
  */
 export const SKIP_ITEM: unique symbol = Symbol.for("remeda/lazy/skip");
-
-/**
- * Stop the pipe without emitting anything.
- */
-export const STOP: unique symbol = Symbol.for("remeda/lazy/stop");
-
-/**
- * Emit the slot's `value` and stop the pipe.
- *
- * @see lastLazyValue
- */
-export const LAST: unique symbol = Symbol.for("remeda/lazy/last");
 
 /**
  * Feed every element of the slot's `values` through the rest of the pipe, one
@@ -53,18 +40,10 @@ export type LazySlot = {
 };
 
 /**
- * A lazy evaluator returns the (possibly transformed) item itself in the
- * common case, `SKIP_ITEM` to skip it, or `MANY` (via `manyLazyValues`) to
- * expand it.
+ * A lazy evaluator can return an item, many items, or tell the executor that
+ * the current item was filtered out (skipped).
  */
 export type LazyResult<T> = T | LazyMany<T> | typeof SKIP_ITEM;
-
-/**
- * The results of an evaluator that can also stop the pipe.
- *
- * @see StoppableLazyEvaluator
- */
-export type StoppableLazyResult<T> = LazyResult<T> | LazyLast<T> | typeof STOP;
 
 // The payload travels in the slot, so the tag is what ties its type to the
 // control: `LAST` and `MANY` only typecheck as the result of the helpers that
@@ -72,34 +51,12 @@ export type StoppableLazyResult<T> = LazyResult<T> | LazyLast<T> | typeof STOP;
 // type other than `unknown`, which absorbs the rest of the union and so accepts
 // a bare control too (e.g., `flat`'s evaluators, whose item type changes with
 // depth).
-type LazyLast<T> = Tagged<typeof LAST, "RemedaLazyLast", T>;
 type LazyMany<T> = Tagged<typeof MANY, "RemedaLazyMany", readonly T[]>;
 
 export const createLazySlot = (): LazySlot => ({
   value: undefined,
   values: NO_VALUES,
 });
-
-/**
- * A helper evaluator for stopping the pipe without emitting anything.
- */
-export const lazyEmptyEvaluator: StoppableLazyEvaluator<
-  unknown,
-  never
-> = (): typeof STOP => STOP;
-
-/**
- * Emits `value` and ends the fused lazy sequence it is part of.
- */
-export function lastLazyValue<T>(
-  value: T,
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The slot exists to carry the payload back to the pipe; this is one of the two helpers that write it.
-  slot: Writable<LazySlot>,
-): LazyLast<T> {
-  slot.value = value;
-  // @ts-expect-error [ts2322] -- The tag exists only at compile time; at runtime the control is the bare symbol, and its payload is the `value` just written to the slot.
-  return LAST;
-}
 
 /**
  * Feeds every element of `values` through the rest of the pipe, one by one.

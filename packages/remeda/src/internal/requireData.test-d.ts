@@ -1,5 +1,5 @@
 import { describe, test } from "vitest";
-import { STOP, lastLazyValue } from "./lazyControl";
+import { lastLazyValue, STOP } from "./makeStoppable";
 import { requireData, requireDataByArity } from "./requireData";
 import type {
   LazyEvaluator,
