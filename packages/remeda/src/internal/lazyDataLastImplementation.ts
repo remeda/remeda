@@ -32,8 +32,6 @@ export type LazyEvaluatorFactory<
           StoppableMetadata)
     );
 
-type LazyMeta = Partial<ReducingMetadata & StoppableMetadata>;
-
 type LazyDefinition<
   T extends IterableContainer,
   P extends readonly unknown[],
@@ -41,6 +39,8 @@ type LazyDefinition<
   readonly lazy: LazyEvaluatorFactory<T, P>;
   readonly lazyArgs: P;
 };
+
+type LazyMeta = Partial<ReducingMetadata & StoppableMetadata>;
 
 // Allows us to build the lazy definition dynamically at runtime.
 type MutableLazyDefinition<
