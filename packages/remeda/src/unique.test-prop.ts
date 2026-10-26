@@ -1,7 +1,6 @@
 import { fc, test } from "@fast-check/vitest";
 import { expect } from "vitest";
 import { pipe } from "./pipe";
-import { take } from "./take";
 import { unique } from "./unique";
 
 // Few distinct values, so duplicates are common, among them the ones equality
@@ -19,9 +18,7 @@ test.prop([items])(
   "data-first and data-last produce the same result",
   (data) => {
     const dataFirst = unique(data);
-    // Keeps the step lazy: on an array, a run fuses only when one of its
-    // steps can stop early, as `take` can.
-    const dataLast = pipe(data, take(Infinity), unique());
+    const dataLast = pipe(data, unique());
 
     // By identity: deep equality can't tell the two objects apart.
     expect(dataFirst).toHaveLength(dataLast.length);

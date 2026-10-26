@@ -2,7 +2,6 @@ import { fc, test } from "@fast-check/vitest";
 import { expect } from "vitest";
 import { differenceWith } from "./differenceWith";
 import { pipe } from "./pipe";
-import { take } from "./take";
 
 // Few distinct values, so duplicates within an input and overlaps between the
 // inputs are common, among them the ones equality treats specially: `NaN`,
@@ -22,9 +21,7 @@ test.prop([items, items, fc.func(fc.boolean())])(
   "data-first and data-last produce the same result",
   (data, other, isEqual) => {
     const dataFirst = differenceWith(data, other, isEqual);
-    // Keeps the step lazy: on an array, a run fuses only when one of its
-    // steps can stop early, as `take` can.
-    const dataLast = pipe(data, take(Infinity), differenceWith(other, isEqual));
+    const dataLast = pipe(data, differenceWith(other, isEqual));
 
     // By identity: deep equality can't tell the two objects apart.
     expect(dataFirst).toHaveLength(dataLast.length);
