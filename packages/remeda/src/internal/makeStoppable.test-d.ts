@@ -6,7 +6,7 @@
 import { describe, test } from "vitest";
 import { $typed } from "../../test/$typed";
 import type { LazyResult, LazySlot } from "./lazyControl";
-import type { LazyDefinition } from "./lazyDataLastImplementation";
+import type { LazyEvaluatorFactory } from "./lazyDataLastImplementation";
 import {
   LAST,
   lastLazyValue,
@@ -21,7 +21,7 @@ import type {
 } from "./types/LazyEvaluator";
 
 declare function acceptLazy(
-  lazy: LazyDefinition<readonly unknown[], readonly []>["lazy"],
+  lazy: LazyEvaluatorFactory<readonly unknown[], readonly []>,
 ): void;
 
 // Both stand in for the evaluator type a lazy implementation declares as its

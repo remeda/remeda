@@ -18,17 +18,27 @@ export type LazyUnaryFunction<
   R = unknown,
 > = UnaryFunction<T, R> & LazyDefinition<T, P>;
 
-export type LazyDefinition<
+export type LazyEvaluatorFactory<
+  T extends IterableContainer,
+  P extends readonly unknown[],
+> =
+  // We put the metadata first so we can override it later so we can enable the
+  // stoppable metadata.
+  LazyMeta &
+    (
+      | ((...args: P) => LazyEvaluator<T[number], unknown>)
+      // Stoppable lazy evaluators, marked with the Stoppable metadata
+      | (((...args: P) => StoppableLazyEvaluator<T[number], unknown>) &
+          StoppableMetadata)
+    );
+
+type LazyMeta = Partial<ReducingMetadata & StoppableMetadata>;
+
+type LazyDefinition<
   T extends IterableContainer,
   P extends readonly unknown[],
 > = {
-  readonly lazy: (
-    | (((...args: P) => LazyEvaluator<T[number], unknown>) &
-        Partial<StoppableMetadata>)
-    | (((...args: P) => StoppableLazyEvaluator<T[number], unknown>) &
-        StoppableMetadata)
-  ) &
-    Partial<ReducingMetadata>;
+  readonly lazy: LazyEvaluatorFactory<T, P>;
   readonly lazyArgs: P;
 };
 
@@ -52,7 +62,7 @@ export function lazyDataLastImplementation<
 >(
   dataFirst: DataFirst<T, P, R>,
   args: P,
-  lazy: LazyDefinition<T, P>["lazy"],
+  lazy: LazyEvaluatorFactory<T, P>,
 ): LazyUnaryFunction<T, P, R> {
   const dataLast = dataLastImplementation(dataFirst, args);
 

@@ -1,5 +1,5 @@
 import { createLazySlot, MANY, SKIP_ITEM, type LazySlot } from "./lazyControl";
-import type { LazyDefinition } from "./lazyDataLastImplementation";
+import type { LazyEvaluatorFactory } from "./lazyDataLastImplementation";
 import { LAST, STOP } from "./makeStoppable";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
 
@@ -16,8 +16,8 @@ import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
  */
 export function processSingleLazyStep<P extends readonly unknown[]>(
   input: Iterable<unknown>,
-  lazy: LazyDefinition<readonly unknown[], P>["lazy"],
-  lazyArgs: LazyDefinition<readonly unknown[], P>["lazyArgs"],
+  lazy: LazyEvaluatorFactory<readonly unknown[], P>,
+  lazyArgs: P,
 ): unknown {
   const lazyEvaluator = lazy(...lazyArgs);
 

@@ -1,7 +1,7 @@
 import type { DataFirst } from "./dataLastImplementation";
 import {
   lazyDataLastImplementation,
-  type LazyDefinition,
+  type LazyEvaluatorFactory,
   type LazyUnaryFunction,
 } from "./lazyDataLastImplementation";
 import type { IterableContainer } from "./types/IterableContainer";
@@ -21,7 +21,7 @@ export const purryWithLazy = <
 >(
   dataFirst: DataFirst<T, P, R>,
   args: readonly unknown[],
-  lazy: LazyDefinition<T, P>["lazy"],
+  lazy: LazyEvaluatorFactory<T, P>,
 ): R | LazyUnaryFunction<T, P, R> =>
   args.length >= dataFirst.length
     ? dataFirst(
