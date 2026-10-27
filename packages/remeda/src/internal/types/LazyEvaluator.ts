@@ -1,5 +1,4 @@
 import type { LazyResult, LazySlot } from "../lazyControl";
-import type { StoppableResult } from "../makeStoppable";
 
 // `LazyEvaluatorFactory` checks evaluators with an `unknown` result, which
 // absorbs `StoppableResult`, so the result type alone can't tell the two
@@ -7,7 +6,6 @@ import type { StoppableResult } from "../makeStoppable";
 // evaluator was declared with, so a `StoppableLazyEvaluator` is only accepted
 // together with the `makeStoppable` mark.
 declare const BRAND_RESULT_KINDS: unique symbol;
-type ResultKind = "lazy" | "stoppable";
 
 /**
  * Extra levers an evaluator gives `pipe` over how it runs the step.
@@ -24,7 +22,7 @@ type LazyEvaluatorMetadata = {
   readonly requiresData?: true;
 };
 
-type BaseEvaluator<T, Result, ResultKinds extends ResultKind> = (((
+export type BaseEvaluator<T, Result, ResultKinds extends string> = (((
   item: T,
   index: number,
   data: readonly T[],
@@ -40,16 +38,4 @@ export type LazyEvaluator<T = unknown, R = T> = BaseEvaluator<
   T,
   LazyResult<R>,
   "lazy"
->;
-
-/**
- * An evaluator that can also use pipe short-circuiting controls to stop
- * pipe evaluations in the middle.
- *
- * @see makeStoppable
- */
-export type StoppableLazyEvaluator<T = unknown, R = T> = BaseEvaluator<
-  T,
-  LazyResult<R> | StoppableResult<R>,
-  "lazy" | "stoppable"
 >;

@@ -4,12 +4,12 @@ import {
   type UnaryFunction,
 } from "./dataLastImplementation";
 import type { ReducingMetadata } from "./makeReducing";
-import type { StoppableMetadata } from "./makeStoppable";
-import type { IterableContainer } from "./types/IterableContainer";
 import type {
-  LazyEvaluator,
   StoppableLazyEvaluator,
-} from "./types/LazyEvaluator";
+  StoppableMetadata,
+} from "./makeStoppable";
+import type { IterableContainer } from "./types/IterableContainer";
+import type { LazyEvaluator } from "./types/LazyEvaluator";
 import type { SimplifiedWritable } from "./types/SimplifiedWritable";
 
 export type LazyUnaryFunction<

@@ -2,10 +2,10 @@ import {
   lastLazyValue,
   lazyEmptyEvaluator,
   makeStoppable,
+  type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Returns the first `n` elements of `array`.

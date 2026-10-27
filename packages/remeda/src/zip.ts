@@ -2,10 +2,10 @@ import {
   lastLazyValue,
   lazyEmptyEvaluator,
   makeStoppable,
+  type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
   // If the array is empty the output is empty, no surprises

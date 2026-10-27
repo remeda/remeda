@@ -1,10 +1,11 @@
 import { describe, test } from "vitest";
-import { lastLazyValue, STOP } from "./makeStoppable";
+import {
+  lastLazyValue,
+  STOP,
+  type StoppableLazyEvaluator,
+} from "./makeStoppable";
 import { requireData, requireDataByArity } from "./requireData";
-import type {
-  LazyEvaluator,
-  StoppableLazyEvaluator,
-} from "./types/LazyEvaluator";
+import type { LazyEvaluator } from "./types/LazyEvaluator";
 
 // Both stand in for the evaluator type a lazy implementation declares as its
 // return type, which is what checks the evaluator it returns.

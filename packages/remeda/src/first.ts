@@ -1,9 +1,12 @@
 import { makeReducing } from "./internal/makeReducing";
-import { lastLazyValue, makeStoppable } from "./internal/makeStoppable";
+import {
+  lastLazyValue,
+  makeStoppable,
+  type StoppableLazyEvaluator,
+} from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Gets the first element of `array`.

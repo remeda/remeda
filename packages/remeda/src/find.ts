@@ -1,6 +1,10 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
 import { makeReducing } from "./internal/makeReducing";
-import { lastLazyValue, makeStoppable } from "./internal/makeStoppable";
+import {
+  lastLazyValue,
+  makeStoppable,
+  type StoppableLazyEvaluator,
+} from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
 import type { Assignability } from "./internal/types/Assignability";
@@ -10,7 +14,6 @@ import type {
   LazyCallback,
   LazyTypePredicate,
 } from "./internal/types/LazyCallback";
-import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
 

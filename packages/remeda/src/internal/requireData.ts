@@ -1,4 +1,4 @@
-import type { StoppableLazyEvaluator } from "./types/LazyEvaluator";
+import type { StoppableLazyEvaluator } from "./makeStoppable";
 import type { StrictFunction } from "./types/StrictFunction";
 
 // Most callbacks have the input `data` as their 3rd parameter, as in the

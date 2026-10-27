@@ -13,12 +13,10 @@ import {
   lazyEmptyEvaluator,
   makeStoppable,
   STOP,
+  type StoppableLazyEvaluator,
   type StoppableResult,
 } from "./makeStoppable";
-import type {
-  LazyEvaluator,
-  StoppableLazyEvaluator,
-} from "./types/LazyEvaluator";
+import type { LazyEvaluator } from "./types/LazyEvaluator";
 
 declare function acceptLazy(
   lazy: LazyEvaluatorFactory<readonly unknown[], readonly []>,

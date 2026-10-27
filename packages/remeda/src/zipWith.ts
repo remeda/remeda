@@ -3,10 +3,10 @@ import {
   lastLazyValue,
   lazyEmptyEvaluator,
   makeStoppable,
+  type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
 
 type ZippingFunction<

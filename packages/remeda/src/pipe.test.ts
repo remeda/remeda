@@ -8,12 +8,13 @@ import { flatMap } from "./flatMap";
 import { identity } from "./identity";
 import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
 import { makeReducing } from "./internal/makeReducing";
-import { lazyEmptyEvaluator, makeStoppable } from "./internal/makeStoppable";
+import {
+  lazyEmptyEvaluator,
+  makeStoppable,
+  type StoppableLazyEvaluator,
+} from "./internal/makeStoppable";
 import type { LazyCallback } from "./internal/types/LazyCallback";
-import type {
-  LazyEvaluator,
-  StoppableLazyEvaluator,
-} from "./internal/types/LazyEvaluator";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { isStrictEqual } from "./isStrictEqual";
 import { join } from "./join";
 import { map } from "./map";

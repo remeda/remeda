@@ -1,7 +1,7 @@
-import type { StrictFunction } from "./types/StrictFunction";
 import type { Tagged, Writable } from "type-fest";
-import type { LazySlot } from "./lazyControl";
-import type { StoppableLazyEvaluator } from "./types/LazyEvaluator";
+import type { LazyResult, LazySlot } from "./lazyControl";
+import type { BaseEvaluator } from "./types/LazyEvaluator";
+import type { StrictFunction } from "./types/StrictFunction";
 
 /**
  * End the iteration without emitting anything.
@@ -14,6 +14,18 @@ export const STOP: unique symbol = Symbol.for("remeda/lazy/stop");
  * @see lastLazyValue
  */
 export const LAST: unique symbol = Symbol.for("remeda/lazy/last");
+
+/**
+ * An evaluator that can also use pipe short-circuiting controls to stop
+ * pipe evaluations in the middle.
+ *
+ * @see makeStoppable
+ */
+export type StoppableLazyEvaluator<T = unknown, R = T> = BaseEvaluator<
+  T,
+  LazyResult<R> | StoppableResult<R>,
+  "lazy" | "stoppable"
+>;
 
 /**
  * The results only a stoppable evaluator may return: end the iteration, with

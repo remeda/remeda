@@ -3,9 +3,9 @@ import {
   lastLazyValue,
   lazyEmptyEvaluator,
   makeStoppable,
+  type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
-import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the
