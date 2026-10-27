@@ -1,8 +1,8 @@
 import type { LazyResult, LazySlot } from "../lazyControl";
 
-// Allows an evaluator to declare it's return types explicitly, avoiding types
-// collapsing to `unknown` due to the raw T in LazyResult eagerly resolving to
-// `unknown`.
+// Declares the kinds of results an evaluator may return, which its result type
+// alone can't: `LazyResult<unknown>` collapses to `unknown`, so without it an
+// evaluator that can stop would be assignable to one that can't.
 declare const BRAND_RESULT_KINDS: unique symbol;
 
 /**

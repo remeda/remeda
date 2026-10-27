@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter.js";
+import { forceFusion } from "../test/forceFusion";
 import { find } from "./find";
 import { flat } from "./flat";
 import { identity } from "./identity";
@@ -131,7 +132,7 @@ describe("dataLast", () => {
 
   test("works lazily with trivial depth === 0", () => {
     const data = [1, [2, 3], [4, [5, 6], [7, [8, 9], [[10]]]]];
-    const result = pipe(data, take(Infinity), flat(0));
+    const result = pipe(data, forceFusion(), flat(0));
 
     expect(result).toStrictEqual(data);
     expect(result).not.toBe(data);

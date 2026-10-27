@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import { forceFusion } from "../test/forceFusion";
 import { constant } from "./constant";
 import { isDefined } from "./isDefined";
 import { isNot } from "./isNot";
@@ -7,7 +8,6 @@ import { isStrictEqual } from "./isStrictEqual";
 import { isString } from "./isString";
 import { map } from "./map";
 import { pipe } from "./pipe";
-import { take } from "./take";
 import { when } from "./when";
 
 describe("dataFirst", () => {
@@ -133,8 +133,7 @@ describe("dataLast", () => {
     expect(
       pipe(
         [3, 1, 4, 1, 5],
-        // Keeps the step lazy by making the run fuse.
-        take(Infinity),
+        forceFusion(),
         map(
           when(
             // In a lazy step `data` is the items processed so far, so this

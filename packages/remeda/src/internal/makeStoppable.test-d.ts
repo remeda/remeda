@@ -189,7 +189,7 @@ describe("known issues!", () => {
 
   test("the empty evaluator next to an evaluator of neither type, without the mark", () => {
     // TypeScript reduces the union of the two to the evaluator of neither type,
-    // which `lazyEmptyEvaluator` is a subtype of, so its kind is lost too.
+    // which `LAZY_EMPTY_EVALUATOR` is a subtype of, so its kind is lost too.
     acceptLazy(() => ($typed<boolean>() ? emitAndStop : LAZY_EMPTY_EVALUATOR));
   });
 });

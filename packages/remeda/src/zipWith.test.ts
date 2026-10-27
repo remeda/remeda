@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { forceFusion } from "../test/forceFusion";
 import { filter } from "./filter";
 import { identity } from "./identity";
 import { map } from "./map";
@@ -108,12 +109,7 @@ describe("data second with initial arg", () => {
         data: readonly [readonly unknown[], readonly unknown[]],
       ) => unknown
     >((_first, _second, _index, data) => structuredClone(data));
-    pipe(
-      [1, 2, 3],
-      // Keeps the step lazy: alone, it would run eagerly on the array.
-      map(identity()),
-      zipWith(other, zipper),
-    );
+    pipe([1, 2, 3], forceFusion(), zipWith(other, zipper));
 
     expect(zipper).toHaveNthReturnedWith(1, [[1], other]);
     expect(zipper).toHaveNthReturnedWith(2, [[1, 2], other]);
@@ -129,12 +125,7 @@ describe("data second with initial arg", () => {
         data: readonly [readonly number[], readonly string[]],
       ) => string
     >((first, second, index) => `${first}${second}${index}`);
-    pipe(
-      [1, 2, 3],
-      // Keeps the step lazy: alone, it would run eagerly on the array.
-      map(identity()),
-      zipWith(["a", "b", "c"], zipper),
-    );
+    pipe([1, 2, 3], forceFusion(), zipWith(["a", "b", "c"], zipper));
 
     expect(() => zipper.mock.calls[0]?.[3]?.[0]?.at(0)).toThrow(/^Remeda: /u);
   });

@@ -1,4 +1,5 @@
 import { expect, test, vi } from "vitest";
+import { forceFusion } from "../test/forceFusion";
 import { forEach } from "./forEach";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import { pipe } from "./pipe";
@@ -51,8 +52,7 @@ test("pipe with another lazy step", () => {
 
   const result = pipe(
     data,
-    // Keeps the step lazy by making the run fuse.
-    take(Infinity),
+    forceFusion(),
     forEach(vi.fn<(x: number) => void>()),
   );
 
@@ -77,12 +77,7 @@ test("provides the items processed so far to the callback", () => {
   const callback = vi.fn<LazyCallback<unknown[], unknown>>(
     (_value, _index, data) => [...data],
   );
-  pipe(
-    [1, 2, 3],
-    // Keeps the step lazy by making the run fuse.
-    take(Infinity),
-    forEach(callback),
-  );
+  pipe([1, 2, 3], forceFusion(), forEach(callback));
 
   expect(callback).toHaveNthReturnedWith(1, [1]);
   expect(callback).toHaveNthReturnedWith(2, [1, 2]);
@@ -95,12 +90,7 @@ test("doesn't collect the items processed so far for a callback without `data`",
   const callback = vi.fn<
     (value: number, index: number, data: readonly number[]) => void
   >((value, index) => value + index);
-  pipe(
-    [1, 2, 3],
-    // Keeps the step lazy by making the run fuse.
-    take(Infinity),
-    forEach(callback),
-  );
+  pipe([1, 2, 3], forceFusion(), forEach(callback));
 
   expect(() => callback.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
 });

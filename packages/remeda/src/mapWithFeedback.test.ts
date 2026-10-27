@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { forceFusion } from "../test/forceFusion";
 import { map } from "./map";
 import { mapWithFeedback } from "./mapWithFeedback";
 import { pipe } from "./pipe";
@@ -86,8 +87,7 @@ describe("data last", () => {
     const indices: number[] = [];
     pipe(
       [1, 2, 3, 4, 5],
-      // Keeps the step lazy by making the run fuse.
-      take(Infinity),
+      forceFusion(),
       mapWithFeedback((acc, x, index, items) => {
         indices.push(index);
         lazyItems.push([...items]);
@@ -114,12 +114,7 @@ describe("data last", () => {
         data: readonly number[],
       ) => number
     >((accumulator, value, index) => accumulator + value + index);
-    pipe(
-      [1, 2, 3],
-      // Keeps the step lazy by making the run fuse.
-      take(Infinity),
-      mapWithFeedback(reducer, 0),
-    );
+    pipe([1, 2, 3], forceFusion(), mapWithFeedback(reducer, 0));
 
     expect(() => reducer.mock.calls[0]?.[3]?.at(0)).toThrow(/^Remeda: /u);
   });

@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { forceFusion } from "../test/forceFusion";
 import { find } from "./find";
 import { identity } from "./identity";
 import { isStrictEqual } from "./isStrictEqual";
@@ -120,8 +121,7 @@ describe("data last", () => {
     const dataSnapshots: number[][] = [];
     pipe(
       [1, 2, 3],
-      // Keeps the step lazy: alone, it would run eagerly on the array.
-      map(identity()),
+      forceFusion(),
       find((_value, _index, data) => {
         dataSnapshots.push([...data]);
         return false;
@@ -135,12 +135,7 @@ describe("data last", () => {
     const predicate = vi.fn<
       (value: number, index: number, data: readonly number[]) => boolean
     >((value, index) => value > index);
-    pipe(
-      [1, 2, 3],
-      // Keeps the step lazy: alone, it would run eagerly on the array.
-      map(identity()),
-      find(predicate),
-    );
+    pipe([1, 2, 3], forceFusion(), find(predicate));
 
     expect(() => predicate.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
   });

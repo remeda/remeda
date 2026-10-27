@@ -744,12 +744,40 @@ describe("lazy", () => {
       expect(result).toStrictEqual([1]);
       expect(dataLengths).toStrictEqual([2, 2]);
     });
+
+    test("starts on the array a non-lazy function returned", () => {
+      const calls: string[] = [];
+      pipe(
+        { inner: [1, 2] },
+        prop("inner"),
+        map((x) => {
+          calls.push("map");
+          return x;
+        }),
+        filter(() => {
+          calls.push("filter");
+          return true;
+        }),
+      );
+
+      expect(calls).toStrictEqual(["map", "map", "filter", "filter"]);
+    });
   });
 
   test("a run of one lazy function between two non-lazy ones", () => {
     expect(
       pipe({ inner: [1, 2, 3] }, prop("inner"), map(multiply(10)), join(",")),
     ).toBe("10,20,30");
+  });
+
+  test("a lone step on the array a non-lazy function returned gets the complete array", () => {
+    expect(
+      pipe(
+        { inner: [1, 2, 3] },
+        prop("inner"),
+        map((_value, _index, data) => data.length),
+      ),
+    ).toStrictEqual([3, 3, 3]);
   });
 
   test("fused steps pull from a non-array iterable only until done", () => {

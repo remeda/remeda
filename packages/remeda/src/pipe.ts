@@ -381,15 +381,12 @@ export function pipe(
 
     const fusedSequence = buildFusedSequence(functions, functionIndex);
 
-    output = runFusedSequence(output, fusedSequence);
+    const fusedOutput = runFusedSequence(output, fusedSequence);
     functionIndex += fusedSequence.length;
 
     // @ts-expect-error [ts2322] -- TypeScript can't follow the logic that `functionIndex - 1` is pointing to the last function in `fusedSequence`.
     const lastLazyFunction: LazyUnaryFunction = functions[functionIndex - 1];
-    if (lastLazyFunction.lazy.isReducing) {
-      // @ts-expect-error [ts18046] -- output is always an array when the last lazy function in the sequence was reducing.
-      output = output[0];
-    }
+    output = lastLazyFunction.lazy.isReducing ? fusedOutput[0] : fusedOutput;
   }
 
   return output;

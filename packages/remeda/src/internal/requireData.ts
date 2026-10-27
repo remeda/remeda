@@ -32,7 +32,10 @@ export const requireData = <
   // as the lazy implementation's return type), so a wrong evaluator is
   // reported at its own return expression instead of being inferred from it
   // and failing at the call. Without a declared type it falls back to its
-  // constraint, whose `never` items no lazy implementation accepts.
+  // constraint, whose `never` items no lazy implementation accepts, or, in a
+  // lazy implementation written inline as an argument, to the
+  // `StoppableLazyEvaluator` its context expects, which needs the
+  // `makeStoppable` mark.
   evaluator: NoInfer<Evaluator>,
 ): Evaluator => {
   // @ts-expect-error [ts2540] -- Intentional! we want to keep the prop
@@ -46,7 +49,7 @@ export const requireData = <
  * Marks an evaluator as needing `data` only when the user's `callback` is
  * likely to read it, based on its signature. It marks `evaluator` the way
  * `requireData` does, by mutating it, so callers must pass a freshly created
- * closure, never a module-level evaluator such as `lazyEmptyEvaluator`.
+ * closure, never a module-level evaluator such as `LAZY_EMPTY_EVALUATOR`.
  *
  * @see canReadData
  * @see requireData

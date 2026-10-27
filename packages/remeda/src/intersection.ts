@@ -101,7 +101,6 @@ const lazyImplementation = makeStoppable(
       remaining.set(value, (remaining.get(value) ?? 0) + 1);
     }
 
-    // @ts-expect-error [ts2333] -- TypeScript can't infer through the implementation that `value` is `T & S` when we return it.
     return (value, _index, _data, slot) => {
       const copies = remaining.get(value);
 
@@ -120,8 +119,12 @@ const lazyImplementation = makeStoppable(
         remaining.set(value, copies - 1);
       }
 
-      // We can stop the iteration if the remaining map is empty.
-      return remaining.size === 0 ? lastLazyValue(value, slot) : value;
+      // @ts-expect-error [ts2333] -- TypeScript can't infer through the implementation that `value` is `T & S`.
+      const result: T & S = value;
+      return remaining.size === 0
+        ? // We can stop the iteration if the remaining map is empty.
+          lastLazyValue(result, slot)
+        : result;
     };
   },
 );

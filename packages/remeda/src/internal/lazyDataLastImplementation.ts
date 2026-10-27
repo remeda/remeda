@@ -22,8 +22,9 @@ export type LazyEvaluatorFactory<
   T extends IterableContainer,
   P extends readonly unknown[],
 > =
-  // `pipe` reads both marks on every lazy implementation, so they are optional
-  // on both members.
+  // `pipe` reads both marks off any lazy implementation, so neither is
+  // required in general; a factory whose evaluators can stop must carry the
+  // `makeStoppable` mark.
   Partial<ReducingMetadata & StoppableMetadata> &
     (
       | ((...args: P) => LazyEvaluator<T[number], unknown>)
