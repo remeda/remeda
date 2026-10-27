@@ -73,12 +73,6 @@ describe("data last", () => {
     expect(pipe([], chunk(NaN))).toStrictEqual([]);
   });
 
-  test("throws on a NaN size", () => {
-    expect(() => pipe([1], chunk(NaN))).toThrow(
-      new RangeError("Invalid array length"),
-    );
-  });
-
   test("keeps holes across chunks", () => {
     expect(
       pipe(
@@ -127,36 +121,6 @@ describe("data last", () => {
         [7, 8, 9],
       ]);
     });
-
-    test("float rounding can drop an item", () => {
-      expect(pipe(range(0, 12), chunk<number>(1.2))).toStrictEqual([
-        [0],
-        [1],
-        [2],
-        [3],
-        [4, 5],
-        [6],
-        [7],
-        [8],
-        [9],
-        [10],
-      ]);
-    });
-
-    test("float rounding can end with an empty chunk", () => {
-      expect(pipe(range(0, 21), chunk<number>(1.4)).slice(-3)).toStrictEqual([
-        [18],
-        [19],
-        [],
-      ]);
-    });
-
-    test("float rounding can repeat an item", () => {
-      expect(pipe(range(0, 58), chunk<number>(2.28)).slice(-2)).toStrictEqual([
-        [54, 55, 56],
-        [56, 57],
-      ]);
-    });
   });
 });
 
@@ -198,12 +162,6 @@ describe("edge-cases", () => {
       new RangeError(
         "chunk: A chunk size of '0' would result in an infinite array",
       ),
-    );
-  });
-
-  test("throws on a NaN size", () => {
-    expect(() => chunk(["a", "b", "c", "d"], NaN)).toThrow(
-      new RangeError("Invalid array length"),
     );
   });
 
@@ -278,13 +236,46 @@ describe("edge-cases", () => {
         [3],
       ]);
     });
+  });
+});
 
+describe("known issues!", () => {
+  describe("a NaN size", () => {
+    test("throws a generic error", () => {
+      // `NaN` fails every comparison, so it slips past the size guard and
+      // reaches `new Array(NaN)`.
+      expect(() => chunk(["a", "b", "c", "d"], NaN)).not.toThrow(/^chunk: /u);
+
+      // Actual
+      expect(() => chunk(["a", "b", "c", "d"], NaN)).toThrow(
+        new RangeError("Invalid array length"),
+      );
+    });
+  });
+
+  describe("fractional sizes", () => {
     test("float rounding can drop an item", () => {
+      const result = chunk<number[], number>(range(0, 12), 1.2);
+
       // Chunk `k` ends at `k * size + size` but chunk `k + 1` starts at
       // `(k + 1) * size`, and in floating point the two can truncate to
       // different integers. The chunk count, `Math.ceil(length / size)`, can
       // round up too.
-      expect(chunk<number[], number>(range(0, 12), 1.2)).toStrictEqual([
+      expect(result).not.toStrictEqual([
+        [0],
+        [1],
+        [2],
+        [3],
+        [4, 5],
+        [6],
+        [7],
+        [8],
+        [9],
+        [10, 11],
+      ]);
+
+      // Actual
+      expect(result).toStrictEqual([
         [0],
         [1],
         [2],
@@ -299,15 +290,21 @@ describe("edge-cases", () => {
     });
 
     test("float rounding can end with an empty chunk", () => {
-      expect(
-        chunk<number[], number>(range(0, 21), 1.4).slice(-3),
-      ).toStrictEqual([[18], [19], []]);
+      const result = chunk<number[], number>(range(0, 21), 1.4).slice(-3);
+
+      expect(result).not.toStrictEqual([[16, 17], [18], [19, 20]]);
+
+      // Actual
+      expect(result).toStrictEqual([[18], [19], []]);
     });
 
     test("float rounding can repeat an item", () => {
-      expect(
-        chunk<number[], number>(range(0, 58), 2.28).slice(-2),
-      ).toStrictEqual([
+      const result = chunk<number[], number>(range(0, 58), 2.28).slice(-2);
+
+      expect(result).not.toStrictEqual([[54, 55, 56], [57]]);
+
+      // Actual
+      expect(result).toStrictEqual([
         [54, 55, 56],
         [56, 57],
       ]);
