@@ -1,9 +1,7 @@
-import type { LazyResult } from "./internal/lazyControl";
 import {
   lastLazyValue,
   lazyEmptyEvaluator,
   makeStoppable,
-  type StoppableResult,
 } from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -88,19 +86,9 @@ const lazyImplementation = makeStoppable(
   ): StoppableLazyEvaluator<F[number], [F[number], S[number]]> =>
     second.length === 0
       ? lazyEmptyEvaluator
-      : (
-          value,
-          index,
-          _data,
-          slot,
-        ):
-          | LazyResult<[F[number], S[number]]>
-          | StoppableResult<[F[number], S[number]]> => {
+      : // @ts-expect-error [ts2322] -- TypeScript fails to infer that pair is typed `[F[number], S[number]]`.
+        (value, index, _data, slot) => {
           const pair = [value, second[index]];
-          return index >= second.length - 1
-            ? // @ts-expect-error [ts2322] -- TypeScript widens fixed tuple literals as arrays of a union of all their items. For us this means it considers pair to be `unknown[]`, but we know better...
-              lastLazyValue(pair, slot)
-            : // @ts-expect-error [ts2322] -- TypeScript widens fixed tuple literals as arrays of a union of all their items. For us this means it considers pair to be `unknown[]`, but we know better...
-              pair;
+          return index >= second.length - 1 ? lastLazyValue(pair, slot) : pair;
         },
 );

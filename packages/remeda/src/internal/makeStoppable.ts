@@ -4,22 +4,22 @@ import type { LazySlot } from "./lazyControl";
 import type { StoppableLazyEvaluator } from "./types/LazyEvaluator";
 
 /**
- * Stop the pipe without emitting anything.
+ * End the iteration without emitting anything.
  *
- * @see `makeStoppable` Only stoppable evaluators can use this helper.
+ * Only the evaluators of a `makeStoppable` implementation may return it.
  */
 export const STOP: unique symbol = Symbol.for("remeda/lazy/stop");
 
 /**
- * Emit the slot's `value` and stop the pipe.
+ * Emit the slot's `value` and end the iteration.
  *
- * @see `lastLazyValue`
+ * @see lastLazyValue
  */
 export const LAST: unique symbol = Symbol.for("remeda/lazy/last");
 
 /**
- * Stoppable evaluators can short-circuit execution by throwing the towel in
- * with or without a last element.
+ * The results only a stoppable evaluator may return: end the iteration, with
+ * or without a last value.
  */
 export type StoppableResult<T = never> = LazyLast<T> | typeof STOP;
 
@@ -27,18 +27,19 @@ export type StoppableMetadata = {
   readonly isStoppable: true;
 };
 
-// The payload travels in the slot, so the tag is what ties its type to the
-// control: `LAST` and `MANY` only typecheck as the result of the helpers that
-// write a payload of the evaluator's declared result type. That needs a result
-// type other than `unknown`, which absorbs the rest of the union and so accepts
-// a bare control too (e.g., `flat`'s evaluators, whose item type changes with
-// depth).
+// Tagged like `LazyMany` in `lazyControl.ts`: `LAST` only typechecks as the
+// result of `lastLazyValue`, which writes a payload of the evaluator's declared
+// result type.
 type LazyLast<T> = Tagged<typeof LAST, "RemedaLazyLast", T>;
 
 /**
- * Allow an evaluator to return the `STOP` and `LAST` control symbols.
+ * Marks a lazy implementation whose evaluators can end the iteration early. On
+ * arrays, `pipe` only fuses a run of lazy functions when one of them carries
+ * this mark, as ending early is what makes feeding the items through the run
+ * one by one pay off. The evaluators are declared as `StoppableLazyEvaluator`,
+ * which a lazy implementation only accepts together with this mark.
  *
- * @see `StoppableLazyEvaluator`
+ * @see StoppableLazyEvaluator
  */
 export const makeStoppable = <Func extends StrictFunction>(
   fn: Func,
@@ -46,9 +47,9 @@ export const makeStoppable = <Func extends StrictFunction>(
   Object.assign(fn, { isStoppable: true } satisfies StoppableMetadata);
 
 /**
- * A helper evaluator for stopping the pipe without emitting anything.
+ * An evaluator that ends the iteration before emitting anything.
  *
- * @see `makeStoppable` Only stoppable evaluators can use this helper.
+ * Only a `makeStoppable` implementation may return it.
  */
 export const lazyEmptyEvaluator: StoppableLazyEvaluator<
   unknown,
@@ -56,9 +57,9 @@ export const lazyEmptyEvaluator: StoppableLazyEvaluator<
 > = (): typeof STOP => STOP;
 
 /**
- * Emits `value` and ends the fused sequence it is part of.
+ * Emits `value` and ends the iteration.
  *
- * @see `makeStoppable` Only stoppable evaluators can use this helper.
+ * Only the evaluators of a `makeStoppable` implementation may return it.
  */
 export function lastLazyValue<T>(
   value: T,

@@ -40,12 +40,12 @@ type LazyStep = {
  *
  * When consecutive functions with a `lazy` tag (e.g., `map`, `filter`, `take`,
  * `drop`, `forEach`, etc...) are used together and one of them can end the
- * iteration early (`take`, `find`, `first`, `intersection`, `zip`, `zipWith`),
- * they process data item-by-item rather than creating intermediate arrays.
- * This enables early termination when only partial results are needed,
- * improving performance for large datasets and expensive operations. On
- * arrays, consecutive lazy functions without one of those run one after the
- * other, each the same as its data-first call.
+ * iteration early, they process data item-by-item rather than creating
+ * intermediate arrays. This enables early termination when only partial
+ * results are needed, improving performance for large datasets and expensive
+ * operations. On arrays, consecutive lazy functions without one that can end
+ * the iteration early run one after the other, each the same as its
+ * data-first call.
  *
  * Functions are only evaluated lazily when their data-last form is used
  * directly in the pipe. To disable lazy evaluation, use data-first calls via
@@ -60,11 +60,12 @@ type LazyStep = {
  *
  * IMPORTANT: During lazy evaluation, callbacks using the third parameter (the
  * input array) receive only items processed up to that point, not the complete
- * array, and each item goes through all the lazy functions before the next
- * one is read. On arrays, a lazy function that isn't evaluated together with
- * one that can end the iteration early runs the same as its data-first call:
- * its callbacks receive the complete array, and run for every item before the
- * next function starts.
+ * array, and each item goes through the rest of the lazy functions before the
+ * next one is read. On arrays, only consecutive lazy functions that include one
+ * that can end the iteration early (possibly the function itself) are
+ * evaluated lazily; any other lazy function runs the same as its data-first
+ * call: its callbacks receive the complete array, and run for every item
+ * before the next function starts.
  *
  * @param data - The input data.
  * @param functions - A sequence of functions that take one argument and

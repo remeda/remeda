@@ -1,9 +1,8 @@
-import { SKIP_ITEM, type LazyResult } from "./internal/lazyControl";
+import { SKIP_ITEM } from "./internal/lazyControl";
 import {
   lastLazyValue,
   lazyEmptyEvaluator,
   makeStoppable,
-  type StoppableResult,
 } from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import type { StoppableLazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -102,12 +101,8 @@ const lazyImplementation = makeStoppable(
       remaining.set(value, (remaining.get(value) ?? 0) + 1);
     }
 
-    return (
-      value,
-      _index,
-      _data,
-      slot,
-    ): LazyResult<T & S> | StoppableResult<T & S> => {
+    // @ts-expect-error [ts2333] -- TypeScript can't infer through the implementation that `value` is `T & S` when we return it.
+    return (value, _index, _data, slot) => {
       const copies = remaining.get(value);
 
       if (copies === undefined) {
@@ -126,11 +121,7 @@ const lazyImplementation = makeStoppable(
       }
 
       // We can stop the iteration if the remaining map is empty.
-      return remaining.size === 0
-        ? // @ts-expect-error [ts2322] -- `value` is `T & S` here semantically, but TypeScript can't infer it via this implementation.
-          lastLazyValue(value, slot)
-        : // @ts-expect-error [ts2322] -- `value` is `T & S` here semantically, but TypeScript can't infer it via this implementation.
-          value;
+      return remaining.size === 0 ? lastLazyValue(value, slot) : value;
     };
   },
 );

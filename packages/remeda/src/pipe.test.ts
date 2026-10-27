@@ -108,9 +108,22 @@ describe("lazy", () => {
 
   describe("a reducing step followed by a lazy step", () => {
     test("at the start of a run", () => {
+      const dataLengths: number[] = [];
+
       expect(
-        pipe([[1, 2], [3]] as const, first(), map(multiply(10))),
-      ).toStrictEqual([10, 20]);
+        pipe(
+          [[1, 2], [3]],
+          // @ts-expect-error [ts2345] -- `find` can return `undefined`, which `map` doesn't accept, but this predicate always finds an item.
+          find((value, _index, data) => {
+            dataLengths.push(data.length);
+            return value.length === 1;
+          }),
+          map(multiply(10)),
+        ),
+      ).toStrictEqual([30]);
+      // A reducing step ends its run, so at the start of one it runs alone,
+      // data-first, and its callback sees the whole array.
+      expect(dataLengths).toStrictEqual([2, 2]);
     });
 
     test("ending a fused run", () => {
@@ -726,7 +739,7 @@ describe("lazy", () => {
         makeReducing(() => identity()),
       );
       const dataLengths: number[] = [];
-      pipe(
+      const result = pipe(
         [[1, 2], [3]],
         map((value, _index, data) => {
           dataLengths.push(data.length);
@@ -736,6 +749,7 @@ describe("lazy", () => {
         take(1),
       );
 
+      expect(result).toStrictEqual([1]);
       expect(dataLengths).toStrictEqual([2, 2]);
     });
   });

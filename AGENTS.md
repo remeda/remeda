@@ -91,7 +91,7 @@ Internal helpers: `src/internal/`. Type utilities: `src/internal/types/`.
 
 `purry` enables dual calling styles by counting arguments against the implementation's `fn.length`: at least that many = data-first (calls directly, extra arguments included), fewer = data-last (returns curried function). Every exported function that operates on data uses `purry`, or its internal lazy counterpart `purryWithLazy` (`src/internal/`) when it also has a lazy implementation.
 
-`pipe(data, fn1, fn2, fn3)` chains data-last functions. When consecutive functions in a pipe have a `lazy` property (attached by the internal lazy helpers in `src/internal/`), `pipe` batches them and processes items **one-by-one** through the batch instead of eagerly running each function on the full array. This enables short-circuiting (e.g., `take(3)` stops after 3 items) and skip-filtering without intermediate arrays.
+`pipe(data, fn1, fn2, fn3)` chains data-last functions. When consecutive functions in a pipe have a `lazy` property (attached by the internal lazy helpers in `src/internal/`) and one of them can end the iteration early (marked with `makeStoppable`, e.g., `take(3)` stops after 3 items), `pipe` batches them and processes items **one-by-one** through the batch, skipping the rest of the input and the intermediate arrays. On arrays, any other lazy function runs its data-first implementation; other iterables always run lazily.
 
 ## Conventions
 

@@ -1,14 +1,15 @@
-// A lazy evaluator answers `pipe` with the item itself, or with one of the
-// control symbols defined here to skip the item, stop, or expand it. Controls
-// are told apart from user items by identity alone, so `pipe` never touches an
-// item to classify it, and items that are proxies (e.g. reactive stores) see
-// no probe. Each control is a registered symbol, which no ordinary value is:
-// JSON can't produce one, and code has to ask the registry for these exact
-// keys. They are registered rather than module-private so that separate copies
-// of Remeda in one program (two installed versions, or the ESM and CJS builds
-// side by side) interoperate while they share this protocol. Mixing copies on
-// different protocols in one pipe is unsupported; changing the keys along with
-// the protocol keeps a future shape change from being read as this one.
+// A lazy evaluator answers `pipe` with the item itself, or with a control
+// symbol: the ones defined here skip the item or expand it, and the ones in
+// `makeStoppable.ts` end the iteration. Controls are told apart from user
+// items by identity alone, so `pipe` never touches an item to classify it, and
+// items that are proxies (e.g. reactive stores) see no probe. Each control is a
+// registered symbol, which no ordinary value is: JSON can't produce one, and
+// code has to ask the registry for these exact keys. They are registered
+// rather than module-private so that separate copies of Remeda in one program
+// (two installed versions, or the ESM and CJS builds side by side)
+// interoperate while they share this protocol. Mixing copies on different
+// protocols in one pipe is unsupported; changing the keys along with the
+// protocol keeps a future shape change from being read as this one.
 
 import type { Tagged, Writable } from "type-fest";
 
@@ -28,11 +29,11 @@ export const MANY: unique symbol = Symbol.for("remeda/lazy/many");
 const NO_VALUES: readonly unknown[] = [];
 
 /**
- * Where an evaluator leaves the payload of a `LAST` or `MANY` result. The pipe
- * that calls the evaluator owns it, one per run, so nested pipes and other
- * copies of Remeda never share one, and reads it as soon as the evaluator
- * returns. Evaluators only ever hand it to `lastLazyValue` and
- * `manyLazyValues`.
+ * Where an evaluator leaves the payload of a control result: a single `value`,
+ * or a list of `values`. The pipe that calls the evaluator owns it, one per
+ * run, so nested pipes and other copies of Remeda never share one, and reads
+ * it as soon as the evaluator returns. Evaluators only ever hand it to the
+ * helpers that return those controls.
  */
 export type LazySlot = {
   readonly value: unknown;
@@ -46,8 +47,8 @@ export type LazySlot = {
 export type LazyResult<T> = T | LazyMany<T> | typeof SKIP_ITEM;
 
 // The payload travels in the slot, so the tag is what ties its type to the
-// control: `LAST` and `MANY` only typecheck as the result of the helpers that
-// write a payload of the evaluator's declared result type. That needs a result
+// control: `MANY` only typechecks as the result of `manyLazyValues`, which
+// writes a payload of the evaluator's declared result type. That needs a result
 // type other than `unknown`, which absorbs the rest of the union and so accepts
 // a bare control too (e.g., `flat`'s evaluators, whose item type changes with
 // depth).

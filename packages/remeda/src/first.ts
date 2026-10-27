@@ -1,10 +1,5 @@
-import type { LazySlot } from "./internal/lazyControl";
 import { makeReducing } from "./internal/makeReducing";
-import {
-  lastLazyValue,
-  makeStoppable,
-  type StoppableResult,
-} from "./internal/makeStoppable";
+import { lastLazyValue, makeStoppable } from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -51,13 +46,7 @@ export function first(...args: readonly unknown[]): unknown {
 
 const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;
 
-const lazyImplementation = makeReducing(
-  makeStoppable((): StoppableLazyEvaluator => emitAndStop),
-);
+const lazyImplementation = makeReducing(makeStoppable(() => emitAndStop));
 
-const emitAndStop = <T>(
-  value: T,
-  _index: number,
-  _data: readonly T[],
-  slot: LazySlot,
-): StoppableResult<T> => lastLazyValue(value, slot);
+const emitAndStop: StoppableLazyEvaluator = (value, _index, _data, slot) =>
+  lastLazyValue(value, slot);

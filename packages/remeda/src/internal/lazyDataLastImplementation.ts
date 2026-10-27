@@ -22,12 +22,12 @@ export type LazyEvaluatorFactory<
   T extends IterableContainer,
   P extends readonly unknown[],
 > =
-  // We put the metadata first so we can override it later so we can enable the
-  // stoppable metadata.
+  // `pipe` reads both marks on every lazy implementation, so they are optional
+  // on both members; an implementation whose evaluators can end the iteration
+  // early is only accepted together with the `makeStoppable` mark.
   LazyMeta &
     (
       | ((...args: P) => LazyEvaluator<T[number], unknown>)
-      // Stoppable lazy evaluators, marked with the Stoppable metadata
       | (((...args: P) => StoppableLazyEvaluator<T[number], unknown>) &
           StoppableMetadata)
     );
