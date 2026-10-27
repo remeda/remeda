@@ -12,7 +12,7 @@ type LazyEvaluatorMetadata = {
   /**
    * Some evaluators provide `data` to their callbacks (e.g., `map`'s 3rd
    * parameter). Collecting it lazily costs a buffer that grows with every
-   * item, so the lazy runners (`pipe`, `processSingleLazyStep`) only collect
+   * item, so the lazy runners (`pipe`, `iterableDataFirst`) only collect
    * it for evaluators marked with this flag and hand every other evaluator
    * `UNEXPECTED_ACCESS_SENTINEL` instead. Set it via `requireData` or
    * `requireDataByArity`, never directly.

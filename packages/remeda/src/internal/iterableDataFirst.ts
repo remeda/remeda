@@ -4,16 +4,17 @@ import { LAST, STOP } from "./makeStoppable";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
 
 /**
- * Runs an iterable through a single lazy step, skipping the step objects and
- * the fan-out recursion that the general path in `pipe` needs. `pipe` never
- * calls it for an array.
+ * Runs a lazy function on an iterable that isn't an array, standing in for its
+ * data-first implementation, which only accepts arrays. With a single step
+ * there is nothing to fuse, so it skips the step objects and the fan-out
+ * recursion of a fused run in `pipe`.
  *
  * @param input - The data to run through the step.
  * @param lazy - The lazy implementation the step's evaluator is built from.
  * @param lazyArgs - The arguments the evaluator is built with.
  * @see pipe
  */
-export function processSingleLazyStep<P extends readonly unknown[]>(
+export function iterableDataFirst<P extends readonly unknown[]>(
   input: Iterable<unknown>,
   lazy: LazyEvaluatorFactory<readonly unknown[], P>,
   lazyArgs: P,

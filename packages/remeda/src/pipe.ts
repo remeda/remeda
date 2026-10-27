@@ -15,7 +15,7 @@ import {
   STOP,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
-import { processSingleLazyStep } from "./internal/processSingleLazyStep";
+import { iterableDataFirst } from "./internal/iterableDataFirst";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/unexpectedAccessSentinel";
 
 type LazyStep = {
@@ -321,7 +321,7 @@ export function pipe(
     // data-first implementation.
     const func = functions[0]!;
     return "lazy" in func && !Array.isArray(input)
-      ? processSingleLazyStep(
+      ? iterableDataFirst(
           // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
           input,
           func.lazy,
@@ -350,7 +350,7 @@ export function pipe(
       // A run of one has nothing to fuse with either.
       output = Array.isArray(output)
         ? func(output)
-        : processSingleLazyStep(
+        : iterableDataFirst(
             // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
             output,
             func.lazy,
