@@ -24,8 +24,8 @@ export type BaseEvaluator<T, Result, ResultKinds extends string> = (((
   item: T,
   index: number,
   data: readonly T[],
-  // Only evaluators that stop with a value or fan out need it, and only to
-  // pass it to `lastLazyValue` or `manyLazyValues`.
+  // Allows an evaluator to pass back data; The semantics of this data is
+  // defined by the lazy controls.
   slot: LazySlot,
 ) => Result) &
   LazyEvaluatorMetadata) & {
