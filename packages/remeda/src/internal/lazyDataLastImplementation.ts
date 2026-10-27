@@ -24,7 +24,7 @@ export type LazyEvaluatorFactory<
 > =
   // `pipe` reads both marks on every lazy implementation, so they are optional
   // on both members.
-  LazyMeta &
+  Partial<ReducingMetadata & StoppableMetadata> &
     (
       | ((...args: P) => LazyEvaluator<T[number], unknown>)
       | (((...args: P) => StoppableLazyEvaluator<T[number], unknown>) &
@@ -38,8 +38,6 @@ type LazyDefinition<
   readonly lazy: LazyEvaluatorFactory<T, P>;
   readonly lazyArgs: P;
 };
-
-type LazyMeta = Partial<ReducingMetadata & StoppableMetadata>;
 
 // Allows us to build the lazy definition dynamically at runtime.
 type MutableLazyDefinition<

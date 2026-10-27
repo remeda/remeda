@@ -1,7 +1,7 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
 import {
   lastLazyValue,
-  lazyEmptyEvaluator,
+  LAZY_EMPTY_EVALUATOR,
   makeStoppable,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
@@ -90,7 +90,7 @@ function intersectionImplementation<T, S>(
 const lazyImplementation = makeStoppable(
   <T, S>(other: readonly S[]): StoppableLazyEvaluator<T, T & S> => {
     if (other.length === 0) {
-      return lazyEmptyEvaluator;
+      return LAZY_EMPTY_EVALUATOR;
     }
 
     // We need to build a more efficient data structure that would allow us

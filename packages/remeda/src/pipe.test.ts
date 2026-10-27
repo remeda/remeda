@@ -9,7 +9,7 @@ import { identity } from "./identity";
 import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
 import { makeReducing } from "./internal/makeReducing";
 import {
-  lazyEmptyEvaluator,
+  LAZY_EMPTY_EVALUATOR,
   makeStoppable,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
@@ -462,7 +462,7 @@ describe("lazy", () => {
     });
 
     test("stopping without a value ends the iteration", () => {
-      const evaluator = vi.fn<StoppableLazyEvaluator>(lazyEmptyEvaluator);
+      const evaluator = vi.fn<StoppableLazyEvaluator>(LAZY_EMPTY_EVALUATOR);
       pipe(
         // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
         [1, 2, 3].values(),

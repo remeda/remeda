@@ -1,6 +1,6 @@
 import {
   lastLazyValue,
-  lazyEmptyEvaluator,
+  LAZY_EMPTY_EVALUATOR,
   makeStoppable,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
@@ -63,7 +63,7 @@ const takeImplementation = <T extends IterableContainer>(
 const lazyImplementation = makeStoppable(
   <T>(n: number): StoppableLazyEvaluator<T> => {
     if (Number.isNaN(n) || n < 1) {
-      return lazyEmptyEvaluator;
+      return LAZY_EMPTY_EVALUATOR;
     }
 
     let remaining = n;

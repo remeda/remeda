@@ -1,6 +1,6 @@
 import {
   lastLazyValue,
-  lazyEmptyEvaluator,
+  LAZY_EMPTY_EVALUATOR,
   makeStoppable,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
@@ -85,7 +85,7 @@ const lazyImplementation = makeStoppable(
     second: S,
   ): StoppableLazyEvaluator<F[number], [F[number], S[number]]> =>
     second.length === 0
-      ? lazyEmptyEvaluator
+      ? LAZY_EMPTY_EVALUATOR
       : // @ts-expect-error [ts2322] -- TypeScript fails to infer that pair is typed `[F[number], S[number]]`.
         (value, index, _data, slot) => {
           const pair = [value, second[index]];

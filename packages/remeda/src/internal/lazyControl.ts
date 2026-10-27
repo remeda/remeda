@@ -16,11 +16,7 @@ export const MANY: unique symbol = Symbol.for("remeda/lazy/many");
 const NO_VALUES: readonly unknown[] = [];
 
 /**
- * Where an evaluator leaves the payload of a control result: a single `value`,
- * or a list of `values`. The pipe that calls the evaluator owns it, one per
- * run, so nested pipes and other copies of Remeda never share one, and reads
- * it as soon as the evaluator returns. Evaluators only ever hand it to the
- * helpers that return those controls.
+ * Where an evaluator leaves the payload of a control result.
  */
 export type LazySlot = {
   readonly value: unknown;

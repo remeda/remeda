@@ -1,7 +1,7 @@
 import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
 import {
   lastLazyValue,
-  lazyEmptyEvaluator,
+  LAZY_EMPTY_EVALUATOR,
   makeStoppable,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
@@ -138,7 +138,7 @@ const lazyImplementation = makeStoppable(
     fn: ZippingFunction<readonly T1[], T2, Value>,
   ): StoppableLazyEvaluator<T1, Value> =>
     second.length === 0
-      ? lazyEmptyEvaluator
+      ? LAZY_EMPTY_EVALUATOR
       : requireDataByArity(
           fn,
           (value, index, data, slot) => {

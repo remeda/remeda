@@ -16,6 +16,14 @@ export const STOP: unique symbol = Symbol.for("remeda/lazy/stop");
 export const LAST: unique symbol = Symbol.for("remeda/lazy/last");
 
 /**
+ * An evaluator that ends the iteration before emitting anything.
+ */
+export const LAZY_EMPTY_EVALUATOR: StoppableLazyEvaluator<
+  unknown,
+  never
+> = (): typeof STOP => STOP;
+
+/**
  * An evaluator that can also use pipe short-circuiting controls to stop
  * pipe evaluations in the middle.
  *
@@ -49,14 +57,6 @@ export const makeStoppable = <Func extends StrictFunction>(
   fn: Func,
 ): Func & StoppableMetadata =>
   Object.assign(fn, { isStoppable: true } satisfies StoppableMetadata);
-
-/**
- * An evaluator that ends the iteration before emitting anything.
- */
-export const lazyEmptyEvaluator: StoppableLazyEvaluator<
-  unknown,
-  never
-> = (): typeof STOP => STOP;
 
 /**
  * Emits `value` and ends the iteration.

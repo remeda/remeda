@@ -10,7 +10,7 @@ import type { LazyEvaluatorFactory } from "./lazyDataLastImplementation";
 import {
   LAST,
   lastLazyValue,
-  lazyEmptyEvaluator,
+  LAZY_EMPTY_EVALUATOR,
   makeStoppable,
   STOP,
   type StoppableLazyEvaluator,
@@ -77,7 +77,7 @@ describe("accepted", () => {
   });
 
   test("the empty evaluator, with the mark", () => {
-    acceptLazy(makeStoppable(() => lazyEmptyEvaluator));
+    acceptLazy(makeStoppable(() => LAZY_EMPTY_EVALUATOR));
   });
 });
 
@@ -156,7 +156,7 @@ describe("rejected", () => {
   test("the empty evaluator, without the mark", () => {
     // @ts-expect-error [ts2345] -- A stoppable evaluator needs the
     // `makeStoppable` mark.
-    acceptLazy(() => lazyEmptyEvaluator);
+    acceptLazy(() => LAZY_EMPTY_EVALUATOR);
   });
 });
 
@@ -190,7 +190,7 @@ describe("known issues!", () => {
   test("the empty evaluator next to an evaluator of neither type, without the mark", () => {
     // TypeScript reduces the union of the two to the evaluator of neither type,
     // which `lazyEmptyEvaluator` is a subtype of, so its kind is lost too.
-    acceptLazy(() => ($typed<boolean>() ? emitAndStop : lazyEmptyEvaluator));
+    acceptLazy(() => ($typed<boolean>() ? emitAndStop : LAZY_EMPTY_EVALUATOR));
   });
 });
 
