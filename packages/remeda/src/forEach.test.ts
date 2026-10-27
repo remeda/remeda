@@ -42,8 +42,7 @@ test("pipe", () => {
   expect(cb).toHaveBeenNthCalledWith(2, 2, 1, data);
   expect(cb).toHaveBeenNthCalledWith(3, 3, 2, data);
 
-  // Alone in the pipe the step runs eagerly, like the dataLast function used
-  // directly, so we return the same reference.
+  // Alone in the pipe the step runs eagerly, so we return the same reference.
   expect(result).toBe(data);
 });
 
@@ -52,8 +51,7 @@ test("pipe with another lazy step", () => {
 
   const result = pipe(
     data,
-    // Keeps the step lazy: on an array, a run fuses only when one of its
-    // steps can stop early, as `take` can.
+    // Keeps the step lazy by making the run fuse.
     take(Infinity),
     forEach(vi.fn<(x: number) => void>()),
   );
@@ -72,8 +70,6 @@ test("pipe with another lazy step that can't stop early", () => {
     forEach(vi.fn<(x: number) => void>()),
   );
 
-  // Neither step can stop early, so each one runs eagerly, like the dataLast
-  // function used directly, and passes on the reference it got.
   expect(result).toBe(data);
 });
 
@@ -83,8 +79,7 @@ test("provides the items processed so far to the callback", () => {
   );
   pipe(
     [1, 2, 3],
-    // Keeps the step lazy: on an array, a run fuses only when one of its
-    // steps can stop early, as `take` can.
+    // Keeps the step lazy by making the run fuse.
     take(Infinity),
     forEach(callback),
   );
@@ -102,8 +97,7 @@ test("doesn't collect the items processed so far for a callback without `data`",
   >((value, index) => value + index);
   pipe(
     [1, 2, 3],
-    // Keeps the step lazy: on an array, a run fuses only when one of its
-    // steps can stop early, as `take` can.
+    // Keeps the step lazy by making the run fuse.
     take(Infinity),
     forEach(callback),
   );

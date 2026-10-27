@@ -23,8 +23,7 @@ export type LazyEvaluatorFactory<
   P extends readonly unknown[],
 > =
   // `pipe` reads both marks on every lazy implementation, so they are optional
-  // on both members; an implementation whose evaluators can end the iteration
-  // early is only accepted together with the `makeStoppable` mark.
+  // on both members.
   LazyMeta &
     (
       | ((...args: P) => LazyEvaluator<T[number], unknown>)

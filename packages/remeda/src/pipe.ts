@@ -61,11 +61,7 @@ type LazyStep = {
  * IMPORTANT: During lazy evaluation, callbacks using the third parameter (the
  * input array) receive only items processed up to that point, not the complete
  * array, and each item goes through the rest of the lazy functions before the
- * next one is read. On arrays, only consecutive lazy functions that include one
- * that can end the iteration early (possibly the function itself) are
- * evaluated lazily; any other lazy function runs the same as its data-first
- * call: its callbacks receive the complete array, and run for every item
- * before the next function starts.
+ * next one is read.
  *
  * @param data - The input data.
  * @param functions - A sequence of functions that take one argument and
@@ -112,8 +108,7 @@ type LazyStep = {
  *
  *    // = Using the 3rd param of a callback =
  *    // The following would print out `data` in its entirety for each value
- *    // of `data`, and so would the same `forEach` in a `pipe`, alone or with
- *    // lazy functions that can't end the iteration early (e.g., `map`).
+ *    // of `data`.
  *    forEach([1, 2, 3, 4], (_item, _index, data) => {
  *      console.log(data);
  *    }); //=> "[1, 2, 3, 4]" logged 4 times
@@ -319,10 +314,8 @@ export function pipe(
   }
 
   if (functions.length === 1) {
-    // A lone lazy function has nothing to fuse with, so an array is passed to
-    // it directly, which runs its data-first implementation; only the other
-    // iterables, which those implementations don't accept, need the lazy
-    // runner.
+    // A lone lazy function has nothing to fuse with, so an array runs its
+    // data-first implementation.
     const func = functions[0]!;
     return "lazy" in func && !Array.isArray(input)
       ? processSingleLazyStep(
@@ -351,11 +344,7 @@ export function pipe(
       !("lazy" in nextFunc) ||
       func.lazy.isReducing
     ) {
-      // A run of one lazy function has nothing to fuse with, so an array is
-      // passed to it directly, which runs its data-first implementation. Any
-      // other iterable runs that one lazy step directly, without the
-      // cross-step bookkeeping of a fused sequence: the step array, the step
-      // object, and the hand-off through them are all overhead.
+      // A run of one has nothing to fuse with either.
       output = Array.isArray(output)
         ? func(output)
         : processSingleLazyStep(
@@ -419,17 +408,13 @@ function endOfStepByStepRun(
     const func = functions[index]!;
     if ("lazy" in func) {
       if (func.lazy.isStoppable) {
-        // One function that can stop the pipe early is enough to fuse the
-        // whole run.
         return startIndex;
       }
 
       if (func.lazy.isReducing) {
-        // Functions that reduce to a value always end the run.
         return index + 1;
       }
     } else {
-      // A non-lazy function ends the run.
       return index;
     }
   }

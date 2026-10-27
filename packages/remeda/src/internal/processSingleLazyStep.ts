@@ -6,8 +6,7 @@ import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
 /**
  * Runs an iterable through a single lazy step, skipping the step objects and
  * the fan-out recursion that the general path in `pipe` needs. `pipe` never
- * calls it for an array: a lone step on an array runs the data-first
- * implementation instead.
+ * calls it for an array.
  *
  * @param input - The data to run through the step.
  * @param lazy - The lazy implementation the step's evaluator is built from.

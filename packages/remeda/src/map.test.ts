@@ -61,8 +61,7 @@ describe(pipe, () => {
     expect(
       pipe(
         [1, 2, 3, 4, 5],
-        // Keeps the steps lazy: on an array, a run fuses only when one of its
-        // steps can stop early, as `take` can.
+        // Keeps the steps lazy by making the run fuse.
         take(Infinity),
         map((x, i, items) => {
           anyItems1.push([...items]);
@@ -96,8 +95,7 @@ describe(pipe, () => {
     >((value, index) => value + index);
     pipe(
       [1, 2, 3],
-      // Keeps the step lazy: on an array, a run fuses only when one of its
-      // steps can stop early, as `take` can.
+      // Keeps the step lazy by making the run fuse.
       take(Infinity),
       map(callbackfn),
     );
@@ -108,8 +106,7 @@ describe(pipe, () => {
   test("never marks the callback itself", () => {
     pipe(
       [1, 2, 3],
-      // Keeps the steps lazy: on an array, a run fuses only when one of its
-      // steps can stop early, as `take` can.
+      // Keeps the steps lazy by making the run fuse.
       take(Infinity),
       map(double),
       map(addDataLength),

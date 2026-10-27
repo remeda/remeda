@@ -71,7 +71,7 @@ function forEachImplementation<T>(
 ): T[] {
   // eslint-disable-next-line unicorn/no-for-each -- We are intentionally proxying the built in forEach, it's up to the user to decide if they want to use a for loop instead.
   data.forEach(callbackfn);
-  // @ts-expect-error [ts4104] -- The dataFirst signature returns `void`, so only the dataLast signature exposes this, as `Writable<T>`. Outside `pipe`, and inside it unless it runs fused with other lazy functions, the result is the input array itself, which the docs warn about.
+  // @ts-expect-error [ts4104] -- The dataFirst signature returns `void`, so only the dataLast signature exposes this, as `Writable<T>`, and its docs warn that the result is the input array itself.
   return data;
 }
 

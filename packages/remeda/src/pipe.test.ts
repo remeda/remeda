@@ -144,8 +144,7 @@ describe("lazy", () => {
     );
     pipe(
       [1, 2, 3],
-      // Keeps the steps lazy: on an array, a run fuses only when one of its
-      // steps can stop early, as `take` can.
+      // Keeps the steps lazy by making the run fuse.
       take(Infinity),
       map(multiply(10)),
       map(mapper),
@@ -264,7 +263,7 @@ describe("lazy", () => {
   test("`null` items pass through as items, not control signals", () => {
     expect(
       pipe(
-        // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
         [null, 1, null].values(),
         filter((x) => x === null),
       ),
@@ -276,7 +275,7 @@ describe("lazy", () => {
 
     expect(
       pipe(
-        // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
         [0].values(),
         map(() => item),
       ),
@@ -301,7 +300,7 @@ describe("lazy", () => {
     const { proxy: item, revoke } = Proxy.revocable({}, {});
     revoke();
     const [result] = pipe(
-      // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+      // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
       [item].values(),
       map(identity()),
     );
@@ -409,15 +408,13 @@ describe("lazy", () => {
     });
   });
 
-  // A pipe whose only function is lazy takes a dedicated path through `pipe`,
-  // which runs the lazy evaluator on any input that isn't an array, so every
-  // kind of lazy result needs to be exercised on such an input too.
+  // A pipe whose only function is lazy takes a dedicated path through `pipe`.
   describe("a lone lazy function on a non-array iterable", () => {
     test("skipped items are dropped", () => {
       expect(
         pipe(
           [1, 2, 3, 4].values(),
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
           filter((x: number) => x % 2 === 0),
         ),
       ).toStrictEqual([2, 4]);
@@ -426,7 +423,7 @@ describe("lazy", () => {
     test("index advances past skipped items", () => {
       expect(
         pipe(
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
           [1, 2, 3, 4, 5].values(),
           filter((_value, index: number) => index % 2 === 0),
         ),
@@ -436,7 +433,7 @@ describe("lazy", () => {
     test("index advances past fan-outs", () => {
       expect(
         pipe(
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
           ["a", "b"].values(),
           flatMap((value, index: number) => [value, index]),
         ),
@@ -447,7 +444,7 @@ describe("lazy", () => {
       expect(
         pipe(
           [1, 2, 3].values(),
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
           take(0),
         ),
       ).toStrictEqual([]);
@@ -466,7 +463,7 @@ describe("lazy", () => {
     test("stopping without a value ends the iteration", () => {
       const evaluator = vi.fn<StoppableLazyEvaluator>(lazyEmptyEvaluator);
       pipe(
-        // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
         [1, 2, 3].values(),
         lazyDataLastImplementation(
           identity(),
@@ -482,7 +479,7 @@ describe("lazy", () => {
       expect(
         pipe(
           [1, 2, 3].values(),
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
           first(),
         ),
       ).toBe(1);
@@ -492,7 +489,7 @@ describe("lazy", () => {
       const predicate = vi.fn<(x: number) => boolean>(isStrictEqual(2));
       pipe(
         [1, 2, 3].values(),
-        // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
         find(predicate),
       );
 
@@ -503,7 +500,7 @@ describe("lazy", () => {
       expect(
         pipe(
           [].values(),
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
           first(),
         ),
       ).toBeUndefined();
@@ -512,7 +509,7 @@ describe("lazy", () => {
     test("fan-out emits every sub-item", () => {
       expect(
         pipe(
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
           [1, 2].values(),
           flatMap((x: number) => [x, x * 10]),
         ),
@@ -522,7 +519,7 @@ describe("lazy", () => {
     test("an empty fan-out contributes nothing for that item", () => {
       expect(
         pipe(
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
           [1, 2, 3].values(),
           flatMap((x: number) => (x === 2 ? [] : [x])),
         ),
@@ -534,7 +531,7 @@ describe("lazy", () => {
         pipe(
           // Too many sub-items to pass as the arguments of a single call.
           [Array.from({ length: 500_000 }, (_item, index) => index)].values(),
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
           flat(),
         ),
       ).toHaveLength(500_000);
@@ -543,7 +540,7 @@ describe("lazy", () => {
     test("an evaluator that doesn't require `data` gets the sentinel", () => {
       const evaluator = vi.fn<LazyEvaluator>(identity());
       pipe(
-        // @ts-expect-error [ts2345] -- The utilities only type arrays, but a lone step runs lazily only on other iterables, which is what this test exercises.
+        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
         [1, 2, 3].values(),
         lazyDataLastImplementation(identity(), [], () => evaluator),
       );
@@ -552,9 +549,6 @@ describe("lazy", () => {
     });
   });
 
-  // With nothing to fuse with, a lone lazy function on an array runs its
-  // data-first implementation, the same as calling the data-last function
-  // directly.
   describe("a lone lazy function on an array", () => {
     test("a callback that doesn't declare `data` gets the array, not the sentinel", () => {
       const data = [1, 2, 3];
@@ -585,9 +579,6 @@ describe("lazy", () => {
     expect(mapper).toHaveBeenCalledTimes(3);
   });
 
-  // A run fuses when one of its steps can stop the pipe early. Without one,
-  // every item goes through every step anyway, so on an array each function
-  // runs its data-first implementation in turn instead.
   describe("run order", () => {
     test("a run on an array that can't stop early runs step by step", () => {
       const calls: string[] = [];
@@ -771,9 +762,6 @@ describe("lazy", () => {
     ).toStrictEqual([0, 10, 20]);
   });
 
-  // A lone step runs the data-first implementation on an array, which hands
-  // its callbacks the complete array, and the lazy runner on every other
-  // iterable, which fills the data buffer and counts the index.
   test.each([
     [
       "an array",

@@ -133,8 +133,7 @@ describe("dataLast", () => {
     expect(
       pipe(
         [3, 1, 4, 1, 5],
-        // Keeps the step lazy: on an array, a run fuses only when one of its
-        // steps can stop early, as `take` can.
+        // Keeps the step lazy by making the run fuse.
         take(Infinity),
         map(
           when(

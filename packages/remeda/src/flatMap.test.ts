@@ -61,8 +61,7 @@ describe("dataLast", () => {
       expect(
         pipe(
           [1, 2, 3],
-          // Keeps the step lazy: on an array, a run fuses only when one of its
-          // steps can stop early, as `take` can.
+          // Keeps the step lazy by making the run fuse.
           take(Infinity),
           flatMap(add(1)),
         ),
@@ -75,8 +74,7 @@ describe("dataLast", () => {
       );
       pipe(
         [1, 2, 3],
-        // Keeps the step lazy: on an array, a run fuses only when one of its
-        // steps can stop early, as `take` can.
+        // Keeps the step lazy by making the run fuse.
         take(Infinity),
         flatMap(mapper),
       );
@@ -92,8 +90,7 @@ describe("dataLast", () => {
       >((value, index) => [value + index]);
       pipe(
         [1, 2, 3],
-        // Keeps the step lazy: on an array, a run fuses only when one of its
-        // steps can stop early, as `take` can.
+        // Keeps the step lazy by making the run fuse.
         take(Infinity),
         flatMap(callback),
       );

@@ -86,8 +86,7 @@ describe("data last", () => {
     const indices: number[] = [];
     pipe(
       [1, 2, 3, 4, 5],
-      // Keeps the step lazy: on an array, a run fuses only when one of its
-      // steps can stop early, as `take` can.
+      // Keeps the step lazy by making the run fuse.
       take(Infinity),
       mapWithFeedback((acc, x, index, items) => {
         indices.push(index);
@@ -117,8 +116,7 @@ describe("data last", () => {
     >((accumulator, value, index) => accumulator + value + index);
     pipe(
       [1, 2, 3],
-      // Keeps the step lazy: on an array, a run fuses only when one of its
-      // steps can stop early, as `take` can.
+      // Keeps the step lazy by making the run fuse.
       take(Infinity),
       mapWithFeedback(reducer, 0),
     );

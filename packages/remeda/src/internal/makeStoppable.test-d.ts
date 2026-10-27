@@ -148,16 +148,16 @@ describe("rejected", () => {
 
   test("an evaluator that can stop, without the mark", () => {
     acceptLazy(
-      // @ts-expect-error [ts2345] -- `pipe` fuses a run over an array only for
-      // the mark, so without one the evaluator can't stop it early.
+      // @ts-expect-error [ts2345] -- A stoppable evaluator needs the
+      // `makeStoppable` mark.
       (): StoppableLazyEvaluator => (value, _index, _data, slot) =>
         lastLazyValue(value, slot),
     );
   });
 
   test("the empty evaluator, without the mark", () => {
-    // @ts-expect-error [ts2345] -- `pipe` fuses a run over an array only for
-    // the mark, so without one the evaluator can't stop it early.
+    // @ts-expect-error [ts2345] -- A stoppable evaluator needs the
+    // `makeStoppable` mark.
     acceptLazy(() => lazyEmptyEvaluator);
   });
 });
@@ -178,8 +178,7 @@ describe("known issues!", () => {
 
   test("an evaluator that can't stop, with the mark", () => {
     // Every `LazyEvaluator` is also a `StoppableLazyEvaluator` (one that may
-    // stop doesn't have to), so the mark is accepted where nothing stops. A
-    // needless mark only costs a fused run that nothing stops early.
+    // stop doesn't have to), so the mark is accepted where nothing stops.
     acceptLazy(makeStoppable((): LazyEvaluator => (value) => value));
   });
 

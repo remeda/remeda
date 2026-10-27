@@ -66,8 +66,7 @@ describe("data_last", () => {
     const dataSnapshots: number[][] = [];
     pipe(
       [1, 2, 3],
-      // Keeps the step lazy: on an array, a run fuses only when one of its
-      // steps can stop early, as `take` can.
+      // Keeps the step lazy by making the run fuse.
       take(Infinity),
       filter((_value, _index, data) => {
         dataSnapshots.push([...data]);
@@ -84,8 +83,7 @@ describe("data_last", () => {
     >((value, index) => value > index);
     pipe(
       [1, 2, 3],
-      // Keeps the step lazy: on an array, a run fuses only when one of its
-      // steps can stop early, as `take` can.
+      // Keeps the step lazy by making the run fuse.
       take(Infinity),
       filter(predicate),
     );

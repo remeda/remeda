@@ -79,8 +79,7 @@ describe(pipe, () => {
     );
     pipe(
       [1, 2, 2, 3],
-      // Keeps the step lazy: on an array, a run fuses only when one of its
-      // steps can stop early, as `take` can.
+      // Keeps the step lazy by making the run fuse.
       take(Infinity),
       uniqueBy(keyFunction),
     );
@@ -99,8 +98,7 @@ describe(pipe, () => {
     >((item, index) => item + index);
     pipe(
       [1, 2, 3],
-      // Keeps the step lazy: on an array, a run fuses only when one of its
-      // steps can stop early, as `take` can.
+      // Keeps the step lazy by making the run fuse.
       take(Infinity),
       uniqueBy(keyFunction),
     );

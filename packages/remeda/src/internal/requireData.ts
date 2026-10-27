@@ -24,7 +24,8 @@ type RequireDataByArityOptions = {
  * created closure, never a shared singleton or the user's callback itself.
  */
 export const requireData = <
-  // Stoppable evaluators also are also Lazy so this accepts any evaluator.
+  // Every `LazyEvaluator` is also a `StoppableLazyEvaluator`, so this accepts
+  // any evaluator.
   Evaluator extends StoppableLazyEvaluator<never, unknown>,
 >(
   // `Evaluator` comes only from the evaluator type the caller declares (e.g.,
