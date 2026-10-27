@@ -142,13 +142,13 @@ test("a string entry throws instead of being destructured", () => {
 });
 
 test("a hole throws", () => {
-  // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-  const data = [["a", 1], , ["b", 2]] as const;
-
-  // @ts-expect-error [ts2345] -- The hole is the input under test.
-  expect(() => fromEntries(data)).toThrow(
-    new TypeError("Iterator value undefined is not an entry object"),
-  );
+  expect(() =>
+    fromEntries(
+      // @ts-expect-error [ts2345] -- The hole is the input under test.
+      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
+      [["a", 1], , ["b", 2]] as const,
+    ),
+  ).toThrow(new TypeError("Iterator value undefined is not an entry object"));
 });
 
 test("empty array in a pipe", () => {
@@ -176,11 +176,12 @@ test("a string entry throws in a pipe", () => {
 });
 
 test("a hole throws in a pipe", () => {
-  // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-  const data = [["a", 1], , ["b", 2]] as const;
-
-  // @ts-expect-error [ts2345] -- The hole is the input under test.
-  expect(() => pipe(data, fromEntries())).toThrow(
-    new TypeError("Iterator value undefined is not an entry object"),
-  );
+  expect(() =>
+    pipe(
+      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
+      [["a", 1], , ["b", 2]] as const,
+      // @ts-expect-error [ts2345] -- The hole is the input under test.
+      fromEntries(),
+    ),
+  ).toThrow(new TypeError("Iterator value undefined is not an entry object"));
 });

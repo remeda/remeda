@@ -19,6 +19,7 @@ import { iterableDataFirst } from "./internal/iterableDataFirst";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/unexpectedAccessSentinel";
 
 type LazyStep = {
+  // `LazyEvaluator`s are also `StoppableLazyEvaluator`s so this accepts both.
   readonly lazyEvaluator: StoppableLazyEvaluator;
   index: number;
 } & (

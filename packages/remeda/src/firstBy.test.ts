@@ -87,9 +87,8 @@ describe("runtime (dataFirst)", () => {
 
   test("keeps the earlier of tied items", () => {
     const earlier = { id: 0 };
-    const later = { id: 0 };
 
-    expect(firstBy([earlier, later], ({ id }) => id)).toBe(earlier);
+    expect(firstBy([earlier, { id: 0 }], ({ id }) => id)).toBe(earlier);
   });
 
   test("keeps -0 ahead of a tied 0", () => {

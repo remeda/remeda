@@ -80,12 +80,17 @@ describe("data last", () => {
   });
 
   test("keeps holes across chunks", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    const data = [1, , 3, 4];
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    const firstChunk = [1, ,];
-
-    expect(pipe(data, chunk(2))).toStrictEqual([firstChunk, [3, 4]]);
+    expect(
+      pipe(
+        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+        [1, , 3, 4],
+        chunk(2),
+      ),
+    ).toStrictEqual([
+      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+      [1, ,],
+      [3, 4],
+    ]);
   });
 
   test("chunks only the items that reach it", () => {
@@ -113,9 +118,6 @@ describe("data last", () => {
     ]);
   });
 
-  // The sizes are typed as plain `number`: in a pipe, the literal-size result
-  // types recurse past TypeScript's depth limit for some fractional literals
-  // (TS2589).
   describe("fractional sizes", () => {
     test("cut at multiples of the size", () => {
       expect(pipe(range(0, 10), chunk<number>(2.5))).toStrictEqual([
@@ -235,12 +237,17 @@ describe("edge-cases", () => {
 
   describe("holes", () => {
     test("kept across chunks", () => {
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      const data = [1, , 3, 4];
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      const firstChunk = [1, ,];
-
-      expect(chunk(data, 2)).toStrictEqual([firstChunk, [3, 4]]);
+      expect(
+        chunk(
+          // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+          [1, , 3, 4],
+          2,
+        ),
+      ).toStrictEqual([
+        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+        [1, ,],
+        [3, 4],
+      ]);
     });
 
     test("filled in a single chunk", () => {
@@ -254,9 +261,6 @@ describe("edge-cases", () => {
     });
   });
 
-  // The sizes are typed as plain `number`: the literal-size result types
-  // recurse past TypeScript's depth limit for some fractional literals
-  // (TS2589).
   describe("fractional sizes", () => {
     test("cut at multiples of the size", () => {
       expect(chunk<number[], number>(range(0, 10), 2.5)).toStrictEqual([
@@ -275,11 +279,11 @@ describe("edge-cases", () => {
       ]);
     });
 
-    // Chunk `k` ends at `k * size + size` but chunk `k + 1` starts at
-    // `(k + 1) * size`, and in floating point the two can truncate to
-    // different integers. The chunk count, `Math.ceil(length / size)`, can
-    // round up too.
     test("float rounding can drop an item", () => {
+      // Chunk `k` ends at `k * size + size` but chunk `k + 1` starts at
+      // `(k + 1) * size`, and in floating point the two can truncate to
+      // different integers. The chunk count, `Math.ceil(length / size)`, can
+      // round up too.
       expect(chunk<number[], number>(range(0, 12), 1.2)).toStrictEqual([
         [0],
         [1],

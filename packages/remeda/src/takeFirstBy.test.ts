@@ -230,16 +230,18 @@ describe("runtime (dataLast)", () => {
   });
 
   test("keeps holes after a lone lazy step", () => {
-    const result = pipe(
+    expect(
+      pipe(
+        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+        [, 5, 3],
+        // With no lazy function to fuse with, `take` runs its data-first
+        // implementation, a `slice`, which keeps the hole.
+        take(Infinity),
+        takeFirstBy(2, (value: number | undefined) => value ?? NaN),
+      ),
+    ).toStrictEqual(
       // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      [, 5, 3],
-      // With no lazy function to fuse with, `take` runs its data-first
-      // implementation, a `slice`, which keeps the hole.
-      take(Infinity),
-      takeFirstBy(2, (value: number | undefined) => value ?? NaN),
+      [, 5],
     );
-
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(result).toStrictEqual([, 5]);
   });
 });

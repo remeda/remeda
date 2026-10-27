@@ -34,12 +34,14 @@ describe("data first", () => {
   });
 
   test("reads holes as undefined", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-    const data = [1, , 3];
-    // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-    const other = [, 5];
-
-    expect(concat(data, other)).toStrictEqual([1, undefined, 3, undefined, 5]);
+    expect(
+      concat(
+        // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
+        [1, , 3],
+        // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
+        [, 5],
+      ),
+    ).toStrictEqual([1, undefined, 3, undefined, 5]);
   });
 
   test("other can be any iterable at runtime", () => {
@@ -76,18 +78,16 @@ describe("data last", () => {
   });
 
   test("reads holes as undefined", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-    const data = [1, , 3];
-    // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-    const other = [, 5];
-
-    expect(pipe(data, concat(other))).toStrictEqual([
-      1,
-      undefined,
-      3,
-      undefined,
-      5,
-    ]);
+    expect(
+      pipe(
+        // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
+        [1, , 3],
+        concat(
+          // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
+          [, 5],
+        ),
+      ),
+    ).toStrictEqual([1, undefined, 3, undefined, 5]);
   });
 
   test("other can be any iterable at runtime", () => {

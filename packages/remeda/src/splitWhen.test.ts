@@ -61,10 +61,13 @@ test("calls the predicate once per item when nothing matches", () => {
 });
 
 test("holes are tested as undefined", () => {
-  // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-  const data = [1, , 3];
-
-  expect(splitWhen(data, (item) => item === undefined)).toStrictEqual([
+  expect(
+    splitWhen(
+      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
+      [1, , 3],
+      (item) => item === undefined,
+    ),
+  ).toStrictEqual([
     [1],
     // eslint-disable-next-line no-sparse-arrays -- The hole is the expected output.
     [, 3],
@@ -72,10 +75,13 @@ test("holes are tested as undefined", () => {
 });
 
 test("holes are kept when an item matches", () => {
-  // eslint-disable-next-line no-sparse-arrays -- The holes are the input under test.
-  const data = [1, , 3, , 5];
-
-  expect(splitWhen(data, (item) => item === 3)).toStrictEqual([
+  expect(
+    splitWhen(
+      // eslint-disable-next-line no-sparse-arrays -- The holes are the input under test.
+      [1, , 3, , 5],
+      (item) => item === 3,
+    ),
+  ).toStrictEqual([
     // eslint-disable-next-line no-sparse-arrays -- The hole is the expected output.
     [1, ,],
     // eslint-disable-next-line no-sparse-arrays -- The hole is the expected output.
@@ -95,12 +101,10 @@ test("empty array in a pipe", () => {
 });
 
 test("holes are kept when an item matches in a pipe", () => {
-  // eslint-disable-next-line no-sparse-arrays -- The holes are the input under test.
-  const data = [1, , 3, , 5];
-
   expect(
     pipe(
-      data,
+      // eslint-disable-next-line no-sparse-arrays -- The holes are the input under test.
+      [1, , 3, , 5],
       splitWhen((item) => item === 3),
     ),
   ).toStrictEqual([

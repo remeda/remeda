@@ -67,10 +67,9 @@ describe("data first", () => {
   });
 
   test("returns the last of same-shape matches by reference", () => {
-    const first = { id: 0 };
     const second = { id: 0 };
 
-    expect(findLast([first, second], constant(true))).toBe(second);
+    expect(findLast([{ id: 0 }, second], constant(true))).toBe(second);
   });
 
   test("returns -0 when it is the last match", () => {

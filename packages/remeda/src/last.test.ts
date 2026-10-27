@@ -16,10 +16,9 @@ describe("data first", () => {
   });
 
   test("returns the last of same-shape objects by reference", () => {
-    const first = { id: 0 };
     const second = { id: 0 };
 
-    expect(last([first, second])).toBe(second);
+    expect(last([{ id: 0 }, second])).toBe(second);
   });
 
   test("reads a trailing hole as undefined", () => {

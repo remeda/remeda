@@ -98,22 +98,18 @@ describe("data last", () => {
   });
 
   test("empty array", () => {
-    const data: number[] = [];
-
     expect(
       pipe(
-        data,
+        [] as number[],
         find((x) => x > 3),
       ),
     ).toBeUndefined();
   });
 
   test("empty array after a lazy step", () => {
-    const data: number[] = [];
-
     expect(
       pipe(
-        data,
+        [] as number[],
         map((x) => x * 2),
         find((x) => x > 6),
       ),
