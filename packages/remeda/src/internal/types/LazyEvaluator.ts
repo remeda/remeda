@@ -1,10 +1,8 @@
 import type { LazyResult, LazySlot } from "../lazyControl";
 
-// `LazyEvaluatorFactory` checks evaluators with an `unknown` result, which
-// absorbs `StoppableResult`, so the result type alone can't tell the two
-// evaluator types apart there. The brand carries the kinds of results an
-// evaluator was declared with, so a `StoppableLazyEvaluator` is only accepted
-// together with the `makeStoppable` mark.
+// Allows an evaluator to declare it's return types explicitly, avoiding types
+// collapsing to `unknown` due to the raw T in LazyResult eagerly resolving to
+// `unknown`.
 declare const BRAND_RESULT_KINDS: unique symbol;
 
 /**
