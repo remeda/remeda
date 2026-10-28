@@ -45,7 +45,7 @@ export function dropFirstBy<T>(
  */
 export function dropFirstBy<T>(
   n: number,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
+  ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
 ): (data: readonly T[]) => T[];
 
 export function dropFirstBy(...args: readonly unknown[]): unknown {
