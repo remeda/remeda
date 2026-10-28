@@ -1,7 +1,11 @@
-import { lastLazyValue, lazyEmptyEvaluator } from "./internal/lazyControl";
+import {
+  lastLazyValue,
+  LAZY_EMPTY_EVALUATOR,
+  makeStoppable,
+  type StoppableLazyEvaluator,
+} from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Returns the first `n` elements of `array`.
@@ -56,14 +60,16 @@ const takeImplementation = <T extends IterableContainer>(
   n: number,
 ): T[number][] => (n < 0 ? [] : array.slice(0, n));
 
-function lazyImplementation<T>(n: number): LazyEvaluator<T> {
-  if (Number.isNaN(n) || n < 1) {
-    return lazyEmptyEvaluator;
-  }
+const lazyImplementation = makeStoppable(
+  <T>(n: number): StoppableLazyEvaluator<T> => {
+    if (Number.isNaN(n) || n < 1) {
+      return LAZY_EMPTY_EVALUATOR;
+    }
 
-  let remaining = n;
-  return (value, _index, _data, slot) => {
-    remaining -= 1;
-    return remaining < 1 ? lastLazyValue(value, slot) : value;
-  };
-}
+    let remaining = n;
+    return (value, _index, _data, slot) => {
+      remaining -= 1;
+      return remaining < 1 ? lastLazyValue(value, slot) : value;
+    };
+  },
+);

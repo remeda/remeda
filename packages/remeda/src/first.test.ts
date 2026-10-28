@@ -1,5 +1,6 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
+import { constant } from "./constant";
 import { filter } from "./filter";
 import { first } from "./first";
 import { pipe } from "./pipe";
@@ -42,6 +43,15 @@ describe(pipe, () => {
 
     expect(counter.count).toHaveBeenCalledTimes(0);
     expect(result).toBeUndefined();
+  });
+
+  test("a lone step reads only the first item", () => {
+    const readSecond = vi.fn<() => number>(constant(2));
+    const data = [1];
+    Object.defineProperty(data, 1, { get: readSecond, enumerable: true });
+    pipe(data, first());
+
+    expect(readSecond).not.toHaveBeenCalled();
   });
 
   test("2 x first()", () => {

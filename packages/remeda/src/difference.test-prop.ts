@@ -1,5 +1,6 @@
 import { fc, test } from "@fast-check/vitest";
 import { expect } from "vitest";
+import { forceFusion } from "../test/forceFusion";
 import { difference } from "./difference";
 import { pipe } from "./pipe";
 
@@ -19,7 +20,7 @@ test.prop([items, items])(
   "data-first and data-last produce the same result",
   (data, other) => {
     const dataFirst = difference(data, other);
-    const dataLast = pipe(data, difference(other));
+    const dataLast = pipe(data, forceFusion(), difference(other));
 
     // By identity: deep equality can't tell the two objects apart.
     expect(dataFirst).toHaveLength(dataLast.length);

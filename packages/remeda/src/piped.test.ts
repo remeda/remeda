@@ -22,10 +22,8 @@ test("should pipe operations", () => {
 test("reused as the only lazy step, starts fresh on every run", () => {
   expect(
     map(
-      [
-        [1, 2, 3],
-        [4, 5, 6],
-      ],
+      [[1, 2, 3].values(), [4, 5, 6].values()],
+      // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
       piped(take(2)),
     ),
   ).toStrictEqual([

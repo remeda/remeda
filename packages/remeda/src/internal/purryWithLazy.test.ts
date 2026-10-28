@@ -1,9 +1,8 @@
 import { describe, expect, test } from "vitest";
-import type { LazyDefinition } from "./lazyDataLastImplementation";
+import type { LazyUnaryFunction } from "./lazyDataLastImplementation";
 import { purryWithLazy } from "./purryWithLazy";
 
-type Curried = ((...args: readonly unknown[]) => unknown) &
-  LazyDefinition<readonly unknown[], never>;
+type Curried = ((...args: readonly unknown[]) => unknown) & LazyUnaryFunction;
 
 describe("data-first (delegated)", () => {
   test("exact number of arguments", () => {

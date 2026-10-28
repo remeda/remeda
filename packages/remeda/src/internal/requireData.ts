@@ -1,4 +1,4 @@
-import type { LazyEvaluator } from "./types/LazyEvaluator";
+import type { StoppableLazyEvaluator } from "./makeStoppable";
 import type { StrictFunction } from "./types/StrictFunction";
 
 // Most callbacks have the input `data` as their 3rd parameter, as in the
@@ -23,12 +23,21 @@ type RequireDataByArityOptions = {
  * The marker is applied by mutating `evaluator`, so callers must pass a freshly
  * created closure, never a shared singleton or the user's callback itself.
  */
-export const requireData = <T, R>(
-  // `T` and `R` come only from the caller's declared `LazyEvaluator<T, R>`
-  // return type, so a wrong evaluator is reported at its own return expression
-  // instead of widening `R` and failing at the call.
-  evaluator: NoInfer<LazyEvaluator<T, R>>,
-): LazyEvaluator<T, R> => {
+export const requireData = <
+  // Every `LazyEvaluator` is also a `StoppableLazyEvaluator`, so this accepts
+  // any evaluator.
+  Evaluator extends StoppableLazyEvaluator<never, unknown>,
+>(
+  // `Evaluator` comes only from the evaluator type the caller declares (e.g.,
+  // as the lazy implementation's return type), so a wrong evaluator is
+  // reported at its own return expression instead of being inferred from it
+  // and failing at the call. Without a declared type it falls back to its
+  // constraint, whose `never` items no lazy implementation accepts, or, in a
+  // lazy implementation written inline as an argument, to the
+  // `StoppableLazyEvaluator` its context expects, which needs the
+  // `makeStoppable` mark.
+  evaluator: NoInfer<Evaluator>,
+): Evaluator => {
   // @ts-expect-error [ts2540] -- Intentional! we want to keep the prop
   // `readonly` to communicate that it shouldn't be mutated freely; this is the
   // only place where we allow it to be set!
@@ -40,18 +49,20 @@ export const requireData = <T, R>(
  * Marks an evaluator as needing `data` only when the user's `callback` is
  * likely to read it, based on its signature. It marks `evaluator` the way
  * `requireData` does, by mutating it, so callers must pass a freshly created
- * closure, never a module-level evaluator such as `lazyEmptyEvaluator`.
+ * closure, never a module-level evaluator such as `LAZY_EMPTY_EVALUATOR`.
  *
  * @see canReadData
  * @see requireData
  */
-export const requireDataByArity = <T, R>(
+export const requireDataByArity = <
+  Evaluator extends StoppableLazyEvaluator<never, unknown>,
+>(
   callback: StrictFunction,
-  evaluator: NoInfer<LazyEvaluator<T, R>>,
+  evaluator: NoInfer<Evaluator>,
   {
     dataParameterIndex = DEFAULT_DATA_PARAMETER_INDEX,
   }: RequireDataByArityOptions = {},
-): LazyEvaluator<T, R> =>
+): Evaluator =>
   canReadData(callback, dataParameterIndex)
     ? requireData(evaluator)
     : evaluator;

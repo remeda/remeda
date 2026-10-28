@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { forceFusion } from "../test/forceFusion";
 import { filter } from "./filter";
 import { identity } from "./identity";
 import { map } from "./map";
@@ -65,6 +66,7 @@ describe("data_last", () => {
     const dataSnapshots: number[][] = [];
     pipe(
       [1, 2, 3],
+      forceFusion(),
       filter((_value, _index, data) => {
         dataSnapshots.push([...data]);
         return true;
@@ -78,7 +80,7 @@ describe("data_last", () => {
     const predicate = vi.fn<
       (value: number, index: number, data: readonly number[]) => boolean
     >((value, index) => value > index);
-    pipe([1, 2, 3], filter(predicate));
+    pipe([1, 2, 3], forceFusion(), filter(predicate));
 
     expect(() => predicate.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
   });

@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { constant } from "./constant";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
@@ -83,6 +84,15 @@ describe("data last", () => {
     expect(
       pipe([1, 2, 3, 4, 5], map(identity()), take(Infinity)),
     ).toStrictEqual([1, 2, 3, 4, 5]);
+  });
+
+  test("a lone step stops reading the input after `n` items", () => {
+    const readThird = vi.fn<() => number>(constant(3));
+    const data = [1, 2];
+    Object.defineProperty(data, 2, { get: readThird, enumerable: true });
+    pipe(data, take(2));
+
+    expect(readThird).not.toHaveBeenCalled();
   });
 
   test("lazy implementation", () => {

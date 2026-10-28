@@ -1,7 +1,12 @@
-import { lastLazyValue, SKIP_ITEM } from "./internal/lazyControl";
+import { SKIP_ITEM } from "./internal/lazyControl";
+import { makeReducing } from "./internal/makeReducing";
+import {
+  lastLazyValue,
+  makeStoppable,
+  type StoppableLazyEvaluator,
+} from "./internal/makeStoppable";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
-import { toSingle } from "./internal/toSingle";
 import type { Assignability } from "./internal/types/Assignability";
 import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -9,7 +14,6 @@ import type {
   LazyCallback,
   LazyTypePredicate,
 } from "./internal/types/LazyCallback";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
 
@@ -163,11 +167,13 @@ const findImplementation = <T, S extends T>(
   predicate: (value: T, index: number, data: readonly T[]) => value is S,
 ): S | undefined => data.find(predicate);
 
-const lazyImplementation = toSingle(
-  <T, S extends T>(
-    predicate: (value: T, index: number, data: readonly T[]) => value is S,
-  ): LazyEvaluator<T, S> =>
-    requireDataByArity(predicate, (value, index, data, slot) =>
-      predicate(value, index, data) ? lastLazyValue(value, slot) : SKIP_ITEM,
-    ),
+const lazyImplementation = makeReducing(
+  makeStoppable(
+    <T, S extends T>(
+      predicate: (value: T, index: number, data: readonly T[]) => value is S,
+    ): StoppableLazyEvaluator<T, S> =>
+      requireDataByArity(predicate, (value, index, data, slot) =>
+        predicate(value, index, data) ? lastLazyValue(value, slot) : SKIP_ITEM,
+      ),
+  ),
 );

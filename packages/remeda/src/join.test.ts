@@ -1,5 +1,7 @@
 import { describe, expect, test } from "vitest";
+import { constant } from "./constant";
 import { join } from "./join";
+import { pipe } from "./pipe";
 
 describe("joins same-typed items", () => {
   test("number", () => {
@@ -72,5 +74,54 @@ describe("edge-cases", () => {
     const result = join(array, ",");
 
     expect(result).toBe("1");
+  });
+
+  test("holes become empty strings", () => {
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
+    expect(join([1, , 3], "-")).toBe("1--3");
+  });
+
+  test("nested arrays join their own items with commas", () => {
+    // @ts-expect-error [ts2322] -- The nested array is the input under test.
+    expect(join([1, [2, [3, null]]], "-")).toBe("1-2,3,");
+  });
+
+  test("objects convert with the string hint", () => {
+    expect(
+      // @ts-expect-error [ts2322] -- The object is the input under test.
+      join(["a", { toString: constant("b"), valueOf: constant("c") }], "-"),
+    ).toBe("a-b");
+  });
+
+  test("a self-referencing array joins as empty", () => {
+    const array: unknown[] = [1];
+    array.push(array);
+
+    // @ts-expect-error [ts2345] -- The array is the input under test.
+    expect(join(array, "-")).toBe("1-");
+  });
+
+  test("a symbol item throws", () => {
+    // @ts-expect-error [ts2322] -- The symbol is the input under test.
+    expect(() => join([Symbol("a")], "-")).toThrow(
+      new TypeError("Cannot convert a Symbol value to a string"),
+    );
+  });
+});
+
+describe("data last", () => {
+  test("joins items", () => {
+    expect(pipe([1, 2, 3], join(","))).toBe("1,2,3");
+  });
+
+  test("empty array", () => {
+    expect(pipe([], join(","))).toBe("");
+  });
+
+  test("a symbol item throws", () => {
+    // @ts-expect-error [ts2322] -- The symbol is the input under test.
+    expect(() => pipe([Symbol("a")], join(","))).toThrow(
+      new TypeError("Cannot convert a Symbol value to a string"),
+    );
   });
 });

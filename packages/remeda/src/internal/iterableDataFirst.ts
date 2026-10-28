@@ -1,27 +1,23 @@
-import {
-  createLazySlot,
-  LAST,
-  MANY,
-  SKIP_ITEM,
-  STOP,
-  type LazySlot,
-} from "./lazyControl";
-import type { LazyDefinition } from "./lazyDataLastImplementation";
+import { createLazySlot, MANY, SKIP_ITEM, type LazySlot } from "./lazyControl";
+import type { LazyEvaluatorFactory } from "./lazyDataLastImplementation";
+import { LAST, STOP } from "./makeStoppable";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
 
 /**
- * Runs an iterable through a single lazy step, skipping the step objects and
- * the fan-out recursion that the general path in `pipe` needs.
+ * Runs a lazy function on an iterable that isn't an array, standing in for its
+ * data-first implementation, which only accepts arrays. With a single step
+ * there is nothing to fuse, so it skips the step objects and the fan-out
+ * recursion of a fused run in `pipe`.
  *
  * @param input - The data to run through the step.
  * @param lazy - The lazy implementation the step's evaluator is built from.
  * @param lazyArgs - The arguments the evaluator is built with.
  * @see pipe
  */
-export function processSingleLazyStep<P extends readonly unknown[]>(
+export function iterableDataFirst<P extends readonly unknown[]>(
   input: Iterable<unknown>,
-  lazy: LazyDefinition<readonly unknown[], P>["lazy"],
-  lazyArgs: LazyDefinition<readonly unknown[], P>["lazyArgs"],
+  lazy: LazyEvaluatorFactory<readonly unknown[], P>,
+  lazyArgs: P,
 ): unknown {
   const lazyEvaluator = lazy(...lazyArgs);
 
@@ -34,40 +30,21 @@ export function processSingleLazyStep<P extends readonly unknown[]>(
   const accumulator: unknown[] = [];
   let index = 0;
 
-  if (Array.isArray(input)) {
-    // Iterated rather than indexed, so a reactive array that instruments
-    // iteration tracks one dependency instead of one per index.
-    for (const value of input) {
-      dataBuffer?.push(value);
+  for (const value of input) {
+    dataBuffer?.push(value);
 
-      const isDone = collect(
-        lazyEvaluator(value, index, items, slot),
-        accumulator,
-        slot,
-      );
-      index += 1;
-      if (isDone) {
-        break;
-      }
-    }
-    // eslint-disable-next-line unicorn/no-duplicate-if-branches -- Intentional! Identical on purpose. In V8, a `for...of` that has only ever seen arrays skips the iterator protocol; each loop is its own iteration site, which is what lets the compiler specialize the first one for arrays, that sets, strings and generators never reach.
-  } else {
-    for (const value of input) {
-      dataBuffer?.push(value);
-
-      const isDone = collect(
-        lazyEvaluator(value, index, items, slot),
-        accumulator,
-        slot,
-      );
-      index += 1;
-      if (isDone) {
-        break;
-      }
+    const isDone = collect(
+      lazyEvaluator(value, index, items, slot),
+      accumulator,
+      slot,
+    );
+    index += 1;
+    if (isDone) {
+      break;
     }
   }
 
-  return lazy.single ? accumulator[0] : accumulator;
+  return lazy.isReducing ? accumulator[0] : accumulator;
 }
 
 /**

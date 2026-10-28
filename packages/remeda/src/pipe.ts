@@ -5,19 +5,22 @@
 import type { UnaryFunction } from "./internal/dataLastImplementation";
 import {
   createLazySlot,
-  LAST,
   MANY,
   SKIP_ITEM,
-  STOP,
   type LazySlot,
 } from "./internal/lazyControl";
 import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
-import { processSingleLazyStep } from "./internal/processSingleLazyStep";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import {
+  LAST,
+  STOP,
+  type StoppableLazyEvaluator,
+} from "./internal/makeStoppable";
+import { iterableDataFirst } from "./internal/iterableDataFirst";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./internal/unexpectedAccessSentinel";
 
 type LazyStep = {
-  readonly lazyEvaluator: LazyEvaluator;
+  // `LazyEvaluator`s are also `StoppableLazyEvaluator`s so this accepts both.
+  readonly lazyEvaluator: StoppableLazyEvaluator;
   index: number;
 } & (
   | {
@@ -40,10 +43,13 @@ type LazyStep = {
  * calls into clear, sequential steps without temporary variables.
  *
  * When consecutive functions with a `lazy` tag (e.g., `map`, `filter`, `take`,
- * `drop`, `forEach`, etc...) are used together, they process data item-by-item
- * rather than creating intermediate arrays. This enables early termination
- * when only partial results are needed, improving performance for large
- * datasets and expensive operations.
+ * `drop`, `forEach`, etc...) are used together and one of them can end the
+ * iteration early, they process data item-by-item rather than creating
+ * intermediate arrays. This enables early termination when only partial
+ * results are needed, improving performance for large datasets and expensive
+ * operations. On arrays, consecutive lazy functions without one that can end
+ * the iteration early run one after the other, each the same as its
+ * data-first call.
  *
  * Functions are only evaluated lazily when their data-last form is used
  * directly in the pipe. To disable lazy evaluation, use data-first calls via
@@ -58,7 +64,8 @@ type LazyStep = {
  *
  * IMPORTANT: During lazy evaluation, callbacks using the third parameter (the
  * input array) receive only items processed up to that point, not the complete
- * array.
+ * array, and each item goes through the rest of the lazy functions before the
+ * next one is read.
  *
  * @param data - The input data.
  * @param functions - A sequence of functions that take one argument and
@@ -110,11 +117,16 @@ type LazyStep = {
  *      console.log(data);
  *    }); //=> "[1, 2, 3, 4]" logged 4 times
  *
- *    // But with `pipe` data would only contain the items up to the current
+ *    // But when evaluated lazily together with a function that can end the
+ *    // iteration early, data would only contain the items up to the current
  *    // index.
- *    pipe([1, 2, 3, 4], forEach((_item, _index, data) => {
- *      console.log(data);
- *    })); //=> "[1]", "[1, 2]", "[1, 2, 3]", "[1, 2, 3, 4]"
+ *    pipe(
+ *      [1, 2, 3, 4],
+ *      forEach((_item, _index, data) => {
+ *        console.log(data);
+ *      }),
+ *      take(3),
+ *    ); //=> "[1]", "[1, 2]", "[1, 2, 3]"
  * @dataFirst
  * @category Function
  */
@@ -306,16 +318,18 @@ export function pipe(
   }
 
   if (functions.length === 1) {
-    // The most common pipe, a single function, skips the loop below.
+    // A lone lazy function has nothing to fuse with, so an array runs its
+    // data-first implementation.
     const func = functions[0]!;
-    return "lazy" in func
-      ? processSingleLazyStep(
+    return "lazy" in func && !Array.isArray(input)
+      ? iterableDataFirst(
           // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
           input,
           func.lazy,
           func.lazyArgs,
         )
-      : func(input);
+      : // @ts-expect-error [ts2345] -- A lazy function only gets here with an array, which every lazy function accepts, but TypeScript can't narrow `func` from a check on `input`.
+        func(input);
   }
 
   let output = input;
@@ -329,41 +343,91 @@ export function pipe(
     }
 
     const nextFunc = functions[functionIndex + 1];
-    if (nextFunc === undefined || !("lazy" in nextFunc) || func.lazy.single) {
-      // A run of one lazy function is a lazy sequence of one step, which has
-      // no cross-step bookkeeping to set up: the step array, the step object,
-      // and the hand-off through them are all overhead.
-      output = processSingleLazyStep(
-        // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
-        output,
-        func.lazy,
-        func.lazyArgs,
-      );
+    if (
+      nextFunc === undefined ||
+      !("lazy" in nextFunc) ||
+      func.lazy.isReducing
+    ) {
+      // A run of one has nothing to fuse with either.
+      output = Array.isArray(output)
+        ? func(output)
+        : iterableDataFirst(
+            // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
+            output,
+            func.lazy,
+            func.lazyArgs,
+          );
       functionIndex += 1;
       continue;
     }
 
-    const lazySequence = buildLazySequence(functions, functionIndex);
-
-    output = runLazySequence(output, lazySequence);
-    functionIndex += lazySequence.length;
-
-    // @ts-expect-error [ts2322] -- TypeScript can't follow the logic that `functionIndex - 1` is pointing to the last function in `lazySequence`.
-    const lastLazyFunction: LazyUnaryFunction = functions[functionIndex - 1];
-    if (lastLazyFunction.lazy.single) {
-      // @ts-expect-error [ts18046] -- output is always an array when the last lazy function in the sequence was single.
-      output = output[0];
+    // Fusing a run pays off only when one of its steps can stop the pipe
+    // early, which skips the work of the remaining items. Without one, every
+    // item goes through every step anyway, so an array goes through each
+    // function's data-first implementation in turn instead, trading the
+    // per-item step bookkeeping for an intermediate array per step. Other
+    // iterables always fuse, as those implementations only accept arrays.
+    const stepByStepEnd = Array.isArray(output)
+      ? endOfStepByStepRun(functions, functionIndex)
+      : functionIndex;
+    if (stepByStepEnd > functionIndex) {
+      do {
+        // @ts-expect-error [ts2345] -- Every function before `stepByStepEnd` is lazy and gets the array the previous one returned, but TypeScript can't narrow the functions from the scan that found them.
+        output = functions[functionIndex]!(output);
+        functionIndex += 1;
+      } while (functionIndex < stepByStepEnd);
+      continue;
     }
+
+    const fusedSequence = buildFusedSequence(functions, functionIndex);
+
+    const fusedOutput = runFusedSequence(output, fusedSequence);
+    functionIndex += fusedSequence.length;
+
+    // @ts-expect-error [ts2322] -- TypeScript can't follow the logic that `functionIndex - 1` is pointing to the last function in `fusedSequence`.
+    const lastLazyFunction: LazyUnaryFunction = functions[functionIndex - 1];
+    output = lastLazyFunction.lazy.isReducing ? fusedOutput[0] : fusedOutput;
   }
 
   return output;
 }
 
-function buildLazySequence(
+/**
+ * Plans the run of lazy functions that starts at `startIndex`, the same run
+ * `buildFusedSequence` would build: the consecutive lazy functions, ending after
+ * the first reducing one.
+ *
+ * @returns The index after the run when none of its functions can stop the
+ * pipe early, so they should run one after the other; `startIndex` when one of
+ * them can, so the whole run should fuse.
+ */
+function endOfStepByStepRun(
+  functions: readonly (UnaryFunction | LazyUnaryFunction)[],
+  startIndex: number,
+): number {
+  for (let index = startIndex; index < functions.length; index++) {
+    const func = functions[index]!;
+    if ("lazy" in func) {
+      if (func.lazy.isStoppable) {
+        return startIndex;
+      }
+
+      if (func.lazy.isReducing) {
+        return index + 1;
+      }
+    } else {
+      return index;
+    }
+  }
+
+  return functions.length;
+}
+
+function buildFusedSequence(
   functions: readonly (UnaryFunction | LazyUnaryFunction)[],
   startIndex: number,
 ): readonly LazyStep[] {
-  const lazySequence: LazyStep[] = [];
+  const fusedSequence: LazyStep[] = [];
 
   for (let index = startIndex; index < functions.length; index++) {
     const func = functions[index]!;
@@ -372,7 +436,7 @@ function buildLazySequence(
     }
 
     const lazyEvaluator = func.lazy(...func.lazyArgs);
-    lazySequence.push(
+    fusedSequence.push(
       lazyEvaluator.requiresData
         ? {
             lazyEvaluator,
@@ -388,19 +452,19 @@ function buildLazySequence(
           },
     );
 
-    if (func.lazy.single) {
-      // Functions that generate a single value always end the sequence.
+    if (func.lazy.isReducing) {
+      // Functions that reduce to a value always end the sequence.
       break;
     }
   }
 
-  return lazySequence;
+  return fusedSequence;
 }
 
-function runLazySequence(
+function runFusedSequence(
   input: unknown,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
-  lazySequence: readonly LazyStep[],
+  fusedSequence: readonly LazyStep[],
 ): unknown[] {
   const accumulator: unknown[] = [];
   const slot = createLazySlot();
@@ -409,7 +473,7 @@ function runLazySequence(
     // Iterated rather than indexed, so a reactive array that instruments
     // iteration tracks one dependency instead of one per index.
     for (const item of input) {
-      const isDone = processItem(lazySequence, accumulator, item, slot, 0);
+      const isDone = processItem(fusedSequence, accumulator, item, slot, 0);
       if (isDone) {
         break;
       }
@@ -419,7 +483,7 @@ function runLazySequence(
   } else {
     // @ts-expect-error [ts18046] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
     for (const item of input) {
-      const isDone = processItem(lazySequence, accumulator, item, slot, 0);
+      const isDone = processItem(fusedSequence, accumulator, item, slot, 0);
       if (isDone) {
         break;
       }
@@ -431,7 +495,7 @@ function runLazySequence(
 
 function processItem(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the items buffer and the index counter) to avoid per-item allocations.
-  lazySequence: readonly LazyStep[],
+  fusedSequence: readonly LazyStep[],
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use `output` directly to accumulate the results.
   accumulator: unknown[],
   item: unknown,
@@ -442,10 +506,10 @@ function processItem(
   let isDone = false;
   for (
     let stepIndex = startIndex;
-    stepIndex < lazySequence.length;
+    stepIndex < fusedSequence.length;
     stepIndex++
   ) {
-    const step = lazySequence[stepIndex]!;
+    const step = fusedSequence[stepIndex]!;
 
     if (step.requiresData) {
       step.items.push(currentItem);
@@ -465,7 +529,13 @@ function processItem(
       if (result === MANY) {
         for (const subItem of slot.values) {
           if (
-            processItem(lazySequence, accumulator, subItem, slot, stepIndex + 1)
+            processItem(
+              fusedSequence,
+              accumulator,
+              subItem,
+              slot,
+              stepIndex + 1,
+            )
           ) {
             return true;
           }

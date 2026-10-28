@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
+import { forceFusion } from "../test/forceFusion";
 import { identity } from "./identity";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import { pipe } from "./pipe";
@@ -77,7 +78,7 @@ describe(pipe, () => {
     const keyFunction = vi.fn<LazyCallback<unknown[], unknown>>(
       (_item, _index, data) => [...data],
     );
-    pipe([1, 2, 2, 3], uniqueBy(keyFunction));
+    pipe([1, 2, 2, 3], forceFusion(), uniqueBy(keyFunction));
 
     expect(keyFunction).toHaveNthReturnedWith(1, [1]);
     expect(keyFunction).toHaveNthReturnedWith(2, [1, 2]);
@@ -91,7 +92,7 @@ describe(pipe, () => {
     const keyFunction = vi.fn<
       (item: number, index: number, data: readonly number[]) => number
     >((item, index) => item + index);
-    pipe([1, 2, 3], uniqueBy(keyFunction));
+    pipe([1, 2, 3], forceFusion(), uniqueBy(keyFunction));
 
     expect(() => keyFunction.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
   });

@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { forceFusion } from "../test/forceFusion";
 import { add } from "./add";
 import { constant } from "./constant";
 import { filter } from "./filter";
@@ -61,6 +62,7 @@ describe(pipe, () => {
     expect(
       pipe(
         [1, 2, 3, 4, 5],
+        forceFusion(),
         map((x, i, items) => {
           anyItems1.push([...items]);
           indexes1.push(i);
@@ -91,13 +93,13 @@ describe(pipe, () => {
     const callbackfn = vi.fn<
       (value: number, index: number, data: readonly number[]) => number
     >((value, index) => value + index);
-    pipe([1, 2, 3], map(callbackfn));
+    pipe([1, 2, 3], forceFusion(), map(callbackfn));
 
     expect(() => callbackfn.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
   });
 
   test("never marks the callback itself", () => {
-    pipe([1, 2, 3], map(double), map(addDataLength));
+    pipe([1, 2, 3], forceFusion(), map(double), map(addDataLength));
 
     expect(double).not.toHaveProperty("requiresData");
     expect(addDataLength).not.toHaveProperty("requiresData");
@@ -112,9 +114,9 @@ describe(pipe, () => {
         receivers.push(this);
         return x;
       }),
-      // A lone lazy step runs its evaluator from a local; only a run of steps
-      // keeps it on a step object it could be called as a method of.
-      map((x) => x),
+      // Only a fused run keeps the evaluator on a step object it could be
+      // called as a method of.
+      forceFusion(),
     );
 
     expect(receivers).toStrictEqual([undefined, undefined]);

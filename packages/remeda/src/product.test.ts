@@ -17,6 +17,73 @@ describe("dataFirst", () => {
   test("works with bigints", () => {
     expect(product([1n, 2n, 3n])).toBe(6n);
   });
+
+  test("a single number", () => {
+    expect(product([5])).toBe(5);
+  });
+
+  test("a single bigint", () => {
+    expect(product([5n])).toBe(5n);
+  });
+
+  test("keeps -0", () => {
+    expect(product([-0])).toBe(-0);
+  });
+
+  test("propagates NaN", () => {
+    expect(product([2, NaN, 3])).toBeNaN();
+  });
+
+  test("reads holes as undefined", () => {
+    // @ts-expect-error [ts2322] -- A hole reads as `undefined`, which the types reject.
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+    expect(product([2, , 3])).toBeNaN();
+  });
+
+  test("throws on a hole in a bigint array", () => {
+    // @ts-expect-error [ts2322] -- A hole reads as `undefined`, which the types reject.
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+    expect(() => product([2n, , 3n])).toThrow(
+      new TypeError(
+        "Cannot mix BigInt and other types, use explicit conversions",
+      ),
+    );
+  });
+
+  test("throws on a number after bigints", () => {
+    // @ts-expect-error [ts2345] -- The types reject mixing bigint and number.
+    expect(() => product([2n, 3])).toThrow(
+      new TypeError(
+        "Cannot mix BigInt and other types, use explicit conversions",
+      ),
+    );
+  });
+
+  test("throws on a bigint after numbers", () => {
+    // @ts-expect-error [ts2345] -- The types reject mixing bigint and number.
+    expect(() => product([2, 3n])).toThrow(
+      new TypeError(
+        "Cannot mix BigInt and other types, use explicit conversions",
+      ),
+    );
+  });
+
+  test("throws on the first item of the other type", () => {
+    const data = [2n, 3n, 4];
+    // Reading past the item that mixes the types throws a different error.
+    Object.defineProperty(data, 3, {
+      get: () => {
+        throw new Error("Read past the mixed item");
+      },
+    });
+
+    // @ts-expect-error [ts2345] -- The types reject mixing bigint and number.
+    expect(() => product(data)).toThrow(
+      new TypeError(
+        "Cannot mix BigInt and other types, use explicit conversions",
+      ),
+    );
+  });
 });
 
 describe("dataLast", () => {
@@ -29,6 +96,25 @@ describe("dataLast", () => {
 
   test("should return 1 for an empty array", () => {
     expect(pipe([], product())).toBe(1);
+  });
+
+  test("throws like data-first on mixed bigint and number", () => {
+    // @ts-expect-error [ts2345] -- The types reject mixing bigint and number.
+    expect(() => pipe([2n, 3], product())).toThrow(
+      new TypeError(
+        "Cannot mix BigInt and other types, use explicit conversions",
+      ),
+    );
+  });
+
+  test("throws like data-first on a hole in a bigint array", () => {
+    // @ts-expect-error [ts2345] -- A hole reads as `undefined`, which the types reject.
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+    expect(() => pipe([2n, , 3n], product())).toThrow(
+      new TypeError(
+        "Cannot mix BigInt and other types, use explicit conversions",
+      ),
+    );
   });
 });
 

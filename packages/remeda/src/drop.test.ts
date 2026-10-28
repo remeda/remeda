@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { forceFusion } from "../test/forceFusion";
 import { drop } from "./drop";
 import { identity } from "./identity";
 import { map } from "./map";
@@ -85,6 +86,12 @@ describe("data last", () => {
     expect(
       pipe([1, 2, 3, 4, 5], map(identity()), drop(Infinity), take(5)),
     ).toStrictEqual([]);
+  });
+
+  test("lazily drops nothing for a negative `n`", () => {
+    expect(pipe([1, 2, 3, 4, 5], forceFusion(), drop(-1))).toStrictEqual([
+      1, 2, 3, 4, 5,
+    ]);
   });
 
   test("lazy impl", () => {

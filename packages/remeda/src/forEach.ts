@@ -1,4 +1,3 @@
-import type { Writable } from "type-fest";
 import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -10,9 +9,10 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  * `Array.prototype.forEach`.
  *
  * The dataLast version returns the original array (instead of not returning
- * anything (`void`)) to allow using it in a pipe. When not used in a `pipe` the
- * returned array is equal to the input array (by reference), and not a shallow
- * copy of it!
+ * anything (`void`)) to allow using it in a pipe. The returned array is the
+ * same reference as the input array, and not a shallow copy of it, except when
+ * `pipe` evaluates it lazily together with a function that can end the
+ * iteration early (e.g., `take`), which builds a new array.
  *
  * @param data - The values that would be iterated on.
  * @param callbackfn - A function to execute for each element in the array.
@@ -37,7 +37,10 @@ export function forEach<T extends IterableContainer>(
  *
  * The dataLast version returns the original array (instead of not returning
  * anything (`void`)) to allow using it in a pipe. The returned array is the
- * same reference as the input array, and not a shallow copy of it!
+ * same reference as the input array, and not a shallow copy of it, except when
+ * `pipe` evaluates it lazily together with a function that can end the
+ * iteration early (e.g., `take`), which builds a new array. Either way it keeps
+ * the input's type, `readonly` included.
  *
  * @param callbackfn - A function to execute for each element in the array.
  * @returns The original array (the ref itself, not a shallow copy of it).
@@ -56,7 +59,7 @@ export function forEach<T extends IterableContainer>(
  */
 export function forEach<T extends IterableContainer>(
   callbackfn: LazyCallback<T, void>,
-): (data: T) => Writable<T>;
+): (data: T) => T;
 
 export function forEach(...args: readonly unknown[]): unknown {
   return purryWithLazy(forEachImplementation, args, lazyImplementation);
@@ -65,10 +68,9 @@ export function forEach(...args: readonly unknown[]): unknown {
 function forEachImplementation<T>(
   data: readonly T[],
   callbackfn: (value: T, index: number, data: readonly T[]) => void,
-): T[] {
+): readonly T[] {
   // eslint-disable-next-line unicorn/no-for-each -- We are intentionally proxying the built in forEach, it's up to the user to decide if they want to use a for loop instead.
   data.forEach(callbackfn);
-  // @ts-expect-error [ts4104] - Because the dataFirst signature returns void this is only a problem when the dataLast function is used **outside** of a pipe; for these cases we warn the user that this is happening.
   return data;
 }
 
