@@ -61,17 +61,17 @@ describe("runtime (dataFirst)", () => {
     ]);
   });
 
-  test("keeps an evicted null item", () => {
+  test("keeps a null item from the first n", () => {
     expect(dropFirstBy([null, -1], 1, (x) => x ?? 0)).toStrictEqual([null]);
   });
 
-  test("keeps an evicted undefined item", () => {
+  test("keeps an undefined item from the first n", () => {
     expect(dropFirstBy([undefined, -1], 1, (x) => x ?? 0)).toStrictEqual([
       undefined,
     ]);
   });
 
-  test("keeps every evicted nullish item", () => {
+  test("keeps every nullish item from the first n", () => {
     expect(
       dropFirstBy([null, null, 1, 2], 2, (x) => x ?? Infinity),
     ).toStrictEqual([null, null]);
@@ -160,7 +160,7 @@ describe("runtime (dataLast)", () => {
     ).toStrictEqual(["bbbbb", "aaa", "bbb", "bbbb", "aaaa", "bb", "aaaaa"]);
   });
 
-  test("keeps an evicted null item", () => {
+  test("keeps a null item from the first n", () => {
     expect(
       pipe(
         [null, -1],
@@ -169,7 +169,7 @@ describe("runtime (dataLast)", () => {
     ).toStrictEqual([null]);
   });
 
-  test("keeps an evicted undefined item", () => {
+  test("keeps an undefined item from the first n", () => {
     expect(
       pipe(
         [undefined, -1],
@@ -178,7 +178,7 @@ describe("runtime (dataLast)", () => {
     ).toStrictEqual([undefined]);
   });
 
-  test("keeps every evicted nullish item", () => {
+  test("keeps every nullish item from the first n", () => {
     expect(
       pipe(
         [null, null, 1, 2],

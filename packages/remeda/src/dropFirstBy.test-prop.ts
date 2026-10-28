@@ -2,19 +2,27 @@ import { fc, test } from "@fast-check/vitest";
 import { expect } from "vitest";
 import { dropFirstBy } from "./dropFirstBy";
 
-// Few distinct values so duplicates are common, among them the two that the
-// heap's "nothing was inserted" signal must not be confused with.
+// Few distinct values so ties are common, among them `null` and `undefined`,
+// which must be dropped and kept like any other item.
 const item = fc.constantFrom(null, undefined, -2, -1, 0, 1, 2);
 
 // A hole reads as `undefined`.
 const items = fc.oneof(fc.array(item), fc.sparseArray(item));
 
-test.prop([items, fc.integer({ min: -2, max: 12 })])(
+// Fractions, `NaN` and infinities too, which `dropFirstBy` truncates the way
+// `slice` does.
+const counts = fc.oneof(
+  fc.integer({ min: -2, max: 12 }),
+  fc.double({ min: -2, max: 12, noNaN: true }),
+  fc.constantFrom(NaN, Infinity, -Infinity),
+);
+
+test.prop([items, counts])(
   "drops the n smallest items, like a sort-based reference",
   (data, n) => {
-    // The result is in eviction order, so it is sorted before the comparison.
+    // The result isn't in input order, so it is sorted before the comparison.
     expect(sortedByRank(dropFirstBy(data, n, rank))).toStrictEqual(
-      sortedByRank(data).slice(Math.min(Math.max(n, 0), data.length)),
+      sortedByRank(data).slice(Math.max(n, 0)),
     );
   },
 );

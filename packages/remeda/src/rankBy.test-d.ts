@@ -12,83 +12,116 @@ type Task = {
   readonly score: number;
 };
 
-test("a literal item ranks among wider items", () => {
-  expectTypeOf(pipe([5, 1, 3], rankBy(2, identity()))).toEqualTypeOf<number>();
+describe("dataFirst", () => {
+  test("a literal item among wider items", () => {
+    expectTypeOf(rankBy([5, 1, 3], 2, identity())).toEqualTypeOf<number>();
+  });
+
+  test("a literal item with a tuple of literal items", () => {
+    expectTypeOf(
+      rankBy([5, 1, 3] as const, 2, identity()),
+    ).toEqualTypeOf<number>();
+  });
+
+  test("a literal item among literal union items", () => {
+    expectTypeOf(
+      rankBy([] as Status[], "active", identity()),
+    ).toEqualTypeOf<number>();
+  });
+
+  test("a projection typed on literal union items", () => {
+    expectTypeOf(
+      rankBy([] as Status[], "active", (status: Status) => status.length),
+    ).toEqualTypeOf<number>();
+  });
+
+  test("an item wider than the items", () => {
+    expectTypeOf(
+      rankBy([] as ("a" | "b")[], "c", identity()),
+    ).toEqualTypeOf<number>();
+  });
+
+  test("rejects an item unrelated to the items", () => {
+    // @ts-expect-error [ts2769] -- The items aren't numbers like the item.
+    rankBy(["a"], 2, identity());
+  });
 });
 
-test("an item wider than the items", () => {
-  expectTypeOf(
-    pipe([] as ("a" | "b")[], rankBy("c" as string, identity())),
-  ).toEqualTypeOf<number>();
-});
+describe("dataLast", () => {
+  test("a literal item ranks among wider items", () => {
+    expectTypeOf(
+      pipe([5, 1, 3], rankBy(2, identity())),
+    ).toEqualTypeOf<number>();
+  });
 
-test("as a callback", () => {
-  expectTypeOf(
-    map([] as (readonly number[])[], rankBy(2, identity())),
-  ).toEqualTypeOf<number[]>();
-});
+  test("an item wider than the items", () => {
+    expectTypeOf(
+      pipe([] as ("a" | "b")[], rankBy("c", identity())),
+    ).toEqualTypeOf<number>();
+  });
 
-test("projections receive the item's type", () => {
-  pipe(
-    [{ a: 5 }, { a: 1 }],
-    rankBy({ a: 2 }, (item) => {
-      expectTypeOf(item).toEqualTypeOf<{ a: number }>();
+  test("as a callback", () => {
+    expectTypeOf(
+      map([] as (readonly number[])[], rankBy(2, identity())),
+    ).toEqualTypeOf<number[]>();
+  });
 
-      return item.a;
-    }),
-  );
-});
-
-test("an object item with a prop rule", () => {
-  expectTypeOf(
-    pipe([{ a: 5 }, { a: 1 }], rankBy({ a: 2 }, prop("a"))),
-  ).toEqualTypeOf<number>();
-});
-
-test("a literal item outside a tuple's literal items", () => {
-  expectTypeOf(
-    pipe([5, 1, 3] as const, rankBy(2, identity())),
-  ).toEqualTypeOf<number>();
-});
-
-test("a literal item inside a tuple's literal items", () => {
-  expectTypeOf(
-    pipe([5, 1, 3] as const, rankBy(5, identity())),
-  ).toEqualTypeOf<number>();
-});
-
-test("a literal item among literal union items", () => {
-  expectTypeOf(
-    pipe([] as Status[], rankBy("active", identity())),
-  ).toEqualTypeOf<number>();
-});
-
-test("a literal item with an inline projection", () => {
-  expectTypeOf(
+  test("projections receive the item's type", () => {
     pipe(
-      [] as Status[],
-      rankBy("active", (status) => status.length),
-    ),
-  ).toEqualTypeOf<number>();
-});
+      [{ a: 5 }, { a: 1 }],
+      rankBy({ a: 2 }, (item) => {
+        expectTypeOf(item).toEqualTypeOf<{ a: number }>();
 
-test("an object item with a prop rule on a literal union prop", () => {
-  expectTypeOf(
-    pipe(
-      [] as Task[],
-      rankBy({ priority: "high", score: 2 }, prop("priority")),
-    ),
-  ).toEqualTypeOf<number>();
-});
+        return item.a;
+      }),
+    );
+  });
 
-test("rejects an item unrelated to the items", () => {
-  // @ts-expect-error [ts2322] -- The items aren't numbers like the item.
-  pipe(["a"], rankBy(2, identity()));
-});
+  test("a literal item outside a tuple's literal items", () => {
+    expectTypeOf(
+      pipe([5, 1, 3] as const, rankBy(2, identity())),
+    ).toEqualTypeOf<number>();
+  });
 
-test("rejects a prop rule on a prop the item lacks", () => {
-  // @ts-expect-error [ts2345] -- The item has no `a` for the projection to read.
-  pipe([{ a: 5, b: 1 }], rankBy({ b: 2 }, prop("a")));
+  test("a literal item inside a tuple's literal items", () => {
+    expectTypeOf(
+      pipe([5, 1, 3] as const, rankBy(5, identity())),
+    ).toEqualTypeOf<number>();
+  });
+
+  test("a literal item among literal union items", () => {
+    expectTypeOf(
+      pipe([] as Status[], rankBy("active", identity())),
+    ).toEqualTypeOf<number>();
+  });
+
+  test("a literal item with an inline projection", () => {
+    expectTypeOf(
+      pipe(
+        [] as Status[],
+        rankBy("active", (status) => status.length),
+      ),
+    ).toEqualTypeOf<number>();
+  });
+
+  test("an object item with a prop rule on a literal union prop", () => {
+    expectTypeOf(
+      pipe(
+        [] as Task[],
+        rankBy({ priority: "high", score: 2 }, prop("priority")),
+      ),
+    ).toEqualTypeOf<number>();
+  });
+
+  test("rejects an item unrelated to the items", () => {
+    // @ts-expect-error [ts2322] -- The items aren't numbers like the item.
+    pipe(["a"], rankBy(2, identity()));
+  });
+
+  test("rejects a prop rule on a prop the item lacks", () => {
+    // @ts-expect-error [ts2345] -- The item has no `a` for the projection to read.
+    pipe([{ a: 5, b: 1 }], rankBy({ b: 2 }, prop("a")));
+  });
 });
 
 describe("known issues!", () => {
