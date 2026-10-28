@@ -85,10 +85,8 @@ describe("dataFirst", () => {
     ).toStrictEqual([["__proto__", 2]]);
   });
 
-  test("number and string categories of the same key overwrite each other", () => {
-    // The categories are counted apart, as distinct `Map` keys, and only then
-    // become the same property, so the count of the one first seen last wins.
-    expect(countBy([1, 1, "1"], identity())).toStrictEqual({ 1: 1 });
+  test("number and string categories of the same key share a count", () => {
+    expect(countBy([1, 1, "1"], identity())).toStrictEqual({ 1: 3 });
   });
 
   test("key order", () => {

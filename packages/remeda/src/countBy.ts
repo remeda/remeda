@@ -63,19 +63,21 @@ const countByImplementation = <T>(
     data: readonly T[],
   ) => PropertyKey | undefined,
 ): BoundedPartial<Record<PropertyKey, number>> => {
-  const out = new Map<PropertyKey, number>();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- `Object.create` is typed as returning `any`. Without a prototype the object only has the keys *we* add to it, so a category such as `toString` or `__proto__` is counted like any other.
+  const out: Record<PropertyKey, number> = Object.create(null);
 
   for (const [index, item] of data.entries()) {
     const category = categorizationFn(item, index, data);
     if (category !== undefined) {
-      const count = out.get(category);
-      if (count === undefined) {
-        out.set(category, 1);
-      } else {
-        out.set(category, count + 1);
-      }
+      // Counted per property key, so the categories that share one (e.g., `1`
+      // and `"1"`) share its count.
+      out[category] = (out[category] ?? 0) + 1;
     }
   }
 
-  return Object.fromEntries(out);
+  // Set the prototype as if the object was created as a normal one (e.g.,
+  // `{}`), so the built-in object methods work on it.
+  Object.setPrototypeOf(out, Object.prototype);
+
+  return out;
 };
