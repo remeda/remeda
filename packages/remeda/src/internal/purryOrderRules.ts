@@ -118,7 +118,7 @@ export function purryOrderRulesWithArgument(
   return purryOrderRules((...args) => func(...args, arg), argRemoved);
 }
 
-function orderRuleComparer<T>(
+export function orderRuleComparer<T>(
   primaryRule: OrderRule<T>,
   secondaryRule?: OrderRule<T>,
   ...otherRules: readonly OrderRule<T>[]
@@ -153,7 +153,7 @@ function orderRuleComparer<T>(
   };
 }
 
-function isOrderRule<T>(x: unknown): x is OrderRule<T> {
+export function isOrderRule<T>(x: unknown): x is OrderRule<T> {
   if (isProjection(x)) {
     return true;
   }

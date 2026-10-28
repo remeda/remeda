@@ -1,6 +1,8 @@
 import { fc, test } from "@fast-check/vitest";
 import { expect } from "vitest";
+import { forceFusion } from "../test/forceFusion";
 import { dropFirstBy } from "./dropFirstBy";
+import { pipe } from "./pipe";
 
 // Few distinct values so ties are common, among them `null` and `undefined`,
 // which must be dropped and kept like any other item.
@@ -26,6 +28,74 @@ test.prop([items, counts])(
     );
   },
 );
+
+// Fresh objects with few distinct keys, so ties are common and only the
+// reference tells apart which of the tied items the heap dropped.
+const keyedItem = fc.oneof(
+  fc.record({ key: fc.integer({ min: 0, max: 2 }) }),
+  fc.constantFrom(null, undefined),
+);
+
+// A hole reads as `undefined`.
+const keyedItems = fc.oneof(fc.array(keyedItem), fc.sparseArray(keyedItem));
+
+test.prop([keyedItems, counts])(
+  "data-first and data-last produce the same result",
+  (data, n) => {
+    const dataFirst = dropFirstBy(data, n, keyOf);
+    const dataLast = pipe(data, dropFirstBy(n, keyOf));
+
+    expect(dataLast).toHaveLength(dataFirst.length);
+    expect(
+      dataLast.every((value, index) => Object.is(value, dataFirst[index])),
+    ).toBe(true);
+  },
+);
+
+test.prop([keyedItems, counts])(
+  "data-first and a fused run produce the same result",
+  (data, n) => {
+    const dataFirst = dropFirstBy(data, n, keyOf);
+    const fused = pipe(data, forceFusion(), dropFirstBy(n, keyOf));
+
+    expect(fused).toHaveLength(dataFirst.length);
+    expect(
+      fused.every((value, index) => Object.is(value, dataFirst[index])),
+    ).toBe(true);
+  },
+);
+
+test.prop([keyedItems, counts])(
+  "data-first and a fused run call the projection the same way",
+  (data, n) => {
+    const dataFirstCalls: unknown[] = [];
+    dropFirstBy(data, n, (value) => {
+      dataFirstCalls.push(value);
+      return keyOf(value);
+    });
+
+    const fusedCalls: unknown[] = [];
+    pipe(
+      data,
+      forceFusion(),
+      dropFirstBy(n, (value) => {
+        fusedCalls.push(value);
+        return keyOf(value);
+      }),
+    );
+
+    expect(fusedCalls).toHaveLength(dataFirstCalls.length);
+    expect(
+      fusedCalls.every((value, index) =>
+        Object.is(value, dataFirstCalls[index]),
+      ),
+    ).toBe(true);
+  },
+);
+
+// Ties nullish items with each other and with the objects in the middle key.
+const keyOf = (value: { readonly key: number } | null | undefined): number =>
+  value?.key ?? 1;
 
 // Different for every distinct item, so equal ranks mean equal items and what
 // is left is the same no matter which of the tied items the heap drops.
