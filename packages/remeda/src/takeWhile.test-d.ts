@@ -455,13 +455,15 @@ describe("callback data param", () => {
   });
 
   test("lazily reconstructed in data-last with a type predicate", () => {
-    pipe(
-      [1, 2, 3] as const,
-      takeWhile((item, _index, data): item is 1 => {
-        expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+    expectTypeOf(
+      pipe(
+        [1, 2, 3] as const,
+        takeWhile((item, _index, data): item is 1 => {
+          expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
 
-        return item === 1;
-      }),
-    );
+          return item === 1;
+        }),
+      ),
+    ).toEqualTypeOf<1[]>();
   });
 });

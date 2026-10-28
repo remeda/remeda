@@ -8,22 +8,6 @@ import { map } from "./map";
 import { pipe } from "./pipe";
 import { take } from "./take";
 
-// What is left of `[1, 2, 3, 4, 5]` after dropping the last `n` items.
-const COUNTS: readonly (readonly [n: number, expected: readonly number[]])[] = [
-  [0, [1, 2, 3, 4, 5]],
-  [-1, [1, 2, 3, 4, 5]],
-  [-Infinity, [1, 2, 3, 4, 5]],
-  [NaN, [1, 2, 3, 4, 5]],
-  [2, [1, 2, 3]],
-  [0.5, [1, 2, 3, 4]],
-  [2.5, [1, 2]],
-  // Too small to change `5 - n`, but still a partial item.
-  [1e-20, [1, 2, 3, 4]],
-  [5, []],
-  [10, []],
-  [Infinity, []],
-];
-
 describe("data first", () => {
   test("empty array", () => {
     expect(dropLast([], 2)).toStrictEqual([]);
@@ -57,17 +41,56 @@ describe("data first", () => {
     expect(result).toStrictEqual(data);
   });
 
-  test.each(COUNTS)("count %s", (n, expected) => {
+  test.each([
+    [0, [1, 2, 3, 4, 5]],
+    [-1, [1, 2, 3, 4, 5]],
+    [-Infinity, [1, 2, 3, 4, 5]],
+    [NaN, [1, 2, 3, 4, 5]],
+    [2, [1, 2, 3]],
+    [0.5, [1, 2, 3, 4]],
+    [2.5, [1, 2]],
+    // Too small to change `5 - n`, but still a partial item.
+    [1e-20, [1, 2, 3, 4]],
+    [5, []],
+    [10, []],
+    [Infinity, []],
+  ] as const)("count %s", (n, expected) => {
     expect(dropLast([1, 2, 3, 4, 5], n)).toStrictEqual(expected);
   });
 });
 
 describe("data last", () => {
-  test.each(COUNTS)("count %s", (n, expected) => {
+  test.each([
+    [0, [1, 2, 3, 4, 5]],
+    [-1, [1, 2, 3, 4, 5]],
+    [-Infinity, [1, 2, 3, 4, 5]],
+    [NaN, [1, 2, 3, 4, 5]],
+    [2, [1, 2, 3]],
+    [0.5, [1, 2, 3, 4]],
+    [2.5, [1, 2]],
+    // Too small to change `5 - n`, but still a partial item.
+    [1e-20, [1, 2, 3, 4]],
+    [5, []],
+    [10, []],
+    [Infinity, []],
+  ] as const)("count %s", (n, expected) => {
     expect(pipe([1, 2, 3, 4, 5], dropLast(n))).toStrictEqual(expected);
   });
 
-  test.each(COUNTS)("count %s in a fused run", (n, expected) => {
+  test.each([
+    [0, [1, 2, 3, 4, 5]],
+    [-1, [1, 2, 3, 4, 5]],
+    [-Infinity, [1, 2, 3, 4, 5]],
+    [NaN, [1, 2, 3, 4, 5]],
+    [2, [1, 2, 3]],
+    [0.5, [1, 2, 3, 4]],
+    [2.5, [1, 2]],
+    // Too small to change `5 - n`, but still a partial item.
+    [1e-20, [1, 2, 3, 4]],
+    [5, []],
+    [10, []],
+    [Infinity, []],
+  ] as const)("count %s in a fused run", (n, expected) => {
     expect(pipe([1, 2, 3, 4, 5], forceFusion(), dropLast(n))).toStrictEqual(
       expected,
     );

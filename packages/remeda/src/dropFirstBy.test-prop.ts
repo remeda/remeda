@@ -22,7 +22,23 @@ const counts = fc.oneof(
 test.prop([items, counts])(
   "drops the n smallest items, like a sort-based reference",
   (data, n) => {
-    // The result isn't in input order, so it is sorted before the comparison.
+    // Different for every distinct item, so equal ranks mean equal items and
+    // what is left is the same no matter which of the tied items the heap
+    // drops.
+    // eslint-disable-next-line unicorn/consistent-function-scoping -- Kept inside the property because tests are self-contained, and it is only used here.
+    const rank = (value: number | null | undefined): number =>
+      value === null ? 0.5 : (value ?? -0.5);
+
+    // The native sort moves `undefined` to the end without calling the
+    // comparator, so the items are wrapped to be ordered by their rank. The
+    // result isn't in input order, so it is sorted before the comparison.
+    const sortedByRank = (
+      unsorted: readonly (number | null | undefined)[],
+    ): (number | null | undefined)[] =>
+      Array.from(unsorted, (value) => ({ value, rank: rank(value) }))
+        .sort((a, b) => a.rank - b.rank)
+        .map(({ value }) => value);
+
     expect(sortedByRank(dropFirstBy(data, n, rank))).toStrictEqual(
       sortedByRank(data).slice(Math.max(n, 0)),
     );
@@ -42,8 +58,13 @@ const keyedItems = fc.oneof(fc.array(keyedItem), fc.sparseArray(keyedItem));
 test.prop([keyedItems, counts])(
   "data-first and data-last produce the same result",
   (data, n) => {
-    const dataFirst = dropFirstBy(data, n, keyOf);
-    const dataLast = pipe(data, dropFirstBy(n, keyOf));
+    // The projection ties nullish items with each other and with the objects
+    // in the middle key.
+    const dataFirst = dropFirstBy(data, n, (value) => value?.key ?? 1);
+    const dataLast = pipe(
+      data,
+      dropFirstBy(n, (value) => value?.key ?? 1),
+    );
 
     expect(dataLast).toHaveLength(dataFirst.length);
     expect(
@@ -55,8 +76,14 @@ test.prop([keyedItems, counts])(
 test.prop([keyedItems, counts])(
   "data-first and a fused run produce the same result",
   (data, n) => {
-    const dataFirst = dropFirstBy(data, n, keyOf);
-    const fused = pipe(data, forceFusion(), dropFirstBy(n, keyOf));
+    // The projection ties nullish items with each other and with the objects
+    // in the middle key.
+    const dataFirst = dropFirstBy(data, n, (value) => value?.key ?? 1);
+    const fused = pipe(
+      data,
+      forceFusion(),
+      dropFirstBy(n, (value) => value?.key ?? 1),
+    );
 
     expect(fused).toHaveLength(dataFirst.length);
     expect(
@@ -68,10 +95,12 @@ test.prop([keyedItems, counts])(
 test.prop([keyedItems, counts])(
   "data-first and a fused run call the projection the same way",
   (data, n) => {
+    // The projection ties nullish items with each other and with the objects
+    // in the middle key.
     const dataFirstCalls: unknown[] = [];
     dropFirstBy(data, n, (value) => {
       dataFirstCalls.push(value);
-      return keyOf(value);
+      return value?.key ?? 1;
     });
 
     const fusedCalls: unknown[] = [];
@@ -80,7 +109,7 @@ test.prop([keyedItems, counts])(
       forceFusion(),
       dropFirstBy(n, (value) => {
         fusedCalls.push(value);
-        return keyOf(value);
+        return value?.key ?? 1;
       }),
     );
 
@@ -92,21 +121,3 @@ test.prop([keyedItems, counts])(
     ).toBe(true);
   },
 );
-
-// Ties nullish items with each other and with the objects in the middle key.
-const keyOf = (value: { readonly key: number } | null | undefined): number =>
-  value?.key ?? 1;
-
-// Different for every distinct item, so equal ranks mean equal items and what
-// is left is the same no matter which of the tied items the heap drops.
-const rank = (value: number | null | undefined): number =>
-  value === null ? 0.5 : (value ?? -0.5);
-
-// The native sort moves `undefined` to the end without calling the comparator,
-// so the items are wrapped to be ordered by their rank.
-const sortedByRank = (
-  data: readonly (number | null | undefined)[],
-): (number | null | undefined)[] =>
-  Array.from(data, (value) => ({ value, rank: rank(value) }))
-    .sort((a, b) => a.rank - b.rank)
-    .map(({ value }) => value);

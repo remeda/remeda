@@ -1,34 +1,12 @@
 import { describe, expect, test, vi } from "vitest";
 import { forceFusion } from "../test/forceFusion";
 import { dropFirstBy } from "./dropFirstBy";
+import { filter } from "./filter";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
 import { take } from "./take";
-
-// What is left of `[1, 2, 3, 4, 5]` after dropping the `n` smallest items.
-const COUNTS: readonly (readonly [n: number, expected: readonly number[]])[] = [
-  [0, [1, 2, 3, 4, 5]],
-  [-1, [1, 2, 3, 4, 5]],
-  [-Infinity, [1, 2, 3, 4, 5]],
-  [NaN, [1, 2, 3, 4, 5]],
-  [2, [3, 4, 5]],
-  [0.5, [1, 2, 3, 4, 5]],
-  [2.5, [3, 4, 5]],
-  [5, []],
-  [10, []],
-  [Infinity, []],
-];
-
-// Ties on `key` are broken by the shape of the heap, not by input order.
-const TIED = [
-  { id: "a", key: 0 },
-  { id: "b", key: 0 },
-  { id: "c", key: 1 },
-  { id: "d", key: 1 },
-  { id: "e", key: 0 },
-];
 
 describe("runtime (dataFirst)", () => {
   test("works", () => {
@@ -104,14 +82,38 @@ describe("runtime (dataFirst)", () => {
     ).toStrictEqual([null, null]);
   });
 
-  test.each(COUNTS)("count %s", (n, expected) => {
+  test.each([
+    [0, [1, 2, 3, 4, 5]],
+    [-1, [1, 2, 3, 4, 5]],
+    [-Infinity, [1, 2, 3, 4, 5]],
+    [NaN, [1, 2, 3, 4, 5]],
+    [2, [3, 4, 5]],
+    [0.5, [1, 2, 3, 4, 5]],
+    [2.5, [3, 4, 5]],
+    [5, []],
+    [10, []],
+    [Infinity, []],
+  ] as const)("count %s", (n, expected) => {
     expect(dropFirstBy([1, 2, 3, 4, 5], n, identity())).toStrictEqual(expected);
   });
 
   test("breaks ties by the shape of the heap", () => {
-    expect(dropFirstBy(TIED, 4, prop("key"))).toStrictEqual([
+    // Ties on `key` are broken by the shape of the heap, not by input order.
+    const tied = [
+      { id: "a", key: 0 },
+      { id: "b", key: 0 },
+      { id: "c", key: 1 },
+      { id: "d", key: 1 },
+      { id: "e", key: 0 },
+    ];
+
+    expect(dropFirstBy(tied, 4, prop("key"))).toStrictEqual([
       { id: "d", key: 1 },
     ]);
+  });
+
+  test("works with a descending order rule", () => {
+    expect(dropFirstBy([5, 1, 3], 2, [identity(), "desc"])).toStrictEqual([1]);
   });
 });
 
@@ -224,13 +226,41 @@ describe("runtime (dataLast)", () => {
     ).toStrictEqual([null, null]);
   });
 
-  test.each(COUNTS)("count %s", (n, expected) => {
+  test("works with a descending order rule", () => {
+    expect(pipe([5, 1, 3], dropFirstBy(2, [identity(), "desc"]))).toStrictEqual(
+      [1],
+    );
+  });
+
+  test.each([
+    [0, [1, 2, 3, 4, 5]],
+    [-1, [1, 2, 3, 4, 5]],
+    [-Infinity, [1, 2, 3, 4, 5]],
+    [NaN, [1, 2, 3, 4, 5]],
+    [2, [3, 4, 5]],
+    [0.5, [1, 2, 3, 4, 5]],
+    [2.5, [3, 4, 5]],
+    [5, []],
+    [10, []],
+    [Infinity, []],
+  ] as const)("count %s", (n, expected) => {
     expect(pipe([1, 2, 3, 4, 5], dropFirstBy(n, identity()))).toStrictEqual(
       expected,
     );
   });
 
-  test.each(COUNTS)("count %s in a fused run", (n, expected) => {
+  test.each([
+    [0, [1, 2, 3, 4, 5]],
+    [-1, [1, 2, 3, 4, 5]],
+    [-Infinity, [1, 2, 3, 4, 5]],
+    [NaN, [1, 2, 3, 4, 5]],
+    [2, [3, 4, 5]],
+    [0.5, [1, 2, 3, 4, 5]],
+    [2.5, [3, 4, 5]],
+    [5, []],
+    [10, []],
+    [Infinity, []],
+  ] as const)("count %s in a fused run", (n, expected) => {
     expect(
       pipe([1, 2, 3, 4, 5], forceFusion(), dropFirstBy(n, identity())),
     ).toStrictEqual(expected);
@@ -286,9 +316,36 @@ describe("runtime (dataLast)", () => {
   });
 
   test("breaks ties like data-first in a fused run", () => {
+    const tied = [
+      { id: "a", key: 0 },
+      { id: "b", key: 0 },
+      { id: "c", key: 1 },
+      { id: "d", key: 1 },
+      { id: "e", key: 0 },
+    ];
+
     expect(
-      pipe(TIED, forceFusion(), dropFirstBy(4, prop("key"))),
-    ).toStrictEqual(dropFirstBy(TIED, 4, prop("key")));
+      pipe(tied, forceFusion(), dropFirstBy(4, prop("key"))),
+    ).toStrictEqual(dropFirstBy(tied, 4, prop("key")));
+  });
+
+  test("index counts the items that reached the step", () => {
+    const data = [9, 4, 8, 1, 7, 2, 6, 3];
+
+    expect(
+      pipe(
+        data,
+        forceFusion(),
+        filter((x) => x % 2 === 0),
+        dropFirstBy(2, identity()),
+      ),
+    ).toStrictEqual(
+      dropFirstBy(
+        data.filter((x) => x % 2 === 0),
+        2,
+        identity(),
+      ),
+    );
   });
 
   test("stops pulling items once later steps are done", () => {
@@ -322,6 +379,6 @@ describe("runtime (dataLast)", () => {
     const dropSmallest = dropFirstBy<number>(1, identity());
     pipe([3, 1, 2], forceFusion(), dropSmallest);
 
-    expect(pipe([5, 4], forceFusion(), dropSmallest)).toStrictEqual([5]);
+    expect(pipe([0, -1], forceFusion(), dropSmallest)).toStrictEqual([0]);
   });
 });

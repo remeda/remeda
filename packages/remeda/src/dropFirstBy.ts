@@ -24,7 +24,7 @@ type DataLastArgs = readonly [n: number, ...rules: Rules];
  * For the opposite operation (to keep `n` elements) see `takeFirstBy`.
  *
  * @param data - The input array.
- * @param n - The number of items to drop. If `n` is non-positive no items would be dropped and a *clone* of the input would be returned, if `n` is bigger then data.length no items would be returned.
+ * @param n - The number of items to drop, rounded down. If `n` is less than 1 (or `NaN`) no items are dropped and a *clone* of the input is returned; if `n` is at least `data.length` no items are returned.
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns A subset of the input array.
  * @signature
@@ -46,7 +46,7 @@ export function dropFirstBy<T>(
  *
  * For the opposite operation (to keep `n` elements) see `takeFirstBy`.
  *
- * @param n - The number of items to drop. If `n` is non-positive no items would be dropped and a *clone* of the input would be returned, if `n` is bigger then data.length no items would be returned.
+ * @param n - The number of items to drop, rounded down. If `n` is less than 1 (or `NaN`) no items are dropped and a *clone* of the input is returned; if `n` is at least `data.length` no items are returned.
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns A subset of the input array.
  * @signature
@@ -69,7 +69,7 @@ export function dropFirstBy(...args: DataFirstArgs | DataLastArgs): unknown {
   }
 
   const [n, ...rules] = args;
-  // The comparer is stateless, so every run of the data-last function can
+  // `compareFn` is stateless, so every run of the data-last function can
   // share the one built here.
   const compareFn = orderRuleComparer(...rules);
   return lazyDataLastImplementation(
@@ -82,7 +82,8 @@ export function dropFirstBy(...args: DataFirstArgs | DataLastArgs): unknown {
 const isDataFirst = (
   args: DataFirstArgs | DataLastArgs,
 ): args is DataFirstArgs =>
-  // The data-last form starts with `n`, so its 2nd argument is a rule already.
+  // The 2nd argument is `n` in the data-first form and the first order rule in
+  // the data-last form.
   !isOrderRule(args[1]);
 
 function dropFirstByImplementation<T>(
@@ -133,9 +134,10 @@ function lazyImplementation<T>(
     }
 
     if (index === heapSize) {
-      // Like data-first, the heap is built in one go, as ties are broken by
-      // its shape, and only once there's an item beyond the first `n`, so
-      // `compareFn` is never called on shorter inputs.
+      // Built in one go rather than item by item: ties are broken by the
+      // heap's shape, which has to match the data-first implementation's. It
+      // waits for an item beyond the first `n` so that `compareFn` isn't
+      // called on inputs too short to emit anything.
       heapify(heap, compareFn);
     }
 
