@@ -48,7 +48,7 @@ export function rankBy<T>(
  */
 export function rankBy<T>(
   item: T,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
+  ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
 ): (data: readonly T[]) => number;
 
 export function rankBy(...args: readonly unknown[]): unknown {
