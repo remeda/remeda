@@ -77,14 +77,26 @@ export function sortedLastIndexBy<T>(
  * @category Array
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndex
  */
-export function sortedLastIndexBy<T>(
-  item: T,
+export function sortedLastIndexBy<T = never>(
+  // We first try to infer T through the callback to allow the type to be pulled
+  // from the call site it is used in (like `pipe`).
+  item: NoInfer<T>,
   valueFunction: (
-    item: T,
+    item: NoInfer<T>,
     index: number | undefined,
-    data: readonly T[],
+    data: readonly NoInfer<T>[],
   ) => NonNullable<unknown>,
 ): (data: readonly T[]) => number;
+
+export function sortedLastIndexBy<T>(
+  // Otherwise we allow T to be inferred directly from the operand.
+  item: T,
+  valueFunction: (
+    item: NoInfer<T>,
+    index: number | undefined,
+    data: readonly NoInfer<T>[],
+  ) => NonNullable<unknown>,
+): (data: readonly NoInfer<T>[]) => number;
 
 export function sortedLastIndexBy(...args: readonly unknown[]): unknown {
   return purry(sortedLastIndexByImplementation, args);

@@ -42,7 +42,16 @@ export function sortedLastIndex<T>(data: readonly T[], item: T): number;
  * @category Array
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndexBy
  */
-export function sortedLastIndex<T>(item: T): (data: readonly T[]) => number;
+export function sortedLastIndex<T = never>(
+  // We first try to infer T through the callback to allow the type to be pulled
+  // from the call site it is used in (like `pipe`).
+  item: NoInfer<T>,
+): (data: readonly T[]) => number;
+
+export function sortedLastIndex<T>(
+  // Otherwise we allow T to be inferred directly from the operand.
+  item: T,
+): (data: readonly NoInfer<T>[]) => number;
 
 export function sortedLastIndex(...args: readonly unknown[]): unknown {
   return purry(sortedLastIndexImplementation, args);

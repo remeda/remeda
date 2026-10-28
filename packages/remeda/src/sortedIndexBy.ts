@@ -68,21 +68,34 @@ export function sortedIndexBy<T>(
  * provided to sortBy to sort the array. The function is called exactly once on
  * each items that is compared against in the array, and once at the beginning
  * on `item`. When called on `item` the `index` argument is `undefined`.
+ * @returns Insertion index (In the range 0..data.length).
  * @signature
- *    sortedIndexBy(data, item, valueFunction)
+ *    sortedIndexBy(item, valueFunction)(data)
  * @example
- *    sortedIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
+ *    pipe([{age:20},{age:22}],sortedIndexBy({age:21},prop('age'))) // => 1
  * @dataLast
  * @category Array
  */
-export function sortedIndexBy<T>(
-  item: T,
+export function sortedIndexBy<T = never>(
+  // We first try to infer T through the callback to allow the type to be pulled
+  // from the call site it is used in (like `pipe`).
+  item: NoInfer<T>,
   valueFunction: (
-    item: T,
+    item: NoInfer<T>,
     index: number | undefined,
-    data: readonly T[],
+    data: readonly NoInfer<T>[],
   ) => NonNullable<unknown>,
 ): (data: readonly T[]) => number;
+
+export function sortedIndexBy<T>(
+  // Otherwise we allow T to be inferred directly from the operand.
+  item: T,
+  valueFunction: (
+    item: NoInfer<T>,
+    index: number | undefined,
+    data: readonly NoInfer<T>[],
+  ) => NonNullable<unknown>,
+): (data: readonly NoInfer<T>[]) => number;
 
 export function sortedIndexBy(...args: readonly unknown[]): unknown {
   return purry(sortedIndexByImplementation, args);

@@ -46,10 +46,18 @@ export function rankBy<T>(
  * @dataLast
  * @category Array
  */
-export function rankBy<T>(
-  item: T,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
+export function rankBy<T = never>(
+  // We first try to infer T through the callback to allow the type to be pulled
+  // from the call site it is used in (like `pipe`).
+  item: NoInfer<T>,
+  ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
 ): (data: readonly T[]) => number;
+
+export function rankBy<T>(
+  // Otherwise we allow T to be inferred directly from the operand.
+  item: T,
+  ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
+): (data: readonly NoInfer<T>[]) => number;
 
 export function rankBy(...args: readonly unknown[]): unknown {
   return purryOrderRulesWithArgument(rankByImplementation, args);
