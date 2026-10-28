@@ -77,9 +77,8 @@ export function sortedIndexBy<T>(
  * @category Array
  */
 export function sortedIndexBy<T = never>(
-  // `T` is inferred from the data so that a literal item (`"active"`) doesn't
-  // narrow it below the data's items (`Status`). With no data to infer from,
-  // the `never` default rejects the item so the overload below takes the call.
+  // We first try to infer T through the callback to allow the type to be pulled
+  // from the call site it is used in (like `pipe`).
   item: NoInfer<T>,
   valueFunction: (
     item: NoInfer<T>,
@@ -87,9 +86,9 @@ export function sortedIndexBy<T = never>(
     data: readonly NoInfer<T>[],
   ) => NonNullable<unknown>,
 ): (data: readonly T[]) => number;
+
 export function sortedIndexBy<T>(
-  // An item wider than the data's items (`"c"` for `("a" | "b")[]`) doesn't
-  // match the overload above, so `T` is inferred from the item instead.
+  // Otherwise we allow T to be inferred directly from the operand.
   item: T,
   valueFunction: (
     item: NoInfer<T>,

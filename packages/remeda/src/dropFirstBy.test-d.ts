@@ -8,11 +8,7 @@ import { prop } from "./prop";
 describe("dataFirst", () => {
   test("a projection typed on a supertype of the items", () => {
     expectTypeOf(
-      dropFirstBy(
-        [{ a: 5, b: "x" }],
-        1,
-        (item: { readonly a: number }) => item.a,
-      ),
+      dropFirstBy([{ a: 5, b: "x" }], 1, ({ a }: { readonly a: number }) => a),
     ).toEqualTypeOf<{ a: number; b: string }[]>();
   });
 });
@@ -51,7 +47,7 @@ describe("dataLast", () => {
     expectTypeOf(
       pipe(
         [{ a: 5, b: "x" }],
-        dropFirstBy(1, (item: { readonly a: number }) => item.a),
+        dropFirstBy(1, ({ a }: { readonly a: number }) => a),
       ),
     ).toEqualTypeOf<{ a: number; b: string }[]>();
   });
