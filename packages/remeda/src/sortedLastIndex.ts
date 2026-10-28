@@ -42,7 +42,17 @@ export function sortedLastIndex<T>(data: readonly T[], item: T): number;
  * @category Array
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndexBy
  */
-export function sortedLastIndex<T>(item: T): (data: readonly T[]) => number;
+export function sortedLastIndex<T = never>(
+  // `T` is inferred from the data so that a literal item (`"active"`) doesn't
+  // narrow it below the data's items (`Status`). With no data to infer from,
+  // the `never` default rejects the item so the overload below takes the call.
+  item: NoInfer<T>,
+): (data: readonly T[]) => number;
+export function sortedLastIndex<T>(
+  // An item wider than the data's items (`"c"` for `("a" | "b")[]`) doesn't
+  // match the overload above, so `T` is inferred from the item instead.
+  item: T,
+): (data: readonly NoInfer<T>[]) => number;
 
 export function sortedLastIndex(...args: readonly unknown[]): unknown {
   return purry(sortedLastIndexImplementation, args);

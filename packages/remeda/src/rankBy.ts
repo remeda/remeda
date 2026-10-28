@@ -46,7 +46,16 @@ export function rankBy<T>(
  * @dataLast
  * @category Array
  */
+export function rankBy<T = never>(
+  // `T` is inferred from the data so that a literal item (`"active"`) doesn't
+  // narrow it below the data's items (`Status`). With no data to infer from,
+  // the `never` default rejects the item so the overload below takes the call.
+  item: NoInfer<T>,
+  ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
+): (data: readonly T[]) => number;
 export function rankBy<T>(
+  // An item wider than the data's items (`"c"` for `("a" | "b")[]`) doesn't
+  // match the overload above, so `T` is inferred from the item instead.
   item: T,
   ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
 ): (data: readonly NoInfer<T>[]) => number;

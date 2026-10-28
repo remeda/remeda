@@ -68,21 +68,35 @@ export function sortedIndexBy<T>(
  * provided to sortBy to sort the array. The function is called exactly once on
  * each items that is compared against in the array, and once at the beginning
  * on `item`. When called on `item` the `index` argument is `undefined`.
+ * @returns Insertion index (In the range 0..data.length).
  * @signature
- *    sortedIndexBy(data, item, valueFunction)
+ *    sortedIndexBy(item, valueFunction)(data)
  * @example
- *    sortedIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
+ *    pipe([{age:20},{age:22}],sortedIndexBy({age:21},prop('age'))) // => 1
  * @dataLast
  * @category Array
  */
-export function sortedIndexBy<T>(
-  item: T,
+export function sortedIndexBy<T = never>(
+  // `T` is inferred from the data so that a literal item (`"active"`) doesn't
+  // narrow it below the data's items (`Status`). With no data to infer from,
+  // the `never` default rejects the item so the overload below takes the call.
+  item: NoInfer<T>,
   valueFunction: (
-    item: T,
+    item: NoInfer<T>,
     index: number | undefined,
-    data: readonly T[],
+    data: readonly NoInfer<T>[],
   ) => NonNullable<unknown>,
 ): (data: readonly T[]) => number;
+export function sortedIndexBy<T>(
+  // An item wider than the data's items (`"c"` for `("a" | "b")[]`) doesn't
+  // match the overload above, so `T` is inferred from the item instead.
+  item: T,
+  valueFunction: (
+    item: NoInfer<T>,
+    index: number | undefined,
+    data: readonly NoInfer<T>[],
+  ) => NonNullable<unknown>,
+): (data: readonly NoInfer<T>[]) => number;
 
 export function sortedIndexBy(...args: readonly unknown[]): unknown {
   return purry(sortedIndexByImplementation, args);

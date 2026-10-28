@@ -35,7 +35,19 @@ export function difference<T>(data: readonly T[], other: readonly T[]): T[];
  * @lazy
  * @category Array
  */
-export function difference<T>(other: readonly T[]): (data: readonly T[]) => T[];
+export function difference<T = never>(
+  // `T` is inferred from the data so that literal values (`["active"]`) don't
+  // narrow it below the data's items (`Status`). With no data to infer from,
+  // the `never` default rejects any non-empty values so the overload below
+  // takes the call.
+  other: readonly NoInfer<T>[],
+): (data: readonly T[]) => T[];
+export function difference<T>(
+  // Values wider than the data's items (`["c"]` for `("a" | "b")[]`) don't
+  // match the overload above, so `T` is inferred from them instead, and `D`
+  // keeps the output typed by the data's items.
+  other: readonly T[],
+): <D extends T>(data: readonly D[]) => D[];
 
 export function difference(...args: readonly unknown[]): unknown {
   return purryWithLazy(differenceImplementation, args, lazyImplementation);
