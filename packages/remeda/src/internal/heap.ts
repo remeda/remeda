@@ -26,31 +26,34 @@ export function heapify<T>(
 
 /**
  * Insert an item into a heap if it's "smaller" (in regards to `compareFn`) than
- * the current head of the heap (which is the "largest" value in the heap). If
- * the item is inserted, the previous head of the heap is returned, otherwise
- * `undefined` is returned and the heap is unchanged.
+ * the current head of the heap (which is the "largest" value in the heap). The
+ * size of the heap doesn't change, so one item is always left out and returned:
+ * the previous head of the heap if the item was inserted, or the item itself if
+ * the heap is unchanged.
  *
  * @param heap - A *mutable* array representing a heap (see `heapify`).
- * @param compareFn - The comparator used to order items in the heap. Use the.
+ * @param compareFn - The comparator used to order items in the heap. Use the
+ * same function in all calls mutating the same heap otherwise you'd get
+ * unexpected results.
  * @param item - The item to be inserted into the heap.
- * @returns `undefined` if the heap is unchanged, or the previous head of the
- * heap if the item was inserted.
+ * @returns The previous head of the heap if the item was inserted, otherwise
+ * the item itself.
  */
 export function heapMaybeInsert<T>(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
   heap: T[],
   compareFn: CompareFunction<T>,
   item: T,
-): T | undefined {
+): T {
   if (!hasAtLeast(heap, 1)) {
-    return undefined;
+    return item;
   }
 
   const [head] = heap;
 
   if (compareFn(item, head) >= 0) {
     // The item shouldn't be inserted into the heap, the heap is unchanged.
-    return undefined;
+    return item;
   }
 
   heap[0] = item;

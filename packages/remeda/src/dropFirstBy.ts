@@ -72,8 +72,7 @@ function dropFirstByImplementation<T>(
 
   const rest = data.slice(n);
   for (const item of rest) {
-    const previousHead = heapMaybeInsert(heap, compareFn, item);
-    out.push(previousHead ?? item);
+    out.push(heapMaybeInsert(heap, compareFn, item));
   }
 
   return out;
