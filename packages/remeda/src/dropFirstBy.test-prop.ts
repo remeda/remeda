@@ -22,28 +22,26 @@ const counts = fc.oneof(
 test.prop([items, counts])(
   "drops the n smallest items, like a sort-based reference",
   (data, n) => {
-    // Different for every distinct item, so equal ranks mean equal items and
-    // what is left is the same no matter which of the tied items the heap
-    // drops.
-    // eslint-disable-next-line unicorn/consistent-function-scoping -- Kept inside the property because tests are self-contained, and it is only used here.
-    const rank = (value: number | null | undefined): number =>
-      value === null ? 0.5 : (value ?? -0.5);
-
-    // The native sort moves `undefined` to the end without calling the
-    // comparator, so the items are wrapped to be ordered by their rank. The
-    // result isn't in input order, so it is sorted before the comparison.
-    const sortedByRank = (
-      unsorted: readonly (number | null | undefined)[],
-    ): (number | null | undefined)[] =>
-      Array.from(unsorted, (value) => ({ value, rank: rank(value) }))
-        .sort((a, b) => a.rank - b.rank)
-        .map(({ value }) => value);
-
+    // The result isn't in input order, so it is sorted before the comparison.
     expect(sortedByRank(dropFirstBy(data, n, rank))).toStrictEqual(
       sortedByRank(data).slice(Math.max(n, 0)),
     );
   },
 );
+
+// Different for every distinct item, so equal ranks mean equal items and what
+// is left is the same no matter which of the tied items the heap drops.
+const rank = (value: number | null | undefined): number =>
+  value === null ? 0.5 : (value ?? -0.5);
+
+// The native sort moves `undefined` to the end without calling the comparator,
+// so the items are wrapped to be ordered by their rank.
+const sortedByRank = (
+  data: readonly (number | null | undefined)[],
+): (number | null | undefined)[] =>
+  Array.from(data, (value) => ({ value, rank: rank(value) }))
+    .sort((a, b) => a.rank - b.rank)
+    .map(({ value }) => value);
 
 // Fresh objects with few distinct keys, so ties are common and only the
 // reference tells apart which of the tied items the heap dropped.
