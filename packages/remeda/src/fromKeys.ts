@@ -1,4 +1,5 @@
 import type { Simplify } from "type-fest";
+import { createDataProperty } from "./internal/createDataProperty";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
@@ -83,8 +84,8 @@ function fromKeysImplementation<T extends IterableContainer<PropertyKey>, V>(
   const result: Partial<FromKeys<T, V>> = {};
 
   for (const [index, key] of data.entries()) {
-    // @ts-expect-error [ts7053] - There's no easy way to make Typescript aware that the items in T would be keys in the output object because it's type is built recursively and the "being an item of an array" property of a type is not "carried over" in the recursive type definition.
-    result[key] = mapper(key, index, data);
+    // @ts-expect-error [ts2345] - There's no easy way to make Typescript aware that the items in T would be keys in the output object because it's type is built recursively and the "being an item of an array" property of a type is not "carried over" in the recursive type definition.
+    createDataProperty(result, key, mapper(key, index, data));
   }
 
   return result as FromKeys<T, V>;

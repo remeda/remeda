@@ -4,6 +4,7 @@
  */
 
 import type { IsUnion } from "type-fest";
+import { createDataProperty } from "./internal/createDataProperty";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { IsBounded } from "./internal/types/IsBounded";
@@ -98,7 +99,7 @@ function mapKeysImplementation<T extends {}, Key extends PropertyKey>(
 
   for (const [key, value] of Object.entries(data)) {
     const mappedKey = keyMapper(key, value, data);
-    out[mappedKey] = value;
+    createDataProperty(out, mappedKey, value);
   }
 
   return out;

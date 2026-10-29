@@ -1,3 +1,4 @@
+import { createDataProperty } from "./internal/createDataProperty";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
@@ -97,7 +98,7 @@ function pullObjectImplementation<
   for (const [index, item] of data.entries()) {
     const key = keyExtractor(item, index, data);
     const value = valueExtractor(item, index, data);
-    result[key] = value;
+    createDataProperty(result, key, value);
   }
 
   return result;

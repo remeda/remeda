@@ -1,4 +1,5 @@
 import type { Simplify } from "type-fest";
+import { createDataProperty } from "./internal/createDataProperty";
 import { purry } from "./purry";
 import type { ToString } from "./internal/types/ToString";
 
@@ -49,7 +50,7 @@ function invertImplementation(
   const result: Record<PropertyKey, PropertyKey> = {};
 
   for (const [key, value] of Object.entries(data)) {
-    result[value] = key;
+    createDataProperty(result, value, key);
   }
 
   return result;
