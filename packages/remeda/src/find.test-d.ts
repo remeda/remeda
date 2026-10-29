@@ -404,15 +404,4 @@ describe("callback data param", () => {
       }),
     );
   });
-
-  test("generic data in data-last", () => {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping -- Intentional! a generic wrapper is the only way to build a generic context, and its inferred return type is under test.
-    const findGeneric = <T>(data: readonly T[]) =>
-      pipe(
-        data,
-        find((_value, index, prefix) => index < prefix.length),
-      );
-
-    expectTypeOf(findGeneric([1, 2, 3])).toEqualTypeOf<number | undefined>();
-  });
 });

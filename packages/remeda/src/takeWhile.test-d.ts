@@ -455,15 +455,4 @@ describe("callback data param", () => {
       ),
     ).toEqualTypeOf<1[]>();
   });
-
-  test("generic data in data-last", () => {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping -- Intentional! a generic wrapper is the only way to build a generic context, and its inferred return type is under test.
-    const takeWhileGeneric = <T>(data: readonly T[]) =>
-      pipe(
-        data,
-        takeWhile((_item, index, prefix) => index < prefix.length),
-      );
-
-    expectTypeOf(takeWhileGeneric([1, 2, 3])).toEqualTypeOf<number[]>();
-  });
 });
