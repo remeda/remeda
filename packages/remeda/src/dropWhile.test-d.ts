@@ -121,7 +121,7 @@ describe("data-last", () => {
         dropWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<never>();
           expectTypeOf(index).toEqualTypeOf<number>();
-          expectTypeOf(array).toEqualTypeOf<[]>();
+          expectTypeOf(array).toEqualTypeOf<never>();
 
           return true;
         }),
@@ -134,7 +134,7 @@ describe("data-last", () => {
         dropWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<number>();
           expectTypeOf(index).toEqualTypeOf<number>();
-          expectTypeOf(array).toEqualTypeOf<number[]>();
+          expectTypeOf(array).toEqualTypeOf<readonly [number, ...number[]]>();
 
           return true;
         }),
@@ -147,7 +147,9 @@ describe("data-last", () => {
         dropWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<number | string>();
           expectTypeOf(index).toEqualTypeOf<number>();
-          expectTypeOf(array).toEqualTypeOf<(number | string)[]>();
+          expectTypeOf(array).toEqualTypeOf<
+            readonly [number | string, ...(number | string)[]]
+          >();
 
           return true;
         }),
@@ -160,7 +162,7 @@ describe("data-last", () => {
         dropWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | number>();
           expectTypeOf(index).toEqualTypeOf<number>();
-          expectTypeOf(array).toEqualTypeOf<[number, ...boolean[]]>();
+          expectTypeOf(array).toEqualTypeOf<readonly [number, ...boolean[]]>();
 
           return true;
         }),
@@ -173,7 +175,11 @@ describe("data-last", () => {
         dropWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | number>();
           expectTypeOf(index).toEqualTypeOf<number>();
-          expectTypeOf(array).toEqualTypeOf<[...boolean[], number]>();
+          expectTypeOf(array).toEqualTypeOf<
+            | readonly [boolean, ...boolean[]]
+            | readonly [boolean, ...boolean[], number]
+            | readonly [number]
+          >();
 
           return true;
         }),
@@ -186,7 +192,10 @@ describe("data-last", () => {
         dropWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | number | string>();
           expectTypeOf(index).toEqualTypeOf<number>();
-          expectTypeOf(array).toEqualTypeOf<[number, ...boolean[], string]>();
+          expectTypeOf(array).toEqualTypeOf<
+            | readonly [number, ...boolean[]]
+            | readonly [number, ...boolean[], string]
+          >();
 
           return true;
         }),
@@ -199,7 +208,7 @@ describe("data-last", () => {
         dropWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<"a" | 1 | true>();
           expectTypeOf(index).toEqualTypeOf<number>();
-          expectTypeOf(array).toEqualTypeOf<readonly [1, "a", true]>();
+          expectTypeOf(array).toEqualTypeOf<readonly [1, "a"?, true?]>();
 
           return true;
         }),
@@ -212,11 +221,23 @@ describe("data-last", () => {
         dropWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | string>();
           expectTypeOf(index).toEqualTypeOf<number>();
-          expectTypeOf(array).toEqualTypeOf<boolean[] | string[]>();
+          expectTypeOf(array).toEqualTypeOf<
+            readonly [boolean, ...boolean[]] | readonly [string, ...string[]]
+          >();
 
           return true;
         }),
       );
+    });
+  });
+});
+
+describe("callback data param", () => {
+  test("complete in data-first", () => {
+    dropWhile([1, 2, 3] as const, (_item, _index, data) => {
+      expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
+
+      return true;
     });
   });
 });

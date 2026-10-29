@@ -1,5 +1,9 @@
+import { SKIP_ITEM } from "./internal/lazyControl";
+import { purryWithLazy } from "./internal/purryWithLazy";
+import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
+import type { LazyCallback } from "./internal/types/LazyCallback";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Removes elements from the beginning of the array until the predicate returns false.
@@ -13,6 +17,7 @@ import { purry } from "./purry";
  * @example
  *    dropWhile([1, 2, 10, 3, 4], x => x < 10) // => [10, 3, 4]
  * @dataFirst
+ * @lazy
  * @category Array
  */
 export function dropWhile<T extends IterableContainer>(
@@ -31,24 +36,39 @@ export function dropWhile<T extends IterableContainer>(
  * @example
  *    pipe([1, 2, 10, 3, 4], dropWhile(x => x < 10))  // => [10, 3, 4]
  * @dataLast
+ * @lazy
  * @category Array
  */
 export function dropWhile<T extends IterableContainer>(
-  predicate: (item: T[number], index: number, data: T) => boolean,
+  predicate: LazyCallback<T, boolean>,
 ): (data: T) => T[number][];
 
 export function dropWhile(...args: readonly unknown[]): unknown {
-  return purry(dropWhileImplementation, args);
+  return purryWithLazy(dropWhileImplementation, args, lazyImplementation);
 }
 
-function dropWhileImplementation<T extends IterableContainer>(
-  data: T,
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): T[number][] {
+function dropWhileImplementation<T>(
+  data: readonly T[],
+  predicate: (item: T, index: number, data: readonly T[]) => boolean,
+): T[] {
   for (const [index, item] of data.entries()) {
     if (!predicate(item, index, data)) {
       return data.slice(index);
     }
   }
   return [];
+}
+
+function lazyImplementation<T>(
+  predicate: (item: T, index: number, data: readonly T[]) => boolean,
+): LazyEvaluator<T> {
+  let isDropping = true;
+  return requireDataByArity(predicate, (item, index, data) => {
+    if (isDropping && predicate(item, index, data)) {
+      return SKIP_ITEM;
+    }
+
+    isDropping = false;
+    return item;
+  });
 }
