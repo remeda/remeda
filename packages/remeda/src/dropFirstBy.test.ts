@@ -7,6 +7,7 @@ import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
 import { take } from "./take";
+import { defaultTo } from "./defaultTo";
 
 describe("runtime (dataFirst)", () => {
   test("works", () => {
@@ -55,7 +56,7 @@ describe("runtime (dataFirst)", () => {
       "aaaaa",
     ];
 
-    expect(dropFirstBy(data, 3, (x) => x.length, identity())).toStrictEqual([
+    expect(dropFirstBy(data, 3, prop("length"), identity())).toStrictEqual([
       "bbbbb",
       "aaa",
       "bbb",
@@ -67,18 +68,18 @@ describe("runtime (dataFirst)", () => {
   });
 
   test("keeps a null item from the first n", () => {
-    expect(dropFirstBy([null, -1], 1, (x) => x ?? 0)).toStrictEqual([null]);
+    expect(dropFirstBy([null, -1], 1, defaultTo(0))).toStrictEqual([null]);
   });
 
   test("keeps an undefined item from the first n", () => {
-    expect(dropFirstBy([undefined, -1], 1, (x) => x ?? 0)).toStrictEqual([
+    expect(dropFirstBy([undefined, -1], 1, defaultTo(0))).toStrictEqual([
       undefined,
     ]);
   });
 
   test("keeps every nullish item from the first n", () => {
     expect(
-      dropFirstBy([null, null, 1, 2], 2, (x) => x ?? Infinity),
+      dropFirstBy([null, null, 1, 2], 2, defaultTo(Infinity)),
     ).toStrictEqual([null, null]);
   });
 
@@ -98,18 +99,19 @@ describe("runtime (dataFirst)", () => {
   });
 
   test("breaks ties by the shape of the heap", () => {
-    // Ties on `key` are broken by the shape of the heap, not by input order.
-    const tied = [
-      { id: "a", key: 0 },
-      { id: "b", key: 0 },
-      { id: "c", key: 1 },
-      { id: "d", key: 1 },
-      { id: "e", key: 0 },
-    ];
-
-    expect(dropFirstBy(tied, 4, prop("key"))).toStrictEqual([
-      { id: "d", key: 1 },
-    ]);
+    expect(
+      dropFirstBy(
+        [
+          { id: "a", key: 0 },
+          { id: "b", key: 0 },
+          { id: "c", key: 1 },
+          { id: "d", key: 1 },
+          { id: "e", key: 0 },
+        ],
+        4,
+        prop("key"),
+      ),
+    ).toStrictEqual([{ id: "d", key: 1 }]);
   });
 
   test("works with a descending order rule", () => {
@@ -121,53 +123,32 @@ describe("runtime (dataLast)", () => {
   test("works", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
 
-    expect(
-      pipe(
-        data,
-        dropFirstBy(2, (x) => x),
-      ),
-    ).toStrictEqual([5, 6, 4, 3, 7]);
+    expect(pipe(data, dropFirstBy(2, identity()))).toStrictEqual([
+      5, 6, 4, 3, 7,
+    ]);
   });
 
   test("handles empty arrays gracefully", () => {
     const data: number[] = [];
 
-    expect(
-      pipe(
-        data,
-        dropFirstBy(1, (x) => x),
-      ),
-    ).toHaveLength(0);
+    expect(pipe(data, dropFirstBy(1, identity()))).toHaveLength(0);
   });
 
   test("handles negative numbers gracefully", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
 
-    expect(
-      pipe(
-        data,
-        dropFirstBy(-3, (x) => x),
-      ),
-    ).toHaveLength(data.length);
+    expect(pipe(data, dropFirstBy(-3, identity()))).toHaveLength(data.length);
   });
 
   test("handles overflowing numbers gracefully", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
 
-    expect(
-      pipe(
-        data,
-        dropFirstBy(100, (x) => x),
-      ),
-    ).toHaveLength(0);
+    expect(pipe(data, dropFirstBy(100, identity()))).toHaveLength(0);
   });
 
   test("clones the data when needed", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    const result = pipe(
-      data,
-      dropFirstBy(0, (x) => x),
-    );
+    const result = pipe(data, dropFirstBy(0, identity()));
 
     expect(result).not.toBe(data);
     expect(result).toStrictEqual(data);
@@ -188,41 +169,25 @@ describe("runtime (dataLast)", () => {
     ];
 
     expect(
-      pipe(
-        data,
-        dropFirstBy(
-          3,
-          (x) => x.length,
-          (x) => x,
-        ),
-      ),
+      pipe(data, dropFirstBy(3, prop("length"), identity())),
     ).toStrictEqual(["bbbbb", "aaa", "bbb", "bbbb", "aaaa", "bb", "aaaaa"]);
   });
 
   test("keeps a null item from the first n", () => {
-    expect(
-      pipe(
-        [null, -1],
-        dropFirstBy(1, (x) => x ?? 0),
-      ),
-    ).toStrictEqual([null]);
+    expect(pipe([null, -1], dropFirstBy(1, defaultTo(0)))).toStrictEqual([
+      null,
+    ]);
   });
 
   test("keeps an undefined item from the first n", () => {
-    expect(
-      pipe(
-        [undefined, -1],
-        dropFirstBy(1, (x) => x ?? 0),
-      ),
-    ).toStrictEqual([undefined]);
+    expect(pipe([undefined, -1], dropFirstBy(1, defaultTo(0)))).toStrictEqual([
+      undefined,
+    ]);
   });
 
   test("keeps every nullish item from the first n", () => {
     expect(
-      pipe(
-        [null, null, 1, 2],
-        dropFirstBy(2, (x) => x ?? Infinity),
-      ),
+      pipe([null, null, 1, 2], dropFirstBy(2, defaultTo(Infinity))),
     ).toStrictEqual([null, null]);
   });
 
@@ -279,28 +244,11 @@ describe("runtime (dataLast)", () => {
   });
 
   test("works with complex compare rules in a fused run", () => {
-    const data = [
-      "a",
-      "aaa",
-      "bbbbb",
-      "aa",
-      "bb",
-      "bbb",
-      "bbbb",
-      "aaaa",
-      "b",
-      "aaaaa",
-    ];
-
     expect(
       pipe(
-        data,
+        ["a", "aaa", "bbbbb", "aa", "bb", "bbb", "bbbb", "aaaa", "b", "aaaaa"],
         forceFusion(),
-        dropFirstBy(
-          3,
-          (x) => x.length,
-          (x) => x,
-        ),
+        dropFirstBy(3, prop("length"), identity()),
       ),
     ).toStrictEqual(["bbbbb", "aaa", "bbb", "bbbb", "aaaa", "bb", "aaaaa"]);
   });
@@ -310,13 +258,13 @@ describe("runtime (dataLast)", () => {
       pipe(
         [null, null, 1, 2],
         forceFusion(),
-        dropFirstBy(2, (x) => x ?? Infinity),
+        dropFirstBy(2, defaultTo(Infinity)),
       ),
     ).toStrictEqual([null, null]);
   });
 
   test("breaks ties like data-first in a fused run", () => {
-    const tied = [
+    const data = [
       { id: "a", key: 0 },
       { id: "b", key: 0 },
       { id: "c", key: 1 },
@@ -325,8 +273,8 @@ describe("runtime (dataLast)", () => {
     ];
 
     expect(
-      pipe(tied, forceFusion(), dropFirstBy(4, prop("key"))),
-    ).toStrictEqual(dropFirstBy(tied, 4, prop("key")));
+      pipe(data, forceFusion(), dropFirstBy(4, prop("key"))),
+    ).toStrictEqual(dropFirstBy(data, 4, prop("key")));
   });
 
   test("index counts the items that reached the step", () => {
