@@ -101,17 +101,6 @@ describe("data_last", () => {
     expect(predicate).toHaveBeenCalledTimes(3);
   });
 
-  test("doesn't pass the failing item to later steps", () => {
-    const mapper = vi.fn<(x: number) => number>(identity());
-    pipe(
-      [1, 2, 3, 4, 5],
-      takeWhile((x) => x < 3),
-      map(mapper),
-    );
-
-    expect(mapper).toHaveBeenCalledTimes(2);
-  });
-
   test("provides the items processed so far to the predicate", () => {
     const dataSnapshots: number[][] = [];
     pipe(

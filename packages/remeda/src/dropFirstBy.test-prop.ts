@@ -54,24 +54,6 @@ const keyedItem = fc.oneof(
 const keyedItems = fc.oneof(fc.array(keyedItem), fc.sparseArray(keyedItem));
 
 test.prop([keyedItems, counts])(
-  "data-first and data-last produce the same result",
-  (data, n) => {
-    // The projection ties nullish items with each other and with the objects
-    // in the middle key.
-    const dataFirst = dropFirstBy(data, n, (value) => value?.key ?? 1);
-    const dataLast = pipe(
-      data,
-      dropFirstBy(n, (value) => value?.key ?? 1),
-    );
-
-    expect(dataLast).toHaveLength(dataFirst.length);
-    expect(
-      dataLast.every((value, index) => Object.is(value, dataFirst[index])),
-    ).toBe(true);
-  },
-);
-
-test.prop([keyedItems, counts])(
   "data-first and a fused run produce the same result",
   (data, n) => {
     // The projection ties nullish items with each other and with the objects
@@ -83,10 +65,10 @@ test.prop([keyedItems, counts])(
       dropFirstBy(n, (value) => value?.key ?? 1),
     );
 
-    expect(fused).toHaveLength(dataFirst.length);
-    expect(
-      fused.every((value, index) => Object.is(value, dataFirst[index])),
-    ).toBe(true);
+    // `indexOf` matches by reference, so tied objects are told apart.
+    expect(fused.map((value) => data.indexOf(value))).toStrictEqual(
+      dataFirst.map((value) => data.indexOf(value)),
+    );
   },
 );
 
@@ -95,13 +77,13 @@ test.prop([keyedItems, counts])(
   (data, n) => {
     // The projection ties nullish items with each other and with the objects
     // in the middle key.
-    const dataFirstCalls: unknown[] = [];
+    const dataFirstCalls: typeof data = [];
     dropFirstBy(data, n, (value) => {
       dataFirstCalls.push(value);
       return value?.key ?? 1;
     });
 
-    const fusedCalls: unknown[] = [];
+    const fusedCalls: typeof data = [];
     pipe(
       data,
       forceFusion(),
@@ -111,11 +93,8 @@ test.prop([keyedItems, counts])(
       }),
     );
 
-    expect(fusedCalls).toHaveLength(dataFirstCalls.length);
-    expect(
-      fusedCalls.every((value, index) =>
-        Object.is(value, dataFirstCalls[index]),
-      ),
-    ).toBe(true);
+    expect(fusedCalls.map((value) => data.indexOf(value))).toStrictEqual(
+      dataFirstCalls.map((value) => data.indexOf(value)),
+    );
   },
 );

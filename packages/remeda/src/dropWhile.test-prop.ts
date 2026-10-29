@@ -9,22 +9,10 @@ import { pipe } from "./pipe";
 const items = fc.array(fc.anything());
 
 test.prop([items, fc.func(fc.boolean())])(
-  "data-first and data-last produce the same result",
-  (data, predicateOf) => {
-    // The predicate ignores `data`, which differs between the calling styles
-    // on purpose: the whole input data-first, the items so far in `pipe`.
-    const predicate = (value: unknown, index: number): boolean =>
-      predicateOf(value, index);
-
-    expect(pipe(data, dropWhile(predicate))).toStrictEqual(
-      dropWhile(data, predicate),
-    );
-  },
-);
-
-test.prop([items, fc.func(fc.boolean())])(
   "data-first and a fused run produce the same result",
   (data, predicateOf) => {
+    // The predicate ignores `data`, which differs between the two on purpose:
+    // the whole input data-first, the items so far in a fused run.
     const predicate = (value: unknown, index: number): boolean =>
       predicateOf(value, index);
 

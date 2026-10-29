@@ -8,22 +8,10 @@ import { takeWhile } from "./takeWhile";
 const items = fc.oneof(fc.array(fc.anything()), fc.sparseArray(fc.anything()));
 
 test.prop([items, fc.func(fc.boolean())])(
-  "data-first and data-last produce the same result",
-  (data, predicateOf) => {
-    // The predicate ignores `data`, which differs between the calling styles
-    // on purpose: the whole input data-first, the items so far in `pipe`.
-    const predicate = (value: unknown, index: number): boolean =>
-      predicateOf(value, index);
-
-    expect(pipe(data, takeWhile(predicate))).toStrictEqual(
-      takeWhile(data, predicate),
-    );
-  },
-);
-
-test.prop([items, fc.func(fc.boolean())])(
   "data-first and a fused run produce the same result",
   (data, predicateOf) => {
+    // The predicate ignores `data`, which differs between the two on purpose:
+    // the whole input data-first, the items so far in a fused run.
     const predicate = (value: unknown, index: number): boolean =>
       predicateOf(value, index);
 

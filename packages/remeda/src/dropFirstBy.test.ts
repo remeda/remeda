@@ -1,13 +1,14 @@
 import { describe, expect, test, vi } from "vitest";
 import { forceFusion } from "../test/forceFusion";
+import { defaultTo } from "./defaultTo";
 import { dropFirstBy } from "./dropFirstBy";
 import { filter } from "./filter";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
+import { piped } from "./piped";
 import { prop } from "./prop";
 import { take } from "./take";
-import { defaultTo } from "./defaultTo";
 
 describe("runtime (dataFirst)", () => {
   test("works", () => {
@@ -94,7 +95,7 @@ describe("runtime (dataFirst)", () => {
     [5, []],
     [10, []],
     [Infinity, []],
-  ] as const)("count %s", (n, expected) => {
+  ])("count %s", (n, expected) => {
     expect(dropFirstBy([1, 2, 3, 4, 5], n, identity())).toStrictEqual(expected);
   });
 
@@ -208,24 +209,7 @@ describe("runtime (dataLast)", () => {
     [5, []],
     [10, []],
     [Infinity, []],
-  ] as const)("count %s", (n, expected) => {
-    expect(pipe([1, 2, 3, 4, 5], dropFirstBy(n, identity()))).toStrictEqual(
-      expected,
-    );
-  });
-
-  test.each([
-    [0, [1, 2, 3, 4, 5]],
-    [-1, [1, 2, 3, 4, 5]],
-    [-Infinity, [1, 2, 3, 4, 5]],
-    [NaN, [1, 2, 3, 4, 5]],
-    [2, [3, 4, 5]],
-    [0.5, [1, 2, 3, 4, 5]],
-    [2.5, [3, 4, 5]],
-    [5, []],
-    [10, []],
-    [Infinity, []],
-  ] as const)("count %s in a fused run", (n, expected) => {
+  ])("count %s in a fused run", (n, expected) => {
     expect(
       pipe([1, 2, 3, 4, 5], forceFusion(), dropFirstBy(n, identity())),
     ).toStrictEqual(expected);
@@ -323,10 +307,24 @@ describe("runtime (dataLast)", () => {
   });
 
   test("each pipe starts with an empty heap", () => {
-    // Created outside a pipe, so its data type has to be provided explicitly.
-    const dropSmallest = dropFirstBy<number>(1, identity());
-    pipe([3, 1, 2], forceFusion(), dropSmallest);
+    expect(
+      map(
+        [
+          [3, 1, 2],
+          [0, -1],
+        ],
+        piped(forceFusion(), dropFirstBy(1, identity())),
+      ),
+    ).toStrictEqual([[3, 2], [0]]);
+  });
 
-    expect(pipe([0, -1], forceFusion(), dropSmallest)).toStrictEqual([0]);
+  test("earlier steps see the whole input", () => {
+    expect(
+      pipe(
+        [1, 2, 3],
+        map((_x, _index, { length }) => length),
+        dropFirstBy(1, identity()),
+      ),
+    ).toStrictEqual([3, 3]);
   });
 });

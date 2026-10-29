@@ -12,7 +12,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  * - `takeLast` - to keep the last `n` instead.
  *
  * @param array - The target array.
- * @param n - The number of elements to skip.
+ * @param n - The number of elements to drop, rounded up. If `n` is 0 or less (or `NaN`) no elements are dropped and a *clone* of the input is returned.
  * @signature
  *    dropLast(array, n)
  * @example
@@ -34,7 +34,7 @@ export function dropLast<T extends IterableContainer>(
  * - `splice` - to remove or insert at an arbitrary index.
  * - `takeLast` - to keep the last `n` instead.
  *
- * @param n - The number of elements to skip.
+ * @param n - The number of elements to drop, rounded up. If `n` is 0 or less (or `NaN`) no elements are dropped and a *clone* of the input is returned.
  * @signature
  *    dropLast(n)(array)
  * @example
@@ -58,12 +58,8 @@ const dropLastImplementation = <T extends IterableContainer>(
   n > 0
     ? array.slice(
         0,
-        Math.max(
-          0,
-          array.length -
-            // Rounded up because a partial item is dropped whole.
-            Math.ceil(n),
-        ),
+        // Rounded up because we can't drop an item partially!
+        -Math.ceil(n),
       )
     : [...array];
 

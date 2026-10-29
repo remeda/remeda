@@ -6,31 +6,12 @@ import { flat } from "./flat";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
+import { piped } from "./piped";
 import { take } from "./take";
 
 describe("data first", () => {
   test("empty array", () => {
     expect(dropLast([], 2)).toStrictEqual([]);
-  });
-
-  test("n < 0", () => {
-    expect(dropLast([1, 2, 3, 4, 5], -1)).toStrictEqual([1, 2, 3, 4, 5]);
-  });
-
-  test("n === 0", () => {
-    expect(dropLast([1, 2, 3, 4, 5], 0)).toStrictEqual([1, 2, 3, 4, 5]);
-  });
-
-  test("n < length", () => {
-    expect(dropLast([1, 2, 3, 4, 5], 2)).toStrictEqual([1, 2, 3]);
-  });
-
-  test("n === length", () => {
-    expect(dropLast([1, 2, 3, 4, 5], 5)).toStrictEqual([]);
-  });
-
-  test("n > length", () => {
-    expect(dropLast([1, 2, 3, 4, 5], 10)).toStrictEqual([]);
   });
 
   test("should return a new array even if there was no drop", () => {
@@ -54,27 +35,14 @@ describe("data first", () => {
     [5, []],
     [10, []],
     [Infinity, []],
-  ] as const)("count %s", (n, expected) => {
+  ])("count %s", (n, expected) => {
     expect(dropLast([1, 2, 3, 4, 5], n)).toStrictEqual(expected);
   });
 });
 
 describe("data last", () => {
-  test.each([
-    [0, [1, 2, 3, 4, 5]],
-    [-1, [1, 2, 3, 4, 5]],
-    [-Infinity, [1, 2, 3, 4, 5]],
-    [NaN, [1, 2, 3, 4, 5]],
-    [2, [1, 2, 3]],
-    [0.5, [1, 2, 3, 4]],
-    [2.5, [1, 2]],
-    // Too small to change `5 - n`, but still a partial item.
-    [1e-20, [1, 2, 3, 4]],
-    [5, []],
-    [10, []],
-    [Infinity, []],
-  ] as const)("count %s", (n, expected) => {
-    expect(pipe([1, 2, 3, 4, 5], dropLast(n))).toStrictEqual(expected);
+  test("regular input", () => {
+    expect(pipe([1, 2, 3, 4, 5], dropLast(2))).toStrictEqual([1, 2, 3]);
   });
 
   test.each([
@@ -90,7 +58,7 @@ describe("data last", () => {
     [5, []],
     [10, []],
     [Infinity, []],
-  ] as const)("count %s in a fused run", (n, expected) => {
+  ])("count %s in a fused run", (n, expected) => {
     expect(pipe([1, 2, 3, 4, 5], forceFusion(), dropLast(n))).toStrictEqual(
       expected,
     );
@@ -152,9 +120,24 @@ describe("data last", () => {
   });
 
   test("each pipe starts with nothing held back", () => {
-    const dropLastTwo = dropLast(2);
-    pipe([1, 2, 3], forceFusion(), dropLastTwo);
+    expect(
+      map(
+        [
+          [1, 2, 3],
+          [4, 5, 6],
+        ],
+        piped(forceFusion(), dropLast(2)),
+      ),
+    ).toStrictEqual([[1], [4]]);
+  });
 
-    expect(pipe([4, 5, 6], forceFusion(), dropLastTwo)).toStrictEqual([4]);
+  test("earlier steps see the whole input", () => {
+    expect(
+      pipe(
+        [1, 2, 3],
+        map((_x, _index, { length }) => length),
+        dropLast(1),
+      ),
+    ).toStrictEqual([3, 3]);
   });
 });

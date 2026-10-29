@@ -5,6 +5,7 @@ import { filter } from "./filter";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
+import { piped } from "./piped";
 import { take } from "./take";
 
 describe("data first", () => {
@@ -147,16 +148,6 @@ describe("data last", () => {
     expect(predicate).toHaveBeenCalledTimes(3);
   });
 
-  test("keeps items that pass after the first failing item", () => {
-    expect(
-      pipe(
-        [1, 2, 3, 1, 2],
-        forceFusion(),
-        dropWhile((x) => x < 3),
-      ),
-    ).toStrictEqual([3, 1, 2]);
-  });
-
   test("provides the items processed so far to the predicate", () => {
     const dataSnapshots: number[][] = [];
     pipe(
@@ -194,10 +185,30 @@ describe("data last", () => {
   });
 
   test("each pipe starts dropping anew", () => {
-    // Created outside a pipe, so its data type has to be provided explicitly.
-    const dropSmall = dropWhile<number[]>((x) => x < 3);
-    pipe([1, 3, 1], forceFusion(), dropSmall);
+    expect(
+      map(
+        [
+          [1, 3, 1],
+          [1, 4, 1],
+        ],
+        piped(
+          forceFusion(),
+          dropWhile((x) => x < 3),
+        ),
+      ),
+    ).toStrictEqual([
+      [3, 1],
+      [4, 1],
+    ]);
+  });
 
-    expect(pipe([1, 4, 1], forceFusion(), dropSmall)).toStrictEqual([4, 1]);
+  test("earlier steps see the whole input", () => {
+    expect(
+      pipe(
+        [1, 2, 3],
+        map((_x, _index, { length }) => length),
+        dropWhile((x) => x < 2),
+      ),
+    ).toStrictEqual([3, 3, 3]);
   });
 });

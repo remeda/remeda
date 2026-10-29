@@ -9,7 +9,7 @@ import type { NonEmptyPrefix } from "./NonEmptyPrefix";
 export type LazyCallback<T extends IterableContainer, R> = (
   value: T[number],
   index: number,
-  data: Readonly<NonEmptyPrefix<T>>,
+  data: NoInfer<Readonly<NonEmptyPrefix<T>>>,
 ) => R;
 
 /**
@@ -21,5 +21,5 @@ export type LazyCallback<T extends IterableContainer, R> = (
 export type LazyTypePredicate<T extends IterableContainer, S> = (
   value: T[number],
   index: number,
-  data: Readonly<NonEmptyPrefix<T>>,
+  data: NoInfer<Readonly<NonEmptyPrefix<T>>>,
 ) => value is S;

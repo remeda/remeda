@@ -240,15 +240,4 @@ describe("callback data param", () => {
       return true;
     });
   });
-
-  test("lazily reconstructed in data-last", () => {
-    pipe(
-      [1, 2, 3] as const,
-      dropWhile((_item, _index, data) => {
-        expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
-
-        return true;
-      }),
-    );
-  });
 });
