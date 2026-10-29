@@ -1,4 +1,5 @@
 import type { IsNever, Simplify } from "type-fest";
+import { createDataProperty } from "./internal/createDataProperty";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import { purry } from "./purry";
@@ -142,7 +143,17 @@ export function fromEntries(): <Entries extends IterableContainer<Entry>>(
 ) => Simplify<FromEntries<Entries>>;
 
 export function fromEntries(...args: readonly unknown[]): unknown {
-  // To avoid getting the `any` return type from `Object.fromEntries` we select
-  // a different overloaded signature by explicitly stating the type parameter.
-  return purry(Object.fromEntries<unknown>, args);
+  return purry(fromEntriesImplementation, args);
+}
+
+function fromEntriesImplementation(
+  entries: IterableContainer<Entry>,
+): Record<PropertyKey, unknown> {
+  const result: Record<PropertyKey, unknown> = {};
+
+  for (const [key, value] of entries) {
+    createDataProperty(result, key, value);
+  }
+
+  return result;
 }
