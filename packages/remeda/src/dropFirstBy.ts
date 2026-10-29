@@ -112,12 +112,8 @@ function lazyImplementation<T>(
   n: number,
 ): LazyEvaluator<T> {
   if (Number.isNaN(n) || n < 1) {
+    // Trivially dropping nothing...
     return (item) => item;
-  }
-
-  if (n === Infinity) {
-    // Nothing is ever passed on, so there's no point holding items back.
-    return () => SKIP_ITEM;
   }
 
   const heapSize = Math.floor(n);

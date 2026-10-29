@@ -56,19 +56,21 @@ const dropLastImplementation = <T extends IterableContainer>(
   n: number,
 ): T[number][] =>
   n > 0
-    ? // Rounded up because a partial item is dropped whole; rounding before
-      // subtracting also covers counts too small to change `length - n`.
-      array.slice(0, Math.max(0, array.length - Math.ceil(n)))
+    ? array.slice(
+        0,
+        Math.max(
+          0,
+          array.length -
+            // Rounded up because a partial item is dropped whole.
+            Math.ceil(n),
+        ),
+      )
     : [...array];
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (Number.isNaN(n) || n <= 0) {
+    // Trivially dropping nothing...
     return (item) => item;
-  }
-
-  if (n === Infinity) {
-    // Nothing is ever passed on, so there's no point holding items back.
-    return () => SKIP_ITEM;
   }
 
   const heldBackCount = Math.ceil(n);
