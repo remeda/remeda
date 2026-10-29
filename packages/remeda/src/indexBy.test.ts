@@ -73,26 +73,28 @@ test("number keys share the property of their string form", () => {
   expect(indexBy([1, "1"], identity())).toStrictEqual({ 1: "1" });
 });
 
-test("`__proto__` key replaces the prototype with an object item", () => {
-  const item = { id: "__proto__" };
-
-  expect(Object.getPrototypeOf(indexBy([item], prop("id")))).toBe(item);
+test("`__proto__` key keeps the prototype", () => {
+  expect(
+    Object.getPrototypeOf(indexBy([{ id: "__proto__" }], prop("id"))),
+  ).toBe(Object.prototype);
 });
 
-test("`__proto__` key isn't an own property", () => {
+test("`__proto__` key with an object item is an own property", () => {
   expect(
     Reflect.ownKeys(indexBy([{ id: "__proto__" }], prop("id"))),
-  ).toStrictEqual([]);
+  ).toStrictEqual(["__proto__"]);
 });
 
-test("`__proto__` key with a null item removes the prototype", () => {
-  expect(
-    Object.getPrototypeOf(indexBy([null], constant("__proto__"))),
-  ).toBeNull();
+test("`__proto__` key with a null item keeps the prototype", () => {
+  expect(Object.getPrototypeOf(indexBy([null], constant("__proto__")))).toBe(
+    Object.prototype,
+  );
 });
 
-test("`__proto__` key with a primitive item is ignored", () => {
-  expect(indexBy(["__proto__"], identity())).toStrictEqual({});
+test("`__proto__` key with a primitive item is an own property", () => {
+  expect(Object.entries(indexBy(["__proto__"], identity()))).toStrictEqual([
+    ["__proto__", "__proto__"],
+  ]);
 });
 
 test("holes are indexed as undefined", () => {

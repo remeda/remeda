@@ -1,4 +1,5 @@
 import type { IsNever, Simplify } from "type-fest";
+import { createDataProperty } from "./internal/createDataProperty";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
@@ -199,7 +200,7 @@ function pickByImplementation<T extends object>(
 
   for (const [key, value] of Object.entries(data)) {
     if (predicate(value, key, data)) {
-      out[key] = value;
+      createDataProperty(out, key, value);
     }
   }
 

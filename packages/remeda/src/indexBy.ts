@@ -1,3 +1,4 @@
+import { createDataProperty } from "./internal/createDataProperty";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import { purry } from "./purry";
 
@@ -64,7 +65,7 @@ function indexByImplementation<T, K extends PropertyKey>(
 
   for (const [index, item] of data.entries()) {
     const key = mapper(item, index, data);
-    out[key] = item;
+    createDataProperty(out, key, item);
   }
 
   return out as BoundedPartial<Record<K, T>>;

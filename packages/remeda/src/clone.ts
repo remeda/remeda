@@ -3,6 +3,7 @@
  * arrays.
  */
 
+import { createDataProperty } from "./internal/createDataProperty";
 import { purry } from "./purry";
 
 /**
@@ -99,7 +100,7 @@ function deepCloneObject<T extends object>(
   refTo.push(copiedValue);
 
   for (const [k, v] of Object.entries(value)) {
-    copiedValue[k] = cloneValue(v, refFrom, refTo);
+    createDataProperty(copiedValue, k, cloneValue(v, refFrom, refTo));
   }
 
   return copiedValue as T;

@@ -93,28 +93,26 @@ describe("dataFirst", () => {
     ).toBe(Object.prototype);
   });
 
-  test("`__proto__` key replaces the prototype with an object value", () => {
-    const value = { a: 1 };
-
+  test("`__proto__` key keeps the prototype", () => {
     expect(
       Object.getPrototypeOf(
-        pullObject(["__proto__"], identity(), constant(value)),
+        pullObject(["__proto__"], identity(), constant({ a: 1 })),
       ),
-    ).toBe(value);
+    ).toBe(Object.prototype);
   });
 
-  test("`__proto__` key isn't an own property", () => {
+  test("`__proto__` key with an object value is an own property", () => {
     expect(
       Reflect.ownKeys(
         pullObject(["__proto__"], identity(), constant({ a: 1 })),
       ),
-    ).toStrictEqual([]);
+    ).toStrictEqual(["__proto__"]);
   });
 
-  test("`__proto__` key with a primitive value is ignored", () => {
-    expect(pullObject(["__proto__"], identity(), constant(1))).toStrictEqual(
-      {},
-    );
+  test("`__proto__` key with a primitive value is an own property", () => {
+    expect(
+      Object.entries(pullObject(["__proto__"], identity(), constant(1))),
+    ).toStrictEqual([["__proto__", 1]]);
   });
 
   test("a repeated key keeps its first position", () => {

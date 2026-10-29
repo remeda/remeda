@@ -1,3 +1,4 @@
+import { createDataProperty } from "./internal/createDataProperty";
 import { purry } from "./purry";
 
 // TODO [>2]: Once we allow fromEntries to run lazily on iterables we need to remove this utility as it's completely replaceable by `fromEntries(map(...))`.
@@ -89,7 +90,7 @@ function mapToObjImplementation(
 
   for (const [index, element] of array.entries()) {
     const [key, value] = fn(element, index, array);
-    out[key] = value;
+    createDataProperty(out, key, value);
   }
 
   return out;

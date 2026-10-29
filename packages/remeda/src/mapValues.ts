@@ -1,4 +1,5 @@
 import type { Simplify } from "type-fest";
+import { createDataProperty } from "./internal/createDataProperty";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import { purry } from "./purry";
@@ -67,7 +68,7 @@ function mapValuesImplementation<T extends object, Value>(
 
   for (const [key, value] of Object.entries(data)) {
     const mappedValue = valueMapper(value, key, data);
-    out[key] = mappedValue;
+    createDataProperty(out, key, mappedValue);
   }
 
   return out;
