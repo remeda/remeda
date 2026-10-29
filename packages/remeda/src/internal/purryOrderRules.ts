@@ -30,7 +30,7 @@ const COMPARATORS = {
  * projection function and therefore no guarantee that it would only be called
  * once.
  */
-export type OrderRule<T> =
+export type OrderRule<T = unknown> =
   | Projection<T>
   | readonly [projection: Projection<T>, direction: keyof typeof COMPARATORS];
 

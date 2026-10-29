@@ -1,22 +1,10 @@
 import { heapify, heapMaybeInsert } from "./internal/heap";
 import { SKIP_ITEM } from "./internal/lazyControl";
 import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
-import {
-  isOrderRule,
-  orderRuleComparer,
-  type OrderRule,
-} from "./internal/purryOrderRules";
+import { orderRuleComparer, type OrderRule } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
-
-type Rules = Readonly<NonEmptyArray<OrderRule<unknown>>>;
-type DataFirstArgs = readonly [
-  data: readonly unknown[],
-  n: number,
-  ...rules: Rules,
-];
-type DataLastArgs = readonly [n: number, ...rules: Rules];
 
 /**
  * Drop the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before dropping the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.
@@ -62,29 +50,36 @@ export function dropFirstBy<T>(
   ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
 ): (data: readonly T[]) => T[];
 
-export function dropFirstBy(...args: DataFirstArgs | DataLastArgs): unknown {
-  if (isDataFirst(args)) {
-    const [data, n, ...rules] = args;
-    return dropFirstByImplementation(data, orderRuleComparer(...rules), n);
+export function dropFirstBy(
+  dataOrN: readonly unknown[] | number,
+  nOrRule: number | OrderRule,
+  ...rules: readonly OrderRule[]
+): unknown {
+  if (typeof dataOrN === "number") {
+    // `compareFn` is stateless, so every run of the data-last function can
+    // share the one built here.
+    const compareFn = orderRuleComparer(
+      // @ts-expect-error [ts2345] -- The function signatures ensure this is an `OrderRule`
+      nOrRule,
+      ...rules,
+    );
+    return lazyDataLastImplementation(
+      dropFirstByImplementation,
+      [compareFn, dataOrN],
+      lazyImplementation,
+    );
   }
 
-  const [n, ...rules] = args;
-  // `compareFn` is stateless, so every run of the data-last function can
-  // share the one built here.
-  const compareFn = orderRuleComparer(...rules);
-  return lazyDataLastImplementation(
-    dropFirstByImplementation,
-    [compareFn, n],
-    lazyImplementation,
+  return dropFirstByImplementation(
+    dataOrN,
+    orderRuleComparer(
+      // @ts-expect-error [ts2556] -- The function signatures ensure this is a non-empty array of `OrderRule`s
+      ...rules,
+    ),
+    // @ts-expect-error [ts2345] -- The function signatures ensure this is a `number`
+    nOrRule,
   );
 }
-
-const isDataFirst = (
-  args: DataFirstArgs | DataLastArgs,
-): args is DataFirstArgs =>
-  // The 2nd argument is `n` in the data-first form and the first order rule in
-  // the data-last form.
-  !isOrderRule(args[1]);
 
 function dropFirstByImplementation<T>(
   data: readonly T[],
@@ -134,10 +129,6 @@ function lazyImplementation<T>(
     }
 
     if (index === heapSize) {
-      // Built in one go rather than item by item: ties are broken by the
-      // heap's shape, which has to match the data-first implementation's. It
-      // waits for an item beyond the first `n` so that `compareFn` isn't
-      // called on inputs too short to emit anything.
       heapify(heap, compareFn);
     }
 
