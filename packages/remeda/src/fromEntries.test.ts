@@ -133,7 +133,7 @@ test("reads each entry through its iterator", () => {
   ]);
 });
 
-test("a non-object entry throws", () => {
+test("a non-iterable entry throws", () => {
   // @ts-expect-error [ts2322] -- The invalid entry is the input under test.
   expect(() => fromEntries([1])).toThrow(TypeError);
 });
@@ -163,7 +163,7 @@ test("prototype is Object.prototype in a pipe", () => {
   );
 });
 
-test("a non-object entry throws in a pipe", () => {
+test("a non-iterable entry throws in a pipe", () => {
   // @ts-expect-error [ts2345] -- The invalid entry is the input under test.
   expect(() => pipe([1], fromEntries())).toThrow(TypeError);
 });

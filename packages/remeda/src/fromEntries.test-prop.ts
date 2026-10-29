@@ -5,10 +5,11 @@ import { fromEntries } from "./fromEntries";
 const FIRST_SYMBOL = Symbol("first");
 const SECOND_SYMBOL = Symbol("second");
 
-// Few distinct keys, so duplicates are common, among them the ones objects
-// store specially: `__proto__`, which plain assignment doesn't define as an own
-// property, integer-like keys, which come first in ascending order, and
-// numbers, which share the property of their string form (`-0` that of "0").
+// Mostly drawn from a small pool so duplicates are common, and covering the
+// keys objects treat specially: `__proto__`, which plain assignment doesn't
+// define as an own property; integer-like keys, which come first in ascending
+// order; numbers, which share the property of their string form (`-0` that of
+// "0"); and symbols, which come after all string keys.
 const key = fc.oneof(
   fc.constant("__proto__"),
   fc.integer({ min: 0, max: 3 }).map(String),

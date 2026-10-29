@@ -76,7 +76,7 @@ type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
 // I tried and failed to simplify the type here! What the ternary does here is
 // to support the cases where the entries are defined by a single type that
 // defines all entries, but it defines the keys as a union of literals
-// (`['a' | 'b', number]`); which is different from the output of toPairs
+// (`['a' | 'b', number]`); which is different from the output of `entries`
 // which would define a separate tuple literal for each key (`['a', number] |
 // ['b', number]`). We need to support both cases!
 type ValueForKey<
@@ -88,11 +88,7 @@ type ValueForKey<
 
 /**
  * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
- * If a tuple is not supplied for any element in the array, the element will be ignored
  * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
- *
- * The strict option supports more sophisticated use-cases like those that would
- * result when calling the strict `toPairs` function.
  *
  * There are several other functions that could be used to build an object from
  * an array:
@@ -115,11 +111,7 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
 
 /**
  * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
- * If a tuple is not supplied for any element in the array, the element will be ignored
  * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
- *
- * The strict option supports more sophisticated use-cases like those that would
- * result when calling the strict `toPairs` function.
  *
  * There are several other functions that could be used to build an object from
  * an array:
