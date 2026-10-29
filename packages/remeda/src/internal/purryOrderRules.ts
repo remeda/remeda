@@ -153,7 +153,7 @@ export function orderRuleComparer<T>(
   };
 }
 
-export function isOrderRule<T>(x: unknown): x is OrderRule<T> {
+function isOrderRule<T>(x: unknown): x is OrderRule<T> {
   if (isProjection(x)) {
     return true;
   }
