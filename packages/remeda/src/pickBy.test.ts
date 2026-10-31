@@ -31,3 +31,15 @@ test("symbols are not passed to the predicate", () => {
 
   expect(mock).toHaveBeenCalledExactlyOnceWith("hello", "a", data);
 });
+
+test("`__proto__` key is an own property", () => {
+  expect(
+    Object.entries(pickBy({ ["__proto__"]: 1 }, constant(true))),
+  ).toStrictEqual([["__proto__", 1]]);
+});
+
+test("`__proto__` key keeps the prototype", () => {
+  expect(
+    Object.getPrototypeOf(pickBy({ ["__proto__"]: { a: 1 } }, constant(true))),
+  ).toBe(Object.prototype);
+});

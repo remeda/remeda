@@ -199,7 +199,18 @@ function pickByImplementation<T extends object>(
 
   for (const [key, value] of Object.entries(data)) {
     if (predicate(value, key, data)) {
-      out[key] = value;
+      // `__proto__` is the one key with an inherited setter, so assigning it
+      // would replace the prototype instead of defining an own property.
+      if (key === "__proto__") {
+        Object.defineProperty(out, "__proto__", {
+          value,
+          configurable: true,
+          enumerable: true,
+          writable: true,
+        });
+      } else {
+        out[key] = value;
+      }
     }
   }
 

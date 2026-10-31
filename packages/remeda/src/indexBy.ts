@@ -64,7 +64,18 @@ function indexByImplementation<T, K extends PropertyKey>(
 
   for (const [index, item] of data.entries()) {
     const key = mapper(item, index, data);
-    out[key] = item;
+    // `__proto__` is the one key with an inherited setter, so assigning it
+    // would replace the prototype instead of defining an own property.
+    if (key === "__proto__") {
+      Object.defineProperty(out, "__proto__", {
+        value: item,
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      });
+    } else {
+      out[key] = item;
+    }
   }
 
   return out as BoundedPartial<Record<K, T>>;

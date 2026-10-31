@@ -123,7 +123,18 @@ function pickImplementation<
   for (const key of keys) {
     // eslint-disable-next-line unicorn/no-computed-property-existence-check -- The prototype-chain check is intentional: for class instances the picked keys (methods and accessors) live on the prototype, and `Object.hasOwn` would wrongly skip them (https://github.com/remeda/remeda/issues/107).
     if (key in object) {
-      out[key] = object[key];
+      // `__proto__` is the one key with an inherited setter, so assigning it
+      // would replace the prototype instead of defining an own property.
+      if (key === "__proto__") {
+        Object.defineProperty(out, "__proto__", {
+          value: object[key],
+          configurable: true,
+          enumerable: true,
+          writable: true,
+        });
+      } else {
+        out[key] = object[key];
+      }
     }
   }
   // @ts-expect-error [ts2322] - We build the type incrementally, there's no way to make typescript infer that we "finished" building the object and to treat it as such.

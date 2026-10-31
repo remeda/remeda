@@ -49,7 +49,18 @@ function invertImplementation(
   const result: Record<PropertyKey, PropertyKey> = {};
 
   for (const [key, value] of Object.entries(data)) {
-    result[value] = key;
+    // `__proto__` is the one key with an inherited setter, so assigning it
+    // would replace the prototype instead of defining an own property.
+    if (value === "__proto__") {
+      Object.defineProperty(result, "__proto__", {
+        value: key,
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      });
+    } else {
+      result[value] = key;
+    }
   }
 
   return result;

@@ -67,7 +67,18 @@ function mapValuesImplementation<T extends object, Value>(
 
   for (const [key, value] of Object.entries(data)) {
     const mappedValue = valueMapper(value, key, data);
-    out[key] = mappedValue;
+    // `__proto__` is the one key with an inherited setter, so assigning it
+    // would replace the prototype instead of defining an own property.
+    if (key === "__proto__") {
+      Object.defineProperty(out, "__proto__", {
+        value: mappedValue,
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      });
+    } else {
+      out[key] = mappedValue;
+    }
   }
 
   return out;

@@ -99,7 +99,19 @@ function deepCloneObject<T extends object>(
   refTo.push(copiedValue);
 
   for (const [k, v] of Object.entries(value)) {
-    copiedValue[k] = cloneValue(v, refFrom, refTo);
+    const clonedValue: unknown = cloneValue(v, refFrom, refTo);
+    // `__proto__` is the one key with an inherited setter, so assigning it
+    // would replace the prototype instead of defining an own property.
+    if (k === "__proto__") {
+      Object.defineProperty(copiedValue, "__proto__", {
+        value: clonedValue,
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      });
+    } else {
+      copiedValue[k] = clonedValue;
+    }
   }
 
   return copiedValue as T;

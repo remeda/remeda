@@ -81,6 +81,18 @@ describe("objects", () => {
 
     expect(cloned.c.b).not.toStrictEqual(x.c.b);
   });
+
+  test("`__proto__` key is an own property", () => {
+    expect(Object.entries(clone({ ["__proto__"]: 1 }))).toStrictEqual([
+      ["__proto__", 1],
+    ]);
+  });
+
+  test("`__proto__` key keeps the prototype", () => {
+    expect(Object.getPrototypeOf(clone({ ["__proto__"]: { a: 1 } }))).toBe(
+      Object.prototype,
+    );
+  });
 });
 
 describe("arrays", () => {
