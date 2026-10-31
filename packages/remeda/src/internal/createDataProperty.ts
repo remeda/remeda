@@ -12,7 +12,7 @@ export function createDataProperty<
   Key extends keyof Target,
 >(target: Target, key: Key, value: Target[Key]): void {
   if (key === "__proto__") {
-    Object.defineProperty(target, key, {
+    Object.defineProperty(target, "__proto__", {
       value,
       writable: true,
       enumerable: true,
