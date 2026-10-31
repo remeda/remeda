@@ -107,6 +107,27 @@ These three "empty-ish" values are not interchangeable in Remeda:
 
 The vast majority of users pass plain objects: arbitrarily deep, but plain. Correctness for that case is enough. When an implementation choice trades off between behavior that is better for plain objects and behavior that supports prototype chains or class instances, always take the plain-object side (e.g., `Object.hasOwn` over `in` for key-existence checks).
 
+## Storing computed keys
+
+A function that builds an object one key at a time from keys it doesn't choose (the input's keys, keys a callback returns, values turned into keys) can receive the key `"__proto__"`. Assigning that key calls the setter every plain object inherits from `Object.prototype`: the result's prototype changes (or the value is dropped, when it isn't an object or `null`) and the key never appears. An object literal with a computed key, a spread, and `Object.fromEntries` define own properties and handle it already; a loop of assignments needs this branch at every store:
+
+```ts
+// `__proto__` is the one key with an inherited setter, so assigning it
+// would replace the prototype instead of defining an own property.
+if (key === "__proto__") {
+  Object.defineProperty(out, "__proto__", {
+    value,
+    configurable: true,
+    enumerable: true,
+    writable: true,
+  });
+} else {
+  out[key] = value;
+}
+```
+
+`__proto__` is the only accessor a plain object inherits, so the plain assignment covers every other key. Each utility carries its own copy of the branch (`mapValues`, `pick`, `indexBy`, `clone` and the other object builders do): a shared helper measured slower. Runtime tests pin both halves of the behavior: the result lists `"__proto__"` among its own entries, and keeps `Object.prototype` as its prototype when the stored value is an object.
+
 ## Type System
 
 ### Inputs

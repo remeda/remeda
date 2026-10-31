@@ -1,4 +1,3 @@
-import { createDataProperty } from "./internal/createDataProperty";
 import { purry } from "./purry";
 
 // TODO [>2]: Once we allow fromEntries to run lazily on iterables we need to remove this utility as it's completely replaceable by `fromEntries(map(...))`.
@@ -90,7 +89,18 @@ function mapToObjImplementation(
 
   for (const [index, element] of array.entries()) {
     const [key, value] = fn(element, index, array);
-    createDataProperty(out, key, value);
+    // `__proto__` is the one key with an inherited setter, so assigning it
+    // would replace the prototype instead of defining an own property.
+    if (key === "__proto__") {
+      Object.defineProperty(out, "__proto__", {
+        value,
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      });
+    } else {
+      out[key] = value;
+    }
   }
 
   return out;

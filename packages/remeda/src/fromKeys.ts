@@ -1,5 +1,4 @@
 import type { Simplify } from "type-fest";
-import { createDataProperty } from "./internal/createDataProperty";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
@@ -81,10 +80,23 @@ function fromKeysImplementation<T extends IterableContainer<PropertyKey>, V>(
   data: T,
   mapper: (item: T[number], index: number, data: T) => V,
 ): FromKeys<T, V> {
-  const result: Partial<Record<T[number], V>> = {};
+  const result: Partial<FromKeys<T, V>> = {};
 
   for (const [index, key] of data.entries()) {
-    createDataProperty(result, key, mapper(key, index, data));
+    const value = mapper(key, index, data);
+    // `__proto__` is the one key with an inherited setter, so assigning it
+    // would replace the prototype instead of defining an own property.
+    if (key === "__proto__") {
+      Object.defineProperty(result, "__proto__", {
+        value,
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      });
+    } else {
+      // @ts-expect-error [ts7053] - There's no easy way to make Typescript aware that the items in T would be keys in the output object because it's type is built recursively and the "being an item of an array" property of a type is not "carried over" in the recursive type definition.
+      result[key] = value;
+    }
   }
 
   return result as FromKeys<T, V>;

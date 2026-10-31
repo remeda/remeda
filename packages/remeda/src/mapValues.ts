@@ -1,5 +1,4 @@
 import type { Simplify } from "type-fest";
-import { createDataProperty } from "./internal/createDataProperty";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import { purry } from "./purry";
@@ -68,7 +67,18 @@ function mapValuesImplementation<T extends object, Value>(
 
   for (const [key, value] of Object.entries(data)) {
     const mappedValue = valueMapper(value, key, data);
-    createDataProperty(out, key, mappedValue);
+    // `__proto__` is the one key with an inherited setter, so assigning it
+    // would replace the prototype instead of defining an own property.
+    if (key === "__proto__") {
+      Object.defineProperty(out, "__proto__", {
+        value: mappedValue,
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      });
+    } else {
+      out[key] = mappedValue;
+    }
   }
 
   return out;
