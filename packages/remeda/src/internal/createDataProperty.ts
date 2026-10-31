@@ -14,9 +14,9 @@ export function createDataProperty<
   if (key === "__proto__") {
     Object.defineProperty(target, "__proto__", {
       value,
-      writable: true,
-      enumerable: true,
       configurable: true,
+      enumerable: true,
+      writable: true,
     });
   } else {
     target[key] = value;
