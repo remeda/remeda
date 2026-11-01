@@ -98,7 +98,20 @@ function mapKeysImplementation<T extends {}, Key extends PropertyKey>(
 
   for (const [key, value] of Object.entries(data)) {
     const mappedKey = keyMapper(key, value, data);
-    out[mappedKey] = value;
+    if (mappedKey === "__proto__") {
+      // We want `__proto__` to act just like any other key, but assigning it
+      // runs the setter inherited from `Object.prototype` instead of creating
+      // a property. Defining it directly creates the same own data property
+      // that assigning creates for all *other* keys.
+      Object.defineProperty(out, "__proto__", {
+        value,
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      });
+    } else {
+      out[mappedKey] = value;
+    }
   }
 
   return out;

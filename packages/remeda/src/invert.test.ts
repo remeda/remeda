@@ -41,6 +41,12 @@ describe("data first", () => {
 
     expect(invert({ a: mySymbol })).toStrictEqual({ [mySymbol]: "a" });
   });
+
+  test("`__proto__` value is an own property", () => {
+    expect(Object.entries(invert({ a: "__proto__" }))).toStrictEqual([
+      ["__proto__", "a"],
+    ]);
+  });
 });
 
 describe("data last", () => {

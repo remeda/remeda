@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { pick } from "./pick";
 import { pipe } from "./pipe";
 
@@ -28,6 +28,30 @@ test("picking from non-existent keys (in a union)", () => {
   expect(pick({ a: 1 } as { a: number } | { b: string }, ["b"])).toStrictEqual(
     {},
   );
+});
+
+describe("`__proto__` key", () => {
+  test("is an own property", () => {
+    expect(
+      Object.entries(
+        pick({ ["__proto__"]: { hello: "world" } }, ["__proto__"]),
+      ),
+    ).toStrictEqual([["__proto__", { hello: "world" }]]);
+  });
+
+  test("keeps the prototype", () => {
+    expect(
+      Object.getPrototypeOf(pick({ ["__proto__"]: { a: 1 } }, ["__proto__"])),
+    ).toBe(Object.prototype);
+  });
+
+  test("that isn't own isn't picked", () => {
+    expect(
+      Reflect.ownKeys(
+        pick({ a: 1 } as Record<string, number>, ["a", "__proto__"]),
+      ),
+    ).toStrictEqual(["a"]);
+  });
 });
 
 // @see https://github.com/remeda/remeda/issues/107

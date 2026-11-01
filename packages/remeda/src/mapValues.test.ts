@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { constant } from "./constant";
 import { mapValues } from "./mapValues";
 import { pipe } from "./pipe";
@@ -39,5 +39,23 @@ test("number keys are converted to string in the mapper", () => {
     expect(key).toBe("123");
 
     return "world";
+  });
+});
+
+describe("`__proto__` key", () => {
+  test("is an own property", () => {
+    expect(
+      Object.entries(
+        mapValues({ ["__proto__"]: { hello: "world" } }, constant(2)),
+      ),
+    ).toStrictEqual([["__proto__", 2]]);
+  });
+
+  test("keeps the prototype", () => {
+    expect(
+      Object.getPrototypeOf(
+        mapValues({ ["__proto__"]: { hello: "world" } }, constant({ a: 1 })),
+      ),
+    ).toBe(Object.prototype);
   });
 });

@@ -83,8 +83,22 @@ function fromKeysImplementation<T extends IterableContainer<PropertyKey>, V>(
   const result: Partial<FromKeys<T, V>> = {};
 
   for (const [index, key] of data.entries()) {
-    // @ts-expect-error [ts7053] - There's no easy way to make Typescript aware that the items in T would be keys in the output object because it's type is built recursively and the "being an item of an array" property of a type is not "carried over" in the recursive type definition.
-    result[key] = mapper(key, index, data);
+    const value = mapper(key, index, data);
+    if (key === "__proto__") {
+      // We want `__proto__` to act just like any other key, but assigning it
+      // runs the setter inherited from `Object.prototype` instead of creating
+      // a property. Defining it directly creates the same own data property
+      // that assigning creates for all *other* keys.
+      Object.defineProperty(result, "__proto__", {
+        value,
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      });
+    } else {
+      // @ts-expect-error [ts7053] - There's no easy way to make Typescript aware that the items in T would be keys in the output object because it's type is built recursively and the "being an item of an array" property of a type is not "carried over" in the recursive type definition.
+      result[key] = value;
+    }
   }
 
   return result as FromKeys<T, V>;

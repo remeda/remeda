@@ -107,6 +107,31 @@ These three "empty-ish" values are not interchangeable in Remeda:
 
 The vast majority of users pass plain objects: arbitrarily deep, but plain. Correctness for that case is enough. When an implementation choice trades off between behavior that is better for plain objects and behavior that supports prototype chains or class instances, always take the plain-object side (e.g., `Object.hasOwn` over `in` for key-existence checks).
 
+## Storing computed keys
+
+A function that builds an object one key at a time from keys its caller supplies (the input's keys, keys listed in an argument, keys a callback returns, values turned into keys) can receive the key `"__proto__"`. Assigning that key to an object created with `{}` runs the setter it inherits from `Object.prototype` and creates no own property: an object or `null` value replaces the result's prototype, and any other value is dropped.
+
+A function that only writes to the object defines that key directly, with this block inlined in the utility (`mapValues`, `indexBy`):
+
+```ts
+if (key === "__proto__") {
+  // We want `__proto__` to act just like any other key, but assigning it
+  // runs the setter inherited from `Object.prototype` instead of creating
+  // a property. Defining it directly creates the same own data property
+  // that assigning creates for all *other* keys.
+  Object.defineProperty(out, "__proto__", {
+    value,
+    configurable: true,
+    enumerable: true,
+    writable: true,
+  });
+} else {
+  out[key] = value;
+}
+```
+
+A function that reads a key before writing it (`countBy`, `groupBy`, `groupByProp`) starts from `Object.create(null)` and restores the prototype with `Object.setPrototypeOf(out, Object.prototype)` once the object is built. Without a prototype the object has no setter, and reads see only the keys the function added, so `__proto__` and `toString` start out `undefined` like any other key.
+
 ## Type System
 
 ### Inputs

@@ -81,6 +81,31 @@ describe("objects", () => {
 
     expect(cloned.c.b).not.toStrictEqual(x.c.b);
   });
+
+  describe("`__proto__` key", () => {
+    test("is an own property", () => {
+      expect(
+        Object.entries(clone({ ["__proto__"]: { hello: "world" } })),
+      ).toStrictEqual([["__proto__", { hello: "world" }]]);
+    });
+
+    test("keeps the prototype", () => {
+      expect(Object.getPrototypeOf(clone({ ["__proto__"]: { a: 1 } }))).toBe(
+        Object.prototype,
+      );
+    });
+
+    test("value is cloned", () => {
+      const value = { hello: "world" };
+      const cloned = clone({ ["__proto__"]: value });
+
+      value.hello = "mutated";
+
+      expect(Object.entries(cloned)).toStrictEqual([
+        ["__proto__", { hello: "world" }],
+      ]);
+    });
+  });
 });
 
 describe("arrays", () => {

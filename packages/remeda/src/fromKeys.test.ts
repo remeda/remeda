@@ -53,22 +53,35 @@ test("prototype is Object.prototype", () => {
   );
 });
 
-test("`__proto__` key replaces the prototype with an object value", () => {
-  const value = { a: 1 };
+describe("`__proto__` key", () => {
+  test("keeps the prototype", () => {
+    expect(
+      Object.getPrototypeOf(fromKeys(["__proto__"], constant({ a: 1 }))),
+    ).toBe(Object.prototype);
+  });
 
-  expect(Object.getPrototypeOf(fromKeys(["__proto__"], constant(value)))).toBe(
-    value,
-  );
-});
+  test("with an object value is an own property", () => {
+    expect(
+      Reflect.ownKeys(fromKeys(["__proto__"], constant({ a: 1 }))),
+    ).toStrictEqual(["__proto__"]);
+  });
 
-test("`__proto__` key isn't an own property", () => {
-  expect(
-    Reflect.ownKeys(fromKeys(["__proto__"], constant({ a: 1 }))),
-  ).toStrictEqual([]);
-});
+  test("with a primitive value is an own property", () => {
+    expect(Object.entries(fromKeys(["__proto__"], constant(1)))).toStrictEqual([
+      ["__proto__", 1],
+    ]);
+  });
 
-test("`__proto__` key with a primitive value is ignored", () => {
-  expect(fromKeys(["__proto__"], constant(1))).toStrictEqual({});
+  test("repeated keeps its first position and the last value", () => {
+    expect(
+      Object.entries(
+        fromKeys(["__proto__", "a", "__proto__"], (_, index) => index),
+      ),
+    ).toStrictEqual([
+      ["__proto__", 2],
+      ["a", 1],
+    ]);
+  });
 });
 
 test("number keys share the property of their string form", () => {

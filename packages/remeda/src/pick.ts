@@ -118,12 +118,30 @@ export function pick(...args: readonly unknown[]): unknown {
 function pickImplementation<
   T extends object,
   Keys extends readonly (keyof T)[],
->(object: T, keys: Keys): PickFromArray<T, Keys> {
+>(data: T, keys: Keys): PickFromArray<T, Keys> {
   const out: Partial<Pick<T, Keys[number]>> = {};
   for (const key of keys) {
-    // eslint-disable-next-line unicorn/no-computed-property-existence-check -- The prototype-chain check is intentional: for class instances the picked keys (methods and accessors) live on the prototype, and `Object.hasOwn` would wrongly skip them (https://github.com/remeda/remeda/issues/107).
-    if (key in object) {
-      out[key] = object[key];
+    if (key === "__proto__") {
+      // Every object inherits the `__proto__` accessor, so `in` finds that key
+      // even when the data doesn't have it, and we'd then store the object's
+      // prototype as a regular value in the output.
+      if (Object.hasOwn(data, "__proto__")) {
+        // We want `__proto__` to act just like any other key, but assigning it
+        // runs the setter inherited from `Object.prototype` instead of creating
+        // a property. Defining it directly creates the same own data property
+        // that assigning creates for all *other* keys.
+        Object.defineProperty(out, "__proto__", {
+          value: data[key],
+          configurable: true,
+          enumerable: true,
+          writable: true,
+        });
+      }
+    } else if (
+      // eslint-disable-next-line unicorn/no-computed-property-existence-check -- The prototype-chain check is intentional: for class instances the picked keys (methods and accessors) live on the prototype, and `Object.hasOwn` would wrongly skip them (https://github.com/remeda/remeda/issues/107).
+      key in data
+    ) {
+      out[key] = data[key];
     }
   }
   // @ts-expect-error [ts2322] - We build the type incrementally, there's no way to make typescript infer that we "finished" building the object and to treat it as such.
