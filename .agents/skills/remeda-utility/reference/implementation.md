@@ -128,8 +128,6 @@ if (key === "__proto__") {
 }
 ```
 
-`__proto__` is the only accessor a plain object inherits, so the plain assignment covers every other key. Each utility carries its own copy of the branch (`mapValues`, `pick`, `indexBy`, `clone` and the other object builders do): a shared helper measured slower. Runtime tests pin both halves of the behavior: the result lists `"__proto__"` among its own entries, and keeps `Object.prototype` as its prototype when the stored value is an object.
-
 ## Type System
 
 ### Inputs
