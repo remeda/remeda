@@ -71,6 +71,17 @@ describe("`__proto__` key", () => {
       ["__proto__", 1],
     ]);
   });
+
+  test("repeated keeps its first position and the last value", () => {
+    expect(
+      Object.entries(
+        fromKeys(["__proto__", "a", "__proto__"], (_, index) => index),
+      ),
+    ).toStrictEqual([
+      ["__proto__", 2],
+      ["a", 1],
+    ]);
+  });
 });
 
 test("number keys share the property of their string form", () => {

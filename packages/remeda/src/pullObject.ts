@@ -98,10 +98,10 @@ function pullObjectImplementation<
     const key = keyExtractor(item, index, data);
     const value = valueExtractor(item, index, data);
     if (key === "__proto__") {
-      // We want `__proto__` to act just like any other key, but the default
-      // behavior would call `Object.setPrototypeOf` implicitly, we need to
-      // bypass that by manually calling `Object.defineProperty` which is what's
-      // called for all *other* keys.
+      // We want `__proto__` to act just like any other key, but assigning it
+      // runs the setter inherited from `Object.prototype` instead of creating
+      // a property. Defining it directly creates the same own data property
+      // that assigning creates for all *other* keys.
       Object.defineProperty(result, "__proto__", {
         value,
         configurable: true,

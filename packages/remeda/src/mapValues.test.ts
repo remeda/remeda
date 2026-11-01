@@ -54,7 +54,7 @@ describe("`__proto__` key", () => {
   test("keeps the prototype", () => {
     expect(
       Object.getPrototypeOf(
-        mapValues({ ["__proto__"]: { hello: "world " } }, constant({ a: 1 })),
+        mapValues({ ["__proto__"]: { hello: "world" } }, constant({ a: 1 })),
       ),
     ).toBe(Object.prototype);
   });

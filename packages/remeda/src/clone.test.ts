@@ -94,6 +94,17 @@ describe("objects", () => {
         Object.prototype,
       );
     });
+
+    test("value is cloned", () => {
+      const value = { hello: "world" };
+      const cloned = clone({ ["__proto__"]: value });
+
+      value.hello = "mutated";
+
+      expect(Object.entries(cloned)).toStrictEqual([
+        ["__proto__", { hello: "world" }],
+      ]);
+    });
   });
 });
 

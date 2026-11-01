@@ -93,9 +93,9 @@ describe("`__proto__` key", () => {
   });
 
   test("with a primitive item is an own property", () => {
-    expect(Object.entries(indexBy(["__proto__"], identity()))).toStrictEqual([
-      ["__proto__", "__proto__"],
-    ]);
+    expect(Object.entries(indexBy(["a"], constant("__proto__")))).toStrictEqual(
+      [["__proto__", "a"]],
+    );
   });
 });
 

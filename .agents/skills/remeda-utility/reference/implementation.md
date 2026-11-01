@@ -109,14 +109,16 @@ The vast majority of users pass plain objects: arbitrarily deep, but plain. Corr
 
 ## Storing computed keys
 
-A function that builds an object one key at a time from keys it doesn't choose (the input's keys, keys a callback returns, values turned into keys) can receive the key `"__proto__"`. Assigning that key calls the setter every plain object inherits from `Object.prototype`: the result's prototype changes (or the value is dropped, when it isn't an object or `null`) and the key never appears:
+A function that builds an object one key at a time from keys its caller supplies (the input's keys, keys listed in an argument, keys a callback returns, values turned into keys) can receive the key `"__proto__"`. Assigning that key to an object created with `{}` runs the setter it inherits from `Object.prototype` and creates no own property: an object or `null` value replaces the result's prototype, and any other value is dropped.
+
+A function that only writes to the object defines that key directly, with this block inlined in the utility (`mapValues`, `indexBy`):
 
 ```ts
 if (key === "__proto__") {
-  // We want `__proto__` to act just like any other key, but the default
-  // behavior would call `Object.setPrototypeOf` implicitly, we need to
-  // bypass that by manually calling `Object.defineProperty` which is
-  // what's called for all *other* keys.
+  // We want `__proto__` to act just like any other key, but assigning it
+  // runs the setter inherited from `Object.prototype` instead of creating
+  // a property. Defining it directly creates the same own data property
+  // that assigning creates for all *other* keys.
   Object.defineProperty(out, "__proto__", {
     value,
     configurable: true,
@@ -127,6 +129,8 @@ if (key === "__proto__") {
   out[key] = value;
 }
 ```
+
+A function that reads a key before writing it (`countBy`, `groupBy`, `groupByProp`) starts from `Object.create(null)` and restores the prototype with `Object.setPrototypeOf(out, Object.prototype)` once the object is built. Without a prototype the object has no setter, and reads see only the keys the function added, so `__proto__` and `toString` start out `undefined` like any other key.
 
 ## Type System
 

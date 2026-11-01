@@ -45,13 +45,12 @@ describe("`__proto__` key", () => {
     ).toBe(Object.prototype);
   });
 
-  test("that isn't own picks the prototype as an own property", () => {
+  test("that isn't own isn't picked", () => {
     expect(
-      Object.getOwnPropertyDescriptor(
-        pick({ a: 1 } as Record<string, number>, ["__proto__"]),
-        "__proto__",
-      )?.value,
-    ).toBe(Object.prototype);
+      Reflect.ownKeys(
+        pick({ a: 1 } as Record<string, number>, ["a", "__proto__"]),
+      ),
+    ).toStrictEqual(["a"]);
   });
 });
 
