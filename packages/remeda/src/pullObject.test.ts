@@ -93,26 +93,28 @@ describe("dataFirst", () => {
     ).toBe(Object.prototype);
   });
 
-  test("`__proto__` key keeps the prototype", () => {
-    expect(
-      Object.getPrototypeOf(
-        pullObject(["__proto__"], identity(), constant({ a: 1 })),
-      ),
-    ).toBe(Object.prototype);
-  });
+  describe("`__proto__` key", () => {
+    test("keeps the prototype", () => {
+      expect(
+        Object.getPrototypeOf(
+          pullObject(["__proto__"], identity(), constant({ a: 1 })),
+        ),
+      ).toBe(Object.prototype);
+    });
 
-  test("`__proto__` key with an object value is an own property", () => {
-    expect(
-      Reflect.ownKeys(
-        pullObject(["__proto__"], identity(), constant({ a: 1 })),
-      ),
-    ).toStrictEqual(["__proto__"]);
-  });
+    test("with an object value is an own property", () => {
+      expect(
+        Reflect.ownKeys(
+          pullObject(["__proto__"], identity(), constant({ a: 1 })),
+        ),
+      ).toStrictEqual(["__proto__"]);
+    });
 
-  test("`__proto__` key with a primitive value is an own property", () => {
-    expect(
-      Object.entries(pullObject(["__proto__"], identity(), constant(1))),
-    ).toStrictEqual([["__proto__", 1]]);
+    test("with a primitive value is an own property", () => {
+      expect(
+        Object.entries(pullObject(["__proto__"], identity(), constant(1))),
+      ).toStrictEqual([["__proto__", 1]]);
+    });
   });
 
   test("a repeated key keeps its first position", () => {

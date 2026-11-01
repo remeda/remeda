@@ -123,9 +123,11 @@ function pickImplementation<
   for (const key of keys) {
     // eslint-disable-next-line unicorn/no-computed-property-existence-check -- The prototype-chain check is intentional: for class instances the picked keys (methods and accessors) live on the prototype, and `Object.hasOwn` would wrongly skip them (https://github.com/remeda/remeda/issues/107).
     if (key in object) {
-      // `__proto__` is the one key with an inherited setter, so assigning it
-      // would replace the prototype instead of defining an own property.
       if (key === "__proto__") {
+        // We want `__proto__` to act just like any other key, but the default
+        // behavior would call `Object.setPrototypeOf` implicitly, we need to
+        // bypass that by manually calling `Object.defineProperty` which is
+        // what's called for all *other* keys.
         Object.defineProperty(out, "__proto__", {
           value: object[key],
           configurable: true,

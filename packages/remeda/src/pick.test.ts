@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { pick } from "./pick";
 import { pipe } from "./pipe";
 
@@ -30,25 +30,29 @@ test("picking from non-existent keys (in a union)", () => {
   );
 });
 
-test("`__proto__` key is an own property", () => {
-  expect(
-    Object.entries(pick({ ["__proto__"]: 1 }, ["__proto__"])),
-  ).toStrictEqual([["__proto__", 1]]);
-});
+describe("`__proto__` key", () => {
+  test("is an own property", () => {
+    expect(
+      Object.entries(
+        pick({ ["__proto__"]: { hello: "world" } }, ["__proto__"]),
+      ),
+    ).toStrictEqual([["__proto__", { hello: "world" }]]);
+  });
 
-test("`__proto__` key keeps the prototype", () => {
-  expect(
-    Object.getPrototypeOf(pick({ ["__proto__"]: { a: 1 } }, ["__proto__"])),
-  ).toBe(Object.prototype);
-});
+  test("keeps the prototype", () => {
+    expect(
+      Object.getPrototypeOf(pick({ ["__proto__"]: { a: 1 } }, ["__proto__"])),
+    ).toBe(Object.prototype);
+  });
 
-test("`__proto__` key that isn't own picks the prototype as an own property", () => {
-  const data: Record<string, number> = { a: 1 };
-
-  expect(
-    Object.getOwnPropertyDescriptor(pick(data, ["__proto__"]), "__proto__")
-      ?.value,
-  ).toBe(Object.prototype);
+  test("that isn't own picks the prototype as an own property", () => {
+    expect(
+      Object.getOwnPropertyDescriptor(
+        pick({ a: 1 } as Record<string, number>, ["__proto__"]),
+        "__proto__",
+      )?.value,
+    ).toBe(Object.prototype);
+  });
 });
 
 // @see https://github.com/remeda/remeda/issues/107

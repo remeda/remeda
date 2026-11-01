@@ -109,12 +109,14 @@ The vast majority of users pass plain objects: arbitrarily deep, but plain. Corr
 
 ## Storing computed keys
 
-A function that builds an object one key at a time from keys it doesn't choose (the input's keys, keys a callback returns, values turned into keys) can receive the key `"__proto__"`. Assigning that key calls the setter every plain object inherits from `Object.prototype`: the result's prototype changes (or the value is dropped, when it isn't an object or `null`) and the key never appears. An object literal with a computed key, a spread, and `Object.fromEntries` define own properties and handle it already; a loop of assignments needs this branch at every store:
+A function that builds an object one key at a time from keys it doesn't choose (the input's keys, keys a callback returns, values turned into keys) can receive the key `"__proto__"`. Assigning that key calls the setter every plain object inherits from `Object.prototype`: the result's prototype changes (or the value is dropped, when it isn't an object or `null`) and the key never appears:
 
 ```ts
-// `__proto__` is the one key with an inherited setter, so assigning it
-// would replace the prototype instead of defining an own property.
 if (key === "__proto__") {
+  // We want `__proto__` to act just like any other key, but the default
+  // behavior would call `Object.setPrototypeOf` implicitly, we need to
+  // bypass that by manually calling `Object.defineProperty` which is
+  // what's called for all *other* keys.
   Object.defineProperty(out, "__proto__", {
     value,
     configurable: true,

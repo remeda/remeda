@@ -29,24 +29,26 @@ describe("data_first", () => {
     );
   });
 
-  test("`__proto__` key keeps the prototype", () => {
-    expect(
-      Object.getPrototypeOf(
-        mapToObj(["__proto__"], (item) => [item, { a: 1 }]),
-      ),
-    ).toBe(Object.prototype);
-  });
+  describe("`__proto__` key", () => {
+    test("keeps the prototype", () => {
+      expect(
+        Object.getPrototypeOf(
+          mapToObj(["__proto__"], (item) => [item, { a: 1 }]),
+        ),
+      ).toBe(Object.prototype);
+    });
 
-  test("`__proto__` key with an object value is an own property", () => {
-    expect(
-      Reflect.ownKeys(mapToObj(["__proto__"], (item) => [item, { a: 1 }])),
-    ).toStrictEqual(["__proto__"]);
-  });
+    test("with an object value is an own property", () => {
+      expect(
+        Reflect.ownKeys(mapToObj(["__proto__"], (item) => [item, { a: 1 }])),
+      ).toStrictEqual(["__proto__"]);
+    });
 
-  test("`__proto__` key with a primitive value is an own property", () => {
-    expect(
-      Object.entries(mapToObj(["__proto__"], (item) => [item, 1])),
-    ).toStrictEqual([["__proto__", 1]]);
+    test("with a primitive value is an own property", () => {
+      expect(
+        Object.entries(mapToObj(["__proto__"], (item) => [item, 1])),
+      ).toStrictEqual([["__proto__", 1]]);
+    });
   });
 
   test("a repeated key keeps its first position and the last value", () => {

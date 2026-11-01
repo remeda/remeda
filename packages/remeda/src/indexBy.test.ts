@@ -1,4 +1,4 @@
-import { expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { constant } from "./constant";
 import { identity } from "./identity";
 import { indexBy } from "./indexBy";
@@ -73,28 +73,30 @@ test("number keys share the property of their string form", () => {
   expect(indexBy([1, "1"], identity())).toStrictEqual({ 1: "1" });
 });
 
-test("`__proto__` key keeps the prototype", () => {
-  expect(
-    Object.getPrototypeOf(indexBy([{ id: "__proto__" }], prop("id"))),
-  ).toBe(Object.prototype);
-});
+describe("`__proto__` key", () => {
+  test("keeps the prototype", () => {
+    expect(
+      Object.getPrototypeOf(indexBy([{ id: "__proto__" }], prop("id"))),
+    ).toBe(Object.prototype);
+  });
 
-test("`__proto__` key with an object item is an own property", () => {
-  expect(
-    Reflect.ownKeys(indexBy([{ id: "__proto__" }], prop("id"))),
-  ).toStrictEqual(["__proto__"]);
-});
+  test("with an object item is an own property", () => {
+    expect(
+      Reflect.ownKeys(indexBy([{ id: "__proto__" }], prop("id"))),
+    ).toStrictEqual(["__proto__"]);
+  });
 
-test("`__proto__` key with a null item keeps the prototype", () => {
-  expect(Object.getPrototypeOf(indexBy([null], constant("__proto__")))).toBe(
-    Object.prototype,
-  );
-});
+  test("with a null item keeps the prototype", () => {
+    expect(Object.getPrototypeOf(indexBy([null], constant("__proto__")))).toBe(
+      Object.prototype,
+    );
+  });
 
-test("`__proto__` key with a primitive item is an own property", () => {
-  expect(Object.entries(indexBy(["__proto__"], identity()))).toStrictEqual([
-    ["__proto__", "__proto__"],
-  ]);
+  test("with a primitive item is an own property", () => {
+    expect(Object.entries(indexBy(["__proto__"], identity()))).toStrictEqual([
+      ["__proto__", "__proto__"],
+    ]);
+  });
 });
 
 test("holes are indexed as undefined", () => {

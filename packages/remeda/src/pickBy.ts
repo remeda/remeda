@@ -199,9 +199,11 @@ function pickByImplementation<T extends object>(
 
   for (const [key, value] of Object.entries(data)) {
     if (predicate(value, key, data)) {
-      // `__proto__` is the one key with an inherited setter, so assigning it
-      // would replace the prototype instead of defining an own property.
       if (key === "__proto__") {
+        // We want `__proto__` to act just like any other key, but the default
+        // behavior would call `Object.setPrototypeOf` implicitly, we need to
+        // bypass that by manually calling `Object.defineProperty` which
+        // what's called for all *other* keys.
         Object.defineProperty(out, "__proto__", {
           value,
           configurable: true,

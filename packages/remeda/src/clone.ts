@@ -100,9 +100,11 @@ function deepCloneObject<T extends object>(
 
   for (const [k, v] of Object.entries(value)) {
     const clonedValue: unknown = cloneValue(v, refFrom, refTo);
-    // `__proto__` is the one key with an inherited setter, so assigning it
-    // would replace the prototype instead of defining an own property.
     if (k === "__proto__") {
+      // We want `__proto__` to act just like any other key, but the default
+      // behavior would call `Object.setPrototypeOf` implicitly, we need to
+      // bypass that by manually calling `Object.defineProperty` which is
+      // what's called for all *other* keys.
       Object.defineProperty(copiedValue, "__proto__", {
         value: clonedValue,
         configurable: true,
