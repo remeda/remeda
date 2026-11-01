@@ -15,7 +15,7 @@
     "sync": "astro sync"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.10",
+    "@astrojs/check": "^0.9.12",
     "@astrojs/mdx": "^7.0.8",
     "@astrojs/react": "^6.0.4",
     "@astrojs/sitemap": "^3.7.4",
@@ -53,7 +53,7 @@
     "jsdom": "^30.0.1",
     "lint-staged": "^17.4.1",
     "marked": "^18.0.14",
-    "prettier": "^3.9.9",
+    "prettier": "^3.9.10",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-pkg": "^0.22.1",
     "prettier-plugin-sh": "^0.19.0",
