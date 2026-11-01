@@ -35,18 +35,18 @@ test.prop([entries])(
 test.prop([entries])(
   "the same own properties as Object.fromEntries",
   (data) => {
-    const result = fromEntries(data);
-    const expected = Object.fromEntries(data);
-
-    // Descriptors compare each value along with its attributes.
-    expect(
-      Reflect.ownKeys(result).map((ownKey) =>
-        Object.getOwnPropertyDescriptor(result, ownKey),
-      ),
-    ).toStrictEqual(
-      Reflect.ownKeys(expected).map((ownKey) =>
-        Object.getOwnPropertyDescriptor(expected, ownKey),
-      ),
+    expect(ownPropertyDescriptors(fromEntries(data))).toStrictEqual(
+      ownPropertyDescriptors(Object.fromEntries(data)),
     );
   },
 );
+
+// Descriptors compare each value along with its attributes, and listing them in
+// key order (unlike `Object.getOwnPropertyDescriptors`) keeps the order part of
+// the comparison.
+const ownPropertyDescriptors = (
+  data: object,
+): (PropertyDescriptor | undefined)[] =>
+  Reflect.ownKeys(data).map((ownKey) =>
+    Object.getOwnPropertyDescriptor(data, ownKey),
+  );
