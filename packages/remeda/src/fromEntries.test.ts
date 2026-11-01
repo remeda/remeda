@@ -138,7 +138,7 @@ test("a hole throws", () => {
     fromEntries(
       // @ts-expect-error [ts2322] -- The hole is the input under test.
       // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-      [["a", 1], , ["b", 2]] as const,
+      [["a", 1], , ["b", 2]],
     ),
   ).toThrow(TypeError);
 });
@@ -157,7 +157,7 @@ test("a hole throws in a pipe", () => {
   expect(() =>
     pipe(
       // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-      [["a", 1], , ["b", 2]] as const,
+      [["a", 1], , ["b", 2]],
       // @ts-expect-error [ts2345] -- The hole is the input under test.
       fromEntries(),
     ),
