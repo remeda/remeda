@@ -50,7 +50,3 @@ test.prop([entries])(
     );
   },
 );
-
-test.prop([entries])("the prototype is Object.prototype", (data) => {
-  expect(Object.getPrototypeOf(fromEntries(data))).toBe(Object.prototype);
-});

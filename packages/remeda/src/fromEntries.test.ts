@@ -166,26 +166,53 @@ test("a hole throws in a pipe", () => {
 
 describe("known issues!", () => {
   test("a non-object entry becomes an `undefined` key instead of throwing", () => {
+    // Indexing a primitive reads `undefined` instead of throwing, and there is
+    // no check that each entry is an object like `Object.fromEntries` has.
+    // @ts-expect-error [ts2322] -- The invalid entry is the input under test.
+    expect(() => fromEntries([1])).not.toThrow(TypeError);
+
+    // Actual
     // @ts-expect-error [ts2322] -- The invalid entry is the input under test.
     expect(fromEntries([1])).toStrictEqual({ undefined });
   });
 
   test("a non-object entry becomes an `undefined` key instead of throwing in a pipe", () => {
+    // Indexing a primitive reads `undefined` instead of throwing, and there is
+    // no check that each entry is an object like `Object.fromEntries` has.
+    // @ts-expect-error [ts2345] -- The invalid entry is the input under test.
+    expect(() => pipe([1], fromEntries())).not.toThrow(TypeError);
+
+    // Actual
     // @ts-expect-error [ts2345] -- The invalid entry is the input under test.
     expect(pipe([1], fromEntries())).toStrictEqual({ undefined });
   });
 
   test("a string entry is read by character instead of throwing", () => {
+    // Strings are indexable, and there is no check that each entry is an
+    // object like `Object.fromEntries` has.
+    // @ts-expect-error [ts2322] -- The invalid entry is the input under test.
+    expect(() => fromEntries(["ab"])).not.toThrow(TypeError);
+
+    // Actual
     // @ts-expect-error [ts2322] -- The invalid entry is the input under test.
     expect(fromEntries(["ab"])).toStrictEqual({ a: "b" });
   });
 
   test("a string entry is read by character instead of throwing in a pipe", () => {
+    // Strings are indexable, and there is no check that each entry is an
+    // object like `Object.fromEntries` has.
+    // @ts-expect-error [ts2345] -- The invalid entry is the input under test.
+    expect(() => pipe(["ab"], fromEntries())).not.toThrow(TypeError);
+
+    // Actual
     // @ts-expect-error [ts2345] -- The invalid entry is the input under test.
     expect(pipe(["ab"], fromEntries())).toStrictEqual({ a: "b" });
   });
 
   test("a key inherited as read-only (e.g., from a frozen `Object.prototype`) throws instead of becoming an own property", () => {
+    // Assignment can't shadow an inherited read-only property, while
+    // `Object.fromEntries` defines each property directly. Sloppy-mode code
+    // (the CJS build) drops the key silently instead of throwing.
     // Freezing the real `Object.prototype` would leak into every later test;
     // one read-only member is the same lookup, and is removed afterwards.
     // eslint-disable-next-line no-extend-native -- The inherited member is the input under test; the `finally` below removes it.
