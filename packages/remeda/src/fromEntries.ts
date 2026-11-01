@@ -32,7 +32,7 @@ type FromEntries<Entries> = Entries extends readonly [
       : FromEntriesError<"Entries array-like could not be inferred">;
 
 // For strict tuples we build the result by intersecting each entry as a record
-// between it's key and value, recursively. The recursion goes through our main
+// between its key and value, recursively. The recursion goes through our main
 // type so that we support tuples which also contain rest parts.
 type FromEntriesTuple<E, Rest> = E extends Entry
   ? FromEntries<Rest> & Record<E[0], E[1]>
@@ -42,10 +42,10 @@ type FromEntriesTuple<E, Rest> = E extends Entry
 // 1. If it defines a *broad* key (one that has an infinite set of values, like
 // number or string) then the result is a simple record.
 // 2. If the keys are *literals* then we need to make the record partial
-// (because those props are explicit), and we need to match each key it's
+// (because those props are explicit), and we need to match each key its
 // specific possible value, as defined by the entries.
 //
-// Note that this destination between keys is the result of how typescript
+// Note that this distinction between keys is the result of how typescript
 // considers Record<string, unknown> to be **implicitly** partial, whereas
 // Record<"a", unknown> is not.
 type FromEntriesArray<Entries extends IterableContainer<Entry>> =
@@ -75,9 +75,9 @@ type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
 // I tried and failed to simplify the type here! What the ternary does here is
 // to support the cases where the entries are defined by a single type that
 // defines all entries, but it defines the keys as a union of literals
-// (`['a' | 'b', number]`); which is different from the output of `entries`
-// which would define a separate tuple literal for each key (`['a', number] |
-// ['b', number]`). We need to support both cases!
+// (`['a' | 'b', number]`); which is different from the output of the `entries`
+// function which would define a separate tuple literal for each key
+// (`['a', number] | ['b', number]`). We need to support both cases!
 type ValueForKey<
   Entries extends IterableContainer<Entry>,
   K extends PropertyKey,
@@ -87,7 +87,7 @@ type ValueForKey<
 
 /**
  * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
- * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
+ * If duplicate keys exist, the tuple with the greatest index in the input array is preferred.
  *
  * There are several other functions that could be used to build an object from
  * an array:
@@ -110,7 +110,7 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
 
 /**
  * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
- * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
+ * If duplicate keys exist, the tuple with the greatest index in the input array is preferred.
  *
  * There are several other functions that could be used to build an object from
  * an array:
@@ -142,9 +142,15 @@ function fromEntriesImplementation(
 ): Record<PropertyKey, unknown> {
   const result: Record<PropertyKey, unknown> = {};
 
-  for (const [key, value] of entries) {
-    // `__proto__` is the one key with an inherited setter, so assigning it
-    // would replace the prototype instead of defining an own property.
+  for (const entry of entries) {
+    /* eslint-disable @typescript-eslint/prefer-destructuring -- Read by index, like `Object.fromEntries`: destructuring runs the array iterator for every entry, which is slow until the JIT optimizes the loop. */
+    const key = entry[0];
+    const value = entry[1];
+    /* eslint-enable @typescript-eslint/prefer-destructuring */
+
+    // Assigning `__proto__` would call the setter objects inherit from
+    // `Object.prototype`, which changes the prototype (or ignores a primitive
+    // value) instead of defining an own property.
     if (key === "__proto__") {
       Object.defineProperty(result, "__proto__", {
         value,

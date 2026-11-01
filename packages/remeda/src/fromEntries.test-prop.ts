@@ -16,6 +16,7 @@ const key = fc.oneof(
   fc.constantFrom("a", "b"),
   fc.string(),
   fc.integer({ min: -1, max: 3 }),
+  fc.constant(-0),
   fc.double(),
   fc.constantFrom(FIRST_SYMBOL, SECOND_SYMBOL),
 );
