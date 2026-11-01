@@ -18,10 +18,10 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.11",
-    "lint-staged": "^17.4.1",
+    "lint-staged": "^17.6.0",
     "prettier": "^3.9.10",
     "prettier-plugin-pkg": "^0.22.1",
-    "prettier-plugin-sh": "^0.19.0",
+    "prettier-plugin-sh": "^0.20.2",
     "typescript-language-server": "^6.0.2"
   },
   "overrides": {
