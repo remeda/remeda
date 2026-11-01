@@ -32,7 +32,7 @@ type FromEntries<Entries> = Entries extends readonly [
       : FromEntriesError<"Entries array-like could not be inferred">;
 
 // For strict tuples we build the result by intersecting each entry as a record
-// between it's key and value, recursively. The recursion goes through our main
+// between its key and value, recursively. The recursion goes through our main
 // type so that we support tuples which also contain rest parts.
 type FromEntriesTuple<E, Rest> = E extends Entry
   ? FromEntries<Rest> & Record<E[0], E[1]>
@@ -42,10 +42,10 @@ type FromEntriesTuple<E, Rest> = E extends Entry
 // 1. If it defines a *broad* key (one that has an infinite set of values, like
 // number or string) then the result is a simple record.
 // 2. If the keys are *literals* then we need to make the record partial
-// (because those props are explicit), and we need to match each key it's
+// (because those props are explicit), and we need to match each key its
 // specific possible value, as defined by the entries.
 //
-// Note that this destination between keys is the result of how typescript
+// Note that this distinction between keys is the result of how typescript
 // considers Record<string, unknown> to be **implicitly** partial, whereas
 // Record<"a", unknown> is not.
 type FromEntriesArray<Entries extends IterableContainer<Entry>> =
@@ -75,9 +75,9 @@ type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
 // I tried and failed to simplify the type here! What the ternary does here is
 // to support the cases where the entries are defined by a single type that
 // defines all entries, but it defines the keys as a union of literals
-// (`['a' | 'b', number]`); which is different from the output of toPairs
-// which would define a separate tuple literal for each key (`['a', number] |
-// ['b', number]`). We need to support both cases!
+// (`['a' | 'b', number]`); which is different from the output of the `entries`
+// function which would define a separate tuple literal for each key
+// (`['a', number] | ['b', number]`). We need to support both cases!
 type ValueForKey<
   Entries extends IterableContainer<Entry>,
   K extends PropertyKey,
@@ -86,18 +86,19 @@ type ValueForKey<
   : Extract<Entries[number], Entry<K>>)[1];
 
 /**
- * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
- * If a tuple is not supplied for any element in the array, the element will be ignored
- * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
- *
- * The strict option supports more sophisticated use-cases like those that would
- * result when calling the strict `toPairs` function.
+ * Creates a new object from an array of tuples by pairing up first and second
+ * elements as `{ [key]: value }`.
+ * If duplicate keys exist, the tuple with the greatest index in the input
+ * array is preferred.
  *
  * There are several other functions that could be used to build an object from
  * an array:
- * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
- * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
- * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * * `fromKeys` - Builds an object from an array of *keys* and a mapper for
+ * values.
+ * * `indexBy` - Builds an object from an array of *values* and a mapper for
+ * keys.
+ * * `pullObject` - Builds an object from an array of items with mappers for
+ * *both* keys and values.
  * Refer to the docs for more details.
  *
  * @param entries - An array of key-value pairs.
@@ -113,18 +114,19 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
 ): Simplify<FromEntries<Entries>>;
 
 /**
- * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
- * If a tuple is not supplied for any element in the array, the element will be ignored
- * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
- *
- * The strict option supports more sophisticated use-cases like those that would
- * result when calling the strict `toPairs` function.
+ * Creates a new object from an array of tuples by pairing up first and second
+ * elements as `{ [key]: value }`.
+ * If duplicate keys exist, the tuple with the greatest index in the input
+ * array is preferred.
  *
  * There are several other functions that could be used to build an object from
  * an array:
- * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
- * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
- * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * * `fromKeys` - Builds an object from an array of *keys* and a mapper for
+ * values.
+ * * `indexBy` - Builds an object from an array of *values* and a mapper for
+ * keys.
+ * * `pullObject` - Builds an object from an array of items with mappers for
+ * *both* keys and values.
  * Refer to the docs for more details.
  *
  * @signature
@@ -142,7 +144,35 @@ export function fromEntries(): <Entries extends IterableContainer<Entry>>(
 ) => Simplify<FromEntries<Entries>>;
 
 export function fromEntries(...args: readonly unknown[]): unknown {
-  // To avoid getting the `any` return type from `Object.fromEntries` we select
-  // a different overloaded signature by explicitly stating the type parameter.
-  return purry(Object.fromEntries<unknown>, args);
+  return purry(fromEntriesImplementation, args);
+}
+
+function fromEntriesImplementation(
+  entries: IterableContainer<Entry>,
+): Record<PropertyKey, unknown> {
+  const result: Record<PropertyKey, unknown> = {};
+
+  for (const entry of entries) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
+    const key = entry[0];
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
+    const value = entry[1];
+
+    if (key === "__proto__") {
+      // We want `__proto__` to act just like any other key, but the default
+      // behavior would call `Object.setPrototypeOf` implicitly, we need to
+      // bypass that by manually calling `Object.defineProperty` which is what's
+      // called for all *other* keys.
+      Object.defineProperty(result, "__proto__", {
+        value,
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      });
+    } else {
+      result[key] = value;
+    }
+  }
+
+  return result;
 }
