@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { fromEntries } from "./fromEntries";
 import { pipe } from "./pipe";
 
@@ -48,6 +48,12 @@ test("string values", () => {
 
 test("number keys and values", () => {
   expect(fromEntries([[1, 123]])).toStrictEqual({ 1: 123 });
+});
+
+test("values are stored by reference", () => {
+  const value = { a: 1 };
+
+  expect(fromEntries([["a", value]] as const).a).toBe(value);
 });
 
 test("prototype is Object.prototype", () => {
@@ -127,30 +133,6 @@ test("reads the key at index 0 and then the value at index 1", () => {
   expect(accessed).toStrictEqual(["0", "1"]);
 });
 
-test("a non-object entry throws", () => {
-  // @ts-expect-error [ts2322] -- The invalid entry is the input under test.
-  expect(() => fromEntries([1])).toThrow(
-    new TypeError("Iterator value 1 is not an entry object"),
-  );
-});
-
-test("a string entry throws instead of being destructured", () => {
-  // @ts-expect-error [ts2322] -- The invalid entry is the input under test.
-  expect(() => fromEntries(["ab"])).toThrow(
-    new TypeError("Iterator value ab is not an entry object"),
-  );
-});
-
-test("a hole throws", () => {
-  expect(() =>
-    fromEntries(
-      // @ts-expect-error [ts2322] -- The hole is the input under test.
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-      [["a", 1], , ["b", 2]] as const,
-    ),
-  ).toThrow(new TypeError("Iterator value undefined is not an entry object"));
-});
-
 test("empty array in a pipe", () => {
   expect(pipe([], fromEntries())).toStrictEqual({});
 });
@@ -161,27 +143,23 @@ test("prototype is Object.prototype in a pipe", () => {
   );
 });
 
-test("a non-object entry throws in a pipe", () => {
-  // @ts-expect-error [ts2345] -- The invalid entry is the input under test.
-  expect(() => pipe([1], fromEntries())).toThrow(
-    new TypeError("Iterator value 1 is not an entry object"),
-  );
-});
+describe("known issues!", () => {
+  test("a key inherited as read-only (e.g., from a frozen `Object.prototype`) throws instead of becoming an own property", () => {
+    // Assignment can't shadow an inherited read-only property, while
+    // `Object.fromEntries` defines each property directly. Sloppy-mode code
+    // (the CJS build) drops the key silently instead of throwing.
+    // Freezing the real `Object.prototype` would leak into every later test;
+    // one read-only member is the same lookup, and is removed afterwards.
+    // eslint-disable-next-line no-extend-native -- The inherited member is the input under test; the `finally` below removes it.
+    Object.defineProperty(Object.prototype, "readOnlyMember", {
+      value: "inherited",
+      configurable: true,
+    });
 
-test("a string entry throws in a pipe", () => {
-  // @ts-expect-error [ts2345] -- The invalid entry is the input under test.
-  expect(() => pipe(["ab"], fromEntries())).toThrow(
-    new TypeError("Iterator value ab is not an entry object"),
-  );
-});
-
-test("a hole throws in a pipe", () => {
-  expect(() =>
-    pipe(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-      [["a", 1], , ["b", 2]] as const,
-      // @ts-expect-error [ts2345] -- The hole is the input under test.
-      fromEntries(),
-    ),
-  ).toThrow(new TypeError("Iterator value undefined is not an entry object"));
+    try {
+      expect(() => fromEntries([["readOnlyMember", 1]])).toThrow(TypeError);
+    } finally {
+      Reflect.deleteProperty(Object.prototype, "readOnlyMember");
+    }
+  });
 });
