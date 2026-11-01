@@ -153,15 +153,16 @@ function fromEntriesImplementation(
   const result: Record<PropertyKey, unknown> = {};
 
   for (const entry of entries) {
-    /* eslint-disable @typescript-eslint/prefer-destructuring -- Read by index, like `Object.fromEntries`: destructuring runs the array iterator for every entry, which is slow until the JIT optimizes the loop. */
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
     const key = entry[0];
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
     const value = entry[1];
-    /* eslint-enable @typescript-eslint/prefer-destructuring */
 
-    // Assigning `__proto__` would call the setter objects inherit from
-    // `Object.prototype`, which changes the prototype (or ignores a primitive
-    // value) instead of defining an own property.
     if (key === "__proto__") {
+      // We want `__proto__` to act just like any other key, but the default
+      // behavior would call `Object.setPrototypeOf` implicitly, we need to
+      // bypass that by manually calling `Object.defineProperty` which is what's
+      // called for all *other* keys.
       Object.defineProperty(result, "__proto__", {
         value,
         configurable: true,
