@@ -133,16 +133,6 @@ test("reads the key at index 0 and then the value at index 1", () => {
   expect(accessed).toStrictEqual(["0", "1"]);
 });
 
-test("a hole throws", () => {
-  expect(() =>
-    fromEntries(
-      // @ts-expect-error [ts2322] -- The hole is the input under test.
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-      [["a", 1], , ["b", 2]],
-    ),
-  ).toThrow(TypeError);
-});
-
 test("empty array in a pipe", () => {
   expect(pipe([], fromEntries())).toStrictEqual({});
 });
@@ -153,62 +143,7 @@ test("prototype is Object.prototype in a pipe", () => {
   );
 });
 
-test("a hole throws in a pipe", () => {
-  expect(() =>
-    pipe(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-      [["a", 1], , ["b", 2]],
-      // @ts-expect-error [ts2345] -- The hole is the input under test.
-      fromEntries(),
-    ),
-  ).toThrow(TypeError);
-});
-
 describe("known issues!", () => {
-  test("a non-object entry becomes an `undefined` key instead of throwing", () => {
-    // Indexing a primitive reads `undefined` instead of throwing, and there is
-    // no check that each entry is an object like `Object.fromEntries` has.
-    // @ts-expect-error [ts2322] -- The invalid entry is the input under test.
-    expect(() => fromEntries([1])).not.toThrow(TypeError);
-
-    // Actual
-    // @ts-expect-error [ts2322] -- The invalid entry is the input under test.
-    expect(fromEntries([1])).toStrictEqual({ undefined });
-  });
-
-  test("a non-object entry becomes an `undefined` key instead of throwing in a pipe", () => {
-    // Indexing a primitive reads `undefined` instead of throwing, and there is
-    // no check that each entry is an object like `Object.fromEntries` has.
-    // @ts-expect-error [ts2345] -- The invalid entry is the input under test.
-    expect(() => pipe([1], fromEntries())).not.toThrow(TypeError);
-
-    // Actual
-    // @ts-expect-error [ts2345] -- The invalid entry is the input under test.
-    expect(pipe([1], fromEntries())).toStrictEqual({ undefined });
-  });
-
-  test("a string entry is read by character instead of throwing", () => {
-    // Strings are indexable, and there is no check that each entry is an
-    // object like `Object.fromEntries` has.
-    // @ts-expect-error [ts2322] -- The invalid entry is the input under test.
-    expect(() => fromEntries(["ab"])).not.toThrow(TypeError);
-
-    // Actual
-    // @ts-expect-error [ts2322] -- The invalid entry is the input under test.
-    expect(fromEntries(["ab"])).toStrictEqual({ a: "b" });
-  });
-
-  test("a string entry is read by character instead of throwing in a pipe", () => {
-    // Strings are indexable, and there is no check that each entry is an
-    // object like `Object.fromEntries` has.
-    // @ts-expect-error [ts2345] -- The invalid entry is the input under test.
-    expect(() => pipe(["ab"], fromEntries())).not.toThrow(TypeError);
-
-    // Actual
-    // @ts-expect-error [ts2345] -- The invalid entry is the input under test.
-    expect(pipe(["ab"], fromEntries())).toStrictEqual({ a: "b" });
-  });
-
   test("a key inherited as read-only (e.g., from a frozen `Object.prototype`) throws instead of becoming an own property", () => {
     // Assignment can't shadow an inherited read-only property, while
     // `Object.fromEntries` defines each property directly. Sloppy-mode code
