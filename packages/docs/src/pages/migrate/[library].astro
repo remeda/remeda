@@ -19,13 +19,11 @@ const mappings = await getMigrationMappings(library);
 ---
 
 <DocsPage navbarEntries={forNavbar(mappings)} title={`Migrate: ${library}`}>
-  {
-    mappings.map(([category, categorizedMappings]) => (
-      <DocsSection title={category}>
-        {categorizedMappings.map((mapping) => (
-          <MappingFunctionCard entry={mapping} library={library} />
-        ))}
-      </DocsSection>
-    ))
-  }
+  {mappings.map(([category, categorizedMappings]) => <DocsSection
+    title={category}
+  >
+    {categorizedMappings.map((mapping) => (
+      <MappingFunctionCard entry={mapping} library={library} />
+    ))}
+  </DocsSection>)}
 </DocsPage>

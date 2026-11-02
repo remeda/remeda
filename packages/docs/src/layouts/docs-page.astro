@@ -35,19 +35,13 @@ const entries = [...forNavbar(articles), ...navbarEntries];
       <h1 class="mb-12 text-3xl font-thin tracking-widest capitalize">
         {title}
       </h1>
-      {
-        articles.map(([category, categoryArticles]) => (
-          <DocsSection title={category}>
-            {categoryArticles.map((article) => (
-              <Article
-                article={article}
-                class="scroll-mt-24"
-                id={article.slug}
-              />
-            ))}
-          </DocsSection>
-        ))
-      }
+      {articles.map(([category, categoryArticles]) => <DocsSection
+        title={category}
+      >
+        {categoryArticles.map((article) => (
+          <Article article={article} class="scroll-mt-24" id={article.slug} />
+        ))}
+      </DocsSection>)}
       <slot />
     </main>
   </div>

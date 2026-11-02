@@ -64,7 +64,11 @@ const ogImage = new URL("/og.png", Astro.site).href;
       <Header />
       <slot />
     </div>
-    <script is:inline fetchpriority="low" src="/sandbox.js" type="module"
+    <script
+      is:inline
+      fetchpriority="low"
+      src="/sandbox.js"
+      type="module"
     ></script>
   </body>
 </html>

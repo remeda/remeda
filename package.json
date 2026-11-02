@@ -22,12 +22,9 @@
     "prettier": "^3.9.10",
     "prettier-plugin-pkg": "^0.22.1",
     "prettier-plugin-sh": "^0.20.2",
-    "typescript-language-server": "^6.0.2"
+    "typescript-language-server": "^6.0.3"
   },
   "overrides": {
-    "@ai-sdk/provider-utils": {
-      "undici": "^7.29.0"
-    },
     "@vitest/mocker": {
       "vite": "~7.3.1"
     },

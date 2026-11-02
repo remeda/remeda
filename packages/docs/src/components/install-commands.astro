@@ -12,18 +12,14 @@ const COMMANDS = [
 ---
 
 <ul class="max-w-80 list-none p-0">
-  {
-    COMMANDS.map((command) => (
-      <li class="relative">
-        <ThemedCode code={command} lang="bash" />
-        <div class="absolute top-1/2 right-2 -translate-y-1/2">
-          <CopyButton
-            className="text-background dark:text-foreground"
-            client:visible
-            value={command}
-          />
-        </div>
-      </li>
-    ))
-  }
+  {COMMANDS.map((command) => <li class="relative">
+    <ThemedCode code={command} lang="bash" />
+    <div class="absolute top-1/2 right-2 -translate-y-1/2">
+      <CopyButton
+        className="text-background dark:text-foreground"
+        client:visible
+        value={command}
+      />
+    </div>
+  </li>)}
 </ul>

@@ -23,8 +23,6 @@ const [routeNavbarEntries, articles] = await Promise.all([
 const entries = [...articlesForNavbar(articles), ...routeNavbarEntries];
 ---
 
-{
-  entries.length === 0 ? undefined : (
-    <MobileNav client:visible entries={entries} title={migrationLibrary} />
-  )
-}
+{entries.length === 0 ? undefined : (
+  <MobileNav client:visible entries={entries} title={migrationLibrary} />
+)}

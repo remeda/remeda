@@ -15,17 +15,15 @@ const internalNames = new Set(
 ---
 
 <DocsPage navbarEntries={forNavbar(functions)} title="v1 (Legacy)">
-  {
-    functions.map(([category, categoryFunctions]) => (
-      <DocsSection title={category}>
-        {categoryFunctions.map((data) => (
-          <V1FunctionCard
-            category={category}
-            data={data}
-            internalNames={internalNames}
-          />
-        ))}
-      </DocsSection>
-    ))
-  }
+  {functions.map(([category, categoryFunctions]) => <DocsSection
+    title={category}
+  >
+    {categoryFunctions.map((data) => (
+      <V1FunctionCard
+        category={category}
+        data={data}
+        internalNames={internalNames}
+      />
+    ))}
+  </DocsSection>)}
 </DocsPage>
