@@ -120,6 +120,9 @@ test("parameterized record key (Issue #1122)", () => {
     expectTypeOf(a).toEqualTypeOf<"hello">();
   };
 
-  // We need to "use" the function above to prevent GitHub's CodeQL from surfacing it as unused (`js/unused-local-variable`), which it technically is, albeit this being a **type test** where execution is meaningless to begin with...
+  // We need to "use" the function above to prevent GitHub's CodeQL from
+  // surfacing it as unused (`js/unused-local-variable`), which it technically
+  // is, albeit this being a **type test** where execution is meaningless to
+  // begin with...
   expectTypeOf(foo).toBeFunction();
 });
