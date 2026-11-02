@@ -2,8 +2,6 @@ import { describe, expect, test } from "vitest";
 import type { LazyUnaryFunction } from "./lazyDataLastImplementation";
 import { purryWithLazy } from "./purryWithLazy";
 
-type Curried = ((...args: readonly unknown[]) => unknown) & LazyUnaryFunction;
-
 describe("data-first (delegated)", () => {
   test("exact number of arguments", () => {
     expect(purriedFn([13], 37)).toBe("1337");
@@ -15,6 +13,8 @@ describe("data-first (delegated)", () => {
 });
 
 describe("data-last (curried)", () => {
+  type Curried = ((...args: readonly unknown[]) => unknown) & LazyUnaryFunction;
+
   describe("missing a single argument", () => {
     // @ts-expect-error [ts2322] -- `purriedFn` returns `unknown`, like the implementation signature of a utility built on `purryWithLazy`; the tests in this block assert the runtime shape this type describes.
     const curried: Curried = purriedFn(37);

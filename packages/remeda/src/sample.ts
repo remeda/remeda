@@ -206,11 +206,7 @@ function sampleImplementation<T>(data: readonly T[], sampleSize: number): T[] {
     sampleIndices.add(randomIndex);
   }
 
-  if (sampleSize === actualSampleSize) {
-    return [...sampleIndices]
-      .sort((a, b) => a - b)
-      .map((index) => data[index]!);
-  }
-
-  return data.filter((_, index) => !sampleIndices.has(index));
+  return sampleSize === actualSampleSize
+    ? [...sampleIndices].sort((a, b) => a - b).map((index) => data[index]!)
+    : data.filter((_, index) => !sampleIndices.has(index));
 }

@@ -40,12 +40,6 @@ type LazyDefinition<
   readonly lazyArgs: P;
 };
 
-// Allows us to build the lazy definition dynamically at runtime.
-type MutableLazyDefinition<
-  T extends IterableContainer,
-  P extends readonly unknown[],
-> = Partial<SimplifiedWritable<LazyDefinition<T, P>>>;
-
 /**
  * Use this helper function to build the data last implementation together with
  * a lazy implementation. Use this when you need to build your own purrying
@@ -62,11 +56,13 @@ export function lazyDataLastImplementation<
   args: P,
   lazy: LazyEvaluatorFactory<T, P>,
 ): LazyUnaryFunction<T, P, R> {
-  const dataLast = dataLastImplementation(dataFirst, args);
+  // @ts-expect-error [ts2559] -- Allows us to build the lazy definition dynamically at runtime.
+  const dataLast: Partial<SimplifiedWritable<LazyDefinition<T, P>>> =
+    dataLastImplementation(dataFirst, args);
 
-  (dataLast as MutableLazyDefinition<T, P>).lazy = lazy;
-  (dataLast as MutableLazyDefinition<T, P>).lazyArgs = args;
+  dataLast.lazy = lazy;
+  dataLast.lazyArgs = args;
 
-  // @ts-expect-error [ts2322] -- TypeScript doesn't narrow an object's declared type after its optional props are assigned, so it can't see that `dataLast` is now a complete `LazyUnaryFunction`.
+  // @ts-expect-error [ts2322] -- TypeScript doesn't narrow an object's declared type after its optional props are assigned.
   return dataLast;
 }

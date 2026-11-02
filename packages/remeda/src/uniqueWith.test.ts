@@ -44,13 +44,11 @@ describe("data_first", () => {
           { reason: "No name" },
           { reason: "No name" },
         ] satisfies { id?: number; reason: string }[],
-        (errorA, errorB) => {
+        (errorA, errorB) =>
           // the objects with no ids should effectively be ignored from removal of duplicates
-          if (errorA.id === undefined || errorB.id === undefined) {
-            return false;
-          }
-          return errorA.id === errorB.id;
-        },
+          errorA.id !== undefined &&
+          errorB.id !== undefined &&
+          errorA.id === errorB.id,
       ),
     ).toStrictEqual([
       { id: 1, reason: "No name" },
@@ -95,13 +93,13 @@ describe("data_last", () => {
           { reason: "No name" },
           { reason: "No name" },
         ],
-        uniqueWith((errorA, errorB) => {
-          // the objects with no ids should effectively be ignored from removal of duplicates
-          if (errorA.id === undefined || errorB.id === undefined) {
-            return false;
-          }
-          return errorA.id === errorB.id;
-        }),
+        uniqueWith(
+          (errorA, errorB) =>
+            // the objects with no ids should effectively be ignored from removal of duplicates
+            errorA.id !== undefined &&
+            errorB.id !== undefined &&
+            errorA.id === errorB.id,
+        ),
       ),
     ).toStrictEqual([
       { id: 1, reason: "No name" },

@@ -11,7 +11,7 @@ import tseslint from "typescript-eslint";
 
 export default defineConfig(
   {
-    ignores: [".astro/**", "dist", "public"],
+    ignores: [".astro/**", ".tmp", "dist", "public"],
   },
 
   eslint.configs.recommended,
@@ -54,6 +54,7 @@ export default defineConfig(
       // Not useful!
       "unicorn/max-nested-calls": "off",
       "unicorn/name-replacements": "off",
+      "unicorn/no-asterisk-prefix-in-documentation-comments": "off",
 
       // We prefer the "avoid" syntax which isn't the default...
       "unicorn/switch-case-braces": ["error", "avoid"],

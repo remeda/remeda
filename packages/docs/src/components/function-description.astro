@@ -55,19 +55,16 @@ const [{ comment }] = signatures;
 
               const previous = comment.summary[i - 1];
               const next = comment.summary[i + 1];
-              if (
-                previous?.kind === "text" &&
+
+              return previous?.kind === "text" &&
                 previous.text.endsWith("[") &&
                 next?.kind === "text" &&
                 next.text.startsWith("]")
-              ) {
-                // Skip when this code token is already the text of a markdown
-                // link the author wrote (e.g. `[`toLowerCase`](MDN_URL)`)
-                return text;
-              }
-
-              // If this is a function name, link to its anchor:
-              return `[${text}](#${codeContent})`;
+                ? // Already the text of a markdown link the author wrote
+                  // (e.g., `[`toLowerCase`](MDN_URL)`).
+                  text
+                : // Link to its anchor.
+                  `[${text}](#${codeContent})`;
             })
             .join("")}
         />

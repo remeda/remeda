@@ -3,34 +3,6 @@ import { constant } from "./constant";
 import { fromKeys } from "./fromKeys";
 import { pipe } from "./pipe";
 
-type Letter =
-  | "a"
-  | "b"
-  | "c"
-  | "d"
-  | "e"
-  | "f"
-  | "g"
-  | "h"
-  | "i"
-  | "j"
-  | "k"
-  | "l"
-  | "m"
-  | "n"
-  | "o"
-  | "p"
-  | "q"
-  | "r"
-  | "s"
-  | "t"
-  | "u"
-  | "v"
-  | "w"
-  | "x"
-  | "y"
-  | "z";
-
 test("empty array", () => {
   const data = [] as const;
 
@@ -222,6 +194,34 @@ describe("with string template keys", () => {
 });
 
 test("typescript doesn't choke on huge literal unions", () => {
+  type Letter =
+    | "a"
+    | "b"
+    | "c"
+    | "d"
+    | "e"
+    | "f"
+    | "g"
+    | "h"
+    | "i"
+    | "j"
+    | "k"
+    | "l"
+    | "m"
+    | "n"
+    | "o"
+    | "p"
+    | "q"
+    | "r"
+    | "s"
+    | "t"
+    | "u"
+    | "v"
+    | "w"
+    | "x"
+    | "y"
+    | "z";
+
   const data = [] as `${Letter}${Letter}`[];
 
   expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<

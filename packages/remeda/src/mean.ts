@@ -55,12 +55,7 @@ export function mean(...args: readonly unknown[]): unknown {
   return purry(meanImplementation, args);
 }
 
-function meanImplementation<T extends IterableContainer<number>>(
+const meanImplementation = <T extends IterableContainer<number>>(
   data: T,
-): T[number] | undefined {
-  if (data.length === 0) {
-    return undefined;
-  }
-
-  return sum(data) / data.length;
-}
+): T[number] | undefined =>
+  data.length === 0 ? undefined : sum(data) / data.length;

@@ -25,11 +25,11 @@ test("symbols are filtered out", () => {
 });
 
 test("symbols are not passed to the predicate", () => {
-  const mock = vi.fn<(x: string) => boolean>();
+  const predicate = vi.fn<(x: string) => boolean>();
   const data = { [Symbol("mySymbol")]: 1, a: "hello" };
-  pickBy(data, mock);
+  pickBy(data, predicate);
 
-  expect(mock).toHaveBeenCalledExactlyOnceWith("hello", "a", data);
+  expect(predicate).toHaveBeenCalledExactlyOnceWith("hello", "a", data);
 });
 
 describe("`__proto__` key", () => {

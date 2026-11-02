@@ -49,7 +49,7 @@ export function Navbar({
 
 function NavbarItem({
   title,
-  slug,
+  slug = title,
   tags,
   onSelect,
 }: NavbarEntry & {
@@ -57,7 +57,7 @@ function NavbarItem({
 }): ReactNode {
   return (
     <a
-      href={`#${slug ?? title}`}
+      href={`#${slug}`}
       className={cn([
         buttonVariants({ variant: "ghost" }),
         "text-muted-foreground",

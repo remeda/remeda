@@ -1,7 +1,3 @@
-/* eslint-disable unicorn/prefer-string-raw --
- * We want to have the same inputs as the type-tests.
- */
-
 import { describe, expect, test } from "vitest";
 import { stringToPath } from "./stringToPath";
 

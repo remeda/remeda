@@ -83,25 +83,17 @@ export function isDeepEqual(...args: readonly unknown[]): unknown {
 }
 
 function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
-  if (data === other) {
+  if (data === other || Object.is(data, other)) {
+    // We ignore the slight differences between `===` and `Object.is` as both
+    // of them largely define equality from a semantic point-of-view.
     return true;
   }
 
-  if (Object.is(data, other)) {
-    // We want to ignore the slight differences between `===` and `Object.is` as
-    // both of them largely define equality from a semantic point-of-view.
-    return true;
-  }
-
-  if (typeof data !== "object" || typeof other !== "object") {
-    return false;
-  }
-
-  if (data === null || other === null) {
-    return false;
-  }
-
-  if (!isComparablePrototype(data, other)) {
+  if (
+    typeof data !== "object" ||
+    data === null ||
+    typeof other !== "object" ||
+    other === null ||
     // If the objects don't share a prototype it's unlikely that they are
     // semantically equal. It is technically possible to build 2 prototypes that
     // act the same but are not equal (at the reference level, checked via
@@ -109,6 +101,8 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
     // them. Because this is so unlikely, the optimization we gain here for the
     // rest of the function by assuming that `other` is of the same type as
     // `data` is more than worth it.
+    !isComparablePrototype(data, other)
+  ) {
     return false;
   }
 
@@ -143,11 +137,8 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
   }
 
   for (const [key, value] of Object.entries(data)) {
-    if (!Object.hasOwn(other, key)) {
-      return false;
-    }
-
     if (
+      !Object.hasOwn(other, key) ||
       !isDeepEqualImplementation(
         value,
         // @ts-expect-error [ts7053] - We already checked that `other` has `key`
@@ -204,11 +195,7 @@ function isDeepEqualMaps(
   }
 
   for (const [key, value] of data) {
-    if (!other.has(key)) {
-      return false;
-    }
-
-    if (!isDeepEqualImplementation(value, other.get(key))) {
+    if (!other.has(key) || !isDeepEqualImplementation(value, other.get(key))) {
       return false;
     }
   }

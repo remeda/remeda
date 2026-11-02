@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { defaultTo } from "./defaultTo";
 import { identity } from "./identity";
 import { meanBy } from "./meanBy";
 import { pipe } from "./pipe";
@@ -46,7 +47,7 @@ describe("data first", () => {
 
   test("reads holes as undefined", () => {
     // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(meanBy([1, , 3], (value) => value ?? 10)).toBe(14 / 3);
+    expect(meanBy([1, , 3], defaultTo(10))).toBe(14 / 3);
   });
 
   test("calls the mapper on each item in order with the whole array", () => {

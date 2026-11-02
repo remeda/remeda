@@ -1,5 +1,6 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../test/$typed";
+import { defaultTo } from "./defaultTo";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
@@ -7,14 +8,6 @@ import { prop } from "./prop";
 import { sortedLastIndexBy } from "./sortedLastIndexBy";
 
 type Status = "active" | "inactive" | "pending";
-
-type Task = {
-  readonly priority: "high" | "low" | "medium";
-  readonly score: number;
-};
-
-type Animal = { readonly name: string };
-type Dog = Animal & { readonly breed: string };
 
 describe("dataFirst", () => {
   test("a literal item among literal union items", () => {
@@ -103,6 +96,11 @@ describe("dataLast", () => {
   });
 
   test("an object item with a literal union prop", () => {
+    type Task = {
+      readonly priority: "high" | "low" | "medium";
+      readonly score: number;
+    };
+
     expectTypeOf(
       pipe(
         [] as Task[],
@@ -115,12 +113,15 @@ describe("dataLast", () => {
     expectTypeOf(
       pipe(
         [] as (number | undefined)[],
-        sortedLastIndexBy(undefined, (item) => item ?? 0),
+        sortedLastIndexBy(undefined, defaultTo(0)),
       ),
     ).toEqualTypeOf<number>();
   });
 
   test("a subtype item among supertype items", () => {
+    type Animal = { readonly name: string };
+    type Dog = Animal & { readonly breed: string };
+
     expectTypeOf(
       pipe([] as Animal[], sortedLastIndexBy($typed<Dog>(), prop("name"))),
     ).toEqualTypeOf<number>();

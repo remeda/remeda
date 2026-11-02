@@ -70,17 +70,19 @@ function intersectionImplementation<T, S>(
     }
 
     const copies = remaining.get(value);
-    if (copies !== undefined) {
-      result.push(
-        // @ts-expect-error [ts2345] -- `value` is `T & S` here semantically, but TypeScript can't infer it via this implementation.
-        value,
-      );
+    if (copies === undefined) {
+      continue;
+    }
 
-      if (copies === 1) {
-        remaining.delete(value);
-      } else {
-        remaining.set(value, copies - 1);
-      }
+    result.push(
+      // @ts-expect-error [ts2345] -- `value` is `T & S` here semantically, but TypeScript can't infer it via this implementation.
+      value,
+    );
+
+    if (copies === 1) {
+      remaining.delete(value);
+    } else {
+      remaining.set(value, copies - 1);
     }
   }
 

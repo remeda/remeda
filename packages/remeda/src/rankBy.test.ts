@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { defaultTo } from "./defaultTo";
 import { identity } from "./identity";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
@@ -65,7 +66,7 @@ describe("runtime (dataFirst)", () => {
 
   test("reads holes as undefined", () => {
     // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(rankBy([, 1], 2, (value) => value ?? 0)).toBe(2);
+    expect(rankBy([, 1], 2, defaultTo(0))).toBe(2);
   });
 });
 

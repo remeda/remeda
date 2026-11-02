@@ -74,11 +74,9 @@ function rangeImplementation(
   const end =
     typeof endOrOptions === "object" ? endOrOptions.end : endOrOptions;
   const length = ceilingWithSnap((end - start) / step);
-  if (length <= 0) {
-    return [];
-  }
-
-  return Array.from({ length }, (_, i) => (i === 0 ? start : start + i * step));
+  return length > 0
+    ? Array.from({ length }, (_, i) => (i === 0 ? start : start + i * step))
+    : [];
 }
 
 // JS's floating-point math can create numbers that are slightly larger than

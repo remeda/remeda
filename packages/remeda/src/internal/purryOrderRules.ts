@@ -127,7 +127,7 @@ export function orderRuleComparer<T>(
     typeof primaryRule === "function" ? primaryRule : primaryRule[0];
 
   const direction = typeof primaryRule === "function" ? "asc" : primaryRule[1];
-  const comparator = COMPARATORS[direction];
+  const isAfter = COMPARATORS[direction];
 
   const nextComparer =
     secondaryRule === undefined
@@ -138,17 +138,17 @@ export function orderRuleComparer<T>(
     const projectedA = projector(a);
     const projectedB = projector(b);
 
-    if (comparator(projectedA, projectedB)) {
+    if (isAfter(projectedA, projectedB)) {
       return 1;
     }
 
-    if (comparator(projectedB, projectedA)) {
+    if (isAfter(projectedB, projectedA)) {
       return -1;
     }
 
-    // The elements are equal base on the current comparator and projection. So
-    // we need to check the elements using the next comparer, if one exists,
-    // otherwise we consider them as true equal (returning 0).
+    // The elements are equal based on the projection. So we need to check the
+    // elements using the next comparer, if one exists, otherwise we consider
+    // them as true equal (returning 0).
     return nextComparer?.(a, b) ?? 0;
   };
 }

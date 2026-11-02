@@ -70,18 +70,6 @@ const YELLOW_AREA_POLYGON = [
 // so it renders exactly GLYPH_HEIGHT_PX tall.
 const PROBE_FONT_SIZE = 100;
 
-type Chain = {
-  entry: Point | undefined;
-  pts: Point[];
-  exit: Point | undefined;
-};
-
-type Crossing = {
-  readonly y: number;
-  readonly type: "entry" | "exit";
-  readonly ci: number;
-};
-
 async function main(): Promise<number> {
   const blueHex = toHexColor(COLOR.blue);
   const yellowHex = toHexColor(COLOR.yellow);
@@ -301,6 +289,18 @@ function cutRing(
   ring: readonly Point[],
   shouldKeepLeft: boolean,
 ): (readonly Point[])[] {
+  type Chain = {
+    entry: Point | undefined;
+    pts: Point[];
+    exit: Point | undefined;
+  };
+
+  type Crossing = {
+    readonly y: number;
+    readonly type: "entry" | "exit";
+    readonly ci: number;
+  };
+
   const chains: Chain[] = [];
   let chain: Chain | undefined;
   let openedAtStart: Chain | undefined;
@@ -384,10 +384,7 @@ function cutRing(
       const c = closedChains[ci]!;
       piece.push(c.entry, ...c.pts, c.exit);
       const next = partner.get(`exit:${ci}`);
-      if (next?.type !== "entry") {
-        break;
-      }
-      if (next.ci === start) {
+      if (next?.type !== "entry" || next.ci === start) {
         break;
       }
       ci = next.ci;
