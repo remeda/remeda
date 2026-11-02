@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type --
+ * The value function can return anything other than `null` and `undefined`,
+ * which is exactly what `{}` means.
+ */
+
 import { purry } from "./purry";
 import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
 
@@ -37,11 +42,7 @@ import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
 export function sortedIndexBy<T>(
   data: readonly T[],
   item: T,
-  valueFunction: (
-    item: T,
-    index: number | undefined,
-    data: readonly T[],
-  ) => NonNullable<unknown>,
+  valueFunction: (item: T, index: number | undefined, data: readonly T[]) => {},
 ): number;
 
 /**
@@ -84,7 +85,7 @@ export function sortedIndexBy<T = never>(
     item: NoInfer<T>,
     index: number | undefined,
     data: readonly NoInfer<T>[],
-  ) => NonNullable<unknown>,
+  ) => {},
 ): (data: readonly T[]) => number;
 
 export function sortedIndexBy<T>(
@@ -94,7 +95,7 @@ export function sortedIndexBy<T>(
     item: NoInfer<T>,
     index: number | undefined,
     data: readonly NoInfer<T>[],
-  ) => NonNullable<unknown>,
+  ) => {},
 ): (data: readonly NoInfer<T>[]) => number;
 
 export function sortedIndexBy(...args: readonly unknown[]): unknown {
@@ -104,11 +105,7 @@ export function sortedIndexBy(...args: readonly unknown[]): unknown {
 function sortedIndexByImplementation<T>(
   data: readonly T[],
   item: T,
-  valueFunction: (
-    item: T,
-    index: number | undefined,
-    data: readonly T[],
-  ) => NonNullable<unknown>,
+  valueFunction: (item: T, index: number | undefined, data: readonly T[]) => {},
 ): number {
   const value = valueFunction(item, undefined /* index */, data);
   return binarySearchCutoffIndex(

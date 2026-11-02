@@ -31,9 +31,6 @@
     "@vitest/mocker": {
       "vite": "~7.3.1"
     },
-    "eslint-plugin-jsx-a11y": {
-      "eslint": "~10.8.1"
-    },
     "vite": "~8.2.1",
     "vite-tsconfig-paths": {
       "vite": "~7.3.1"

@@ -27,8 +27,9 @@ const DECLARATION_FILE_RE = /\.d\.c?ts$/u;
 // with a semicolon.
 const TYPE_DEF_RE = /^type [^;]+;/mu;
 
-// Matches the insertion point at the end of the main export statement.
-const EXPORTS_INSERTION_POINT_RE = /(?<=export \{ [^}]+)(?= \};)/u;
+// The bundler exports our public API inline on each declaration, leaving an
+// empty statement at the end of the file for anything else we want to export.
+const EMPTY_EXPORTS_STATEMENT_RE = /^export \{\};$/mu;
 
 // @see `injectAdditionalTypeDeclarations`
 const INTERNAL_SYMBOLS = [
@@ -166,8 +167,8 @@ async function injectAdditionalTypeDeclarations({
         // @see https://github.com/remeda/remeda/issues/1248
         // @see https://github.com/remeda/remeda/issues/1175
         const withSymbols = withPolyfills.replace(
-          EXPORTS_INSERTION_POINT_RE,
-          () => `, ${INTERNAL_SYMBOLS.join(", ")}`,
+          EMPTY_EXPORTS_STATEMENT_RE,
+          () => `export { ${INTERNAL_SYMBOLS.join(", ")} };`,
         );
         if (withSymbols === withPolyfills) {
           throw new Error(`Could not find exports statement in: ${file}`);

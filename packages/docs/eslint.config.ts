@@ -91,8 +91,6 @@ export default defineConfig(
   },
 
   eslintPluginAstro.configs["flat/recommended"],
-  // TODO [eslint-plugin-astro@>3.1.0]: If astro's a11y configs support `eslint-plugin-jsx-a11y-x` (https://github.com/ota-meshi/eslint-plugin-astro/issues/565), switch to it and drop `eslint-plugin-jsx-a11y` (only these configs consume it) and its root `eslint` override.
-  // TODO [eslint-plugin-jsx-a11y@>6.10.2]: If this release ships native ESLint 10 support (https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1075), drop its `eslint` override in the root package.json. Until then the override's version range must match the `eslint` range in the workspace package.jsons: when they diverge npm can hoist the override's (older) copy to the root node_modules, where other hoisted plugins bind to it and break on cross-version rule metadata (e.g. eslint-plugin-unicorn wrapping core rules whose `defaultOptions` only exist in newer ESLint).
   eslintPluginAstro.configs["jsx-a11y-strict"],
   {
     files: ["**/*.astro"],
@@ -105,7 +103,7 @@ export default defineConfig(
         projectService: false,
       },
     },
-    // TODO [eslint-plugin-astro@>3.1.0]: astro-eslint-parser reads `ts.JsxEmit.Preserve`, which TypeScript 7's JS API doesn't expose, so every `.astro` file fails parsing with "Cannot read properties of undefined (reading 'Preserve')". This is one of the reasons `typescript` is held back to `^6.0.2` across the repo (typescript-eslint's peer range and tsdown's dts generation are the others); retest with TypeScript 7 when a newer parser ships.
+    // TODO [eslint-plugin-astro@>3.2.1]: astro-eslint-parser reads `ts.JsxEmit.Preserve`, which TypeScript 7's JS API doesn't expose, so every `.astro` file fails parsing with "Cannot read properties of undefined (reading 'Preserve')". This is one of the reasons `typescript` is held back to `^6.0.2` across the repo (typescript-eslint's peer range and tsdown's dts generation are the others); retest with TypeScript 7 when a newer parser ships.
     rules: {
       // Possible Errors
       "astro/no-exports-from-components": "error",

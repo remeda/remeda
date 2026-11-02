@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type --
+ * The value function can return anything other than `null` and `undefined`,
+ * which is exactly what `{}` means.
+ */
+
 import { purry } from "./purry";
 import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
 
@@ -37,11 +42,7 @@ import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
 export function sortedLastIndexBy<T>(
   data: readonly T[],
   item: T,
-  valueFunction: (
-    item: T,
-    index: number | undefined,
-    data: readonly T[],
-  ) => NonNullable<unknown>,
+  valueFunction: (item: T, index: number | undefined, data: readonly T[]) => {},
 ): number;
 
 /**
@@ -85,7 +86,7 @@ export function sortedLastIndexBy<T = never>(
     item: NoInfer<T>,
     index: number | undefined,
     data: readonly NoInfer<T>[],
-  ) => NonNullable<unknown>,
+  ) => {},
 ): (data: readonly T[]) => number;
 
 export function sortedLastIndexBy<T>(
@@ -95,7 +96,7 @@ export function sortedLastIndexBy<T>(
     item: NoInfer<T>,
     index: number | undefined,
     data: readonly NoInfer<T>[],
-  ) => NonNullable<unknown>,
+  ) => {},
 ): (data: readonly NoInfer<T>[]) => number;
 
 export function sortedLastIndexBy(...args: readonly unknown[]): unknown {
@@ -105,11 +106,7 @@ export function sortedLastIndexBy(...args: readonly unknown[]): unknown {
 function sortedLastIndexByImplementation<T>(
   array: readonly T[],
   item: T,
-  valueFunction: (
-    item: T,
-    index: number | undefined,
-    data: readonly T[],
-  ) => NonNullable<unknown>,
+  valueFunction: (item: T, index: number | undefined, data: readonly T[]) => {},
 ): number {
   const value = valueFunction(item, undefined /* index */, array);
   return binarySearchCutoffIndex(

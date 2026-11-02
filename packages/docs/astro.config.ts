@@ -100,7 +100,7 @@ function staticScriptsPlugin({
 
       const config = defineViteConfig({
         build: {
-          rollupOptions: {
+          rolldownOptions: {
             input,
             output: {
               dir: outputDir,
