@@ -27,8 +27,11 @@ const DECLARATION_FILE_RE = /\.d\.c?ts$/u;
 // with a semicolon.
 const TYPE_DEF_RE = /^type [^;]+;/mu;
 
-// Matches the insertion point at the end of the main export statement.
-const EXPORTS_INSERTION_POINT_RE = /(?<=export \{ [^}]+)(?= \};)/u;
+// The bundler exports our public API inline on each declaration, leaving an
+// empty statement at the end of the file for anything else we want to export.
+// Doc comments inlined from our dependencies reach the output at column 0 so
+// we anchor to the end of the file to avoid matching an example within them.
+const EMPTY_EXPORTS_STATEMENT_RE = /(?<=\n)export \{\};\s*$/u;
 
 // @see `injectAdditionalTypeDeclarations`
 const INTERNAL_SYMBOLS = [
@@ -112,7 +115,11 @@ export default defineConfig({
       dts: false,
 
       // Validate the final package artifacts.
-      attw: true,
+      attw: {
+        // tsdown's default attw profile only checks ESM resolutions, but we
+        // also publish CJS.
+        profile: "strict",
+      },
       publint: true,
     });
   },
@@ -166,8 +173,8 @@ async function injectAdditionalTypeDeclarations({
         // @see https://github.com/remeda/remeda/issues/1248
         // @see https://github.com/remeda/remeda/issues/1175
         const withSymbols = withPolyfills.replace(
-          EXPORTS_INSERTION_POINT_RE,
-          () => `, ${INTERNAL_SYMBOLS.join(", ")}`,
+          EMPTY_EXPORTS_STATEMENT_RE,
+          () => `export { ${INTERNAL_SYMBOLS.join(", ")} };`,
         );
         if (withSymbols === withPolyfills) {
           throw new Error(`Could not find exports statement in: ${file}`);

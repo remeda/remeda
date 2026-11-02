@@ -107,7 +107,6 @@ test("empty object", () => {
 
 // @see https://github.com/remeda/remeda/issues/1122
 test("parameterized record key (Issue #1122)", () => {
-  // eslint-disable-next-line unicorn/consistent-function-scoping -- A generic function is the only way to introduce a free type parameter for testing.
   const foo = <K extends string>(data: Record<K, { a: "hello" }>): void => {
     // Because of the type parameter TypeScript doesn't infer the concrete
     // return type here, preventing us from being able to compare it to an
@@ -125,5 +124,5 @@ test("parameterized record key (Issue #1122)", () => {
   // surfacing it as unused (`js/unused-local-variable`), which it technically
   // is, albeit this being a **type test** where execution is meaningless to
   // begin with...
-  void foo;
+  expectTypeOf(foo).toBeFunction();
 });

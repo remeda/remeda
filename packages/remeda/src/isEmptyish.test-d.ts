@@ -598,7 +598,6 @@ describe("plain objects", () => {
   });
 
   test("required prop and index signature", () => {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- This looks like a bug, the rule is ignoring the added index signature!
     const data = { a: "hello" } as { a: string; [key: string]: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();

@@ -55,17 +55,12 @@ type FromEntriesArray<Entries extends IterableContainer<Entry>> =
       ? Record<number, Entries[number][1]>
       : symbol extends AllKeys<Entries>
         ? Record<symbol, Entries[number][1]>
-        : FromEntriesArrayWithLiteralKeys<Entries>;
-
-// This type is largely copied from `objectFromEntries` in the repo:
-// *sindresorhus/ts-extras* but makes all properties of the output optional,
-// which is more correct because we can't assure that an entry will exist for
-// every possible prop/key of the input.
-// @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-from-entries.ts)
-type FromEntriesArrayWithLiteralKeys<Entries extends IterableContainer<Entry>> =
-  {
-    [P in AllKeys<Entries>]?: ValueForKey<Entries, P>;
-  };
+        : {
+            // All properties of the output are optional because we can't ensure
+            // that an entry will exist for every possible prop/key of the
+            // input.
+            [P in AllKeys<Entries>]?: ValueForKey<Entries, P>;
+          };
 
 type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
   Entries[number],

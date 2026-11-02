@@ -47,7 +47,8 @@ test("narrows unknowns", () => {
     expectTypeOf(
       // Since TypeScript 5.8 the type is narrowed in the else branch; previous
       // versions couldn't do that and kept the type as `unknown`.
-      true as IsEqual<typeof data, NonNullable<unknown>> extends true
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- `{}` is what `unknown` narrows to here.
+      true as IsEqual<typeof data, {}> extends true
         ? true
         : unknown extends typeof data
           ? true
