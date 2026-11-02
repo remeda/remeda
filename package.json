@@ -25,6 +25,9 @@
     "typescript-language-server": "^6.0.3"
   },
   "overrides": {
+    "@vitest/mocker": {
+      "vite": "~7.3.1"
+    },
     "vite": "~8.3.5",
     "vite-tsconfig-paths": {
       "vite": "~7.3.1"
