@@ -44,6 +44,9 @@ export default defineConfig(
     rules: {
       ...eslintPluginUnicorn.configs.recommended.rules,
 
+      // We keep an asterisk on every JSDoc line, same as the library code.
+      "unicorn/no-asterisk-prefix-in-documentation-comments": "off",
+
       // We prefer the "avoid" syntax which isn't the default...
       "unicorn/switch-case-braces": ["error", "avoid"],
     },

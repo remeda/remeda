@@ -151,6 +151,9 @@ export default defineConfig(
       // arrow function. Our typing provides the safety needed here.
       "unicorn/no-array-callback-reference": "off",
 
+      // We prefer `jsdoc/require-asterisk-prefix`.
+      "unicorn/no-asterisk-prefix-in-documentation-comments": "off",
+
       // This isn't very useful in a utility library, a lot of utilities need to
       // access arrays in a random-access way.
       "@typescript-eslint/no-non-null-assertion": "off",
