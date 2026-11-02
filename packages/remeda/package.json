@@ -68,7 +68,7 @@
     "@fast-check/vitest": "^0.5.0",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/node": "^26.6.6",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^5.0.5",
     "@vitest/eslint-plugin": "^1.6.28",
     "eslint": "~10.8.1",
     "eslint-config-prettier": "^10.1.8",
@@ -88,7 +88,7 @@
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.72.1",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.1.10"
+    "vitest": "^5.0.5"
   },
   "sideEffects": false
 }
