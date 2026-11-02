@@ -6,7 +6,6 @@ import { purry } from "./purry";
 // creation.
 const ARROW_FUNCTION_OWN_PROPS = ["length", "name"];
 
-type RestArgsFunction = (...args: readonly unknown[]) => unknown;
 
 describe("data-first (delegated)", () => {
   test("exact number of arguments", () => {
@@ -23,6 +22,8 @@ describe("data-first (delegated)", () => {
 });
 
 describe("data-last (curried)", () => {
+  type RestArgsFunction = (...args: readonly unknown[]) => unknown;
+
   describe("missing a single argument", () => {
     // @ts-expect-error [ts2322] -- `purriedFn` returns `unknown`, like the implementation signature of a utility built on `purry`; the tests in this block assert the runtime shape this type describes.
     const curried: RestArgsFunction = purriedFn(37);

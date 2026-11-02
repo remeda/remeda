@@ -9,10 +9,12 @@ import { isArray } from "./isArray";
 test("should infer readonly unknown[] when given any", () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment -- Explicitly testing `any`
   const data = [] as any;
-  if (isArray(data)) {
-    expectTypeOf(data).not.toBeAny();
-    expectTypeOf(data[0]).toBeUnknown();
+  if (!isArray(data)) {
+    return;
   }
+
+  expectTypeOf(data).not.toBeAny();
+  expectTypeOf(data[0]).toBeUnknown();
 });
 
 test("should work as type guard", () => {

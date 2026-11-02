@@ -86,7 +86,7 @@ test("type predicates that take a type parameter", () => {
 });
 
 test("type predicates which are too narrow for the wrapper", () => {
-  // eslint-disable-next-line unicorn/no-unused-array-method-return -- We use `filter` as a canonical usage of `isNot`, we need it so that we have a wrapper around `isNot` which defines the type for the items being checked.
+  // eslint-disable-next-line unicorn/no-unused-builtin-method-return -- We use `filter` as a canonical usage of `isNot`, we need it so that we have a wrapper around `isNot` which defines the type for the items being checked.
   $typed<(string | number)[]>().filter(
     // @ts-expect-error [ts2769] -- Intentional! This is what we want to test
     // here. The `number` in the data type cannot be processed by the type
@@ -96,7 +96,7 @@ test("type predicates which are too narrow for the wrapper", () => {
 });
 
 test("type predicates which are disjoint for the wrapper", () => {
-  // eslint-disable-next-line unicorn/no-unused-array-method-return -- We use `filter` as a canonical usage of `isNot`, we need it so that we have a wrapper around `isNot` which defines the type for the items being checked.
+  // eslint-disable-next-line unicorn/no-unused-builtin-method-return -- We use `filter` as a canonical usage of `isNot`, we need it so that we have a wrapper around `isNot` which defines the type for the items being checked.
   $typed<number[]>().filter(
     // @ts-expect-error [ts2769] -- Intentional! This is what we want to test
     // here. The `number` in the data type cannot be processed by the type

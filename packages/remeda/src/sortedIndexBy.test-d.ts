@@ -8,13 +8,7 @@ import { sortedIndexBy } from "./sortedIndexBy";
 
 type Status = "active" | "inactive" | "pending";
 
-type Task = {
-  readonly priority: "high" | "low" | "medium";
-  readonly score: number;
-};
 
-type Animal = { readonly name: string };
-type Dog = Animal & { readonly breed: string };
 
 describe("dataFirst", () => {
   test("a literal item among literal union items", () => {
@@ -103,6 +97,11 @@ describe("dataLast", () => {
   });
 
   test("an object item with a literal union prop", () => {
+    type Task = {
+      readonly priority: "high" | "low" | "medium";
+      readonly score: number;
+    };
+
     expectTypeOf(
       pipe(
         [] as Task[],
@@ -121,6 +120,9 @@ describe("dataLast", () => {
   });
 
   test("a subtype item among supertype items", () => {
+    type Animal = { readonly name: string };
+    type Dog = Animal & { readonly breed: string };
+
     expectTypeOf(
       pipe([] as Animal[], sortedIndexBy($typed<Dog>(), prop("name"))),
     ).toEqualTypeOf<number>();

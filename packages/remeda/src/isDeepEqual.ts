@@ -93,11 +93,12 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
     return true;
   }
 
-  if (typeof data !== "object" || typeof other !== "object") {
-    return false;
-  }
-
-  if (data === null || other === null) {
+  if (
+    typeof data !== "object" ||
+    data === null ||
+    typeof other !== "object" ||
+    other === null
+  ) {
     return false;
   }
 
@@ -204,11 +205,7 @@ function isDeepEqualMaps(
   }
 
   for (const [key, value] of data) {
-    if (!other.has(key)) {
-      return false;
-    }
-
-    if (!isDeepEqualImplementation(value, other.get(key))) {
+    if (!other.has(key) || !isDeepEqualImplementation(value, other.get(key))) {
       return false;
     }
   }

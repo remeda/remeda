@@ -4,16 +4,6 @@ import { difference } from "./difference";
 import { map } from "./map";
 import { pipe } from "./pipe";
 
-type Status = "active" | "inactive" | "pending";
-
-type Task = {
-  readonly priority: "high" | "low" | "medium";
-  readonly score: number;
-};
-
-type Animal = { readonly name: string };
-type Dog = Animal & { readonly breed: string };
-
 describe("dataFirst", () => {
   test("an undefined value among possibly undefined items", () => {
     expectTypeOf(
@@ -28,6 +18,8 @@ describe("dataFirst", () => {
 });
 
 describe("dataLast", () => {
+  type Status = "active" | "inactive" | "pending";
+
   test("a literal value among wider items", () => {
     expectTypeOf(pipe([1, 2, 3], difference([2]))).toEqualTypeOf<number[]>();
   });
@@ -81,6 +73,11 @@ describe("dataLast", () => {
   });
 
   test("an object value with a literal union prop", () => {
+    type Task = {
+      readonly priority: "high" | "low" | "medium";
+      readonly score: number;
+    };
+
     expectTypeOf(
       pipe([] as Task[], difference([{ priority: "high", score: 2 }])),
     ).toEqualTypeOf<Task[]>();
@@ -93,6 +90,9 @@ describe("dataLast", () => {
   });
 
   test("a subtype value among supertype items", () => {
+    type Animal = { readonly name: string };
+    type Dog = Animal & { readonly breed: string };
+
     expectTypeOf(
       pipe([] as Animal[], difference([$typed<Dog>()])),
     ).toEqualTypeOf<Animal[]>();

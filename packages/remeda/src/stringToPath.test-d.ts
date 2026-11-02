@@ -1,7 +1,3 @@
-/* eslint-disable unicorn/prefer-string-raw --
- * String.raw`` doesn't get identified as string literals by TypeScript!
- */
-
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../test/$typed";
 import { stringToPath } from "./stringToPath";

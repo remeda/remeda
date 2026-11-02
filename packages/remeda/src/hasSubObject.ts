@@ -111,11 +111,7 @@ function hasSubObjectImplementation<
   S extends Record<PropertyKey, unknown>,
 >(data: T, subObject: S): data is HasSubObjectGuard<T, S> {
   for (const [key, value] of Object.entries(subObject)) {
-    if (!Object.hasOwn(data, key)) {
-      return false;
-    }
-
-    if (!isDeepEqual(value, data[key])) {
+    if (!Object.hasOwn(data, key) || !isDeepEqual(value, data[key])) {
       return false;
     }
   }
