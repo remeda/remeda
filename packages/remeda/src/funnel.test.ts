@@ -18,9 +18,10 @@ const UT = 16;
 // only holds on a clock that moves when the test moves it: with real timers a
 // late event loop wake-up can run timers in a different order.
 beforeEach(() => {
-  // Faking everything breaks on Node 18, where `performance.now` is derived from
-  // `process.hrtime`: restoring the clock looks like a huge time jump to the
-  // duration check vitest wraps hooks with, which then fails them as timed out.
+  // Faking everything breaks on Node 18, where `performance.now` is derived
+  // from `process.hrtime`: restoring the clock looks like a huge time jump to
+  // the duration check vitest wraps hooks with, which then fails them as timed
+  // out.
   vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "Date"] });
 });
 
