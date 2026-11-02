@@ -1,5 +1,6 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../test/$typed";
+import { defaultTo } from "./defaultTo";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
@@ -7,8 +8,6 @@ import { prop } from "./prop";
 import { sortedIndexBy } from "./sortedIndexBy";
 
 type Status = "active" | "inactive" | "pending";
-
-
 
 describe("dataFirst", () => {
   test("a literal item among literal union items", () => {
@@ -114,7 +113,7 @@ describe("dataLast", () => {
     expectTypeOf(
       pipe(
         [] as (number | undefined)[],
-        sortedIndexBy(undefined, (item) => item ?? 0),
+        sortedIndexBy(undefined, defaultTo(0)),
       ),
     ).toEqualTypeOf<number>();
   });

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type --
+/* eslint-disable @typescript-eslint/explicit-function-return-type, unicorn/no-unnecessary-parameters --
  * These aren't useful for a reference implementation for a legacy library!
  */
 
@@ -169,6 +169,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
 
   test("should invoke the trailing call with the correct arguments and `this` binding", async () => {
     const DATA = {};
+    // eslint-disable-next-line unicorn/consistent-boolean-name -- this rule isn't useful here...
     const mockFn = vi.fn<(a: object, b: string) => boolean>(constant(false));
 
     // In Lodash the test uses both `leading` and `trailing` timing options

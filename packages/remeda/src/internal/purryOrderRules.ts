@@ -127,7 +127,7 @@ export function orderRuleComparer<T>(
     typeof primaryRule === "function" ? primaryRule : primaryRule[0];
 
   const direction = typeof primaryRule === "function" ? "asc" : primaryRule[1];
-  const comparator = COMPARATORS[direction];
+  const isInOrder = COMPARATORS[direction];
 
   const nextComparer =
     secondaryRule === undefined
@@ -138,11 +138,11 @@ export function orderRuleComparer<T>(
     const projectedA = projector(a);
     const projectedB = projector(b);
 
-    if (comparator(projectedA, projectedB)) {
+    if (isInOrder(projectedA, projectedB)) {
       return 1;
     }
 
-    if (comparator(projectedB, projectedA)) {
+    if (isInOrder(projectedB, projectedA)) {
       return -1;
     }
 

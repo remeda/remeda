@@ -935,6 +935,7 @@ function* naturals(): Generator<number> {
   }
 }
 
+// eslint-disable-next-line unicorn/no-unnecessary-parameters -- this rule doesn't matter, it's just a test harness
 function* upTo(last: number): Generator<number> {
   for (let value = 1; value <= last; value++) {
     yield value;

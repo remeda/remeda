@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { defaultTo } from "./defaultTo";
 import { firstBy } from "./firstBy";
 import { identity } from "./identity";
 import { pipe } from "./pipe";
@@ -101,7 +102,7 @@ describe("runtime (dataFirst)", () => {
 
   test("reads holes as undefined", () => {
     // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(firstBy([1, , 0], (value) => value ?? -1)).toBeUndefined();
+    expect(firstBy([1, , 0], defaultTo(-1))).toBeUndefined();
   });
 });
 
