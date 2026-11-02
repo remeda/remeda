@@ -31,16 +31,14 @@ const category = tagContent(data.signatures[0].comment.blockTags, "category");
     />
   </HeaderCardHeader>
   <CardContent className="grid gap-8">
-    {
-      pipe(
-        data.signatures,
-        uniqueBy(({ comment: { blockTags } }) =>
-          tagContent(blockTags, "signature"),
-        ),
-        // When multiple signatures exist, put the dataLast ones last.
-        sortBy(({ comment: { blockTags } }) => hasTag(blockTags, "dataLast")),
-        map((signature) => <FunctionApi signature={signature} />),
-      )
-    }
+    {pipe(
+      data.signatures,
+      uniqueBy(({ comment: { blockTags } }) =>
+        tagContent(blockTags, "signature"),
+      ),
+      // When multiple signatures exist, put the dataLast ones last.
+      sortBy(({ comment: { blockTags } }) => hasTag(blockTags, "dataLast")),
+      map((signature) => <FunctionApi signature={signature} />),
+    )}
   </CardContent>
 </ArticleCard>

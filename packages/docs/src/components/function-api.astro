@@ -57,20 +57,18 @@ function extractReturnType(type: Signature["type"]): string {
 ---
 
 <section class="flex flex-col gap-2">
-  {
-    variant !== undefined && (
-      <h4 class="text-sm font-bold text-secondary-foreground">{variant}</h4>
-    )
-  }
+  {variant !== undefined && <h4
+    class="text-sm font-bold text-secondary-foreground"
+  >
+    {variant}
+  </h4>}
   <details>
     <summary
       class="relative flex cursor-pointer list-none items-center [&::-webkit-details-marker]:hidden"
     >
-      {
-        signature !== undefined && (
-          <CodeBlock class="flex-1" code={signature} inline />
-        )
-      }
+      {signature !== undefined && (
+        <CodeBlock class="flex-1" code={signature} inline />
+      )}
       <ChevronsUpDownIcon
         className="absolute right-0 mr-2 size-4 text-background dark:text-foreground"
       />
@@ -81,16 +79,14 @@ function extractReturnType(type: Signature["type"]): string {
         <dl
           class="mt-1 grid grid-cols-[max-content_1fr] gap-x-2 gap-y-1 text-sm"
         >
-          {
-            parameters?.map(({ name, comment }) => (
-              <>
-                <dt class="font-semibold">{name}</dt>
-                <dd class="text-muted-foreground">
-                  {comment?.summary.map(prop("text")).join("")}
-                </dd>
-              </>
-            ))
-          }
+          {parameters?.map(({ name, comment }) => (
+            <>
+              <dt class="font-semibold">{name}</dt>
+              <dd class="text-muted-foreground">
+                {comment?.summary.map(prop("text")).join("")}
+              </dd>
+            </>
+          ))}
         </dl>
       </figure>
       <figure>
@@ -99,9 +95,7 @@ function extractReturnType(type: Signature["type"]): string {
       </figure>
     </div>
   </details>
-  {
-    example !== undefined && (
-      <CodeBlock class="text-xs lg:text-base" code={example} />
-    )
-  }
+  {example !== undefined && (
+    <CodeBlock class="text-xs lg:text-base" code={example} />
+  )}
 </section>

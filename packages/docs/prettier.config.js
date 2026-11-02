@@ -12,4 +12,8 @@ export default {
   tailwindStylesheet: "./src/styles/global.css",
   // @see https://github.com/tailwindlabs/prettier-plugin-tailwindcss?tab=readme-ov-file#sorting-classes-in-function-calls
   tailwindFunctions: ["cn", "cva"],
+
+  // Must match `compressHTML` in astro.config.ts, or prettier-plugin-astro's
+  // whitespace handling diverges from the build's actual HTML compression.
+  astroCompressHTML: true,
 };

@@ -32,33 +32,38 @@ const Migration = entry === undefined ? undefined : await render(entry);
 {
   // Some of the top-level functions in V1 are namespaces which we don't show
   // in the docs.
-  data.kind === "function" && (
-    <ArticleCard className="scroll-mt-24" id={data.name}>
-      <HeaderCardHeader>
-        <FunctionDescription
-          category={category}
-          func={data}
-          internalNames={internalNames}
-        />
-      </HeaderCardHeader>
-      {Migration !== undefined && (
-        <CardContent>
-          <details class="group rounded-md border border-sky-100 bg-linear-to-tl from-sky-50 to-sky-100 p-3 shadow-xs dark:border-sky-900 dark:from-sky-900 dark:to-sky-950">
-            <summary class="relative flex cursor-pointer list-none items-center text-sm font-semibold tracking-wider text-neutral-800 uppercase dark:text-neutral-200 [&::-webkit-details-marker]:hidden">
-              Breaking changes in v2
-              <ChevronsUpDownIcon className="absolute right-0 size-4" />
-            </summary>
-            <Prose class="mt-4 max-w-none prose-h4:text-xl prose-h4:font-bold prose-h5:mb-2 prose-h5:text-lg prose-h5:font-semibold prose-h6:text-base prose-h6:font-semibold prose-p:max-w-prose">
-              <Migration.Content />
-            </Prose>
-          </details>
-        </CardContent>
-      )}
-      <CardContent className="grid gap-8">
-        {data.signatures.map((signature) => (
-          <FunctionApi signature={signature} />
-        ))}
-      </CardContent>
-    </ArticleCard>
-  )
+  data.kind === "function" && <ArticleCard
+    className="scroll-mt-24"
+    id={data.name}
+  >
+    <HeaderCardHeader>
+      <FunctionDescription
+        category={category}
+        func={data}
+        internalNames={internalNames}
+      />
+    </HeaderCardHeader>
+    {Migration !== undefined && <CardContent>
+      <details
+        class="group rounded-md border border-sky-100 bg-linear-to-tl from-sky-50 to-sky-100 p-3 shadow-xs dark:border-sky-900 dark:from-sky-900 dark:to-sky-950"
+      >
+        <summary
+          class="relative flex cursor-pointer list-none items-center text-sm font-semibold tracking-wider text-neutral-800 uppercase dark:text-neutral-200 [&::-webkit-details-marker]:hidden"
+        >
+          Breaking changes in v2
+          <ChevronsUpDownIcon className="absolute right-0 size-4" />
+        </summary>
+        <Prose
+          class="mt-4 max-w-none prose-h4:text-xl prose-h4:font-bold prose-h5:mb-2 prose-h5:text-lg prose-h5:font-semibold prose-h6:text-base prose-h6:font-semibold prose-p:max-w-prose"
+        >
+          <Migration.Content />
+        </Prose>
+      </details>
+    </CardContent>}
+    <CardContent className="grid gap-8">
+      {data.signatures.map((signature) => (
+        <FunctionApi signature={signature} />
+      ))}
+    </CardContent>
+  </ArticleCard>
 }
