@@ -2,7 +2,6 @@ import { describe, expect, test } from "vitest";
 import type { LazyUnaryFunction } from "./lazyDataLastImplementation";
 import { purryWithLazy } from "./purryWithLazy";
 
-
 describe("data-first (delegated)", () => {
   test("exact number of arguments", () => {
     expect(purriedFn([13], 37)).toBe("1337");

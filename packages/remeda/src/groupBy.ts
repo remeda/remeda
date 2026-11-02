@@ -97,7 +97,7 @@ const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(
 
     if (items === undefined) {
       // It is more performant to create a 1-element array over creating an
-      // empty array and falling through to a unified the push. It is also more
+      // empty array and falling through to a unified push. It is also more
       // performant to mutate the existing object over using spread to
       // continually create new objects on every unique key.
       // @ts-expect-error [ts2322] -- In addition to the typing issue we have for `item`, this line also creates a typing issue for the whole object, as TypeScript is having a hard time inferring what values could be adding to the object.

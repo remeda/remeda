@@ -63,7 +63,7 @@ const [{ comment }] = signatures;
                 ? // Already the text of a markdown link the author wrote
                   // (e.g., `[`toLowerCase`](MDN_URL)`).
                   text
-                : // Link to it's anchor.
+                : // Link to its anchor.
                   `[${text}](#${codeContent})`;
             })
             .join("")}

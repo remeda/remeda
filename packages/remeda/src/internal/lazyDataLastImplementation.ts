@@ -63,6 +63,6 @@ export function lazyDataLastImplementation<
   dataLast.lazy = lazy;
   dataLast.lazyArgs = args;
 
-  // @ts-expect-error [ts2322] -- TypeScript doesn't narrow an object's declared type after its optional props are assigned, so it can't see that `dataLast` is now a complete `LazyUnaryFunction`.
+  // @ts-expect-error [ts2322] -- TypeScript doesn't narrow an object's declared type after its optional props are assigned.
   return dataLast;
 }

@@ -6,7 +6,6 @@ import { purry } from "./purry";
 // creation.
 const ARROW_FUNCTION_OWN_PROPS = ["length", "name"];
 
-
 describe("data-first (delegated)", () => {
   test("exact number of arguments", () => {
     expect(purriedFn(13, 37)).toBe("1337");

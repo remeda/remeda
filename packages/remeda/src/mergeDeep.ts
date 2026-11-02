@@ -60,16 +60,16 @@ function mergeDeepImplementation<
   for (const key in source) {
     if (
       Object.hasOwn(destination, key) &&
-      isPlainObject(source[key]) &&
       isPlainObject(
         // @ts-expect-error [ts2536] -- TypeScript isn't narrowing `key` although we checked that it exists in both objects, so it can't see this access is valid.
         destination[key],
-      )
+      ) &&
+      isPlainObject(source[key])
     ) {
       // Both destination and source have a mergeable object for this key, so we
       // recursively merge them.
       output[key] = mergeDeepImplementation(
-        // @ts-expect-error [ts2536] - We build the output object iteratively, I don't think it's possible to improve the types here so that typescript infers this correctly.
+        // @ts-expect-error [ts2536] -- TypeScript isn't narrowing `key` although we checked that it exists in both objects, so it can't see this access is valid.
         destination[key],
         source[key],
       );

@@ -205,10 +205,10 @@ function groupByPropImplementation<
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Following the problem above, TypeScript then thinks that `key` is `never`, and also types `items` as `never`.
     if (items === undefined) {
       // It is more performant to create a 1-element array over creating an
-      // empty array and falling through to a unified the push. It is also more
+      // empty array and falling through to a unified push. It is also more
       // performant to mutate the existing object over using spread to
       // continually create new objects on every unique key.
-      // @ts-expect-error [ts7053] -- For the same reasons as mentioned above, TypeScript isn't inferring `key` correctly, and therefore is erroring when trying to access the output object using it.
+      // @ts-expect-error [ts2322] -- For the same reasons as mentioned above, TypeScript isn't inferring `key` correctly, and therefore is erroring when trying to access the output object using it.
       output[key] = [item];
     } else {
       // It is more performant to add the items to an existing array instead of
