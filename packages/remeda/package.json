@@ -72,7 +72,7 @@
     "@vitest/eslint-plugin": "^1.6.28",
     "eslint": "~10.8.1",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jsdoc": "^64.2.1",
+    "eslint-plugin-jsdoc": "^65.4.2",
     "eslint-plugin-unicorn": "^74.0.0",
     "jiti": "^2.7.0",
     "jsr": "^0.14.3",
