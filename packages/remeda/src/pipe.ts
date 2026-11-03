@@ -288,12 +288,14 @@ export function pipe(
 ): unknown {
   let output = input;
 
-  let functionIndex = 0;
-  while (functionIndex < functions.length) {
+  for (
+    let functionIndex = 0;
+    functionIndex < functions.length;
+    functionIndex += 1
+  ) {
     const func = functions[functionIndex]!;
     if (!("lazy" in func)) {
       output = func(output);
-      functionIndex += 1;
       continue;
     }
 
@@ -312,7 +314,6 @@ export function pipe(
             func.lazy,
             func.lazyArgs,
           );
-      functionIndex += 1;
       continue;
     }
 
@@ -322,24 +323,24 @@ export function pipe(
     // function's data-first implementation in turn instead, trading the
     // per-item step bookkeeping for an intermediate array per step. Other
     // iterables always fuse, as those implementations only accept arrays.
-    const stepByStepEnd = Array.isArray(output)
+    const sequentialSequenceEnd = Array.isArray(output)
       ? findSequentialSequenceEnd(functions, functionIndex)
       : functionIndex;
-    if (stepByStepEnd > functionIndex) {
-      do {
+    if (sequentialSequenceEnd > functionIndex) {
+      for (; functionIndex < sequentialSequenceEnd; functionIndex += 1) {
         // @ts-expect-error [ts2345] -- Every function before `stepByStepEnd` is lazy and gets the array the previous one returned, but TypeScript can't narrow the functions from the scan that found them.
         output = functions[functionIndex]!(output);
-        functionIndex += 1;
-      } while (functionIndex < stepByStepEnd);
+      }
+      functionIndex -= 1;
       continue;
     }
 
     const fusedSequence = buildFusedSequence(functions, functionIndex);
     const fusedOutput = runFusedSequence(output, fusedSequence);
-    functionIndex += fusedSequence.length;
+    functionIndex += fusedSequence.length - 1;
 
-    // @ts-expect-error [ts2322] -- TypeScript can't follow the logic that `functionIndex - 1` is pointing to the last function in `fusedSequence`.
-    const lastLazyFunction: LazyUnaryFunction = functions[functionIndex - 1];
+    // @ts-expect-error [ts2322] -- TypeScript can't follow the logic that `functionIndex` is pointing to the last function in `fusedSequence`.
+    const lastLazyFunction: LazyUnaryFunction = functions[functionIndex];
     output = lastLazyFunction.lazy.isReducing ? fusedOutput[0] : fusedOutput;
   }
 
