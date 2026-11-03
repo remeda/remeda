@@ -242,7 +242,8 @@ function chunkImplementation<T>(data: readonly T[], size: number): T[][] {
 
   if (size >= data.length) {
     // Optimized for when there is only one chunk.
-    return [[...data]];
+    // eslint-disable-next-line unicorn/prefer-spread -- A spread would fill holes, unlike the slices below.
+    return [data.slice()];
   }
 
   const chunks = Math.ceil(data.length / size);
@@ -250,16 +251,9 @@ function chunkImplementation<T>(data: readonly T[], size: number): T[][] {
   // eslint-disable-next-line unicorn/no-new-array -- This is OK, a sparse array allows us to handle very large arrays more efficiently.
   const result = new Array<T[]>(chunks);
 
-  if (size === 1) {
-    // Optimized for when we don't need slice.
-    for (const [index, item] of data.entries()) {
-      result[index] = [item];
-    }
-  } else {
-    for (let index = 0; index < chunks; index += 1) {
-      const start = index * size;
-      result[index] = data.slice(start, start + size);
-    }
+  for (let index = 0; index < chunks; index += 1) {
+    const start = index * size;
+    result[index] = data.slice(start, start + size);
   }
 
   return result;
