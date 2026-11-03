@@ -10,7 +10,7 @@ import type { LazyUnaryFunction } from "./lazyDataLastImplementation";
  * pipe early, so they should run one after the other; `startIndex` when one of
  * them can, so the whole run should fuse.
  */
-export function runSequentialSequence(
+export function findSequentialSequenceEnd(
   functions: readonly (UnaryFunction | LazyUnaryFunction)[],
   startIndex: number,
 ): number {

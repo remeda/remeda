@@ -6,7 +6,7 @@ import type { UnaryFunction } from "./internal/dataLastImplementation";
 import { buildFusedSequence, runFusedSequence } from "./internal/fusedSequence";
 import { iterableDataFirst } from "./internal/iterableDataFirst";
 import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
-import { runSequentialSequence } from "./internal/sequentialSequence";
+import { findSequentialSequenceEnd } from "./internal/sequentialSequence";
 
 /**
  * Performs left-to-right function composition, passing data through functions
@@ -323,7 +323,7 @@ export function pipe(
     // per-item step bookkeeping for an intermediate array per step. Other
     // iterables always fuse, as those implementations only accept arrays.
     const stepByStepEnd = Array.isArray(output)
-      ? runSequentialSequence(functions, functionIndex)
+      ? findSequentialSequenceEnd(functions, functionIndex)
       : functionIndex;
     if (stepByStepEnd > functionIndex) {
       do {
