@@ -74,9 +74,19 @@ function rangeImplementation(
   const end =
     typeof endOrOptions === "object" ? endOrOptions.end : endOrOptions;
   const length = ceilingWithSnap((end - start) / step);
-  return length > 0
-    ? Array.from({ length }, (_, i) => (i === 0 ? start : start + i * step))
-    : [];
+  // Not `length <= 0`, a NaN length has to reach this branch too.
+  if (!(length > 0)) {
+    return [];
+  }
+
+  // eslint-disable-next-line unicorn/no-new-array -- `length` is always a number here, so this can't be mistaken for an array holding one item.
+  const result = new Array<number>(length);
+
+  for (let index = 0; index < length; index++) {
+    result[index] = index === 0 ? start : start + index * step;
+  }
+
+  return result;
 }
 
 // JS's floating-point math can create numbers that are slightly larger than
