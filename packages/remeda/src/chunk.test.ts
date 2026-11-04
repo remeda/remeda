@@ -208,14 +208,14 @@ describe("edge-cases", () => {
       ]);
     });
 
-    test("kept in a single chunk", () => {
+    test("filled in a single chunk", () => {
       // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      expect(chunk([1, , 3], 3)).toStrictEqual([[1, , 3]]);
+      expect(chunk([1, , 3], 3)).toStrictEqual([[1, undefined, 3]]);
     });
 
-    test("kept in chunks of size 1", () => {
+    test("filled in chunks of size 1", () => {
       // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      expect(chunk([1, , 3], 1)).toStrictEqual([[1], [,], [3]]);
+      expect(chunk([1, , 3], 1)).toStrictEqual([[1], [undefined], [3]]);
     });
   });
 
