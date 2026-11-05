@@ -47,5 +47,5 @@ export function reverse(...args: readonly unknown[]): unknown {
 function reverseImplementation<T>(array: readonly T[]): T[] {
   // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toReversed` here.
   // eslint-disable-next-line unicorn/no-array-reverse -- See TODO above.
-  return [...array].reverse();
+  return array.concat().reverse();
 }

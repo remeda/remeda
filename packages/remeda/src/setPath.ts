@@ -95,8 +95,7 @@ function setPathImplementation(
   }
 
   if (Array.isArray(data)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const copy = [...data];
+    const copy = data.concat();
     copy[pivot as number] = setPathImplementation(
       data[pivot as number],
       rest,

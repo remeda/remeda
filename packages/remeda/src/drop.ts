@@ -144,7 +144,7 @@ export function drop(...args: readonly unknown[]): unknown {
 const dropImplementation = <T extends IterableContainer>(
   array: T,
   n: number,
-): T[number][] => (n < 0 ? [...array] : array.slice(n));
+): T[number][] => (n < 0 ? array.concat() : array.slice(n));
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (Number.isNaN(n) || n < 1) {

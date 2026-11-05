@@ -89,11 +89,15 @@ test("holes are kept when an item matches", () => {
   ]);
 });
 
-test("holes become undefined when nothing matches", () => {
+test("holes are kept when nothing matches", () => {
   expect(
     // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
     splitWhen([1, , 3], constant(false)),
-  ).toStrictEqual([[1, undefined, 3], []]);
+  ).toStrictEqual([
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
+    [1, , 3],
+    [],
+  ]);
 });
 
 test("empty array in a pipe", () => {

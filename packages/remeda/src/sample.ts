@@ -176,7 +176,7 @@ function sampleImplementation<T>(data: readonly T[], sampleSize: number): T[] {
 
   if (sampleSize >= data.length) {
     // Trivial
-    return [...data];
+    return data.concat();
   }
 
   // We have 2 modes of sampling, depending on the size of the sample requested.

@@ -242,7 +242,7 @@ function chunkImplementation<T>(data: readonly T[], size: number): T[][] {
 
   if (size >= data.length) {
     // Optimized for when there is only one chunk.
-    return [[...data]];
+    return [data.concat()];
   }
 
   const chunks = Math.ceil(data.length / size);

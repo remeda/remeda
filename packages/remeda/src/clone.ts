@@ -101,7 +101,6 @@ function deepCloneObject<T extends object>(
   for (const entry of Object.entries(value)) {
     const clonedValue: unknown = cloneValue(entry[1], refFrom, refTo);
 
-    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
     const key = entry[0];
     if (key === "__proto__") {
       // We want `__proto__` to act just like any other key, but assigning it

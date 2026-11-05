@@ -98,4 +98,4 @@ const sortByImplementation = <T>(
   compareFn: CompareFunction<T>,
 ): T[] =>
   // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSorted` here.
-  [...data].sort(compareFn);
+  data.concat().sort(compareFn);

@@ -66,7 +66,6 @@ function mapValuesImplementation<T extends object, Value>(
   const out: Record<string, Value> = {};
 
   for (const entry of Object.entries(data)) {
-    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
     const key = entry[0];
     const mappedValue = valueMapper(entry[1], key, data);
     if (key === "__proto__") {

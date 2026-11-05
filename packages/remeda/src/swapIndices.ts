@@ -163,7 +163,7 @@ function swapArray(
   index1: number,
   index2: number,
 ): unknown[] {
-  const result = [...data];
+  const result = data.concat();
 
   if (Number.isNaN(index1) || Number.isNaN(index2)) {
     return result;

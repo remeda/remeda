@@ -11,8 +11,8 @@ export type LazyStep = {
 } & (
   | {
       readonly requiresData: true;
-      // Mutable: each item is appended before the evaluator reads the array as
-      // its `data` argument, and every invocation shares it.
+      // Notice the array is mutable, we will be adding items as the pipe is
+      // evaluating them. It is shared with every invocation of the evaluator.
       readonly data: unknown[];
     }
   | {
@@ -25,6 +25,14 @@ export type LazyStep = {
  * Builds the steps for the sequence of lazy functions that starts at
  * `startIndex`: the consecutive lazy functions, ending after the first reducing
  * one.
+ *
+ * @param functions - The functions of the pipe.
+ * @param startIndex - The index of the first function in the sequence.
+ * @returns One step per function in the sequence, each with its own fresh
+ * evaluator, ready for a single `runFusedSequence` call. The length of the
+ * result is the number of functions the sequence covers.
+ * @see runFusedSequence
+ * @see findSequentialSequenceEnd
  */
 export function buildFusedSequence(
   functions: readonly (UnaryFunction | LazyUnaryFunction)[],
@@ -35,6 +43,7 @@ export function buildFusedSequence(
   for (let index = startIndex; index < functions.length; index++) {
     const currentFunction = functions[index]!;
     if (!("lazy" in currentFunction)) {
+      // Non-lazy functions cannot be fused.
       break;
     }
 
@@ -68,8 +77,13 @@ export function buildFusedSequence(
  * Runs `input` through the steps one item at a time rather than one function at
  * a time, so a step that stops skips the remaining items in every step.
  *
+ * @param input - The iterable to run through the steps.
+ * @param fusedSequence - The steps from `buildFusedSequence`. The run advances
+ * their state in place, so they serve this one call only.
  * @returns The items that left the last step; the caller unwraps a reducing
  * step's value.
+ * @see buildFusedSequence
+ * @see iterableDataFirst
  */
 export function runFusedSequence(
   input: unknown,
@@ -80,8 +94,6 @@ export function runFusedSequence(
   const slot = createLazySlot();
 
   if (Array.isArray(input)) {
-    // Iterated rather than indexed, so a reactive array that instruments
-    // iteration tracks one dependency instead of one per index.
     for (const item of input) {
       const isDone = processItem(fusedSequence, accumulator, item, slot, 0);
       if (isDone) {
@@ -118,8 +130,9 @@ function processItem(
   slot: LazySlot,
   firstStepIndex: number,
 ): boolean {
-  let currentItem = item;
   let isDone = false;
+
+  let currentItem = item;
   for (
     let stepIndex = firstStepIndex;
     stepIndex < fusedSequence.length;
@@ -137,9 +150,10 @@ function processItem(
 
     step.itemIndex += 1;
 
-    // Every control is a symbol, so an item of any other type skips the
-    // comparisons below with this one check.
     if (typeof result === "symbol") {
+      // Every control is a symbol, so an item of any other type skips the
+      // comparisons below with this one check.
+
       if (result === SKIP_ITEM) {
         return isDone;
       }

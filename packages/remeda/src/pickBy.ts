@@ -198,7 +198,6 @@ function pickByImplementation<T extends object>(
   const out: Partial<Record<string, unknown>> = {};
 
   for (const entry of Object.entries(data)) {
-    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
     const key = entry[0];
     const value: unknown = entry[1];
 

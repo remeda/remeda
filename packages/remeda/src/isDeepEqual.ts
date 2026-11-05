@@ -137,7 +137,6 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
   }
 
   for (const entry of Object.entries(data)) {
-    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
     const key = entry[0];
     if (
       !Object.hasOwn(other, key) ||
@@ -199,7 +198,6 @@ function isDeepEqualMaps(
   }
 
   for (const entry of data) {
-    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
     const key = entry[0];
     if (
       !other.has(key) ||

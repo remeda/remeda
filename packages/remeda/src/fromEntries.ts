@@ -148,9 +148,7 @@ function fromEntriesImplementation(
   const result: Record<PropertyKey, unknown> = {};
 
   for (const entry of entries) {
-    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
     const key = entry[0];
-    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
     const value = entry[1];
 
     if (key === "__proto__") {

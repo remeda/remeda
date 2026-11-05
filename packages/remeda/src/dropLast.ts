@@ -61,7 +61,7 @@ const dropLastImplementation = <T extends IterableContainer>(
         // Rounded up because we can't drop an item partially!
         -Math.ceil(n),
       )
-    : [...array];
+    : array.concat();
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (Number.isNaN(n) || n <= 0) {

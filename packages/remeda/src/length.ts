@@ -31,5 +31,15 @@ export function length(...args: readonly unknown[]): unknown {
   return purry(lengthImplementation, args);
 }
 
-const lengthImplementation = <T>(items: Enumerable<T>): number =>
-  "length" in items ? items.length : [...items].length;
+function lengthImplementation<T>(items: Enumerable<T>): number {
+  if ("length" in items) {
+    return items.length;
+  }
+
+  let count = 0;
+  for (const _ of items) {
+    count += 1;
+  }
+
+  return count;
+}

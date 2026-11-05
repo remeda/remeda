@@ -90,13 +90,12 @@ describe("data first", () => {
     );
   });
 
-  test("reads holes as undefined when every item passes", () => {
+  test("keeps holes when every item passes", () => {
     // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(takeLastWhile([1, , 3], constant(true))).toStrictEqual([
-      1,
-      undefined,
-      3,
-    ]);
+    expect(takeLastWhile([1, , 3], constant(true))).toStrictEqual(
+      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+      [1, , 3],
+    );
   });
 });
 

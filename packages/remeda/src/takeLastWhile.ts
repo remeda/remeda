@@ -69,5 +69,5 @@ function takeLastWhileImplementation<T extends IterableContainer>(
       return data.slice(i + 1);
     }
   }
-  return [...data];
+  return data.concat();
 }

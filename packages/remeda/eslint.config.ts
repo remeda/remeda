@@ -173,6 +173,12 @@ export default defineConfig(
       // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and remove this suppression to allow the rule to find these cases.
       "unicorn/no-array-sort": "off",
 
+      // This rule replaces readability with perf by suggesting the slower
+      // spread operator over built-ins like `concat` that perform better in
+      // real-world scenarios. If enabling, each suggested fix should be
+      // benchmarked.
+      "unicorn/prefer-spread": "off",
+
       // === ESLint ============================================================
       // (We are assuming that the config is extended by eslint's: recommended
       // config)
@@ -338,7 +344,17 @@ export default defineConfig(
       ],
 
       "@typescript-eslint/class-methods-use-this": "warn",
-      "@typescript-eslint/prefer-destructuring": "warn",
+      "@typescript-eslint/prefer-destructuring": [
+        "warn",
+        {
+          // Destructuring arrays is actually a more expensive operation that
+          // involves the array's iterator vs a direct indexed access. This
+          // results in less performant code.
+          array: false,
+          // Object destructuring is fine...
+          object: true,
+        },
+      ],
       "@typescript-eslint/promise-function-async": "error",
       "@typescript-eslint/no-use-before-define": [
         "error",

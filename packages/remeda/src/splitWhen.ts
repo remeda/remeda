@@ -42,6 +42,6 @@ function splitWhenImplementation<T>(
 ): [T[], T[]] {
   const index = data.findIndex(predicate);
   return index === -1
-    ? [[...data], []]
+    ? [data.concat(), []]
     : [data.slice(0, index), data.slice(index)];
 }

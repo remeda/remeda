@@ -122,6 +122,8 @@ describe(runFusedSequence, () => {
     });
 
     test("an array is iterated, not indexed", () => {
+      // A reactive array that instruments iteration tracks one dependency this
+      // way, instead of one per index.
       const keys: (string | symbol)[] = [];
       runFusedSequence(
         new Proxy([1, 2, 3], {

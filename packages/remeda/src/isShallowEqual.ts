@@ -137,7 +137,6 @@ function isMapShallowEqual(
   }
 
   for (const entry of a) {
-    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
     const valueA = entry[1];
     const valueB = b.get(entry[0]);
     if (valueA !== valueB && !Object.is(valueA, valueB)) {

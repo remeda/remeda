@@ -36,7 +36,7 @@ export function shuffle(...args: readonly unknown[]): unknown {
 }
 
 function shuffleImplementation<T>(items: readonly T[]): T[] {
-  const result = [...items];
+  const result = items.concat();
   for (let index = 0; index < items.length; index++) {
     const rand = index + Math.floor(Math.random() * (items.length - index));
     const value = result[rand]!;
