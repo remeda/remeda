@@ -61,15 +61,19 @@ function uniqueWithImplementation<T>(
   isEquals: IsEquals<T>,
 ): T[] {
   const result: T[] = [];
-  for (const [index, value] of data.entries()) {
+
+  let index = 0;
+  for (const value of data) {
     if (
       data.findIndex(
+        // eslint-disable-next-line @typescript-eslint/no-loop-func -- findIndex calls this before the counter moves.
         (otherValue, otherIndex) =>
           index === otherIndex || isEquals(value, otherValue),
       ) === index
     ) {
       result.push(value);
     }
+    index += 1;
   }
 
   return result;

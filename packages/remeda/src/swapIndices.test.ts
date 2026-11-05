@@ -6,6 +6,20 @@ describe("data_first", () => {
     expect(swapIndices([1, 2, 3, 4, 5], 0, -1)).toStrictEqual([5, 2, 3, 4, 1]);
   });
 
+  test("keeps holes in arrays", () => {
+    expect(
+      swapIndices(
+        // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
+        [1, , 3, 4],
+        2,
+        3,
+      ),
+    ).toStrictEqual(
+      // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
+      [1, , 4, 3],
+    );
+  });
+
   test("swap string", () => {
     expect(swapIndices("apple", 0, 1)).toBe("paple");
   });

@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { constant } from "./constant";
+import { defaultTo } from "./defaultTo";
 import { isNullish } from "./isNullish";
 import { map } from "./map";
 import { pipe } from "./pipe";
@@ -37,6 +38,19 @@ describe("data first", () => {
     expect(
       sortBy([{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }], prop("a")),
     ).toStrictEqual([{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]);
+  });
+
+  test("keeps holes", () => {
+    expect(
+      sortBy(
+        // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
+        [3, , 1],
+        defaultTo(0),
+      ),
+    ).toStrictEqual(
+      // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
+      [1, 3, ,],
+    );
   });
 
   test("sort booleans correctly", () => {

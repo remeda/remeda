@@ -48,7 +48,9 @@ function invertImplementation(
 ): Record<PropertyKey, PropertyKey> {
   const result: Record<PropertyKey, PropertyKey> = {};
 
-  for (const [key, value] of Object.entries(data)) {
+  for (const entry of Object.entries(data)) {
+    const key = entry[0];
+    const value = entry[1];
     if (value === "__proto__") {
       // We want `__proto__` to act just like any other key, but assigning it
       // runs the setter inherited from `Object.prototype` instead of creating
