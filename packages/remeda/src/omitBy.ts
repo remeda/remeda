@@ -92,9 +92,9 @@ type IsPartialProp<T, P extends keyof T, S> = P extends symbol
       : true;
 
 /**
- * Creates a shallow copy of the data, and then removes any keys that the
- * predicate rejects. Symbol keys are not passed to the predicate and would be
- * passed through to the output as-is.
+ * Creates a shallow copy of the data without the entries that the predicate
+ * rejects. Symbol keys are not passed to the predicate and would be passed
+ * through to the output as-is.
  *
  * See `pickBy` for a complementary function which starts with an empty object
  * and adds the entries that the predicate accepts. Because it is additive,
