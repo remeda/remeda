@@ -9,7 +9,7 @@ Every function with a data-first / data-last API uses `purry` (`src/purry.ts`). 
 - The implementation declares exactly the function's public parameters, none of them optional, defaulted or rest: a call with at least `impl.length` arguments runs data-first with the extras passed along, so a point-free callback (`data.map(clone)`) hands the implementation the index and the array too. Recursion state goes in a separate helper, as `clone`'s `cloneValue` does.
 - The body calls `purry(impl, args)`, or `purryWithLazy(impl, args, lazyImpl)` (`src/internal/purryWithLazy.ts`) when the function also has a lazy evaluator (see below). The lazy protocol is private to the package, so the public `purry` has no lazy parameter.
 
-A lazy function still gets a plain eager implementation for its data-first call, even when it mirrors the evaluator (`unique`, `difference`): running the evaluator item by item outside `pipe` costs a call and a result classification per item, and bundles the lazy runner into every data-first import. The two must give the same result for every input: `pipe` picks between them per run and per input kind, so a mismatch shows up as a pipe whose result changes when an unrelated step is added or removed.
+A lazy function still gets a plain eager implementation for its data-first call, even when it mirrors the evaluator (`unique`, `difference`): running the evaluator item by item outside `pipe` costs a call and a result classification per item, and bundles the lazy runner into every data-first import. The two must give the same result for every input: `pipe` picks between them per sequence and per input kind, so a mismatch shows up as a pipe whose result changes when an unrelated step is added or removed.
 
 ## Lazy evaluation
 

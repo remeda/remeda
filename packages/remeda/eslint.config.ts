@@ -173,10 +173,9 @@ export default defineConfig(
       // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and remove this suppression to allow the rule to find these cases.
       "unicorn/no-array-sort": "off",
 
-      // This rule replaces readability with perf by suggesting the slower
-      // spread operator over built-ins like `concat` that perform better in
-      // real-world scenarios. If enabling, each suggested fix should be
-      // benchmarked.
+      // This rule trades perf for readability by suggesting the spread
+      // operator, which is slower than built-ins like `concat` in real-world
+      // scenarios. If enabling, each suggested fix should be benchmarked.
       "unicorn/prefer-spread": "off",
 
       // === ESLint ============================================================

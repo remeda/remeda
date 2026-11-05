@@ -328,7 +328,7 @@ export function pipe(
       : functionIndex;
     if (sequentialSequenceEnd > functionIndex) {
       for (; functionIndex < sequentialSequenceEnd; functionIndex += 1) {
-        // @ts-expect-error [ts2345] -- Every function before `findSequentialSequenceEnd` is lazy and gets the array the previous one returned, but TypeScript can't narrow the functions from the scan that found them.
+        // @ts-expect-error [ts2345] -- Every function before `sequentialSequenceEnd` is lazy and gets the array the previous one returned, but TypeScript can't narrow the functions from the scan that found them.
         output = functions[functionIndex]!(output);
       }
       functionIndex -= 1;

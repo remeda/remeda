@@ -85,7 +85,7 @@ const lazyFunction = (
     () => {
       throw new Error("Intentional! planning doesn't run the functions");
     },
-    // @ts-expect-error [ts2322] -- The helper never reads `lazyArgs` when planning, so the empty arguments can stand in for the `never` of the default `LazyUnaryFunction`, which is what lets it hold any lazy function.
+    // @ts-expect-error [ts2345] -- The helper never reads `lazyArgs` when planning, so the empty arguments can stand in for the `never` of the default `LazyUnaryFunction`, which is what lets it hold any lazy function.
     [],
     lazyImplementation,
   );

@@ -176,6 +176,16 @@ describe("lazy", () => {
 
       expect(pipeKeys).toStrictEqual(dataFirstKeys);
     });
+
+    test("a callback gets the whole array a non-lazy function returned", () => {
+      expect(
+        pipe(
+          { inner: [1, 2, 3] },
+          prop("inner"),
+          map((_value, _index, data) => data.length),
+        ),
+      ).toStrictEqual([3, 3, 3]);
+    });
   });
 
   describe("a lone lazy function on another iterable", () => {
@@ -327,6 +337,25 @@ describe("lazy", () => {
       expect(
         pipe([item], forceFusion(), map(identity()), filter(constant(true)))[0],
       ).toBe(item);
+    });
+
+    test("pulls from another iterable only until done", () => {
+      const input = [1, 2, 3].values();
+      pipe(
+        input,
+        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
+        map(multiply(10)),
+        take(1),
+      );
+
+      // An array iterator stays open when the loop reading it exits.
+      expect([...input]).toStrictEqual([2, 3]);
+    });
+
+    test("the function after it still runs", () => {
+      expect(pipe([1, 2, 3], map(multiply(10)), take(2), join(","))).toBe(
+        "10,20",
+      );
     });
   });
 

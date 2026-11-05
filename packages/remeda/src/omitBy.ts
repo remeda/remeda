@@ -5,9 +5,8 @@ import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import { purry } from "./purry";
 
 // Symbols are not passed to the predicate (because they can't be enumerated
-// with the `Object.entries` function) and the output object is built from a
-// shallow copy of the input; meaning symbols would just be passed through as-
-// is.
+// with the `Object.entries` function) and the enumerable ones are copied to the
+// output object as-is.
 type PickSymbolKeys<T extends object> = {
   -readonly [P in keyof T as P extends symbol ? P : never]: T[P];
 };
@@ -194,8 +193,7 @@ function omitByImplementation<T extends object>(
     }
   }
 
-  // The predicate only sees string keys, so symbols always stay, the ones a
-  // spread of `data` would copy.
+  // The predicate only sees string keys, so enumerable symbol keys always stay.
   for (const symbol of Object.getOwnPropertySymbols(data)) {
     if (Object.prototype.propertyIsEnumerable.call(data, symbol)) {
       out[symbol] =

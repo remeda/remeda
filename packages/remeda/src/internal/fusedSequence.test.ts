@@ -490,10 +490,10 @@ describe(runFusedSequence, () => {
   });
 
   describe("controls from another copy of the library are recognized", () => {
-    // Re-evaluating the modules gives each test its own controls, the way a
-    // second installed version, or the CJS build next to the ESM one, would.
-    // The payloads of the controls land in the slot of the sequence that
-    // receives them.
+    // Re-evaluating the modules that define the controls gives each test its
+    // own copy of them, the way a second installed version, or the CJS build
+    // next to the ESM one, would. The payloads of the controls land in the slot
+    // of the sequence that receives them.
 
     test("a skip", async () => {
       vi.resetModules();
@@ -551,7 +551,7 @@ const lazyFunction = (
         "Intentional! a fused sequence doesn't call the data-first",
       );
     },
-    // @ts-expect-error [ts2322] -- These functions take no arguments, so the empty ones can stand in for the `never` of the default `LazyUnaryFunction`, which is what lets it hold any lazy function.
+    // @ts-expect-error [ts2345] -- These functions take no arguments, so the empty ones can stand in for the `never` of the default `LazyUnaryFunction`, which is what lets it hold any lazy function.
     [],
     lazyImplementation,
   );
