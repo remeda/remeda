@@ -4,7 +4,7 @@ import type { LazyUnaryFunction } from "./lazyDataLastImplementation";
 import { LAST, STOP, type StoppableLazyEvaluator } from "./makeStoppable";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
 
-type LazyStep = {
+export type LazyStep = {
   // `LazyEvaluator`s are also `StoppableLazyEvaluator`s so this accepts both.
   readonly lazyEvaluator: StoppableLazyEvaluator;
   index: number;
