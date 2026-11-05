@@ -25,9 +25,10 @@ test.prop([items, count])(
 );
 
 test.prop([items, count])(
-  "data-first and data-last produce the same result in a fused run",
+  "data-first and data-last produce the same result in a fused sequence",
   (data, n) => {
-    // The trailing `take` can stop the run early, so `pipe` has to run it lazily.
+    // The trailing `take` can stop the sequence early, so `pipe` has to run it
+    // lazily.
     expect(
       pipe(data, map(identity()), drop(n), take(data.length)),
     ).toStrictEqual(drop(data, n));

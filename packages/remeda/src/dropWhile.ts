@@ -51,11 +51,14 @@ function dropWhileImplementation<T>(
   data: readonly T[],
   predicate: (item: T, index: number, data: readonly T[]) => boolean,
 ): T[] {
-  for (const [index, item] of data.entries()) {
+  let index = 0;
+  for (const item of data) {
     if (!predicate(item, index, data)) {
       return data.slice(index);
     }
+    index += 1;
   }
+
   return [];
 }
 

@@ -250,16 +250,9 @@ function chunkImplementation<T>(data: readonly T[], size: number): T[][] {
   // eslint-disable-next-line unicorn/no-new-array -- This is OK, a sparse array allows us to handle very large arrays more efficiently.
   const result = new Array<T[]>(chunks);
 
-  if (size === 1) {
-    // Optimized for when we don't need slice.
-    for (const [index, item] of data.entries()) {
-      result[index] = [item];
-    }
-  } else {
-    for (let index = 0; index < chunks; index += 1) {
-      const start = index * size;
-      result[index] = data.slice(start, start + size);
-    }
+  for (let index = 0; index < chunks; index += 1) {
+    const start = index * size;
+    result[index] = data.slice(start, start + size);
   }
 
   return result;

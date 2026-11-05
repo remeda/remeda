@@ -28,11 +28,11 @@ describe("no function can stop", () => {
 });
 
 describe("a function can stop", () => {
-  test("first in the run", () => {
+  test("first in the sequence", () => {
     expect(findSequentialSequenceEnd([stoppable(), lazy()], 0)).toBe(0);
   });
 
-  test("later in the run", () => {
+  test("later in the sequence", () => {
     expect(findSequentialSequenceEnd([lazy(), stoppable()], 0)).toBe(0);
   });
 
@@ -40,14 +40,14 @@ describe("a function can stop", () => {
     expect(findSequentialSequenceEnd([lazy(), stoppableReducing()], 0)).toBe(0);
   });
 
-  test("in a run that isn't first", () => {
+  test("in a sequence that isn't first", () => {
     expect(
       findSequentialSequenceEnd([identity(), lazy(), stoppable()], 1),
     ).toBe(1);
   });
 });
 
-describe("a function that can stop outside the run", () => {
+describe("a function that can stop outside the sequence", () => {
   test("before `startIndex`", () => {
     expect(
       findSequentialSequenceEnd([stoppable(), identity(), lazy()], 2),

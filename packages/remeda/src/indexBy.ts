@@ -62,7 +62,8 @@ function indexByImplementation<T, K extends PropertyKey>(
 ): BoundedPartial<Record<K, T>> {
   const out: Partial<Record<K, T>> = {};
 
-  for (const [index, item] of data.entries()) {
+  let index = 0;
+  for (const item of data) {
     const key = mapper(item, index, data);
     if (key === "__proto__") {
       // We want `__proto__` to act just like any other key, but assigning it
@@ -78,6 +79,7 @@ function indexByImplementation<T, K extends PropertyKey>(
     } else {
       out[key] = item;
     }
+    index += 1;
   }
 
   return out as BoundedPartial<Record<K, T>>;

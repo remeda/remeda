@@ -64,7 +64,7 @@ describe(buildFusedSequence, () => {
             ..._args: Readonly<Parameters<typeof lazyImplementation>>
           ) => {
             throw new Error(
-              "Intentional! a fused run doesn't call the data-first",
+              "Intentional! a fused sequence doesn't call the data-first",
             );
           },
           [1, "a"],
@@ -88,22 +88,22 @@ describe(buildFusedSequence, () => {
     expect(lazyImplementation).toHaveBeenCalledTimes(2);
   });
 
-  describe("items", () => {
+  describe("data", () => {
     test("an empty buffer when data is required", () => {
       expect(
         buildFusedSequence(
           [lazyFunction((): LazyEvaluator => requireData((value) => value))],
           0,
-        )[0]?.items,
+        )[0]?.data,
       ).toStrictEqual([]);
     });
 
     test("the sentinel when data isn't required", () => {
-      const items = buildFusedSequence([lazy()], 0)[0]?.items;
+      const data = buildFusedSequence([lazy()], 0)[0]?.data;
 
       // Asserting identity with `toBe` would make the matcher format the
       // sentinel on failure, which throws and hides the real mismatch.
-      expect(() => items?.at(0)).toThrow(/^Remeda: /u);
+      expect(() => data?.at(0)).toThrow(/^Remeda: /u);
     });
   });
 });
@@ -490,8 +490,8 @@ describe(runFusedSequence, () => {
   describe("controls from another copy of the library are recognized", () => {
     // Re-evaluating the modules gives each test its own controls, the way a
     // second installed version, or the CJS build next to the ESM one, would.
-    // The payloads of the controls land in the slot of the run that receives
-    // them.
+    // The payloads of the controls land in the slot of the sequence that
+    // receives them.
 
     test("a skip", async () => {
       vi.resetModules();
@@ -545,7 +545,9 @@ const lazyFunction = (
 ): LazyUnaryFunction =>
   lazyDataLastImplementation(
     () => {
-      throw new Error("Intentional! a fused run doesn't call the data-first");
+      throw new Error(
+        "Intentional! a fused sequence doesn't call the data-first",
+      );
     },
     // @ts-expect-error [ts2322] -- These functions take no arguments, so the empty ones can stand in for the `never` of the default `LazyUnaryFunction`, which is what lets it hold any lazy function.
     [],
@@ -555,17 +557,17 @@ const lazyFunction = (
 const step = (lazyEvaluator: StoppableLazyEvaluator = (value) => value) =>
   ({
     lazyEvaluator,
-    index: 0,
+    itemIndex: 0,
     requiresData: false,
-    items: UNEXPECTED_ACCESS_SENTINEL,
+    data: UNEXPECTED_ACCESS_SENTINEL,
   }) as const satisfies LazyStep;
 
 const stepWithData = (lazyEvaluator: LazyEvaluator) =>
   ({
     lazyEvaluator,
-    index: 0,
+    itemIndex: 0,
     requiresData: true,
-    items: [],
+    data: [],
   }) as const satisfies LazyStep;
 
 // Never finishes on its own, so only a loop that stops pulling can consume it.

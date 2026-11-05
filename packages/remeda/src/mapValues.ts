@@ -65,8 +65,10 @@ function mapValuesImplementation<T extends object, Value>(
 ): Record<string, Value> {
   const out: Record<string, Value> = {};
 
-  for (const [key, value] of Object.entries(data)) {
-    const mappedValue = valueMapper(value, key, data);
+  for (const entry of Object.entries(data)) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
+    const key = entry[0];
+    const mappedValue = valueMapper(entry[1], key, data);
     if (key === "__proto__") {
       // We want `__proto__` to act just like any other key, but assigning it
       // runs the setter inherited from `Object.prototype` instead of creating

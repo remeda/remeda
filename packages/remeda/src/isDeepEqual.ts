@@ -136,11 +136,13 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
     return false;
   }
 
-  for (const [key, value] of Object.entries(data)) {
+  for (const entry of Object.entries(data)) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
+    const key = entry[0];
     if (
       !Object.hasOwn(other, key) ||
       !isDeepEqualImplementation(
-        value,
+        entry[1],
         // @ts-expect-error [ts7053] - We already checked that `other` has `key`
         other[key],
       )
@@ -177,10 +179,12 @@ function isDeepEqualArrays(
     return false;
   }
 
-  for (const [index, item] of data.entries()) {
+  let index = 0;
+  for (const item of data) {
     if (!isDeepEqualImplementation(item, other[index])) {
       return false;
     }
+    index += 1;
   }
 
   return true;
@@ -194,8 +198,13 @@ function isDeepEqualMaps(
     return false;
   }
 
-  for (const [key, value] of data) {
-    if (!other.has(key) || !isDeepEqualImplementation(value, other.get(key))) {
+  for (const entry of data) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
+    const key = entry[0];
+    if (
+      !other.has(key) ||
+      !isDeepEqualImplementation(entry[1], other.get(key))
+    ) {
       return false;
     }
   }

@@ -66,13 +66,15 @@ const countByImplementation = <T>(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- `Object.create` is typed as returning `any`. Without a prototype the object only has the keys *we* add to it, so a category such as `toString` or `__proto__` is counted like any other.
   const out: Record<PropertyKey, number> = Object.create(null);
 
-  for (const [index, item] of data.entries()) {
+  let index = 0;
+  for (const item of data) {
     const category = categorizationFn(item, index, data);
     if (category !== undefined) {
       // Counted per property key, so the categories that share one (e.g., `1`
       // and `"1"`) share its count.
       out[category] = (out[category] ?? 0) + 1;
     }
+    index += 1;
   }
 
   // Set the prototype as if the object was created as a normal one (e.g.,

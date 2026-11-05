@@ -98,9 +98,12 @@ function deepCloneObject<T extends object>(
   // sync with the ref to the original value in refFrom.
   refTo.push(copiedValue);
 
-  for (const [k, v] of Object.entries(value)) {
-    const clonedValue: unknown = cloneValue(v, refFrom, refTo);
-    if (k === "__proto__") {
+  for (const entry of Object.entries(value)) {
+    const clonedValue: unknown = cloneValue(entry[1], refFrom, refTo);
+
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
+    const key = entry[0];
+    if (key === "__proto__") {
       // We want `__proto__` to act just like any other key, but assigning it
       // runs the setter inherited from `Object.prototype` instead of creating
       // a property. Defining it directly creates the same own data property
@@ -112,7 +115,7 @@ function deepCloneObject<T extends object>(
         writable: true,
       });
     } else {
-      copiedValue[k] = clonedValue;
+      copiedValue[key] = clonedValue;
     }
   }
 
@@ -130,8 +133,8 @@ function deepCloneArray<T extends readonly unknown[]>(
   // sync with the ref to the original value in refFrom.
   refTo.push(copiedValue);
 
-  for (const [index, item] of value.entries()) {
-    copiedValue[index] = cloneValue(item, refFrom, refTo);
+  for (const item of value) {
+    copiedValue.push(cloneValue(item, refFrom, refTo));
   }
 
   return copiedValue as unknown as T;

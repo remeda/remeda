@@ -94,7 +94,8 @@ function pullObjectImplementation<
 ): Partial<Record<K, V>> {
   const result: Partial<Record<K, V>> = {};
 
-  for (const [index, item] of data.entries()) {
+  let index = 0;
+  for (const item of data) {
     const key = keyExtractor(item, index, data);
     const value = valueExtractor(item, index, data);
     if (key === "__proto__") {
@@ -111,6 +112,7 @@ function pullObjectImplementation<
     } else {
       result[key] = value;
     }
+    index += 1;
   }
 
   return result;

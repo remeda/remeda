@@ -7,12 +7,12 @@ import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
  * Runs a lazy function on an iterable that isn't an array, standing in for its
  * data-first implementation, which only accepts arrays. With a single step
  * there is nothing to fuse, so it skips the step objects and the fan-out
- * recursion of a fused run in `pipe`.
+ * recursion of `runFusedSequence`.
  *
  * @param input - The data to run through the step.
  * @param lazy - The lazy implementation the step's evaluator is built from.
  * @param lazyArgs - The arguments the evaluator is built with.
- * @see pipe
+ * @see runFusedSequence
  */
 export function iterableDataFirst<P extends readonly unknown[]>(
   input: Iterable<unknown>,
@@ -23,18 +23,20 @@ export function iterableDataFirst<P extends readonly unknown[]>(
 
   // `dataBuffer` exists only when the evaluator requires `data`, so it doubles
   // as the flag for filling it.
-  const dataBuffer = lazyEvaluator.requiresData ? ([] as unknown[]) : undefined;
-  const items = dataBuffer ?? UNEXPECTED_ACCESS_SENTINEL;
+  const dataBuffer: unknown[] | undefined = lazyEvaluator.requiresData
+    ? []
+    : undefined;
+  const data = dataBuffer ?? UNEXPECTED_ACCESS_SENTINEL;
 
   const slot = createLazySlot();
   const accumulator: unknown[] = [];
   let index = 0;
 
-  for (const value of input) {
-    dataBuffer?.push(value);
+  for (const item of input) {
+    dataBuffer?.push(item);
 
     const isDone = collect(
-      lazyEvaluator(value, index, items, slot),
+      lazyEvaluator(item, index, data, slot),
       accumulator,
       slot,
     );

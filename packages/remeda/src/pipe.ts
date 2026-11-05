@@ -293,31 +293,31 @@ export function pipe(
     functionIndex < functions.length;
     functionIndex += 1
   ) {
-    const func = functions[functionIndex]!;
-    if (!("lazy" in func)) {
-      output = func(output);
+    const currentFunction = functions[functionIndex]!;
+    if (!("lazy" in currentFunction)) {
+      output = currentFunction(output);
       continue;
     }
 
-    const nextFunc = functions[functionIndex + 1];
+    const nextFunction = functions[functionIndex + 1];
     if (
-      nextFunc === undefined ||
-      !("lazy" in nextFunc) ||
-      func.lazy.isReducing
+      nextFunction === undefined ||
+      !("lazy" in nextFunction) ||
+      currentFunction.lazy.isReducing
     ) {
-      // A run of one has nothing to fuse with.
+      // A sequence of one has nothing to fuse with.
       output = Array.isArray(output)
-        ? func(output)
+        ? currentFunction(output)
         : iterableDataFirst(
             // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
             output,
-            func.lazy,
-            func.lazyArgs,
+            currentFunction.lazy,
+            currentFunction.lazyArgs,
           );
       continue;
     }
 
-    // Fusing a run pays off only when one of its steps can stop the pipe
+    // Fusing a sequence pays off only when one of its steps can stop the pipe
     // early, which skips the work of the remaining items. Without one, every
     // item goes through every step anyway, so an array goes through each
     // function's data-first implementation in turn instead, trading the

@@ -24,7 +24,7 @@ test.prop([items, count])(
 );
 
 test.prop([items, count])(
-  "data-first and data-last produce the same result in a fused run",
+  "data-first and data-last produce the same result in a fused sequence",
   (data, n) => {
     expect(pipe(data, map(identity()), take(n))).toStrictEqual(take(data, n));
   },

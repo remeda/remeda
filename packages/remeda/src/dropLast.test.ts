@@ -58,13 +58,13 @@ describe("data last", () => {
     [5, []],
     [10, []],
     [Infinity, []],
-  ])("count %s in a fused run", (n, expected) => {
+  ])("count %s in a fused sequence", (n, expected) => {
     expect(pipe([1, 2, 3, 4, 5], forceFusion(), dropLast(n))).toStrictEqual(
       expected,
     );
   });
 
-  test("empty array in a fused run", () => {
+  test("empty array in a fused sequence", () => {
     expect(pipe([], forceFusion(), dropLast(2))).toStrictEqual([]);
   });
 

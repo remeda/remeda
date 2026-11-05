@@ -71,7 +71,7 @@ describe("lazy", () => {
     expect(mapper2).toHaveBeenCalledTimes(2);
   });
 
-  describe("a fused run ending with a reducing step", () => {
+  describe("a fused sequence ending with a reducing step", () => {
     test("unwraps to the value", () => {
       expect(pipe([1, 2, 3], map(multiply(10)), first())).toBe(10);
     });
@@ -84,7 +84,7 @@ describe("lazy", () => {
   });
 
   describe("a reducing step followed by a lazy step", () => {
-    test("at the start of a run", () => {
+    test("at the start of a sequence", () => {
       const dataLengths: number[] = [];
 
       expect(
@@ -98,12 +98,12 @@ describe("lazy", () => {
           map(multiply(10)),
         ),
       ).toStrictEqual([30]);
-      // A reducing step ends its run, so at the start of one it runs alone,
-      // data-first, and its callback sees the whole array.
+      // A reducing step ends its sequence, so at the start of one it runs
+      // alone, data-first, and its callback sees the whole array.
       expect(dataLengths).toStrictEqual([2, 2]);
     });
 
-    test("at the start of a run on another iterable", () => {
+    test("at the start of a sequence on another iterable", () => {
       expect(
         pipe(
           [[1, 2], [3]].values(),
@@ -114,7 +114,7 @@ describe("lazy", () => {
       ).toStrictEqual([1, 2]);
     });
 
-    test("ending a fused run", () => {
+    test("ending a fused sequence", () => {
       expect(
         pipe(
           [[1, 2], [3]] as const,
@@ -250,7 +250,7 @@ describe("lazy", () => {
     });
   });
 
-  describe("a fused run", () => {
+  describe("a fused sequence", () => {
     test("iterates an array rather than indexing it", () => {
       const keys: (string | symbol)[] = [];
       pipe(
@@ -331,7 +331,7 @@ describe("lazy", () => {
   });
 
   describe("run order", () => {
-    test("a run on an array that can't stop early runs step by step", () => {
+    test("a sequence on an array that can't stop early runs step by step", () => {
       const calls: string[] = [];
       pipe(
         [1, 2],
@@ -348,7 +348,7 @@ describe("lazy", () => {
       expect(calls).toStrictEqual(["map", "map", "filter", "filter"]);
     });
 
-    test("a run with a step that can stop early runs item by item", () => {
+    test("a sequence with a step that can stop early runs item by item", () => {
       const calls: string[] = [];
       pipe(
         [1, 2],
@@ -366,7 +366,7 @@ describe("lazy", () => {
       expect(calls).toStrictEqual(["map", "filter", "map", "filter"]);
     });
 
-    test("a run on another iterable runs item by item", () => {
+    test("a sequence on another iterable runs item by item", () => {
       const calls: string[] = [];
       pipe(
         [1, 2].values(),
@@ -385,7 +385,7 @@ describe("lazy", () => {
     });
   });
 
-  describe("a run on an array that can't stop early", () => {
+  describe("a sequence on an array that can't stop early", () => {
     test("the first step's callbacks get the input array", () => {
       const data = [1, 2, 3];
       const mapper = vi.fn<

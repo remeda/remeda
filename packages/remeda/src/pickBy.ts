@@ -197,7 +197,11 @@ function pickByImplementation<T extends object>(
 ): Record<string, unknown> {
   const out: Partial<Record<string, unknown>> = {};
 
-  for (const [key, value] of Object.entries(data)) {
+  for (const entry of Object.entries(data)) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- benchmarking surfaced that destructuring the entry array is slower.
+    const key = entry[0];
+    const value: unknown = entry[1];
+
     if (predicate(value, key, data)) {
       if (key === "__proto__") {
         // We want `__proto__` to act just like any other key, but assigning it

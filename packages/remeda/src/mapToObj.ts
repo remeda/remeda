@@ -87,7 +87,8 @@ function mapToObjImplementation(
 ): Record<PropertyKey, unknown> {
   const out: Record<PropertyKey, unknown> = {};
 
-  for (const [index, element] of array.entries()) {
+  let index = 0;
+  for (const element of array) {
     const [key, value] = fn(element, index, array);
     if (key === "__proto__") {
       // We want `__proto__` to act just like any other key, but assigning it
@@ -103,6 +104,7 @@ function mapToObjImplementation(
     } else {
       out[key] = value;
     }
+    index += 1;
   }
 
   return out;

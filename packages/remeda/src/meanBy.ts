@@ -54,8 +54,10 @@ const meanByImplementation = <T>(
 
   let sum = 0;
 
-  for (const [index, item] of array.entries()) {
+  let index = 0;
+  for (const item of array) {
     sum += fn(item, index, array);
+    index += 1;
   }
 
   return sum / array.length;
