@@ -74,8 +74,7 @@ function rangeImplementation(
   const end =
     typeof endOrOptions === "object" ? endOrOptions.end : endOrOptions;
   const length = ceilingWithSnap((end - start) / step);
-  // Not `length <= 0`, a NaN length has to reach this branch too.
-  if (!(length > 0)) {
+  if (Number.isNaN(length) || length <= 0) {
     return [];
   }
 
