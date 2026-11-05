@@ -25,7 +25,6 @@ describe("data first", () => {
   });
 
   test("counts holes", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
     expect(length([1, , 3])).toBe(3);
   });
 

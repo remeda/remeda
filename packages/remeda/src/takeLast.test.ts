@@ -65,7 +65,6 @@ test("n is -Infinity", () => {
 });
 
 test("keeps holes", () => {
-  // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
   expect(takeLast([1, , 3], 2)).toStrictEqual([, 3]);
 });
 
@@ -80,6 +79,5 @@ test("data-last", () => {
 test("data-last keeps holes after a lone lazy step", () => {
   // With no lazy function to fuse with, `take` runs its data-first
   // implementation, a `slice`, which keeps the hole.
-  // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
   expect(pipe([1, , 3], take(Infinity), takeLast(2))).toStrictEqual([, 3]);
 });

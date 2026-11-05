@@ -41,20 +41,8 @@ describe("data first", () => {
   });
 
   test("should keep holes in nested arrays", () => {
-    expect(
-      setPath(
-        {
-          a:
-            // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-            [1, , 3],
-        },
-        ["a", 0],
-        9,
-      ),
-    ).toStrictEqual({
-      a:
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [9, , 3],
+    expect(setPath({ a: [1, , 3] }, ["a", 0], 9)).toStrictEqual({
+      a: [9, , 3],
     });
   });
 

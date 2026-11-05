@@ -73,7 +73,6 @@ describe("data first", () => {
   test("skips holes", () => {
     expect(
       reduce(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
         [1, , 3],
         (indices: readonly number[], _item, index) => [...indices, index],
         [],
@@ -104,7 +103,6 @@ describe("data last", () => {
   test("skips holes like data-first", () => {
     expect(
       pipe(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
         [1, , 3],
         reduce(
           (indices: readonly number[], _item, index) => [...indices, index],
@@ -117,7 +115,6 @@ describe("data last", () => {
   test("skips holes after a lone lazy step", () => {
     expect(
       pipe(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
         [1, , 3],
         // With no lazy function to fuse with, `take` runs its data-first
         // implementation, a `slice`, which keeps the hole.

@@ -7,17 +7,7 @@ describe("data_first", () => {
   });
 
   test("keeps holes in arrays", () => {
-    expect(
-      swapIndices(
-        // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-        [1, , 3, 4],
-        2,
-        3,
-      ),
-    ).toStrictEqual(
-      // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-      [1, , 4, 3],
-    );
+    expect(swapIndices([1, , 3, 4], 2, 3)).toStrictEqual([1, , 4, 3]);
   });
 
   test("swap string", () => {

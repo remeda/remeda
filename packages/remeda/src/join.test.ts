@@ -77,7 +77,6 @@ describe("edge-cases", () => {
   });
 
   test("holes become empty strings", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
     expect(join([1, , 3], "-")).toBe("1--3");
   });
 

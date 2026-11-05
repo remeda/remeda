@@ -66,7 +66,6 @@ describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
 
 describe("identity", () => {
   test("keeps holes", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
     expect(sample([1, , 3], 3)).toStrictEqual([1, , 3]);
   });
 

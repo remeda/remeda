@@ -20,7 +20,6 @@ describe("data first", () => {
   });
 
   test("keeps holes with negative numbers", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
     expect(drop([1, , 3], -1)).toStrictEqual([1, , 3]);
   });
 

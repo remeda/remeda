@@ -80,7 +80,6 @@ describe("data_first", () => {
 
   test("holes are mapped as undefined", () => {
     expect(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
       mapToObj([1, , 3], (item, index) => [item ?? "hole", index]),
     ).toStrictEqual({ 1: 0, hole: 1, 3: 2 });
   });

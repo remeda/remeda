@@ -61,43 +61,21 @@ test("calls the predicate once per item when nothing matches", () => {
 });
 
 test("holes are tested as undefined", () => {
-  expect(
-    splitWhen(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-      [1, , 3],
-      (item) => item === undefined,
-    ),
-  ).toStrictEqual([
+  expect(splitWhen([1, , 3], (item) => item === undefined)).toStrictEqual([
     [1],
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the expected output.
     [, 3],
   ]);
 });
 
 test("holes are kept when an item matches", () => {
-  expect(
-    splitWhen(
-      // eslint-disable-next-line no-sparse-arrays -- The holes are the input under test.
-      [1, , 3, , 5],
-      (item) => item === 3,
-    ),
-  ).toStrictEqual([
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the expected output.
+  expect(splitWhen([1, , 3, , 5], (item) => item === 3)).toStrictEqual([
     [1, ,],
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the expected output.
     [3, , 5],
   ]);
 });
 
 test("holes are kept when nothing matches", () => {
-  expect(
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-    splitWhen([1, , 3], constant(false)),
-  ).toStrictEqual([
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-    [1, , 3],
-    [],
-  ]);
+  expect(splitWhen([1, , 3], constant(false))).toStrictEqual([[1, , 3], []]);
 });
 
 test("empty array in a pipe", () => {
@@ -107,14 +85,11 @@ test("empty array in a pipe", () => {
 test("holes are kept when an item matches in a pipe", () => {
   expect(
     pipe(
-      // eslint-disable-next-line no-sparse-arrays -- The holes are the input under test.
       [1, , 3, , 5],
       splitWhen((item) => item === 3),
     ),
   ).toStrictEqual([
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the expected output.
     [1, ,],
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the expected output.
     [3, , 5],
   ]);
 });

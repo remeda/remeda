@@ -517,6 +517,10 @@ export default defineConfig(
       "unicorn/max-nested-calls": "off",
       "unicorn/no-duplicate-if-branches": "off",
       "unicorn/no-null": "off",
+
+      // Tests write sparse array literals on purpose: holes are inputs under
+      // test, and expected outputs that keep them.
+      "no-sparse-arrays": "off",
     },
   },
   {

@@ -74,14 +74,7 @@ describe("data last", () => {
   });
 
   test("keeps holes across chunks", () => {
-    expect(
-      pipe(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [1, , 3, 4],
-        chunk(2),
-      ),
-    ).toStrictEqual([
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+    expect(pipe([1, , 3, 4], chunk(2))).toStrictEqual([
       [1, ,],
       [3, 4],
     ]);
@@ -195,43 +188,18 @@ describe("edge-cases", () => {
 
   describe("holes", () => {
     test("kept across chunks", () => {
-      expect(
-        chunk(
-          // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-          [1, , 3, 4],
-          2,
-        ),
-      ).toStrictEqual([
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+      expect(chunk([1, , 3, 4], 2)).toStrictEqual([
         [1, ,],
         [3, 4],
       ]);
     });
 
     test("kept in a single chunk", () => {
-      expect(
-        chunk(
-          // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-          [1, , 3],
-          3,
-        ),
-      ).toStrictEqual([
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [1, , 3],
-      ]);
+      expect(chunk([1, , 3], 3)).toStrictEqual([[1, , 3]]);
     });
 
     test("kept in chunks of size 1", () => {
-      expect(
-        chunk(
-          // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-          [1, , 3],
-          1,
-        ),
-      ).toStrictEqual(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [[1], [,], [3]],
-      );
+      expect(chunk([1, , 3], 1)).toStrictEqual([[1], [,], [3]]);
     });
   });
 

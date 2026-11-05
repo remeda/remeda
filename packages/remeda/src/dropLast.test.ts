@@ -15,7 +15,6 @@ describe("data first", () => {
   });
 
   test("keeps holes when nothing is dropped", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
     expect(dropLast([1, , 3], 0)).toStrictEqual([1, , 3]);
   });
 

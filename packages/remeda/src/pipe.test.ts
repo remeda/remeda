@@ -140,14 +140,12 @@ describe("lazy", () => {
     test("skips holes the way its data-first call does", () => {
       const mapper =
         vi.fn<(x: number | undefined) => number | undefined>(identity());
-      // eslint-disable-next-line no-sparse-arrays -- The hole is what this test exercises.
       pipe([1, , 3], map(mapper));
 
       expect(mapper).toHaveBeenCalledTimes(2);
     });
 
     test("keeps holes when it can stop and a non-lazy function follows", () => {
-      // eslint-disable-next-line no-sparse-arrays -- The hole is what this test exercises.
       expect(pipe([1, , 3], take(3), identity())).toStrictEqual([1, , 3]);
     });
 
@@ -285,7 +283,6 @@ describe("lazy", () => {
     test("visits holes", () => {
       const mapper =
         vi.fn<(x: number | undefined) => number | undefined>(identity());
-      // eslint-disable-next-line no-sparse-arrays -- The hole is what this test exercises.
       pipe([1, , 3], forceFusion(), map(mapper));
 
       expect(mapper).toHaveBeenCalledTimes(3);
@@ -448,7 +445,6 @@ describe("lazy", () => {
     test("skips holes the way its data-first calls do", () => {
       const mapper =
         vi.fn<(x: number | undefined) => number | undefined>(identity());
-      // eslint-disable-next-line no-sparse-arrays -- The hole is what this test exercises.
       pipe([1, , 3], map(identity()), map(mapper));
 
       expect(mapper).toHaveBeenCalledTimes(2);

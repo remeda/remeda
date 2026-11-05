@@ -32,7 +32,6 @@ describe("arrays", () => {
   });
 
   test("sparse", () => {
-    // eslint-disable-next-line no-sparse-arrays
     expect(isEmptyish([, ,])).toBe(false);
   });
 

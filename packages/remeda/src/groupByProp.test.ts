@@ -142,10 +142,9 @@ describe("data first", () => {
   });
 
   test("holes are skipped", () => {
-    expect(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-      groupByProp([{ a: "cat" }, , { a: "cat" }], "a"),
-    ).toStrictEqual({ cat: [{ a: "cat" }, { a: "cat" }] });
+    expect(groupByProp([{ a: "cat" }, , { a: "cat" }], "a")).toStrictEqual({
+      cat: [{ a: "cat" }, { a: "cat" }],
+    });
   });
 
   test("reads the prop once per item", () => {

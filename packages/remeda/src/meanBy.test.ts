@@ -46,7 +46,6 @@ describe("data first", () => {
   });
 
   test("reads holes as undefined", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
     expect(meanBy([1, , 3], defaultTo(10))).toBe(14 / 3);
   });
 

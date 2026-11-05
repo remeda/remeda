@@ -144,11 +144,7 @@ describe(runFusedSequence, () => {
 
     test("an array's holes are visited", () => {
       const evaluator = vi.fn<LazyEvaluator>((value) => value);
-      runFusedSequence(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is what this test exercises.
-        [1, , 3],
-        [step(evaluator)],
-      );
+      runFusedSequence([1, , 3], [step(evaluator)]);
 
       expect(evaluator).toHaveBeenCalledTimes(3);
     });

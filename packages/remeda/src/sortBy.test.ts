@@ -41,16 +41,7 @@ describe("data first", () => {
   });
 
   test("keeps holes", () => {
-    expect(
-      sortBy(
-        // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-        [3, , 1],
-        defaultTo(0),
-      ),
-    ).toStrictEqual(
-      // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-      [1, 3, ,],
-    );
+    expect(sortBy([3, , 1], defaultTo(0))).toStrictEqual([1, 3, ,]);
   });
 
   test("sort booleans correctly", () => {

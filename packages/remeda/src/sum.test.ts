@@ -35,13 +35,11 @@ describe("dataFirst", () => {
 
   test("reads holes as undefined", () => {
     // @ts-expect-error [ts2322] -- A hole reads as `undefined`, which the types reject.
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
     expect(sum([1, , 3])).toBeNaN();
   });
 
   test("throws on a hole in a bigint array", () => {
     // @ts-expect-error [ts2322] -- A hole reads as `undefined`, which the types reject.
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
     expect(() => sum([1n, , 3n])).toThrow(
       new TypeError(
         "Cannot mix BigInt and other types, use explicit conversions",
@@ -107,7 +105,6 @@ describe("dataLast", () => {
 
   test("throws like data-first on a hole in a bigint array", () => {
     // @ts-expect-error [ts2345] -- A hole reads as `undefined`, which the types reject.
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
     expect(() => pipe([1n, , 3n], sum())).toThrow(
       new TypeError(
         "Cannot mix BigInt and other types, use explicit conversions",

@@ -268,17 +268,7 @@ describe("coerced indices", () => {
 
 describe("items", () => {
   test("keeps holes", () => {
-    expect(
-      splice(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [1, , 3],
-        0,
-        1,
-      ),
-    ).toStrictEqual(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      [, 3],
-    );
+    expect(splice([1, , 3], 0, 1)).toStrictEqual([, 3]);
   });
 
   test("keeps NaN and -0", () => {
@@ -374,16 +364,7 @@ describe("in a pipe", () => {
   });
 
   test("keeps holes", () => {
-    expect(
-      pipe(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [1, , 3],
-        splice(0, 1),
-      ),
-    ).toStrictEqual(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      [, 3],
-    );
+    expect(pipe([1, , 3], splice(0, 1))).toStrictEqual([, 3]);
   });
 
   test("counts positions among the items that reach it", () => {

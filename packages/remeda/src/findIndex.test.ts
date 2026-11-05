@@ -22,7 +22,6 @@ describe("data first", () => {
   });
 
   test("reads a hole as undefined", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
     expect(findIndex([1, , 3], (x) => x === undefined)).toBe(1);
   });
 
