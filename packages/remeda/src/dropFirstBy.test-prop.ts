@@ -54,7 +54,7 @@ const keyedItem = fc.oneof(
 const keyedItems = fc.oneof(fc.array(keyedItem), fc.sparseArray(keyedItem));
 
 test.prop([keyedItems, counts])(
-  "data-first and a fused run produce the same result",
+  "data-first and a fused sequence produce the same result",
   (data, n) => {
     // The projection ties nullish items with each other and with the objects
     // in the middle key.
@@ -73,7 +73,7 @@ test.prop([keyedItems, counts])(
 );
 
 test.prop([keyedItems, counts])(
-  "data-first and a fused run call the projection the same way",
+  "data-first and a fused sequence call the projection the same way",
   (data, n) => {
     // The projection ties nullish items with each other and with the objects
     // in the middle key.

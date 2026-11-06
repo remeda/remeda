@@ -34,14 +34,13 @@ describe("data first", () => {
   });
 
   test("reads holes as undefined", () => {
-    expect(
-      concat(
-        // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-        [1, , 3],
-        // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-        [, 5],
-      ),
-    ).toStrictEqual([1, undefined, 3, undefined, 5]);
+    expect(concat([1, , 3], [, 5])).toStrictEqual([
+      1,
+      undefined,
+      3,
+      undefined,
+      5,
+    ]);
   });
 
   test("other can be any iterable at runtime", () => {
@@ -78,16 +77,13 @@ describe("data last", () => {
   });
 
   test("reads holes as undefined", () => {
-    expect(
-      pipe(
-        // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-        [1, , 3],
-        concat(
-          // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-          [, 5],
-        ),
-      ),
-    ).toStrictEqual([1, undefined, 3, undefined, 5]);
+    expect(pipe([1, , 3], concat([, 5]))).toStrictEqual([
+      1,
+      undefined,
+      3,
+      undefined,
+      5,
+    ]);
   });
 
   test("other can be any iterable at runtime", () => {

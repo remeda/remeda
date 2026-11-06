@@ -33,7 +33,7 @@ export function splitWhen<T>(
 ): (array: readonly T[]) => [T[], T[]];
 
 export function splitWhen(...args: readonly unknown[]): unknown {
-  return purry(splitWhenImplementation, args);
+  return purry(splitWhenImplementation, args, 2);
 }
 
 function splitWhenImplementation<T>(
@@ -42,6 +42,6 @@ function splitWhenImplementation<T>(
 ): [T[], T[]] {
   const index = data.findIndex(predicate);
   return index === -1
-    ? [[...data], []]
+    ? [data.concat(), []]
     : [data.slice(0, index), data.slice(index)];
 }

@@ -14,6 +14,10 @@ describe("data first", () => {
     expect(dropLast([], 2)).toStrictEqual([]);
   });
 
+  test("keeps holes when nothing is dropped", () => {
+    expect(dropLast([1, , 3], 0)).toStrictEqual([1, , 3]);
+  });
+
   test("should return a new array even if there was no drop", () => {
     const data = [1, 2, 3, 4, 5];
     const result = dropLast(data, 0);
@@ -58,13 +62,13 @@ describe("data last", () => {
     [5, []],
     [10, []],
     [Infinity, []],
-  ])("count %s in a fused run", (n, expected) => {
+  ])("count %s in a fused sequence", (n, expected) => {
     expect(pipe([1, 2, 3, 4, 5], forceFusion(), dropLast(n))).toStrictEqual(
       expected,
     );
   });
 
-  test("empty array in a fused run", () => {
+  test("empty array in a fused sequence", () => {
     expect(pipe([], forceFusion(), dropLast(2))).toStrictEqual([]);
   });
 

@@ -145,7 +145,7 @@ export function swapIndices<K1 extends number, K2 extends number>(
 ): <T extends IterableContainer | string>(data: T) => SwappedIndices<T, K1, K2>;
 
 export function swapIndices(...args: readonly unknown[]): unknown {
-  return purry(swapIndicesImplementation, args);
+  return purry(swapIndicesImplementation, args, 3);
 }
 
 const swapIndicesImplementation = (
@@ -163,7 +163,7 @@ function swapArray(
   index1: number,
   index2: number,
 ): unknown[] {
-  const result = [...data];
+  const result = data.concat();
 
   if (Number.isNaN(index1) || Number.isNaN(index2)) {
     return result;

@@ -78,7 +78,7 @@ export function filter<
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function filter(...args: readonly unknown[]): unknown {
-  return purryWithLazy(filterImplementation, args, lazyImplementation);
+  return purryWithLazy(filterImplementation, args, lazyImplementation, 2);
 }
 
 const filterImplementation = <T>(

@@ -15,7 +15,6 @@ describe("throws", () => {
     ["iteration", () => [...DATA]],
     ["string coercion", () => String(DATA)],
     ["serialization", () => JSON.stringify(DATA)],
-    // eslint-disable-next-line unicorn/prefer-spread -- `concat` is the subject: unlike a spread, it only spreads arguments that are arrays.
     ["`concat` spreading it", () => [1].concat(DATA)],
     ["`flat` spreading it", () => [DATA].flat()],
     ["deep equality", () => isDeepEqual(DATA, [])],

@@ -74,8 +74,19 @@ describe("data-last (curried)", () => {
   });
 });
 
+describe("arity", () => {
+  test("decides data-first over `Function.length`", () => {
+    // `Function.length` stops counting at the first defaulted parameter, so
+    // it's 1 for `addWithDefault`, and 1 argument would run data-first if
+    // purry read it.
+    expect(purry(addWithDefault, [1], 2)).toBeTypeOf("function");
+  });
+});
+
 const purriedFn = (...args: readonly unknown[]): unknown =>
-  purry(concatenateNumberArgs, args);
+  purry(concatenateNumberArgs, args, 2);
+
+const addWithDefault = (augend: number, addend = 1): number => augend + addend;
 
 function concatenateNumberArgs(_a: number, _b: number): string {
   // eslint-disable-next-line prefer-rest-params -- Intentional, we want to bypass the function shape (which is observable at runtime via `Function.length`) to lock in how excess arguments are passed through.

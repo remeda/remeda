@@ -173,6 +173,11 @@ export default defineConfig(
       // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and remove this suppression to allow the rule to find these cases.
       "unicorn/no-array-sort": "off",
 
+      // This rule trades perf for readability by suggesting the spread
+      // operator, which is slower than built-ins like `concat` in real-world
+      // scenarios. If enabling, each suggested fix should be benchmarked.
+      "unicorn/prefer-spread": "off",
+
       // === ESLint ============================================================
       // (We are assuming that the config is extended by eslint's: recommended
       // config)
@@ -338,7 +343,17 @@ export default defineConfig(
       ],
 
       "@typescript-eslint/class-methods-use-this": "warn",
-      "@typescript-eslint/prefer-destructuring": "warn",
+      "@typescript-eslint/prefer-destructuring": [
+        "warn",
+        {
+          // Destructuring arrays is actually a more expensive operation that
+          // involves the array's iterator vs a direct indexed access. This
+          // results in less performant code.
+          array: false,
+          // Object destructuring is fine...
+          object: true,
+        },
+      ],
       "@typescript-eslint/promise-function-async": "error",
       "@typescript-eslint/no-use-before-define": [
         "error",
@@ -369,7 +384,8 @@ export default defineConfig(
       "@typescript-eslint/no-magic-numbers": [
         "warn",
         {
-          ignore: [-1, 0, 1, 2],
+          // 3 is the largest data-first arity a utility passes to `purry`.
+          ignore: [-1, 0, 1, 2, 3],
           ignoreNumericLiteralTypes: true,
         },
       ],
@@ -502,6 +518,10 @@ export default defineConfig(
       "unicorn/max-nested-calls": "off",
       "unicorn/no-duplicate-if-branches": "off",
       "unicorn/no-null": "off",
+
+      // Tests write sparse array literals on purpose: holes are inputs under
+      // test, and expected outputs that keep them.
+      "no-sparse-arrays": "off",
     },
   },
   {

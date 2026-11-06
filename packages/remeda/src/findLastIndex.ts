@@ -54,15 +54,13 @@ export function findLastIndex<T>(
 ): (array: readonly T[]) => number;
 
 export function findLastIndex(...args: readonly unknown[]): unknown {
-  return purry(findLastIndexImplementation, args);
+  return purry(findLastIndexImplementation, args, 2);
 }
 
 const findLastIndexImplementation = <T>(
   data: readonly T[],
   predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): number => {
-  // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.findLastIndex` here.
-
   for (let i = data.length - 1; i >= 0; i--) {
     if (predicate(data[i]!, i, data)) {
       return i;

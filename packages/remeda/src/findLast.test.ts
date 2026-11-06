@@ -77,7 +77,6 @@ describe("data first", () => {
   });
 
   test("reads holes as undefined", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
     const data = [1, , 3];
     const predicate = vi.fn<
       (

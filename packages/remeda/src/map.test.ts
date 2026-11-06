@@ -114,7 +114,7 @@ describe(pipe, () => {
         receivers.push(this);
         return x;
       }),
-      // Only a fused run keeps the evaluator on a step object it could be
+      // Only a fused sequence keeps the evaluator on a step object it could be
       // called as a method of.
       forceFusion(),
     );

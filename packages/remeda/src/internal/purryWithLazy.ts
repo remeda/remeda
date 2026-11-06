@@ -13,6 +13,8 @@ import type { IterableContainer } from "./types/IterableContainer";
  * This is done as a copy instead of having `purry` call it to keep the
  * execution stack and the bundle lean for the vast majority of functions that
  * don't have lazy semantics.
+ *
+ * `arity` is the same as `purry`'s.
  */
 export const purryWithLazy = <
   T extends IterableContainer,
@@ -22,8 +24,9 @@ export const purryWithLazy = <
   dataFirst: DataFirst<T, P, R>,
   args: readonly unknown[],
   lazy: LazyEvaluatorFactory<T, P>,
+  arity: [T, ...P]["length"],
 ): R | LazyUnaryFunction<T, P, R> =>
-  args.length >= dataFirst.length
+  args.length >= arity
     ? dataFirst(
         // @ts-expect-error [ts2556] -- the whole point of currying is that `args` are polymorphic and can either fit the data-first pattern, like here, or the data-last pattern as below. The length check that is used to pick between them can't narrow it!
         ...args,

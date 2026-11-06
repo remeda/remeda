@@ -8,10 +8,10 @@ import { takeWhile } from "./takeWhile";
 const items = fc.oneof(fc.array(fc.anything()), fc.sparseArray(fc.anything()));
 
 test.prop([items, fc.func(fc.boolean())])(
-  "data-first and a fused run produce the same result",
+  "data-first and a fused sequence produce the same result",
   (data, predicateOf) => {
     // The predicate ignores `data`, which differs between the two on purpose:
-    // the whole input data-first, the items so far in a fused run.
+    // the whole input data-first, the items so far in a fused sequence.
     const predicate = (value: unknown, index: number): boolean =>
       predicateOf(value, index);
 
@@ -22,7 +22,7 @@ test.prop([items, fc.func(fc.boolean())])(
 );
 
 test.prop([items, fc.func(fc.boolean())])(
-  "data-first and a fused run call the predicate the same way",
+  "data-first and a fused sequence call the predicate the same way",
   (data, predicateOf) => {
     const dataFirstCalls: [unknown, number][] = [];
     takeWhile(data, (value, index) => {

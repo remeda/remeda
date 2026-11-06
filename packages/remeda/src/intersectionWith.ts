@@ -66,6 +66,7 @@ export function intersectionWith(...args: readonly unknown[]): unknown {
     intersectionWithImplementation,
     args,
     lazyImplementation,
+    3,
   );
 }
 

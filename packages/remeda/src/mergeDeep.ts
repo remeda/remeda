@@ -42,7 +42,7 @@ export function mergeDeep<Source extends object>(
 ) => MergeDeep<Destination, Source>;
 
 export function mergeDeep(...args: readonly unknown[]): unknown {
-  return purry(mergeDeepImplementation, args);
+  return purry(mergeDeepImplementation, args, 2);
 }
 
 function mergeDeepImplementation<

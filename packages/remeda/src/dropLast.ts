@@ -48,7 +48,7 @@ export function dropLast(
 ): <T extends IterableContainer>(array: T) => T[number][];
 
 export function dropLast(...args: readonly unknown[]): unknown {
-  return purryWithLazy(dropLastImplementation, args, lazyImplementation);
+  return purryWithLazy(dropLastImplementation, args, lazyImplementation, 2);
 }
 
 const dropLastImplementation = <T extends IterableContainer>(
@@ -61,7 +61,7 @@ const dropLastImplementation = <T extends IterableContainer>(
         // Rounded up because we can't drop an item partially!
         -Math.ceil(n),
       )
-    : [...array];
+    : array.concat();
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (Number.isNaN(n) || n <= 0) {

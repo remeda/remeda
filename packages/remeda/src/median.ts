@@ -51,7 +51,7 @@ export function median(): <T extends IterableContainer<number>>(
 ) => Median<T>;
 
 export function median(...args: readonly unknown[]): unknown {
-  return purry(medianImplementation, args);
+  return purry(medianImplementation, args, 1);
 }
 
 const numberComparator = (a: number, b: number): number => a - b;
@@ -64,7 +64,7 @@ function medianImplementation<T extends IterableContainer<number>>(
   }
 
   // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSorted` here.
-  const sortedData = [...data].sort(numberComparator);
+  const sortedData = data.concat().sort(numberComparator);
 
   // For odd length, return the middle element
   if (sortedData.length % 2 !== 0) {

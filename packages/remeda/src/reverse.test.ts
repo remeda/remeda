@@ -8,6 +8,10 @@ describe("data first", () => {
 
     expect(actual).toStrictEqual([3, 2, 1]);
   });
+
+  test("keeps holes", () => {
+    expect(reverse([1, , 3])).toStrictEqual([3, , 1]);
+  });
 });
 
 describe("data last", () => {

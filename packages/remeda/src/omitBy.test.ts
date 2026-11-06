@@ -1,4 +1,4 @@
-import { expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { constant } from "./constant";
 import { omitBy } from "./omitBy";
 import { pipe } from "./pipe";
@@ -31,6 +31,44 @@ test("symbols are passed through", () => {
 
   expect(omitBy({ [mySymbol]: 1 }, constant(true))).toStrictEqual({
     [mySymbol]: 1,
+  });
+});
+
+test("non-enumerable symbols are dropped", () => {
+  const mySymbol = Symbol("mySymbol");
+  const data = Object.defineProperty({ a: 1 }, mySymbol, {
+    value: 1,
+    enumerable: false,
+  });
+
+  expect(
+    Object.getOwnPropertySymbols(omitBy(data, constant(false))),
+  ).toStrictEqual([]);
+});
+
+describe("`__proto__` key", () => {
+  test("is an own property", () => {
+    expect(
+      Object.entries(
+        omitBy({ ["__proto__"]: { hello: "world" } }, constant(false)),
+      ),
+    ).toStrictEqual([["__proto__", { hello: "world" }]]);
+  });
+
+  test("keeps the prototype", () => {
+    expect(
+      Object.getPrototypeOf(
+        omitBy({ ["__proto__"]: { a: 1 } }, constant(false)),
+      ),
+    ).toBe(Object.prototype);
+  });
+
+  test("is omitted when the predicate matches", () => {
+    expect(
+      Object.entries(
+        omitBy({ ["__proto__"]: { hello: "world" } }, constant(true)),
+      ),
+    ).toStrictEqual([]);
   });
 });
 

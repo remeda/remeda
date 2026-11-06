@@ -22,7 +22,6 @@ describe("data first", () => {
   });
 
   test("reads a trailing hole as undefined", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
     expect(last([1, ,])).toBeUndefined();
   });
 

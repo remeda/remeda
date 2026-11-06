@@ -41,7 +41,7 @@ export function only<T extends IterableContainer>(data: T): Only<T>;
 export function only<T extends IterableContainer>(): (data: T) => Only<T>;
 
 export function only(...args: readonly unknown[]): unknown {
-  return purry(onlyImplementation, args);
+  return purry(onlyImplementation, args, 1);
 }
 
 const onlyImplementation = <T>(data: readonly T[]): T | undefined =>

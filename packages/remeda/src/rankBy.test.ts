@@ -65,7 +65,6 @@ describe("runtime (dataFirst)", () => {
   });
 
   test("reads holes as undefined", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
     expect(rankBy([, 1], 2, defaultTo(0))).toBe(2);
   });
 });

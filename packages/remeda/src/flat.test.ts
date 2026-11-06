@@ -151,7 +151,7 @@ describe("dataLast", () => {
     ).toStrictEqual([[1]]);
   });
 
-  test("truncates a fractional depth in a fused run", () => {
+  test("truncates a fractional depth in a fused sequence", () => {
     expect(
       pipe(
         [[1]],
@@ -179,7 +179,7 @@ describe("dataLast", () => {
     ).toStrictEqual([[1]]);
   });
 
-  test("reads a NaN depth as 0 in a fused run", () => {
+  test("reads a NaN depth as 0 in a fused sequence", () => {
     expect(
       pipe(
         [[1]],

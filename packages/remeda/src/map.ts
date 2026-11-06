@@ -52,7 +52,7 @@ export function map<T extends IterableContainer, U>(
 ): (data: T) => Mapped<T, U>;
 
 export function map(...args: readonly unknown[]): unknown {
-  return purryWithLazy(mapImplementation, args, lazyImplementation);
+  return purryWithLazy(mapImplementation, args, lazyImplementation, 2);
 }
 
 const mapImplementation = <T, U>(

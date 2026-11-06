@@ -106,9 +106,9 @@ type IsPartialProp<T, P extends keyof T, S> =
  * entries that `predicate` accepts. Symbol keys are not passed to the predicate
  * and would be filtered out from the output object.
  *
- * See `omitBy` for a complementary function which starts with a shallow copy of
- * the input object and removes the entries that the predicate rejects. Because
- * it is subtractive symbol keys would be copied over to the output object.
+ * See `omitBy` for a complementary function which creates a shallow copy of the
+ * input object without the entries that the predicate rejects. Symbol keys are
+ * copied over to its output object.
  * See also `entries`, `filter`, and `fromEntries` which could be used to build
  * your own version of `pickBy` if you need more control (though the resulting
  * type might be less precise).
@@ -151,9 +151,9 @@ export function pickBy<T extends object>(
  * entries that `predicate` accepts. Symbol keys are not passed to the predicate
  * and would be filtered out from the output object.
  *
- * See `omitBy` for a complementary function which starts with a shallow copy of
- * the input object and removes the entries that the predicate rejects. Because
- * it is subtractive symbol keys would be copied over to the output object.
+ * See `omitBy` for a complementary function which creates a shallow copy of the
+ * input object without the entries that the predicate rejects. Symbol keys are
+ * copied over to its output object.
  * See also `entries`, `filter`, and `fromEntries` which could be used to build
  * your own version of `pickBy` if you need more control (though the resulting
  * type might be less precise).
@@ -188,7 +188,7 @@ export function pickBy<T extends object>(
 ): (data: T) => EnumeratedPartial<T>;
 
 export function pickBy(...args: readonly unknown[]): unknown {
-  return purry(pickByImplementation, args);
+  return purry(pickByImplementation, args, 2);
 }
 
 function pickByImplementation<T extends object>(
@@ -197,7 +197,10 @@ function pickByImplementation<T extends object>(
 ): Record<string, unknown> {
   const out: Partial<Record<string, unknown>> = {};
 
-  for (const [key, value] of Object.entries(data)) {
+  for (const entry of Object.entries(data)) {
+    const key = entry[0];
+    const value: unknown = entry[1];
+
     if (predicate(value, key, data)) {
       if (key === "__proto__") {
         // We want `__proto__` to act just like any other key, but assigning it

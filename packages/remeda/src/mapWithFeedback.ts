@@ -68,7 +68,12 @@ export function mapWithFeedback<T extends IterableContainer, U>(
 ): (data: T) => Mapped<T, U>;
 
 export function mapWithFeedback(...args: readonly unknown[]): unknown {
-  return purryWithLazy(mapWithFeedbackImplementation, args, lazyImplementation);
+  return purryWithLazy(
+    mapWithFeedbackImplementation,
+    args,
+    lazyImplementation,
+    3,
+  );
 }
 
 function mapWithFeedbackImplementation<T, U>(

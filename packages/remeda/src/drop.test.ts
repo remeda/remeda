@@ -19,6 +19,10 @@ describe("data first", () => {
     expect(drop([1, 2, 3, 4, 5], -1)).toStrictEqual([1, 2, 3, 4, 5]);
   });
 
+  test("keeps holes with negative numbers", () => {
+    expect(drop([1, , 3], -1)).toStrictEqual([1, , 3]);
+  });
+
   test("works when dropping more than the length of the array", () => {
     expect(drop([1, 2, 3, 4, 5], 10)).toStrictEqual([]);
   });
@@ -61,8 +65,9 @@ describe("data last", () => {
     [2.5, [3, 4, 5]],
     [1.5, [2, 3, 4, 5]],
     [0.5, [1, 2, 3, 4, 5]],
-  ])("truncates a count of %s in a fused run", (n, expected) => {
-    // The trailing `take` can stop the run early, so `pipe` has to run it lazily.
+  ])("truncates a count of %s in a fused sequence", (n, expected) => {
+    // The trailing `take` can stop the sequence early, so `pipe` has to run it
+    // lazily.
     expect(
       pipe([1, 2, 3, 4, 5], map(identity()), drop(n), take(5)),
     ).toStrictEqual(expected);
@@ -72,7 +77,7 @@ describe("data last", () => {
     expect(pipe([1, 2, 3, 4, 5], drop(NaN))).toStrictEqual([1, 2, 3, 4, 5]);
   });
 
-  test("reads a NaN count as 0 in a fused run", () => {
+  test("reads a NaN count as 0 in a fused sequence", () => {
     expect(
       pipe([1, 2, 3, 4, 5], map(identity()), drop(NaN), take(5)),
     ).toStrictEqual([1, 2, 3, 4, 5]);
@@ -82,7 +87,7 @@ describe("data last", () => {
     expect(pipe([1, 2, 3, 4, 5], drop(Infinity))).toStrictEqual([]);
   });
 
-  test("drops everything for an Infinity count in a fused run", () => {
+  test("drops everything for an Infinity count in a fused sequence", () => {
     expect(
       pipe([1, 2, 3, 4, 5], map(identity()), drop(Infinity), take(5)),
     ).toStrictEqual([]);

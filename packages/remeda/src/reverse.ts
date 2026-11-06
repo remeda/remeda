@@ -16,36 +16,34 @@ type IsNoTuple<T> = T extends readonly [unknown, ...unknown[]] ? never : T;
 /**
  * Reverses array.
  *
- * @param array - The array.
+ * @param data - The array.
  * @signature
- *    reverse(arr);
+ *    reverse(data);
  * @example
- *    reverse([1, 2, 3]) // [3, 2, 1]
+ *    reverse([1, 2, 3]); // [3, 2, 1]
  * @dataFirst
  * @category Array
  */
-export function reverse<T extends readonly unknown[]>(array: T): Reverse<T>;
+export function reverse<T extends readonly unknown[]>(data: T): Reverse<T>;
 
 /**
  * Reverses array.
  *
  * @signature
- *    reverse()(array);
+ *    reverse()(data);
  * @example
- *    reverse()([1, 2, 3]) // [3, 2, 1]
+ *    reverse()([1, 2, 3]); // [3, 2, 1]
  * @dataLast
  * @category Array
  */
 export function reverse<T extends readonly unknown[]>(): (
-  array: T,
+  data: T,
 ) => Reverse<T>;
 
 export function reverse(...args: readonly unknown[]): unknown {
-  return purry(reverseImplementation, args);
+  return purry(reverseImplementation, args, 1);
 }
 
-function reverseImplementation<T>(array: readonly T[]): T[] {
-  // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toReversed` here.
-  // eslint-disable-next-line unicorn/no-array-reverse -- See TODO above.
-  return [...array].reverse();
-}
+const reverseImplementation = <T>(data: readonly T[]): T[] =>
+  // eslint-disable-next-line unicorn/no-array-reverse -- `reverse` only mutates our own copy here, and `toReversed` is slower on larger arrays.
+  data.concat().reverse();

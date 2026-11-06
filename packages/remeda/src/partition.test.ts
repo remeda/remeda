@@ -76,7 +76,6 @@ describe("data first", () => {
   });
 
   test("holes are partitioned as undefined", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
     expect(partition([1, , 3], isDefined)).toStrictEqual([[1, 3], [undefined]]);
   });
 

@@ -5,7 +5,7 @@ import { dropLast } from "./dropLast";
 import { pipe } from "./pipe";
 
 // Dense only: data-first slices the input, which keeps its holes, while a
-// fused run reads each hole as `undefined`.
+// fused sequence reads each hole as `undefined`.
 const items = fc.array(fc.anything());
 
 // Whole counts around the input's length, fractions in quarter steps, `NaN`,
@@ -18,7 +18,7 @@ const counts = fc.oneof(
 );
 
 test.prop([items, counts])(
-  "data-first and a fused run produce the same result",
+  "data-first and a fused sequence produce the same result",
   (data, n) => {
     expect(pipe(data, forceFusion(), dropLast(n))).toStrictEqual(
       dropLast(data, n),

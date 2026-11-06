@@ -100,7 +100,7 @@ export function sortedLastIndexBy<T>(
 ): (data: readonly NoInfer<T>[]) => number;
 
 export function sortedLastIndexBy(...args: readonly unknown[]): unknown {
-  return purry(sortedLastIndexByImplementation, args);
+  return purry(sortedLastIndexByImplementation, args, 3);
 }
 
 function sortedLastIndexByImplementation<T>(

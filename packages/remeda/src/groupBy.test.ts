@@ -81,7 +81,6 @@ describe("data first", () => {
 
   test("holes are grouped as undefined", () => {
     expect(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
       groupBy([1, , 3], (item) => (item === undefined ? "hole" : "item")),
     ).toStrictEqual({ item: [1, 3], hole: [undefined] });
   });

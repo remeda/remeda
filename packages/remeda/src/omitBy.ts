@@ -5,9 +5,8 @@ import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import { purry } from "./purry";
 
 // Symbols are not passed to the predicate (because they can't be enumerated
-// with the `Object.entries` function) and the output object is built from a
-// shallow copy of the input; meaning symbols would just be passed through as-
-// is.
+// with the `Object.entries` function) and the enumerable ones are copied to the
+// output object as-is.
 type PickSymbolKeys<T extends object> = {
   -readonly [P in keyof T as P extends symbol ? P : never]: T[P];
 };
@@ -93,9 +92,9 @@ type IsPartialProp<T, P extends keyof T, S> = P extends symbol
       : true;
 
 /**
- * Creates a shallow copy of the data, and then removes any keys that the
- * predicate rejects. Symbol keys are not passed to the predicate and would be
- * passed through to the output as-is.
+ * Creates a shallow copy of the data without the entries that the predicate
+ * rejects. Symbol keys are not passed to the predicate and would be passed
+ * through to the output as-is.
  *
  * See `pickBy` for a complementary function which starts with an empty object
  * and adds the entries that the predicate accepts. Because it is additive,
@@ -163,19 +162,43 @@ export function omitBy<T extends object>(
 ): (data: T) => PartialEnumerableKeys<T>;
 
 export function omitBy(...args: readonly unknown[]): unknown {
-  return purry(omitByImplementation, args);
+  return purry(omitByImplementation, args, 2);
 }
 
 function omitByImplementation<T extends object>(
   data: T,
   predicate: (value: unknown, key: string, data: T) => boolean,
 ): Record<string, unknown> {
-  const out: Partial<Record<string, unknown>> = { ...data };
+  const out: Record<PropertyKey, unknown> = {};
 
-  for (const [key, value] of Object.entries(out)) {
-    if (predicate(value, key, data)) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- This is the best way to do it!
-      delete out[key];
+  for (const entry of Object.entries(data)) {
+    const key = entry[0];
+    const value: unknown = entry[1];
+
+    if (!predicate(value, key, data)) {
+      if (key === "__proto__") {
+        // We want `__proto__` to act just like any other key, but assigning it
+        // runs the setter inherited from `Object.prototype` instead of creating
+        // a property. Defining it directly creates the same own data property
+        // that assigning creates for all *other* keys.
+        Object.defineProperty(out, "__proto__", {
+          value,
+          configurable: true,
+          enumerable: true,
+          writable: true,
+        });
+      } else {
+        out[key] = value;
+      }
+    }
+  }
+
+  // The predicate only sees string keys, so enumerable symbol keys always stay.
+  for (const symbol of Object.getOwnPropertySymbols(data)) {
+    if (Object.prototype.propertyIsEnumerable.call(data, symbol)) {
+      out[symbol] =
+        // @ts-expect-error [ts7053] -- `symbol` is an own key of `data`, but TypeScript can't tie it to `T`.
+        data[symbol];
     }
   }
 

@@ -57,15 +57,16 @@ export function forEachObj<T extends object>(
 ): (object: T) => T;
 
 export function forEachObj(...args: readonly unknown[]): unknown {
-  return purry(forEachObjImplementation, args);
+  return purry(forEachObjImplementation, args, 2);
 }
 
 function forEachObjImplementation<T extends object>(
   data: T,
   fn: (value: unknown, key: string, data: T) => void,
 ): T {
-  for (const [key, value] of Object.entries(data)) {
-    fn(value, key, data);
+  for (const entry of Object.entries(data)) {
+    fn(entry[1], entry[0], data);
   }
+
   return data;
 }

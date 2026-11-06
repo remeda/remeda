@@ -52,7 +52,12 @@ export function differenceWith<T, Other>(
 ): (data: readonly T[]) => T[];
 
 export function differenceWith(...args: readonly unknown[]): unknown {
-  return purryWithLazy(differenceWithImplementation, args, lazyImplementation);
+  return purryWithLazy(
+    differenceWithImplementation,
+    args,
+    lazyImplementation,
+    3,
+  );
 }
 
 function differenceWithImplementation<T, Other>(
