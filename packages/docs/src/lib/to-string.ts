@@ -12,7 +12,7 @@ export function toString(): <S extends string>(data: {
   readonly toString: () => S;
 }) => S;
 export function toString(...args: readonly unknown[]): unknown {
-  return purry(toStringImplementation, args);
+  return purry(toStringImplementation, args, 1);
 }
 
 const toStringImplementation = <S extends string>(data: {

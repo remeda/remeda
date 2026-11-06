@@ -138,7 +138,7 @@ export function drop<N extends number>(
 ): <T extends IterableContainer>(array: T) => Drop<T, N>;
 
 export function drop(...args: readonly unknown[]): unknown {
-  return purryWithLazy(dropImplementation, args, lazyImplementation);
+  return purryWithLazy(dropImplementation, args, lazyImplementation, 2);
 }
 
 const dropImplementation = <T extends IterableContainer>(

@@ -52,7 +52,7 @@ export function mean(): <T extends IterableContainer<number>>(
 ) => Mean<T>;
 
 export function mean(...args: readonly unknown[]): unknown {
-  return purry(meanImplementation, args);
+  return purry(meanImplementation, args, 1);
 }
 
 const meanImplementation = <T extends IterableContainer<number>>(

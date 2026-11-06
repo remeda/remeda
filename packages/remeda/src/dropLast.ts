@@ -48,7 +48,7 @@ export function dropLast(
 ): <T extends IterableContainer>(array: T) => T[number][];
 
 export function dropLast(...args: readonly unknown[]): unknown {
-  return purryWithLazy(dropLastImplementation, args, lazyImplementation);
+  return purryWithLazy(dropLastImplementation, args, lazyImplementation, 2);
 }
 
 const dropLastImplementation = <T extends IterableContainer>(

@@ -6,8 +6,8 @@ Every function with a data-first / data-last API uses `purry` (`src/purry.ts`). 
 
 - Two overload signatures: data-first **and** data-last, each with its own JSDoc block.
 - One implementation signature — no JSDoc, returns `unknown`. `purry` dispatches by argument count at runtime, not by the typed overloads.
-- The implementation declares exactly the function's public parameters, none of them optional, defaulted or rest: a call with at least `impl.length` arguments runs data-first with the extras passed along, so a point-free callback (`data.map(clone)`) hands the implementation the index and the array too. Recursion state goes in a separate helper, as `clone`'s `cloneValue` does.
-- The body calls `purry(impl, args)`, or `purryWithLazy(impl, args, lazyImpl)` (`src/internal/purryWithLazy.ts`) when the function also has a lazy evaluator (see below). The lazy protocol is private to the package, so the public `purry` has no lazy parameter.
+- The implementation declares exactly the function's public parameters, none of them optional, defaulted or rest: a call with at least that many arguments runs data-first with the extras passed along, so a point-free callback (`data.map(clone)`) hands the implementation the index and the array too. Recursion state goes in a separate helper, as `clone`'s `cloneValue` does.
+- The body calls `purry(impl, args, arity)`, or `purryWithLazy(impl, args, lazyImpl, arity)` (`src/internal/purryWithLazy.ts`) when the function also has a lazy evaluator (see below). `arity` is the implementation's parameter count as a literal (`impl.length`), which spares every call a read of the native `Function.length` accessor; its type, `[T, ...P]["length"]`, makes a wrong literal a compile error. The lazy protocol is private to the package, so the public `purry` has no lazy parameter.
 
 A lazy function still gets a plain eager implementation for its data-first call, even when it mirrors the evaluator (`unique`, `difference`): running the evaluator item by item outside `pipe` costs a call and a result classification per item, and bundles the lazy runner into every data-first import. The two must give the same result for every input: `pipe` picks between them per sequence and per input kind, so a mismatch shows up as a pipe whose result changes when an unrelated step is added or removed.
 
@@ -131,6 +131,14 @@ if (key === "__proto__") {
 ```
 
 A function that reads a key before writing it (`countBy`, `groupBy`, `groupByProp`) starts from `Object.create(null)` and restores the prototype with `Object.setPrototypeOf(out, Object.prototype)` once the object is built. Without a prototype the object has no setter, and reads see only the keys the function added, so `__proto__` and `toString` start out `undefined` like any other key.
+
+## Loops and copies
+
+These shapes measured faster than their usual alternatives:
+
+- **Arrays**: iterate with `for...of`. When the body needs the index, count it in a `let index = 0` that every iteration increments once (`partition`, `sumBy`, `takeWhile`), which runs faster than destructuring `data.entries()`, most of all at startup and in the interpreter. A reactive array (Vue, MobX) tracks a `for...of` as one dependency, where an indexed `for` loop tracks every index it reads (`groupBy` keeps its indexed loop, which measured faster for it). When a closure created in the body captures the index, iterate `data.entries()`, so each iteration binds its own `index` (`uniqueWith`'s `findIndex` callback).
+- **Object entries**: read each entry by position, `for (const entry of Object.entries(data))` with `entry[0]` and `entry[1]` (`mapValues`, `pickBy`, `evolve`). Destructuring a pair runs the array iterator for every entry, which shows at startup and in the interpreter; `@typescript-eslint/prefer-destructuring` allows positional reads for this reason (`array: false`).
+- **Copies**: copy an array with `data.concat()` before mutating the copy (`reverse`, `sort`, `splice`, `swapIndices`). It's the fastest copy that stays cheap on reactive arrays, which track `concat` as a few dependencies and `slice()` as one per index, and holes stay holes, as with `slice()`. A function whose other paths read holes as `undefined` copies with a spread, so all its paths agree (`dropFirstBy`, `takeFirstBy`). `unicorn/prefer-spread` is off for this reason.
 
 ## Type System
 

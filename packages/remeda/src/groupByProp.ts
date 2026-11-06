@@ -180,7 +180,7 @@ export function groupByProp<
 >(prop: Prop): (data: T) => GroupByProp<T, Prop>;
 
 export function groupByProp(...args: readonly unknown[]): unknown {
-  return purry(groupByPropImplementation, args);
+  return purry(groupByPropImplementation, args, 2);
 }
 
 function groupByPropImplementation<

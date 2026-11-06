@@ -45,7 +45,7 @@ export function tap<
 >(fn: F): (value: T) => T;
 
 export function tap(...args: readonly unknown[]): unknown {
-  return purry(tapImplementation, args);
+  return purry(tapImplementation, args, 2);
 }
 
 function tapImplementation<T>(value: T, fn: (value: T) => void): T {

@@ -34,7 +34,7 @@ export function subtract(subtrahend: bigint): (value: bigint) => bigint;
 export function subtract(subtrahend: number): (value: number) => number;
 
 export function subtract(...args: readonly unknown[]): unknown {
-  return purry(subtractImplementation, args);
+  return purry(subtractImplementation, args, 2);
 }
 
 // The implementation only uses `number` types, but that's just because it's

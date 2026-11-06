@@ -52,7 +52,7 @@ export function join<
 >(glue: Glue): (data: T) => Join<T, Glue>;
 
 export function join(...args: readonly unknown[]): unknown {
-  return purry(joinImplementation, args);
+  return purry(joinImplementation, args, 2);
 }
 
 const joinImplementation = (data: readonly unknown[], glue: string): string =>

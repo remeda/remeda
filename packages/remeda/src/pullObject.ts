@@ -80,7 +80,7 @@ export function pullObject<
 ): (data: T) => BoundedPartial<Record<K, V>>;
 
 export function pullObject(...args: readonly unknown[]): unknown {
-  return purry(pullObjectImplementation, args);
+  return purry(pullObjectImplementation, args, 3);
 }
 
 function pullObjectImplementation<

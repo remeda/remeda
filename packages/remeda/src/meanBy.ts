@@ -41,7 +41,7 @@ export function meanBy<T>(
 ): number;
 
 export function meanBy(...args: readonly unknown[]): unknown {
-  return purry(meanByImplementation, args);
+  return purry(meanByImplementation, args, 2);
 }
 
 const meanByImplementation = <T>(

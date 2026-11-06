@@ -53,7 +53,7 @@ export function uniqueWith<T extends IterableContainer>(
 ): (data: T) => Deduped<T>;
 
 export function uniqueWith(...args: readonly unknown[]): unknown {
-  return purryWithLazy(uniqueWithImplementation, args, lazyImplementation);
+  return purryWithLazy(uniqueWithImplementation, args, lazyImplementation, 2);
 }
 
 function uniqueWithImplementation<T>(
@@ -61,19 +61,15 @@ function uniqueWithImplementation<T>(
   isEquals: IsEquals<T>,
 ): T[] {
   const result: T[] = [];
-
-  let index = 0;
-  for (const value of data) {
+  for (const [index, value] of data.entries()) {
     if (
       data.findIndex(
-        // eslint-disable-next-line @typescript-eslint/no-loop-func -- findIndex calls this before the counter moves.
         (otherValue, otherIndex) =>
           index === otherIndex || isEquals(value, otherValue),
       ) === index
     ) {
       result.push(value);
     }
-    index += 1;
   }
 
   return result;

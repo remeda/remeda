@@ -3,10 +3,13 @@
  */
 
 import type { UnaryFunction } from "./internal/dataLastImplementation";
-import { buildFusedSequence, runFusedSequence } from "./internal/fusedSequence";
+import {
+  buildFusedSequence,
+  isStoppableSequence,
+  runFusedSequence,
+} from "./internal/fusedSequence";
 import { iterableDataFirst } from "./internal/iterableDataFirst";
 import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
-import { findSequentialSequenceEnd } from "./internal/sequentialSequence";
 
 /**
  * Performs left-to-right function composition, passing data through functions
@@ -323,15 +326,11 @@ export function pipe(
     // function's data-first implementation in turn instead, trading the
     // per-item step bookkeeping for an intermediate array per step. Other
     // iterables always fuse, as those implementations only accept arrays.
-    const sequentialSequenceEnd = Array.isArray(output)
-      ? findSequentialSequenceEnd(functions, functionIndex)
-      : functionIndex;
-    if (sequentialSequenceEnd > functionIndex) {
-      for (; functionIndex < sequentialSequenceEnd; functionIndex += 1) {
-        // @ts-expect-error [ts2345] -- Every function before `sequentialSequenceEnd` is lazy and gets the array the previous one returned, but TypeScript can't narrow the functions from the scan that found them.
-        output = functions[functionIndex]!(output);
-      }
-      functionIndex -= 1;
+    if (
+      Array.isArray(output) &&
+      !isStoppableSequence(functions, functionIndex)
+    ) {
+      output = currentFunction(output);
       continue;
     }
 

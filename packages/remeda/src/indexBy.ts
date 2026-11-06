@@ -53,7 +53,7 @@ export function indexBy<T, K extends PropertyKey>(
 ): (data: readonly T[]) => BoundedPartial<Record<K, T>>;
 
 export function indexBy(...args: readonly unknown[]): unknown {
-  return purry(indexByImplementation, args);
+  return purry(indexByImplementation, args, 2);
 }
 
 function indexByImplementation<T, K extends PropertyKey>(

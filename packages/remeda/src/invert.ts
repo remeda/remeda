@@ -40,7 +40,7 @@ export function invert<T extends object>(object: T): Inverted<T>;
 export function invert<T extends object>(): (object: T) => Inverted<T>;
 
 export function invert(...args: readonly unknown[]): unknown {
-  return purry(invertImplementation, args);
+  return purry(invertImplementation, args, 1);
 }
 
 function invertImplementation(

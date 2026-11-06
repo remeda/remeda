@@ -112,7 +112,7 @@ export function pick<
 >(data: T, keys: Keys): PickFromArray<T, Keys>;
 
 export function pick(...args: readonly unknown[]): unknown {
-  return purry(pickImplementation, args);
+  return purry(pickImplementation, args, 2);
 }
 
 function pickImplementation<

@@ -55,7 +55,7 @@ export function flatMap<T, U>(
 ): (data: readonly T[]) => U[];
 
 export function flatMap(...args: readonly unknown[]): unknown {
-  return purryWithLazy(flatMapImplementation, args, lazyImplementation);
+  return purryWithLazy(flatMapImplementation, args, lazyImplementation, 2);
 }
 
 const flatMapImplementation = <T, U>(

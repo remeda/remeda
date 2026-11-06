@@ -75,7 +75,7 @@ export function times<T>(
 ): <N extends number>(count: N) => TimesArray<T, N>;
 
 export function times(...args: readonly unknown[]): unknown {
-  return purry(timesImplementation, args);
+  return purry(timesImplementation, args, 2);
 }
 
 function timesImplementation<T>(count: number, fn: (index: number) => T): T[] {

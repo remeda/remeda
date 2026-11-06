@@ -165,7 +165,7 @@ export function sample<const T extends IterableContainer, N extends number>(
 ): (data: T) => Sampled<T, N>;
 
 export function sample(...args: readonly unknown[]): unknown {
-  return purry(sampleImplementation, args);
+  return purry(sampleImplementation, args, 2);
 }
 
 function sampleImplementation<T>(data: readonly T[], sampleSize: number): T[] {

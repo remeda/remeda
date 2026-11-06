@@ -33,7 +33,7 @@ export function splitWhen<T>(
 ): (array: readonly T[]) => [T[], T[]];
 
 export function splitWhen(...args: readonly unknown[]): unknown {
-  return purry(splitWhenImplementation, args);
+  return purry(splitWhenImplementation, args, 2);
 }
 
 function splitWhenImplementation<T>(

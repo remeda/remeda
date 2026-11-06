@@ -44,7 +44,7 @@ export function swapProps<
 >(key1: K1, key2: K2): (data: T) => SwappedProps<T, K1, K2>;
 
 export function swapProps(...args: readonly unknown[]): unknown {
-  return purry(swapPropsImplementation, args);
+  return purry(swapPropsImplementation, args, 3);
 }
 
 const swapPropsImplementation = <T extends object>(

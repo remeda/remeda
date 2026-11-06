@@ -162,7 +162,7 @@ export function omitBy<T extends object>(
 ): (data: T) => PartialEnumerableKeys<T>;
 
 export function omitBy(...args: readonly unknown[]): unknown {
-  return purry(omitByImplementation, args);
+  return purry(omitByImplementation, args, 2);
 }
 
 function omitByImplementation<T extends object>(

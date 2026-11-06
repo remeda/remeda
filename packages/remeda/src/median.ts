@@ -51,7 +51,7 @@ export function median(): <T extends IterableContainer<number>>(
 ) => Median<T>;
 
 export function median(...args: readonly unknown[]): unknown {
-  return purry(medianImplementation, args);
+  return purry(medianImplementation, args, 1);
 }
 
 const numberComparator = (a: number, b: number): number => a - b;

@@ -125,7 +125,7 @@ export function omit<T, const Keys extends readonly KeysOfUnion<T>[]>(
 ): OmitFromArray<T, Keys>;
 
 export function omit(...args: readonly unknown[]): unknown {
-  return purry(omitImplementation, args);
+  return purry(omitImplementation, args, 2);
 }
 
 function omitImplementation<

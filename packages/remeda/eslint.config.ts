@@ -384,7 +384,8 @@ export default defineConfig(
       "@typescript-eslint/no-magic-numbers": [
         "warn",
         {
-          ignore: [-1, 0, 1, 2],
+          // 3 is the largest data-first arity a utility passes to `purry`.
+          ignore: [-1, 0, 1, 2, 3],
           ignoreNumericLiteralTypes: true,
         },
       ],

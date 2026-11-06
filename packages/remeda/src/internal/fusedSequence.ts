@@ -32,7 +32,7 @@ export type LazyStep = {
  * evaluator, ready for a single `runFusedSequence` call. The length of the
  * result is the number of functions the sequence covers.
  * @see runFusedSequence
- * @see findSequentialSequenceEnd
+ * @see isStoppableSequence
  */
 export function buildFusedSequence(
   functions: readonly (UnaryFunction | LazyUnaryFunction)[],
@@ -71,6 +71,33 @@ export function buildFusedSequence(
   }
 
   return fusedSequence;
+}
+
+/**
+ * Whether a function of the sequence of lazy functions that starts at
+ * `startIndex`, the same sequence `buildFusedSequence` builds, can stop the pipe
+ * early.
+ */
+export function isStoppableSequence(
+  functions: readonly (UnaryFunction | LazyUnaryFunction)[],
+  startIndex: number,
+): boolean {
+  for (let index = startIndex; index < functions.length; index++) {
+    const currentFunction = functions[index]!;
+    if (!("lazy" in currentFunction)) {
+      return false;
+    }
+
+    if (currentFunction.lazy.isStoppable) {
+      return true;
+    }
+
+    if (currentFunction.lazy.isReducing) {
+      return false;
+    }
+  }
+
+  return false;
 }
 
 /**

@@ -37,7 +37,7 @@ export function clamp(value: number, limits: Limits): number;
 export function clamp(limits: Limits): (value: number) => number;
 
 export function clamp(...args: readonly unknown[]): unknown {
-  return purry(clampImplementation, args);
+  return purry(clampImplementation, args, 2);
 }
 
 const clampImplementation = (value: number, { min, max }: Limits): number =>

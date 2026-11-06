@@ -139,7 +139,7 @@ export function fromEntries(): <Entries extends IterableContainer<Entry>>(
 ) => Simplify<FromEntries<Entries>>;
 
 export function fromEntries(...args: readonly unknown[]): unknown {
-  return purry(fromEntriesImplementation, args);
+  return purry(fromEntriesImplementation, args, 1);
 }
 
 function fromEntriesImplementation(

@@ -52,7 +52,7 @@ export function take(
 ): <T extends IterableContainer>(array: T) => T[number][];
 
 export function take(...args: readonly unknown[]): unknown {
-  return purryWithLazy(takeImplementation, args, lazyImplementation);
+  return purryWithLazy(takeImplementation, args, lazyImplementation, 2);
 }
 
 const takeImplementation = <T extends IterableContainer>(
