@@ -1,4 +1,5 @@
 import {
+  type DataFirstArity,
   dataLastImplementation,
   type DataFirst,
   type UnaryFunction,
@@ -11,10 +12,7 @@ import {
  * When `args` has at least `arity` items, `dataFirst` is called with all of
  * them, extra ones included. Otherwise `purry` returns a function that takes
  * the data and calls `dataFirst(data, ...args)`. `arity` is the number of
- * arguments of a data-first call, data included, which is `dataFirst.length`
- * for a parameter list without defaulted or rest parameters. It is written out
- * at the call site because `Function.length` is a native accessor that every
- * call would otherwise go through.
+ * arguments of a data-first call.
  *
  * The return type is not dynamically routed via the same runtime logic, and
  * therefore is a union of both data-first and data-last return types. The
@@ -57,7 +55,7 @@ import {
  */
 export const purry = <T, P extends readonly unknown[], R>(
   dataFirst: DataFirst<T, P, R>,
-  arity: [T, ...P]["length"],
+  arity: DataFirstArity<T, P>,
   args: readonly unknown[],
 ): R | UnaryFunction<T, R> =>
   args.length >= arity

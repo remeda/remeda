@@ -15,9 +15,35 @@ test("return type", () => {
   >();
 });
 
-test("the arity has to match the data-first parameters", () => {
-  // @ts-expect-error [ts2345] -- `subtractImplementation` takes 2 parameters, so 1 isn't its arity.
-  purry(subtractImplementation, 1, []);
+describe("arity", () => {
+  test("matches the data-first parameters", () => {
+    purry(
+      subtractImplementation,
+      // @ts-expect-error [ts2345] -- `subtractImplementation` takes 2 parameters, so 1 isn't its arity.
+      1,
+      [],
+    );
+  });
+
+  test("counts optional parameters", () => {
+    purry(subtractOptionalImplementation, 2, []);
+    purry(
+      subtractOptionalImplementation,
+      // @ts-expect-error [ts2345] -- The optional `subtrahend` still counts, so 1 isn't the arity.
+      1,
+      [],
+    );
+  });
+
+  test("counts defaulted parameters", () => {
+    purry(subtractDefaultedImplementation, 2, []);
+    purry(
+      subtractDefaultedImplementation,
+      // @ts-expect-error [ts2345] -- The defaulted `subtrahend` still counts, so 1 isn't the arity.
+      1,
+      [],
+    );
+  });
 });
 
 describe("known issues!", () => {
@@ -136,6 +162,16 @@ function subtractWithMismatchedOverload(...args: readonly unknown[]) {
 
 const subtractImplementation = (minuend: number, subtrahend: number): number =>
   minuend - subtrahend;
+
+const subtractOptionalImplementation = (
+  minuend: number,
+  subtrahend?: number,
+): number => (subtrahend === undefined ? minuend : minuend - subtrahend);
+
+const subtractDefaultedImplementation = (
+  minuend: number,
+  subtrahend = 1,
+): number => minuend - subtrahend;
 
 function genericDataFirstDeclaredLast(): <T>(
   data: readonly T[],

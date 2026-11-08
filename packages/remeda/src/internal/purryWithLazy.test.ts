@@ -82,7 +82,7 @@ function concatenateNumberArgs(
   other: number | undefined,
 ): string {
   return `${data.map((x) => x.toString()).join("")}${other?.toString() ?? "<missing>"}${[
-    // eslint-disable-next-line prefer-rest-params -- Intentional, we want to bypass the function shape (which is observable at runtime via `Function.length`) to lock in how excess arguments are passed through.
+    // eslint-disable-next-line prefer-rest-params -- Intentional, the declared parameters keep the fixture shaped like a real utility (so its arity type is the literal `2` that `purryWithLazy` checks), while `arguments` exposes the excess arguments it passes through, which the declared parameters would drop.
     ...arguments,
   ]
     .slice(2)

@@ -1,4 +1,4 @@
-import type { DataFirst } from "./dataLastImplementation";
+import type { DataFirst, DataFirstArity } from "./dataLastImplementation";
 import {
   lazyDataLastImplementation,
   type LazyEvaluatorFactory,
@@ -22,7 +22,7 @@ export const purryWithLazy = <
   R,
 >(
   dataFirst: DataFirst<T, P, R>,
-  arity: [T, ...P]["length"],
+  arity: DataFirstArity<T, P>,
   lazy: LazyEvaluatorFactory<T, P>,
   args: readonly unknown[],
 ): R | LazyUnaryFunction<T, P, R> =>
