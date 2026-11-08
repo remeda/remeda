@@ -10,7 +10,7 @@ describe("data first", () => {
   });
 
   test("keeps holes", () => {
-    expect(reverse([1, , 3])).toStrictEqual([3, , 1]);
+    expect(reverse([1, , 3, 4])).toStrictEqual([4, 3, , 1]);
   });
 });
 

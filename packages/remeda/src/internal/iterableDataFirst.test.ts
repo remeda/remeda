@@ -82,11 +82,8 @@ describe("items", () => {
     // nothing but its identity was used.
     const { proxy: item, revoke } = Proxy.revocable({}, {});
     revoke();
-    const [result] = iterableDataFirst(
-      [item],
-      () => (value) => value,
-      [],
-    ) as readonly unknown[];
+    // @ts-expect-error [ts2488] -- `iterableDataFirst` returns `unknown` because a reducing step returns its single value; this step isn't reducing, so the result is the array of collected items.
+    const [result] = iterableDataFirst([item], () => (value) => value, []);
 
     expect(result).toBe(item);
   });

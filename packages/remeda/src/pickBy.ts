@@ -107,7 +107,7 @@ type IsPartialProp<T, P extends keyof T, S> =
  * and would be filtered out from the output object.
  *
  * See `omitBy` for a complementary function which creates a shallow copy of the
- * input object without the entries that the predicate rejects. Symbol keys are
+ * input object without the entries that the predicate matches. Symbol keys are
  * copied over to its output object.
  * See also `entries`, `filter`, and `fromEntries` which could be used to build
  * your own version of `pickBy` if you need more control (though the resulting
@@ -152,7 +152,7 @@ export function pickBy<T extends object>(
  * and would be filtered out from the output object.
  *
  * See `omitBy` for a complementary function which creates a shallow copy of the
- * input object without the entries that the predicate rejects. Symbol keys are
+ * input object without the entries that the predicate matches. Symbol keys are
  * copied over to its output object.
  * See also `entries`, `filter`, and `fromEntries` which could be used to build
  * your own version of `pickBy` if you need more control (though the resulting

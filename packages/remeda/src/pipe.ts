@@ -317,8 +317,8 @@ export function pipe(
     }
 
     if (Array.isArray(output) && !isStoppableFrom(functions, functionIndex)) {
-      // Fusing a sequence pays off only when one of its steps can stop the pipe
-      // early, which skips the work of the remaining items. Without one, every
+      // Fusing a sequence pays off only when one of its steps can end the
+      // iteration early, which skips the work of the remaining items. Without one, every
       // item goes through every step anyway, so an array goes through each
       // function's data-first implementation in turn instead, trading the
       // per-item step bookkeeping for an intermediate array per step. Other
@@ -341,7 +341,7 @@ export function pipe(
 
 /**
  * Whether a function from `fromIndex` to the end of its lazy sequence, where
- * `buildFusedSequence` would stop fusing, can stop the pipe early.
+ * `buildFusedSequence` would stop fusing, can end the iteration early.
  */
 function isStoppableFrom(
   functions: readonly (UnaryFunction | LazyUnaryFunction)[],

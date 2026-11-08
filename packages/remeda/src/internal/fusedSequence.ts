@@ -77,8 +77,8 @@ export function buildFusedSequence(
  * a time, so a step that stops skips the remaining items in every step.
  *
  * @param input - The iterable to run through the steps.
- * @param fusedSequence - The steps from `buildFusedSequence`. The run advances
- * their state in place, so they serve this one call only.
+ * @param fusedSequence - The steps from `buildFusedSequence`. Running them
+ * advances their state in place, so they serve this one call only.
  * @returns The items that left the last step; the caller unwraps a reducing
  * step's value.
  * @see buildFusedSequence

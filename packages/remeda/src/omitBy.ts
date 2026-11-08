@@ -93,7 +93,7 @@ type IsPartialProp<T, P extends keyof T, S> = P extends symbol
 
 /**
  * Creates a shallow copy of the data without the entries that the predicate
- * rejects. Symbol keys are not passed to the predicate and would be passed
+ * matches. Symbol keys are not passed to the predicate and would be passed
  * through to the output as-is.
  *
  * See `pickBy` for a complementary function which starts with an empty object
@@ -105,8 +105,7 @@ type IsPartialProp<T, P extends keyof T, S> = P extends symbol
  * and returns `true` if the entry shouldn't be part of the output object, or
  * `false` to keep it. If the function is a type-guard on the value the output
  * type would be narrowed accordingly.
- * @returns A shallow copy of the input object with the rejected entries
- * removed.
+ * @returns A shallow copy of the input object without the matching entries.
  * @signature omitBy(data, predicate)
  * @example
  *    omitBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {a: 1, b: 2}

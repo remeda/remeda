@@ -170,7 +170,7 @@ export default defineConfig(
       "@typescript-eslint/naming-convention": "off",
       "unicorn/name-replacements": "off",
 
-      // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and remove this suppression to allow the rule to find these cases.
+      // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and consider enabling this rule. Its fixes replace sorting a copy with `toSorted`, which measured slower than `concat().sort()` in `sortBy` on small arrays, so each one should be benchmarked.
       "unicorn/no-array-sort": "off",
 
       // This rule trades perf for readability by suggesting the spread
@@ -350,7 +350,8 @@ export default defineConfig(
           // involves the array's iterator vs a direct indexed access. This
           // results in less performant code.
           array: false,
-          // Object destructuring is fine...
+          // An options object turns off every kind it leaves out, so object
+          // destructuring has to be listed to stay enforced.
           object: true,
         },
       ],

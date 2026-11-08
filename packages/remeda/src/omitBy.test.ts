@@ -18,12 +18,12 @@ test("dataLast", () => {
   ).toStrictEqual({ a: 1, b: 2 });
 });
 
-test("number keys are converted to strings in the mapper", () => {
-  omitBy({ 123: "hello" }, (_, key) => {
-    expect(key).toBe("123");
+test("number keys are passed to the predicate as strings", () => {
+  const predicate = vi.fn<(value: string, key: string) => boolean>();
+  const data = { 123: "hello" };
+  omitBy(data, predicate);
 
-    return true;
-  });
+  expect(predicate).toHaveBeenCalledExactlyOnceWith("hello", "123", data);
 });
 
 test("symbols are passed through", () => {

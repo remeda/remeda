@@ -535,7 +535,7 @@ describe("lazy", () => {
             data[0] ?? [],
           [],
           makeReducing(
-            // eslint-disable-next-line unicorn/consistent-function-scoping -- This if fine for a single-use test function...
+            // eslint-disable-next-line unicorn/consistent-function-scoping -- The evaluator captures nothing and could be hoisted; it stays inline so the test's fixture reads in one place.
             () => (value, index) => (index === 0 ? value : SKIP_ITEM),
           ),
         ),

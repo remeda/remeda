@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import type { DataFirstArity } from "./internal/dataLastImplementation";
 import { purry } from "./purry";
 import { sum } from "./sum";
 
@@ -23,6 +24,12 @@ describe("arity", () => {
       1,
       [],
     );
+    purry(
+      subtractImplementation,
+      // @ts-expect-error [ts2345] -- `subtractImplementation` takes 2 parameters, so 3 isn't its arity.
+      3,
+      [],
+    );
   });
 
   test("counts optional parameters", () => {
@@ -30,16 +37,6 @@ describe("arity", () => {
     purry(
       subtractOptionalImplementation,
       // @ts-expect-error [ts2345] -- The optional `subtrahend` still counts, so 1 isn't the arity.
-      1,
-      [],
-    );
-  });
-
-  test("counts defaulted parameters", () => {
-    purry(subtractDefaultedImplementation, 2, []);
-    purry(
-      subtractDefaultedImplementation,
-      // @ts-expect-error [ts2345] -- The defaulted `subtrahend` still counts, so 1 isn't the arity.
       1,
       [],
     );
@@ -117,6 +114,21 @@ describe("known issues!", () => {
     // Actual
     expectTypeOf(result).toBeAny();
   });
+
+  test("a rest parameter accepts any arity", () => {
+    // Counting arguments can't tell a data-first call from a data-last one when
+    // the implementation takes any number of them, so no literal is right for
+    // it. The length of a parameter tuple with a rest element is `number`,
+    // though, which every literal satisfies.
+    expectTypeOf<
+      DataFirstArity<number, readonly number[]>
+    >().not.toEqualTypeOf<never>();
+
+    // Actual
+    expectTypeOf<
+      DataFirstArity<number, readonly number[]>
+    >().toEqualTypeOf<number>();
+  });
 });
 
 function dataLastDeclaredLast(minuend: number, subtrahend: number): number;
@@ -167,11 +179,6 @@ const subtractOptionalImplementation = (
   minuend: number,
   subtrahend?: number,
 ): number => (subtrahend === undefined ? minuend : minuend - subtrahend);
-
-const subtractDefaultedImplementation = (
-  minuend: number,
-  subtrahend = 1,
-): number => minuend - subtrahend;
 
 function genericDataFirstDeclaredLast(): <T>(
   data: readonly T[],
