@@ -7,7 +7,6 @@ import { describe, expect, test, vi } from "vitest";
 import { identity } from "../identity";
 import {
   buildFusedSequence,
-  isStoppableSequence,
   runFusedSequence,
   type LazyStep,
 } from "./fusedSequence";
@@ -20,7 +19,6 @@ import {
 import { makeReducing } from "./makeReducing";
 import {
   lastLazyValue,
-  makeStoppable,
   STOP,
   type StoppableLazyEvaluator,
 } from "./makeStoppable";
@@ -106,50 +104,6 @@ describe(buildFusedSequence, () => {
       // Asserting identity with `toBe` would make the matcher format the
       // sentinel on failure, which throws and hides the real mismatch.
       expect(() => data?.at(0)).toThrow(/^Remeda: /u);
-    });
-  });
-});
-
-describe(isStoppableSequence, () => {
-  test("no function can stop", () => {
-    expect(isStoppableSequence([lazy(), lazy()], 0)).toBe(false);
-  });
-
-  test("the first function can stop", () => {
-    expect(isStoppableSequence([stoppable(), lazy()], 0)).toBe(true);
-  });
-
-  test("a later function can stop", () => {
-    expect(isStoppableSequence([lazy(), stoppable()], 0)).toBe(true);
-  });
-
-  test("a reducing function can stop", () => {
-    expect(isStoppableSequence([lazy(), stoppableReducing()], 0)).toBe(true);
-  });
-
-  test("starts at `startIndex`", () => {
-    expect(isStoppableSequence([identity(), lazy(), stoppable()], 1)).toBe(
-      true,
-    );
-  });
-
-  describe("a function that can stop outside the sequence", () => {
-    test("before `startIndex`", () => {
-      expect(isStoppableSequence([stoppable(), identity(), lazy()], 2)).toBe(
-        false,
-      );
-    });
-
-    test("after a non-lazy function", () => {
-      expect(isStoppableSequence([lazy(), identity(), stoppable()], 0)).toBe(
-        false,
-      );
-    });
-
-    test("after a reducing function", () => {
-      expect(isStoppableSequence([lazy(), reducing(), stoppable()], 0)).toBe(
-        false,
-      );
     });
   });
 });
@@ -597,19 +551,6 @@ const lazyFunction = (
     [],
     lazyImplementation,
   );
-
-const stoppable = (): LazyUnaryFunction =>
-  lazyFunction(makeStoppable(() => neverBuilt()));
-
-const reducing = (): LazyUnaryFunction =>
-  lazyFunction(makeReducing(() => neverBuilt()));
-
-const stoppableReducing = (): LazyUnaryFunction =>
-  lazyFunction(makeReducing(makeStoppable(() => neverBuilt())));
-
-function neverBuilt(): never {
-  throw new Error("Intentional! reading the marks doesn't build evaluators");
-}
 
 const step = (lazyEvaluator: StoppableLazyEvaluator = (value) => value) =>
   ({

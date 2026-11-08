@@ -66,7 +66,7 @@ export function sum(): <
 ) => Sum<T>;
 
 export function sum(...args: readonly unknown[]): unknown {
-  return purry(sumImplementation, args, 1);
+  return purry(sumImplementation, 1, args);
 }
 
 function sumImplementation<

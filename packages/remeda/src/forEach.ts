@@ -62,7 +62,7 @@ export function forEach<T extends IterableContainer>(
 ): (data: T) => T;
 
 export function forEach(...args: readonly unknown[]): unknown {
-  return purryWithLazy(forEachImplementation, args, lazyImplementation, 2);
+  return purryWithLazy(forEachImplementation, 2, lazyImplementation, args);
 }
 
 function forEachImplementation<T>(

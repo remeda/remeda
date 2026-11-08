@@ -226,7 +226,7 @@ export function chunk<N extends number>(
 ): <T extends IterableContainer>(array: T) => Chunk<T, N>;
 
 export function chunk(...args: readonly unknown[]): unknown {
-  return purry(chunkImplementation, args, 2);
+  return purry(chunkImplementation, 2, args);
 }
 
 function chunkImplementation<T>(data: readonly T[], size: number): T[][] {

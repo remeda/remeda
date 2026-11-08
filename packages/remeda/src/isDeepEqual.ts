@@ -79,7 +79,7 @@ export function isDeepEqual<T, S extends T>(
 export function isDeepEqual<T>(other: T): (data: T) => boolean;
 
 export function isDeepEqual(...args: readonly unknown[]): unknown {
-  return purry(isDeepEqualImplementation, args, 2);
+  return purry(isDeepEqualImplementation, 2, args);
 }
 
 function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {

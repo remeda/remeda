@@ -10,14 +10,14 @@ const _DUMMY = {
 };
 
 test("return type", () => {
-  expectTypeOf(purry(subtractImplementation, [], 2)).toEqualTypeOf<
+  expectTypeOf(purry(subtractImplementation, 2, [])).toEqualTypeOf<
     number | ((data: number) => number)
   >();
 });
 
 test("the arity has to match the data-first parameters", () => {
   // @ts-expect-error [ts2345] -- `subtractImplementation` takes 2 parameters, so 1 isn't its arity.
-  purry(subtractImplementation, [], 1);
+  purry(subtractImplementation, 1, []);
 });
 
 describe("known issues!", () => {
@@ -67,10 +67,10 @@ describe("known issues!", () => {
     // `purry` returns can't carry them the way a returned function type could,
     // so TypeScript replaces them with their constraints. The resulting
     // `unknown` absorbs the whole union. An instantiation expression binds them.
-    const result = purry(firstImplementation, [], 1);
+    const result = purry(firstImplementation, 1, []);
 
     expectTypeOf(result).not.toEqualTypeOf(
-      purry(firstImplementation<number>, [], 1),
+      purry(firstImplementation<number>, 1, []),
     );
 
     // Actual
@@ -82,10 +82,10 @@ describe("known issues!", () => {
     // reference, which for `Object.fromEntries` is the one returning `any`. An
     // instantiation expression selects the typed overload.
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- The `any` is what this test pins.
-    const result = purry(Object.fromEntries, [], 1);
+    const result = purry(Object.fromEntries, 1, []);
 
     expectTypeOf(result).not.toEqualTypeOf(
-      purry(Object.fromEntries<unknown>, [], 1),
+      purry(Object.fromEntries<unknown>, 1, []),
     );
 
     // Actual
@@ -97,14 +97,14 @@ function dataLastDeclaredLast(minuend: number, subtrahend: number): number;
 function dataLastDeclaredLast(subtrahend: number): (minuend: number) => number;
 
 function dataLastDeclaredLast(...args: readonly unknown[]): unknown {
-  return purry(subtractImplementation, args, 2);
+  return purry(subtractImplementation, 2, args);
 }
 
 function dataFirstDeclaredLast(subtrahend: number): (minuend: number) => number;
 function dataFirstDeclaredLast(minuend: number, subtrahend: number): number;
 
 function dataFirstDeclaredLast(...args: readonly unknown[]): unknown {
-  return purry(subtractImplementation, args, 2);
+  return purry(subtractImplementation, 2, args);
 }
 
 function subtractWithMatchingOverloads(
@@ -117,7 +117,7 @@ function subtractWithMatchingOverloads(
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional! we want to test `purry`s inferred return type.
 function subtractWithMatchingOverloads(...args: readonly unknown[]) {
-  return purry(subtractImplementation, args, 2);
+  return purry(subtractImplementation, 2, args);
 }
 
 // @ts-expect-error [ts2394] -- Mismatched on purpose: the overload claims a `string`, but `subtractImplementation` returns a `number`.
@@ -131,7 +131,7 @@ function subtractWithMismatchedOverload(
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional! we want to test `purry`s inferred return type.
 function subtractWithMismatchedOverload(...args: readonly unknown[]) {
-  return purry(subtractImplementation, args, 2);
+  return purry(subtractImplementation, 2, args);
 }
 
 const subtractImplementation = (minuend: number, subtrahend: number): number =>
@@ -143,7 +143,7 @@ function genericDataFirstDeclaredLast(): <T>(
 function genericDataFirstDeclaredLast<T>(data: readonly T[]): T | undefined;
 
 function genericDataFirstDeclaredLast(...args: readonly unknown[]): unknown {
-  return purry(firstImplementation, args, 1);
+  return purry(firstImplementation, 1, args);
 }
 
 const firstImplementation = <T>(data: readonly T[]): T | undefined => data[0];

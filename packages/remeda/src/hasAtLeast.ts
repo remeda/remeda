@@ -65,7 +65,7 @@ export function hasAtLeast(
 ): (data: IterableContainer) => boolean;
 
 export function hasAtLeast(...args: readonly unknown[]): unknown {
-  return purry(hasAtLeastImplementation, args, 2);
+  return purry(hasAtLeastImplementation, 2, args);
 }
 
 const hasAtLeastImplementation = (

@@ -54,7 +54,7 @@ export function sortedIndex<T>(
 ): (data: readonly NoInfer<T>[]) => number;
 
 export function sortedIndex(...args: readonly unknown[]): unknown {
-  return purry(sortedIndexImplementation, args, 2);
+  return purry(sortedIndexImplementation, 2, args);
 }
 
 const sortedIndexImplementation = <T>(array: readonly T[], item: T): number =>

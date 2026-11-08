@@ -81,7 +81,7 @@ export function setPath<
 >(path: Path, value: Value): (data: T) => T;
 
 export function setPath(...args: readonly unknown[]): unknown {
-  return purry(setPathImplementation, args, 3);
+  return purry(setPathImplementation, 3, args);
 }
 
 function setPathImplementation(

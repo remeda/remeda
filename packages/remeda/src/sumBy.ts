@@ -81,7 +81,7 @@ export function sumBy<T extends IterableContainer>(
 ): SumBy<T, bigint>;
 
 export function sumBy(...args: readonly unknown[]): unknown {
-  return purry(sumByImplementation, args, 2);
+  return purry(sumByImplementation, 2, args);
 }
 
 const sumByImplementation = <T>(

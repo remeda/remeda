@@ -22,9 +22,9 @@ export const purryWithLazy = <
   R,
 >(
   dataFirst: DataFirst<T, P, R>,
-  args: readonly unknown[],
-  lazy: LazyEvaluatorFactory<T, P>,
   arity: [T, ...P]["length"],
+  lazy: LazyEvaluatorFactory<T, P>,
+  args: readonly unknown[],
 ): R | LazyUnaryFunction<T, P, R> =>
   args.length >= arity
     ? dataFirst(

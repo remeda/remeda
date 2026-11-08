@@ -175,7 +175,7 @@ export function pathOr<
 
 // TODO [>2]: Remove this function!
 export function pathOr(...args: readonly unknown[]): unknown {
-  return purry(pathOrImplementation, args, 3);
+  return purry(pathOrImplementation, 3, args);
 }
 
 function pathOrImplementation(

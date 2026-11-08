@@ -41,7 +41,7 @@ export function reverse<T extends readonly unknown[]>(): (
 ) => Reverse<T>;
 
 export function reverse(...args: readonly unknown[]): unknown {
-  return purry(reverseImplementation, args, 1);
+  return purry(reverseImplementation, 1, args);
 }
 
 const reverseImplementation = <T>(data: readonly T[]): T[] =>

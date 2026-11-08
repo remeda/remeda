@@ -87,7 +87,7 @@ export function mapKeys<T extends {}, Key extends PropertyKey>(
 ): (data: T) => MappedKeys<T, Key>;
 
 export function mapKeys(...args: readonly unknown[]): unknown {
-  return purry(mapKeysImplementation, args, 2);
+  return purry(mapKeysImplementation, 2, args);
 }
 
 function mapKeysImplementation<T extends {}, Key extends PropertyKey>(

@@ -25,10 +25,10 @@ import {
  * `purry` via this template.
  *
  * @param dataFirst - The function to purry.
- * @param args - The arguments.
  * @param arity - The number of arguments of a data-first call, data included.
+ * @param args - The arguments.
  * @signature
- *   purry(dataFirst, args, arity);
+ *   purry(dataFirst, arity, args);
  * @example
  *    // data-first
  *    function findIndex<T>(
@@ -42,7 +42,7 @@ import {
  *    ): (data: readonly T[]) => number;
  *
  *    function findIndex(...args: unknown[]) {
- *      return purry(findIndexImplementation, args, 2);
+ *      return purry(findIndexImplementation, 2, args);
  *    }
  *
  *    function findIndexImplementation(data, predicate): number {
@@ -57,8 +57,8 @@ import {
  */
 export const purry = <T, P extends readonly unknown[], R>(
   dataFirst: DataFirst<T, P, R>,
-  args: readonly unknown[],
   arity: [T, ...P]["length"],
+  args: readonly unknown[],
 ): R | UnaryFunction<T, R> =>
   args.length >= arity
     ? dataFirst(

@@ -54,7 +54,7 @@ export function sortedLastIndex<T>(
 ): (data: readonly NoInfer<T>[]) => number;
 
 export function sortedLastIndex(...args: readonly unknown[]): unknown {
-  return purry(sortedLastIndexImplementation, args, 2);
+  return purry(sortedLastIndexImplementation, 2, args);
 }
 
 const sortedLastIndexImplementation = <T>(

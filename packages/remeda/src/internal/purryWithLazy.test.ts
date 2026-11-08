@@ -75,7 +75,7 @@ describe("data-last (curried)", () => {
 });
 
 const purriedFn = (...args: readonly unknown[]): unknown =>
-  purryWithLazy(concatenateNumberArgs, args, lazyImplementation, 2);
+  purryWithLazy(concatenateNumberArgs, 2, lazyImplementation, args);
 
 function concatenateNumberArgs(
   data: readonly number[],

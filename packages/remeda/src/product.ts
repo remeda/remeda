@@ -68,7 +68,7 @@ export function product(): <
 ) => Product<T>;
 
 export function product(...args: readonly unknown[]): unknown {
-  return purry(productImplementation, args, 1);
+  return purry(productImplementation, 1, args);
 }
 
 function productImplementation<

@@ -53,7 +53,7 @@ export function uniqueWith<T extends IterableContainer>(
 ): (data: T) => Deduped<T>;
 
 export function uniqueWith(...args: readonly unknown[]): unknown {
-  return purryWithLazy(uniqueWithImplementation, args, lazyImplementation, 2);
+  return purryWithLazy(uniqueWithImplementation, 2, lazyImplementation, args);
 }
 
 function uniqueWithImplementation<T>(

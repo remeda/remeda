@@ -159,7 +159,7 @@ export function find<
 ): (data: T) => FoundNonRefined<T, IsItemIncluded>;
 
 export function find(...args: readonly unknown[]): unknown {
-  return purryWithLazy(findImplementation, args, lazyImplementation, 2);
+  return purryWithLazy(findImplementation, 2, lazyImplementation, args);
 }
 
 const findImplementation = <T, S extends T>(

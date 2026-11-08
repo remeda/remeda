@@ -79,12 +79,12 @@ describe("arity", () => {
     // `Function.length` stops counting at the first defaulted parameter, so
     // it's 1 for `addWithDefault`, and 1 argument would run data-first if
     // purry read it.
-    expect(purry(addWithDefault, [1], 2)).toBeTypeOf("function");
+    expect(purry(addWithDefault, 2, [1])).toBeTypeOf("function");
   });
 });
 
 const purriedFn = (...args: readonly unknown[]): unknown =>
-  purry(concatenateNumberArgs, args, 2);
+  purry(concatenateNumberArgs, 2, args);
 
 const addWithDefault = (augend: number, addend = 1): number => augend + addend;
 

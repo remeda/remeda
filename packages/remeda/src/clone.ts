@@ -39,7 +39,7 @@ export function clone<T>(data: T): T;
 export function clone(): <T>(data: T) => T;
 
 export function clone(...args: readonly unknown[]): unknown {
-  return purry(cloneImplementation, args, 1);
+  return purry(cloneImplementation, 1, args);
 }
 
 const cloneImplementation = <T>(value: T): T => cloneValue(value, [], []);

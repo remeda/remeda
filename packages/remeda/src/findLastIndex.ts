@@ -54,7 +54,7 @@ export function findLastIndex<T>(
 ): (array: readonly T[]) => number;
 
 export function findLastIndex(...args: readonly unknown[]): unknown {
-  return purry(findLastIndexImplementation, args, 2);
+  return purry(findLastIndexImplementation, 2, args);
 }
 
 const findLastIndexImplementation = <T>(

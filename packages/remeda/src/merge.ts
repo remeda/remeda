@@ -54,7 +54,7 @@ export function merge<T, Source>(data: T, source: Source): Merge<T, Source>;
 export function merge<Source>(source: Source): <T>(data: T) => Merge<T, Source>;
 
 export function merge(...args: readonly unknown[]): unknown {
-  return purry(mergeImplementation, args, 2);
+  return purry(mergeImplementation, 2, args);
 }
 
 const mergeImplementation = <T, Source>(

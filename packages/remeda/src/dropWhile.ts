@@ -44,7 +44,7 @@ export function dropWhile<T extends IterableContainer>(
 ): (data: T) => T[number][];
 
 export function dropWhile(...args: readonly unknown[]): unknown {
-  return purryWithLazy(dropWhileImplementation, args, lazyImplementation, 2);
+  return purryWithLazy(dropWhileImplementation, 2, lazyImplementation, args);
 }
 
 function dropWhileImplementation<T>(

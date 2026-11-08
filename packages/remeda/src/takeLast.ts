@@ -44,7 +44,7 @@ export function takeLast<T extends IterableContainer>(
 ): (array: T) => T[number][];
 
 export function takeLast(...args: readonly unknown[]): unknown {
-  return purry(takeLastImplementation, args, 2);
+  return purry(takeLastImplementation, 2, args);
 }
 
 const takeLastImplementation = <T extends IterableContainer>(

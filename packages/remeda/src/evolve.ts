@@ -131,7 +131,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
 ): (object: T) => Evolved<T, E>;
 
 export function evolve(...args: readonly unknown[]): unknown {
-  return purry(evolveImplementation, args, 2);
+  return purry(evolveImplementation, 2, args);
 }
 
 function evolveImplementation(data: unknown, evolver: GenericEvolver): unknown {

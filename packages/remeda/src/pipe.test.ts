@@ -7,6 +7,9 @@ import { first } from "./first";
 import { flat } from "./flat";
 import { flatMap } from "./flatMap";
 import { identity } from "./identity";
+import { SKIP_ITEM } from "./internal/lazyControl";
+import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
+import { makeReducing } from "./internal/makeReducing";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import { join } from "./join";
 import { map } from "./map";
@@ -392,6 +395,23 @@ describe("lazy", () => {
       expect(calls).toStrictEqual(["map", "filter", "map", "filter"]);
     });
 
+    test("a sequence ending with a reducing step that can stop early runs item by item", () => {
+      const calls: string[] = [];
+      pipe(
+        [1, 2],
+        map((x) => {
+          calls.push("map");
+          return x;
+        }),
+        find(() => {
+          calls.push("find");
+          return false;
+        }),
+      );
+
+      expect(calls).toStrictEqual(["map", "find", "map", "find"]);
+    });
+
     test("a sequence on another iterable runs item by item", () => {
       const calls: string[] = [];
       pipe(
@@ -490,6 +510,35 @@ describe("lazy", () => {
           return true;
         }),
         identity(),
+        take(1),
+      );
+
+      expect(calls).toStrictEqual(["map", "map", "filter", "filter"]);
+    });
+
+    test("isn't affected by a step past a reducing function that can stop early", () => {
+      const calls: string[] = [];
+      pipe(
+        [[1], [2]],
+        map((x) => {
+          calls.push("map");
+          return x;
+        }),
+        filter(() => {
+          calls.push("filter");
+          return true;
+        }),
+        // No utility reduces without being able to stop early, which would
+        // fuse the sequence by itself.
+        lazyDataLastImplementation(
+          (data: readonly (readonly number[])[]): readonly number[] =>
+            data[0] ?? [],
+          [],
+          makeReducing(
+            // eslint-disable-next-line unicorn/consistent-function-scoping -- This if fine for a single-use test function...
+            () => (value, index) => (index === 0 ? value : SKIP_ITEM),
+          ),
+        ),
         take(1),
       );
 

@@ -57,7 +57,7 @@ export function forEachObj<T extends object>(
 ): (object: T) => T;
 
 export function forEachObj(...args: readonly unknown[]): unknown {
-  return purry(forEachObjImplementation, args, 2);
+  return purry(forEachObjImplementation, 2, args);
 }
 
 function forEachObjImplementation<T extends object>(

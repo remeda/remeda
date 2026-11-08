@@ -5,15 +5,14 @@ Lazy implementations are no longer supported: the function doesn't look for a
 implementation as a third argument. Functions built with `purry` run eagerly
 inside `pipe`.
 
-The third argument is now the data-first arity: the number of parameters of the
+The second argument is the data-first arity: the number of parameters of the
 dataFirst function implementation, as a literal. A call with at least that many
 arguments runs data-first, and a shorter one returns the data-last function.
-Passing it saves `purry` from reading `Function.length` on every call, and
-TypeScript checks it against the implementation's parameters.
+The arguments move to the third position.
 
 ##### Examples
 
-###### Arity added
+###### Basic
 
 ```ts
 function myFunc(...args: readonly unknown[]): unknown {
@@ -21,10 +20,10 @@ function myFunc(...args: readonly unknown[]): unknown {
   return purry(dataFirstImpl, args);
 
   // Now:
-  return purry(dataFirstImpl, args, 2);
+  return purry(dataFirstImpl, 2, args);
 }
 
-function dataFirstImpl(data, value) {
+function dataFirstImpl(data: readonly unknown[], value: unknown) {
   // ...
 }
 ```
@@ -37,7 +36,7 @@ function myFunc(...args: readonly unknown[]): unknown {
   return purry(withLazy, args);
 
   // Now:
-  return purry(dataFirstImpl, args, 2);
+  return purry(dataFirstImpl, 2, args);
 }
 
 function dataFirstImpl(data, value) {
@@ -60,7 +59,7 @@ function myFunc(...args: readonly unknown[]): unknown {
   return purry(dataFirstImpl, args);
 
   // Now:
-  return purry(dataFirstImpl, args, 2);
+  return purry(dataFirstImpl, 2, args);
 }
 
 function dataFirstImpl(data, value) {
@@ -85,7 +84,7 @@ function myFunc(...args: readonly unknown[]): unknown {
   return purry(dataFirstImpl, args, lazyImpl);
 
   // Now:
-  return purry(dataFirstImpl, args, 2);
+  return purry(dataFirstImpl, 2, args);
 }
 
 function dataFirstImpl(data, value) {

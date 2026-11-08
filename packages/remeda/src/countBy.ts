@@ -52,7 +52,7 @@ export function countBy<T, K extends PropertyKey>(
 ): (data: readonly T[]) => BoundedPartial<Record<K, number>>;
 
 export function countBy(...args: readonly unknown[]): unknown {
-  return purry(countByImplementation, args, 2);
+  return purry(countByImplementation, 2, args);
 }
 
 const countByImplementation = <T>(

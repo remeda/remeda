@@ -32,7 +32,7 @@ export function shuffle(): <T extends IterableContainer>(
 ) => ReorderedArray<T>;
 
 export function shuffle(...args: readonly unknown[]): unknown {
-  return purry(shuffleImplementation, args, 1);
+  return purry(shuffleImplementation, 1, args);
 }
 
 function shuffleImplementation<T>(items: readonly T[]): T[] {

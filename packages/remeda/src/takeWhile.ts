@@ -67,7 +67,7 @@ export function takeWhile<
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function takeWhile(...args: readonly unknown[]): unknown {
-  return purryWithLazy(takeWhileImplementation, args, lazyImplementation, 2);
+  return purryWithLazy(takeWhileImplementation, 2, lazyImplementation, args);
 }
 
 function takeWhileImplementation<T>(

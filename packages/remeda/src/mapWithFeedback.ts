@@ -70,9 +70,9 @@ export function mapWithFeedback<T extends IterableContainer, U>(
 export function mapWithFeedback(...args: readonly unknown[]): unknown {
   return purryWithLazy(
     mapWithFeedbackImplementation,
-    args,
-    lazyImplementation,
     3,
+    lazyImplementation,
+    args,
   );
 }
 

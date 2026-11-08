@@ -74,7 +74,7 @@ export function mapToObj<T, K extends PropertyKey, V>(
 ): (array: readonly T[]) => Record<K, V>;
 
 export function mapToObj(...args: readonly unknown[]): unknown {
-  return purry(mapToObjImplementation, args, 2);
+  return purry(mapToObjImplementation, 2, args);
 }
 
 function mapToObjImplementation(

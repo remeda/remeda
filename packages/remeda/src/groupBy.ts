@@ -71,7 +71,7 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
 ): (items: readonly T[]) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
 export function groupBy(...args: readonly unknown[]): unknown {
-  return purry(groupByImplementation, args, 2);
+  return purry(groupByImplementation, 2, args);
 }
 
 const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(

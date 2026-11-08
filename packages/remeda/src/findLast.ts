@@ -145,7 +145,7 @@ export function findLast<
 ): (data: T) => FoundLastNonRefined<T, IsItemIncluded>;
 
 export function findLast(...args: readonly unknown[]): unknown {
-  return purry(findLastImplementation, args, 2);
+  return purry(findLastImplementation, 2, args);
 }
 
 const findLastImplementation = <T, S extends T>(

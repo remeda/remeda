@@ -69,7 +69,7 @@ export function reduce<T, U>(
 ): (data: readonly T[]) => U;
 
 export function reduce(...args: readonly unknown[]): unknown {
-  return purry(reduceImplementation, args, 3);
+  return purry(reduceImplementation, 3, args);
 }
 
 const reduceImplementation = <T, U>(

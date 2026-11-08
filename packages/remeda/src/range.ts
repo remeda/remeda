@@ -58,7 +58,7 @@ export function range(
 ): (start: number) => number[];
 
 export function range(...args: readonly unknown[]): unknown {
-  return purry(rangeImplementation, args, 2);
+  return purry(rangeImplementation, 2, args);
 }
 
 function rangeImplementation(

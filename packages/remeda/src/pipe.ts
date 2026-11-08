@@ -3,11 +3,7 @@
  */
 
 import type { UnaryFunction } from "./internal/dataLastImplementation";
-import {
-  buildFusedSequence,
-  isStoppableSequence,
-  runFusedSequence,
-} from "./internal/fusedSequence";
+import { buildFusedSequence, runFusedSequence } from "./internal/fusedSequence";
 import { iterableDataFirst } from "./internal/iterableDataFirst";
 import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
 
@@ -320,16 +316,13 @@ export function pipe(
       continue;
     }
 
-    // Fusing a sequence pays off only when one of its steps can stop the pipe
-    // early, which skips the work of the remaining items. Without one, every
-    // item goes through every step anyway, so an array goes through each
-    // function's data-first implementation in turn instead, trading the
-    // per-item step bookkeeping for an intermediate array per step. Other
-    // iterables always fuse, as those implementations only accept arrays.
-    if (
-      Array.isArray(output) &&
-      !isStoppableSequence(functions, functionIndex)
-    ) {
+    if (Array.isArray(output) && !isStoppableFrom(functions, functionIndex)) {
+      // Fusing a sequence pays off only when one of its steps can stop the pipe
+      // early, which skips the work of the remaining items. Without one, every
+      // item goes through every step anyway, so an array goes through each
+      // function's data-first implementation in turn instead, trading the
+      // per-item step bookkeeping for an intermediate array per step. Other
+      // iterables always fuse, as those implementations only accept arrays.
       output = currentFunction(output);
       continue;
     }
@@ -344,4 +337,34 @@ export function pipe(
   }
 
   return output;
+}
+
+/**
+ * Whether a function from `fromIndex` to the end of its lazy sequence, where
+ * `buildFusedSequence` would stop fusing, can stop the pipe early.
+ */
+function isStoppableFrom(
+  functions: readonly (UnaryFunction | LazyUnaryFunction)[],
+  fromIndex: number,
+): boolean {
+  for (
+    let candidateIndex = fromIndex;
+    candidateIndex < functions.length;
+    candidateIndex++
+  ) {
+    const candidate = functions[candidateIndex]!;
+    if (!("lazy" in candidate)) {
+      return false;
+    }
+
+    if (candidate.lazy.isStoppable) {
+      return true;
+    }
+
+    if (candidate.lazy.isReducing) {
+      return false;
+    }
+  }
+
+  return false;
 }

@@ -88,7 +88,7 @@ export function partition<
 ];
 
 export function partition(...args: readonly unknown[]): unknown {
-  return purry(partitionImplementation, args, 2);
+  return purry(partitionImplementation, 2, args);
 }
 
 const partitionImplementation = <T, S extends T>(

@@ -83,7 +83,7 @@ export function isShallowEqual<T, S extends T>(
 export function isShallowEqual<T>(other: T): (data: T) => boolean;
 
 export function isShallowEqual(...args: readonly unknown[]): unknown {
-  return purry(isShallowEqualImplementation, args, 2);
+  return purry(isShallowEqualImplementation, 2, args);
 }
 
 function isShallowEqualImplementation<T>(a: T, b: T): boolean {

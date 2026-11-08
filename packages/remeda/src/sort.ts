@@ -41,7 +41,7 @@ export function sort<T extends IterableContainer>(
 ): (items: T) => ReorderedArray<T>;
 
 export function sort(...args: readonly unknown[]): unknown {
-  return purry(sortImplementation, args, 2);
+  return purry(sortImplementation, 2, args);
 }
 
 function sortImplementation<T extends IterableContainer>(

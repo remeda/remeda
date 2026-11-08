@@ -54,9 +54,9 @@ export function differenceWith<T, Other>(
 export function differenceWith(...args: readonly unknown[]): unknown {
   return purryWithLazy(
     differenceWithImplementation,
-    args,
-    lazyImplementation,
     3,
+    lazyImplementation,
+    args,
   );
 }
 
