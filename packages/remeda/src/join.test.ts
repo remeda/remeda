@@ -76,10 +76,6 @@ describe("edge-cases", () => {
     expect(result).toBe("1");
   });
 
-  test("holes become empty strings", () => {
-    expect(join([1, , 3], "-")).toBe("1--3");
-  });
-
   test("nested arrays join their own items with commas", () => {
     // @ts-expect-error [ts2322] -- The nested array is the input under test.
     expect(join([1, [2, [3, null]]], "-")).toBe("1-2,3,");

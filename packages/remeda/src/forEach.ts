@@ -69,7 +69,6 @@ function forEachImplementation<T>(
   data: readonly T[],
   callbackfn: (value: T, index: number, data: readonly T[]) => void,
 ): readonly T[] {
-  // eslint-disable-next-line unicorn/no-for-each -- We are intentionally proxying the built in forEach, it's up to the user to decide if they want to use a for loop instead.
   data.forEach(callbackfn);
   return data;
 }
@@ -77,7 +76,7 @@ function forEachImplementation<T>(
 const lazyImplementation = <T>(
   callbackfn: (value: T, index: number, data: readonly T[]) => void,
 ): LazyEvaluator<T> =>
-  requireDataByArity(callbackfn, (value, index, data) => {
+  requireDataByArity(callbackfn, 2, (value, index, data) => {
     callbackfn(value, index, data);
     return value;
   });

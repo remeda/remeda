@@ -103,12 +103,8 @@ function lazyImplementation<T, U>(
 ): LazyEvaluator<T, U> {
   let previousValue = initialValue;
 
-  return requireDataByArity(
-    callbackfn,
-    (currentValue, index, data) => {
-      previousValue = callbackfn(previousValue, currentValue, index, data);
-      return previousValue;
-    },
-    { dataParameterIndex: 3 },
-  );
+  return requireDataByArity(callbackfn, 3, (currentValue, index, data) => {
+    previousValue = callbackfn(previousValue, currentValue, index, data);
+    return previousValue;
+  });
 }

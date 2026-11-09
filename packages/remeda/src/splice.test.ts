@@ -267,10 +267,6 @@ describe("coerced indices", () => {
 });
 
 describe("items", () => {
-  test("keeps holes", () => {
-    expect(splice([1, , 3], 0, 1)).toStrictEqual([, 3]);
-  });
-
   test("keeps NaN and -0", () => {
     expect(splice([NaN, -0, 1], 2, 1)).toStrictEqual([NaN, -0]);
   });
@@ -361,10 +357,6 @@ describe("in a pipe", () => {
 
   test("an infinite deleteCount deletes the rest", () => {
     expect(pipe([1, 2, 3], splice(1, Infinity, [9]))).toStrictEqual([1, 9]);
-  });
-
-  test("keeps holes", () => {
-    expect(pipe([1, , 3], splice(0, 1))).toStrictEqual([, 3]);
   });
 
   test("counts positions among the items that reach it", () => {

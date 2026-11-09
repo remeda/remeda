@@ -90,7 +90,7 @@ const lazyImplementation = makeStoppable(
   <T>(
     predicate: (item: T, index: number, data: readonly T[]) => boolean,
   ): StoppableLazyEvaluator<T> =>
-    requireDataByArity(predicate, (item, index, data) =>
+    requireDataByArity(predicate, 2, (item, index, data) =>
       predicate(item, index, data) ? item : STOP,
     ),
 );

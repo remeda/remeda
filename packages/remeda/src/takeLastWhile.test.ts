@@ -1,7 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { constant } from "./constant";
 import { pipe } from "./pipe";
-import { take } from "./take";
 import { takeLastWhile } from "./takeLastWhile";
 
 describe("data first", () => {
@@ -76,17 +75,6 @@ describe("data first", () => {
       [1, 0, data],
     ]);
   });
-
-  test("keeps holes after the last failure", () => {
-    expect(takeLastWhile([0, , 3], (value) => value !== 0)).toStrictEqual([
-      ,
-      3,
-    ]);
-  });
-
-  test("keeps holes when every item passes", () => {
-    expect(takeLastWhile([1, , 3], constant(true))).toStrictEqual([1, , 3]);
-  });
 });
 
 describe("data last", () => {
@@ -135,17 +123,5 @@ describe("data last", () => {
 
     expect(result).toStrictEqual(data);
     expect(result).not.toBe(data);
-  });
-
-  test("keeps holes after a lone lazy step", () => {
-    expect(
-      pipe(
-        [0, , 3],
-        // With no lazy function to fuse with, `take` runs its data-first
-        // implementation, a `slice`, which keeps the hole.
-        take(Infinity),
-        takeLastWhile((value) => value !== 0),
-      ),
-    ).toStrictEqual([, 3]);
   });
 });

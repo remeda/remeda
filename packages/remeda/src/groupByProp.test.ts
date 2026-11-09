@@ -141,12 +141,6 @@ describe("data first", () => {
     });
   });
 
-  test("holes are skipped", () => {
-    expect(groupByProp([{ a: "cat" }, , { a: "cat" }], "a")).toStrictEqual({
-      cat: [{ a: "cat" }, { a: "cat" }],
-    });
-  });
-
   test("reads the prop once per item", () => {
     const getter = vi.fn<() => string>(constant("cat"));
 

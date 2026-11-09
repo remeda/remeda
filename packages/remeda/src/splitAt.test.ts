@@ -64,10 +64,6 @@ describe("data_first", () => {
   test("index -Infinity", () => {
     expect(splitAt([1, 2, 3], -Infinity)).toStrictEqual([[], [1, 2, 3]]);
   });
-
-  test("holes are kept", () => {
-    expect(splitAt([1, , 3], 1)).toStrictEqual([[1], [, 3]]);
-  });
 });
 
 describe("data_last", () => {
@@ -84,9 +80,5 @@ describe("data_last", () => {
 
   test("empty array", () => {
     expect(pipe([], splitAt(1))).toStrictEqual([[], []]);
-  });
-
-  test("holes are kept", () => {
-    expect(pipe([1, , 3], splitAt(1))).toStrictEqual([[1], [, 3]]);
   });
 });

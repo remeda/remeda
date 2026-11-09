@@ -89,6 +89,6 @@ const filterImplementation = <T>(
 const lazyImplementation = <T>(
   predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): LazyEvaluator<T> =>
-  requireDataByArity(predicate, (value, index, data) =>
+  requireDataByArity(predicate, 2, (value, index, data) =>
     predicate(value, index, data) ? value : SKIP_ITEM,
   );

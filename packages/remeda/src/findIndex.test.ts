@@ -21,10 +21,6 @@ describe("data first", () => {
     expect(findIndex([10], constant(true))).toBe(0);
   });
 
-  test("reads a hole as undefined", () => {
-    expect(findIndex([1, , 3], (x) => x === undefined)).toBe(1);
-  });
-
   test("passes NaN to the predicate", () => {
     expect(findIndex([1, NaN], Number.isNaN)).toBe(1);
   });

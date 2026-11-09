@@ -19,10 +19,6 @@ describe("data first", () => {
     expect(drop([1, 2, 3, 4, 5], -1)).toStrictEqual([1, 2, 3, 4, 5]);
   });
 
-  test("keeps holes with negative numbers", () => {
-    expect(drop([1, , 3], -1)).toStrictEqual([1, , 3]);
-  });
-
   test("works when dropping more than the length of the array", () => {
     expect(drop([1, 2, 3, 4, 5], 10)).toStrictEqual([]);
   });

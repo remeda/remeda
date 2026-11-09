@@ -151,6 +151,10 @@ export default defineConfig(
       // arrow function. Our typing provides the safety needed here.
       "unicorn/no-array-callback-reference": "off",
 
+      // Each utility uses the loop that measures fastest for it, and for some
+      // (e.g., `groupBy`, `partition`) that's `forEach`.
+      "unicorn/no-for-each": "off",
+
       // We prefer `jsdoc/require-asterisk-prefix`.
       "unicorn/no-asterisk-prefix-in-documentation-comments": "off",
 
@@ -518,10 +522,6 @@ export default defineConfig(
       "unicorn/max-nested-calls": "off",
       "unicorn/no-duplicate-if-branches": "off",
       "unicorn/no-null": "off",
-
-      // Tests write sparse array literals on purpose: holes are inputs under
-      // test, and expected outputs that keep them.
-      "no-sparse-arrays": "off",
     },
   },
   {

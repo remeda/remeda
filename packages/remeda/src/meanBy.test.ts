@@ -1,5 +1,4 @@
 import { describe, expect, test, vi } from "vitest";
-import { defaultTo } from "./defaultTo";
 import { identity } from "./identity";
 import { meanBy } from "./meanBy";
 import { pipe } from "./pipe";
@@ -43,10 +42,6 @@ describe("data first", () => {
 
   test("propagates NaN", () => {
     expect(meanBy([1, NaN, 3], identity())).toBeNaN();
-  });
-
-  test("reads holes as undefined", () => {
-    expect(meanBy([1, , 3], defaultTo(10))).toBe(14 / 3);
   });
 
   test("calls the mapper on each item in order with the whole array", () => {

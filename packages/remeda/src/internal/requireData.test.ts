@@ -10,24 +10,26 @@ describe(requireData, () => {
 describe(requireDataByArity, () => {
   test("marks the evaluator when the callback declares `data`", () => {
     expect(
-      requireDataByArity(declaresData, (value) => value).requiresData,
+      requireDataByArity(declaresData, 2, (value) => value).requiresData,
     ).toBe(true);
   });
 
   test("leaves the evaluator unmarked when the callback doesn't declare `data`", () => {
     expect(
-      requireDataByArity(ignoresData, (value) => value).requiresData,
+      requireDataByArity(ignoresData, 2, (value) => value).requiresData,
     ).toBeUndefined();
   });
 });
 
 describe(canReadData, () => {
   test("treats a rest-parameter callback as reading `data` because its `Function.length` is 0", () => {
-    expect(canReadData((...args: readonly unknown[]) => args[2])).toBe(true);
+    expect(canReadData((...args: readonly unknown[]) => args[2], 2)).toBe(true);
   });
 
   test("judges a callback bound with partial application by its remaining arity", () => {
-    expect(canReadData(ignoresDataAfterTag.bind(undefined, "t"))).toBe(false);
+    expect(canReadData(ignoresDataAfterTag.bind(undefined, "t"), 2)).toBe(
+      false,
+    );
   });
 });
 
@@ -37,6 +39,7 @@ describe("known issues!", () => {
       const canRead = canReadData(
         (_value, _index, ...rest: readonly [readonly number[]]) =>
           rest[0].length,
+        2,
       );
 
       expect(canRead).not.toBe(true);
@@ -48,6 +51,7 @@ describe("known issues!", () => {
     test("default parameters", () => {
       const canRead = canReadData(
         (_value, _index = 0, data: readonly number[] = []) => data.length,
+        2,
       );
 
       expect(canRead).not.toBe(true);
@@ -60,7 +64,7 @@ describe("known issues!", () => {
       const canRead = canReadData(function readsArguments(_) {
         // eslint-disable-next-line prefer-rest-params -- The point of this test is that arguments-based access is invisible to the arity check.
         return arguments[2];
-      });
+      }, 2);
 
       expect(canRead).not.toBe(true);
 

@@ -96,14 +96,12 @@ const partitionImplementation = <T, S extends T>(
   predicate: (value: T, index: number, data: readonly T[]) => value is S,
 ): [S[], T[]] => {
   const ret: [S[], T[]] = [[], []];
-  let index = 0;
-  for (const item of data) {
+  data.forEach((item, index) => {
     if (predicate(item, index, data)) {
       ret[0].push(item);
     } else {
       ret[1].push(item);
     }
-    index += 1;
-  }
+  });
   return ret;
 };

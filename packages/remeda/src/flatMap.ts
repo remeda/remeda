@@ -66,13 +66,17 @@ const flatMapImplementation = <T, U>(
 const lazyImplementation = <T, K>(
   callbackfn: (input: T, index: number, data: readonly T[]) => K | readonly K[],
 ): LazyEvaluator<T, K> =>
-  requireDataByArity(callbackfn, (value, index, data, slot): LazyResult<K> => {
-    const mapped = callbackfn(value, index, data);
-    return Array.isArray(mapped)
-      ? manyLazyValues(mapped, slot)
-      : // @ts-expect-error [ts2322] -- Array.isArray doesn't narrow readonly
-        // arrays (https://github.com/microsoft/TypeScript/issues/17002), so
-        // `mapped` is still typed as K | readonly K[] here even though it is
-        // never an array at runtime.
-        mapped;
-  });
+  requireDataByArity(
+    callbackfn,
+    2,
+    (value, index, data, slot): LazyResult<K> => {
+      const mapped = callbackfn(value, index, data);
+      return Array.isArray(mapped)
+        ? manyLazyValues(mapped, slot)
+        : // @ts-expect-error [ts2322] -- Array.isArray doesn't narrow readonly
+          // arrays (https://github.com/microsoft/TypeScript/issues/17002), so
+          // `mapped` is still typed as K | readonly K[] here even though it is
+          // never an array at runtime.
+          mapped;
+    },
+  );

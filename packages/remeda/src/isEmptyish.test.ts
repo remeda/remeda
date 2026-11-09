@@ -32,7 +32,12 @@ describe("arrays", () => {
   });
 
   test("sparse", () => {
-    expect(isEmptyish([, ,])).toBe(false);
+    expect(
+      isEmptyish(
+        // eslint-disable-next-line no-sparse-arrays -- Intentional!
+        [, ,],
+      ),
+    ).toBe(false);
   });
 
   test("via Array.from", () => {

@@ -66,7 +66,7 @@ function lazyImplementation<T>(
   predicate: (item: T, index: number, data: readonly T[]) => boolean,
 ): LazyEvaluator<T> {
   let isDropping = true;
-  return requireDataByArity(predicate, (item, index, data) => {
+  return requireDataByArity(predicate, 2, (item, index, data) => {
     if (isDropping && predicate(item, index, data)) {
       return SKIP_ITEM;
     }

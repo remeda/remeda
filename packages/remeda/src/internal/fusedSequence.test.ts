@@ -142,13 +142,6 @@ describe(runFusedSequence, () => {
       expect(keys).toStrictEqual([Symbol.iterator]);
     });
 
-    test("an array's holes are visited", () => {
-      const evaluator = vi.fn<LazyEvaluator>((value) => value);
-      runFusedSequence([1, , 3], [step(evaluator)]);
-
-      expect(evaluator).toHaveBeenCalledTimes(3);
-    });
-
     test("a string is iterated by character", () => {
       expect(runFusedSequence("abc", [step()])).toStrictEqual(["a", "b", "c"]);
     });

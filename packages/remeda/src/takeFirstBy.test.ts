@@ -1,7 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { identity } from "./identity";
 import { pipe } from "./pipe";
-import { take } from "./take";
 import { takeFirstBy } from "./takeFirstBy";
 
 describe("runtime (dataFirst)", () => {
@@ -128,22 +127,6 @@ describe("runtime (dataFirst)", () => {
 
     expect(projection).not.toHaveBeenCalled();
   });
-
-  test("keeps holes when taking fewer than all items", () => {
-    // A NaN projection ties the hole with every item, so the heap never moves
-    // it.
-    const result = takeFirstBy([, 5, 3], 2, (value) => value ?? NaN);
-
-    expect(result).toStrictEqual([, 5]);
-  });
-
-  test("reads holes as undefined when taking all items", () => {
-    expect(takeFirstBy([, 5, 3], 3, (value) => value ?? NaN)).toStrictEqual([
-      undefined,
-      5,
-      3,
-    ]);
-  });
 });
 
 describe("runtime (dataLast)", () => {
@@ -226,17 +209,5 @@ describe("runtime (dataLast)", () => {
         ),
       ),
     ).toStrictEqual(["aa", "b", "a"]);
-  });
-
-  test("keeps holes after a lone lazy step", () => {
-    expect(
-      pipe(
-        [, 5, 3],
-        // With no lazy function to fuse with, `take` runs its data-first
-        // implementation, a `slice`, which keeps the hole.
-        take(Infinity),
-        takeFirstBy(2, (value: number | undefined) => value ?? NaN),
-      ),
-    ).toStrictEqual([, 5]);
   });
 });

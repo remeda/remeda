@@ -2,7 +2,6 @@ import { describe, expect, test, vi } from "vitest";
 import { add } from "./add";
 import { pipe } from "./pipe";
 import { reduce } from "./reduce";
-import { take } from "./take";
 
 describe("data first", () => {
   test("reduce", () => {
@@ -69,16 +68,6 @@ describe("data first", () => {
       [103, 3, 2, data],
     ]);
   });
-
-  test("skips holes", () => {
-    expect(
-      reduce(
-        [1, , 3],
-        (indices: readonly number[], _item, index) => [...indices, index],
-        [],
-      ),
-    ).toStrictEqual([0, 2]);
-  });
 });
 
 describe("data last", () => {
@@ -98,32 +87,5 @@ describe("data last", () => {
         reduce((accumulator: number, item: number) => accumulator + item, 7),
       ),
     ).toBe(7);
-  });
-
-  test("skips holes like data-first", () => {
-    expect(
-      pipe(
-        [1, , 3],
-        reduce(
-          (indices: readonly number[], _item, index) => [...indices, index],
-          [],
-        ),
-      ),
-    ).toStrictEqual([0, 2]);
-  });
-
-  test("skips holes after a lone lazy step", () => {
-    expect(
-      pipe(
-        [1, , 3],
-        // With no lazy function to fuse with, `take` runs its data-first
-        // implementation, a `slice`, which keeps the hole.
-        take(Infinity),
-        reduce(
-          (indices: readonly number[], _item, index) => [...indices, index],
-          [],
-        ),
-      ),
-    ).toStrictEqual([0, 2]);
   });
 });

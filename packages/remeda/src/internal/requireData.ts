@@ -1,22 +1,6 @@
 import type { StoppableLazyEvaluator } from "./makeStoppable";
 import type { StrictFunction } from "./types/StrictFunction";
 
-// Most callbacks have the input `data` as their 3rd parameter, as in the
-// standard library's array iteration methods (`map`, `filter`, `find`, ...).
-const DEFAULT_DATA_PARAMETER_INDEX = 2;
-
-type RequireDataByArityOptions = {
-  /**
-   * Callbacks with an extra parameter before the index have `data` one
-   * position later: an accumulator (`mapWithFeedback`) or the second input's
-   * item (`zipWith`).
-   *
-   * @see zipWith
-   * @default 2
-   */
-  readonly dataParameterIndex?: number;
-};
-
 /**
  * Marks an evaluator that always needs `data`, because it reads it itself or
  * forwards it to a callback known to read it, so `pipe` must always buffer.
@@ -47,10 +31,18 @@ export const requireData = <
 
 /**
  * Marks an evaluator as needing `data` only when the user's `callback` is
- * likely to read it, based on its signature. It marks `evaluator` the way
- * `requireData` does, by mutating it, so callers must pass a freshly created
- * closure, never a module-level evaluator such as `LAZY_EMPTY_EVALUATOR`.
+ * likely to read it, based on its signature.
  *
+ * @param callback - The user's callback, whose signature decides whether
+ * `data` is needed.
+ * @param dataParameterIndex - Which positional argument in the callback takes
+ * the accumulated `data` array. For most functions that would be *2* (after
+ * the `item` argument in position 0, and the `index` argument in position 1).
+ * @param evaluator - The evaluator to mark. It is marked the way `requireData`
+ * does, by mutating it, so callers must pass a freshly created closure, never a
+ * module-level evaluator such as `LAZY_EMPTY_EVALUATOR`.
+ * @returns `evaluator` itself, marked as needing `data` when `callback` is
+ * likely to read it.
  * @see canReadData
  * @see requireData
  */
@@ -58,10 +50,8 @@ export const requireDataByArity = <
   Evaluator extends StoppableLazyEvaluator<never, unknown>,
 >(
   callback: StrictFunction,
+  dataParameterIndex: number,
   evaluator: NoInfer<Evaluator>,
-  {
-    dataParameterIndex = DEFAULT_DATA_PARAMETER_INDEX,
-  }: RequireDataByArityOptions = {},
 ): Evaluator =>
   canReadData(callback, dataParameterIndex)
     ? requireData(evaluator)
@@ -77,7 +67,7 @@ export const requireDataByArity = <
  */
 export const canReadData = (
   { length }: StrictFunction,
-  dataParameterIndex = DEFAULT_DATA_PARAMETER_INDEX,
+  dataParameterIndex: number,
 ): boolean =>
   // `Function.length` counts only the plain parameters before the first rest
   // (e.g., 2 for `foo(a, b, ...c)`), or defaulted one (e.g., 1 for

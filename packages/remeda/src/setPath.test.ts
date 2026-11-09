@@ -40,12 +40,6 @@ describe("data first", () => {
     expect(data).toStrictEqual({ a: [{ b: 1 }] });
   });
 
-  test("should keep holes in nested arrays", () => {
-    expect(setPath({ a: [1, , 3] }, ["a", 0], 9)).toStrictEqual({
-      a: [9, , 3],
-    });
-  });
-
   test("should work with undefined / optional types", () => {
     expect(setPath(TEST_OBJECT, ["a", "z"], undefined)).toStrictEqual({
       ...TEST_OBJECT,

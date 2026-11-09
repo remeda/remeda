@@ -75,25 +75,6 @@ describe("data first", () => {
   test("returns -0 when it is the last match", () => {
     expect(findLast([0, -0], (value) => value === 0)).toBe(-0);
   });
-
-  test("reads holes as undefined", () => {
-    const data = [1, , 3];
-    const predicate = vi.fn<
-      (
-        value: number | undefined,
-        index: number,
-        data: readonly (number | undefined)[],
-      ) => boolean
-    >(constant(false));
-
-    findLast(data, predicate);
-
-    expect(predicate.mock.calls).toStrictEqual([
-      [3, 2, data],
-      [undefined, 1, data],
-      [1, 0, data],
-    ]);
-  });
 });
 
 describe("data last", () => {

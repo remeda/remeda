@@ -74,15 +74,10 @@ function rangeImplementation(
   const end =
     typeof endOrOptions === "object" ? endOrOptions.end : endOrOptions;
   const length = ceilingWithSnap((end - start) / step);
-  if (Number.isNaN(length) || length <= 0) {
-    return [];
-  }
 
-  // eslint-disable-next-line unicorn/no-new-array -- `length` is always a number here, so this can't be mistaken for an array holding one item.
-  const result = new Array<number>(length);
-
+  const result: number[] = [];
   for (let index = 0; index < length; index++) {
-    result[index] = index === 0 ? start : start + index * step;
+    result.push(index === 0 ? start : start + index * step);
   }
 
   return result;

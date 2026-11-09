@@ -83,19 +83,14 @@ export function pullObject(...args: readonly unknown[]): unknown {
   return purry(pullObjectImplementation, 3, args);
 }
 
-function pullObjectImplementation<
-  T extends IterableContainer,
-  K extends PropertyKey,
-  V,
->(
-  data: T,
-  keyExtractor: (item: T[number], index: number, data: T) => K,
-  valueExtractor: (item: T[number], index: number, data: T) => V,
+function pullObjectImplementation<T, K extends PropertyKey, V>(
+  data: readonly T[],
+  keyExtractor: (item: T, index: number, data: readonly T[]) => K,
+  valueExtractor: (item: T, index: number, data: readonly T[]) => V,
 ): Partial<Record<K, V>> {
   const result: Partial<Record<K, V>> = {};
 
-  let index = 0;
-  for (const item of data) {
+  data.forEach((item, index) => {
     const key = keyExtractor(item, index, data);
     const value = valueExtractor(item, index, data);
     if (key === "__proto__") {
@@ -112,8 +107,7 @@ function pullObjectImplementation<
     } else {
       result[key] = value;
     }
-    index += 1;
-  }
+  });
 
   return result;
 }

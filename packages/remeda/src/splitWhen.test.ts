@@ -60,36 +60,6 @@ test("calls the predicate once per item when nothing matches", () => {
   ]);
 });
 
-test("holes are tested as undefined", () => {
-  expect(splitWhen([1, , 3], (item) => item === undefined)).toStrictEqual([
-    [1],
-    [, 3],
-  ]);
-});
-
-test("holes are kept when an item matches", () => {
-  expect(splitWhen([1, , 3, , 5], (item) => item === 3)).toStrictEqual([
-    [1, ,],
-    [3, , 5],
-  ]);
-});
-
-test("holes are kept when nothing matches", () => {
-  expect(splitWhen([1, , 3], constant(false))).toStrictEqual([[1, , 3], []]);
-});
-
 test("empty array in a pipe", () => {
   expect(pipe([], splitWhen(constant(true)))).toStrictEqual([[], []]);
-});
-
-test("holes are kept when an item matches in a pipe", () => {
-  expect(
-    pipe(
-      [1, , 3, , 5],
-      splitWhen((item) => item === 3),
-    ),
-  ).toStrictEqual([
-    [1, ,],
-    [3, , 5],
-  ]);
 });

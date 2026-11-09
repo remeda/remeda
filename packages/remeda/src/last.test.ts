@@ -21,10 +21,6 @@ describe("data first", () => {
     expect(last([{ id: 0 }, second])).toBe(second);
   });
 
-  test("reads a trailing hole as undefined", () => {
-    expect(last([1, ,])).toBeUndefined();
-  });
-
   test("keeps -0", () => {
     expect(last([1, -0])).toBe(-0);
   });

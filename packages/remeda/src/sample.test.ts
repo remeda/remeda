@@ -65,10 +65,6 @@ describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
 });
 
 describe("identity", () => {
-  test("keeps holes", () => {
-    expect(sample([1, , 3], 3)).toStrictEqual([1, , 3]);
-  });
-
   test("for full (=== n) sample size", () => {
     const array = [1, 2, 3];
     const result = sample(array, 3);

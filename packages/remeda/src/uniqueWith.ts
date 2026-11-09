@@ -56,24 +56,17 @@ export function uniqueWith(...args: readonly unknown[]): unknown {
   return purryWithLazy(uniqueWithImplementation, 2, lazyImplementation, args);
 }
 
-function uniqueWithImplementation<T>(
+const uniqueWithImplementation = <T>(
   data: readonly T[],
   isEquals: IsEquals<T>,
-): T[] {
-  const result: T[] = [];
-  for (const [index, value] of data.entries()) {
-    if (
+): T[] =>
+  data.filter(
+    (value, index) =>
       data.findIndex(
         (otherValue, otherIndex) =>
           index === otherIndex || isEquals(value, otherValue),
-      ) === index
-    ) {
-      result.push(value);
-    }
-  }
-
-  return result;
-}
+      ) === index,
+  );
 
 const lazyImplementation = <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>
   requireData((value, index, data) =>

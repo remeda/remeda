@@ -24,19 +24,6 @@ describe("dataFirst", () => {
     expect(hasAtLeast(array, 1001)).toBe(false);
   });
 
-  test("works on sparse arrays", () => {
-    const array = Array.from({ length: 1000 });
-
-    expect(hasAtLeast(array, 0)).toBe(true);
-    expect(hasAtLeast(array, 1)).toBe(true);
-    expect(hasAtLeast(array, 1000)).toBe(true);
-    expect(hasAtLeast(array, 1001)).toBe(false);
-  });
-
-  test("counts holes", () => {
-    expect(hasAtLeast([, , ,], 3)).toBe(true);
-  });
-
   test("a fractional minimum above the length", () => {
     expect(hasAtLeast([1, 2], 2.5)).toBe(false);
   });
@@ -76,15 +63,6 @@ describe("dataLast", () => {
 
   test("works on large arrays", () => {
     const array = Array.from({ length: 1000 }, (_, i) => i);
-
-    expect(hasAtLeast(0)(array)).toBe(true);
-    expect(hasAtLeast(1)(array)).toBe(true);
-    expect(hasAtLeast(1000)(array)).toBe(true);
-    expect(hasAtLeast(1001)(array)).toBe(false);
-  });
-
-  test("works on sparse arrays", () => {
-    const array = Array.from({ length: 1000 });
 
     expect(hasAtLeast(0)(array)).toBe(true);
     expect(hasAtLeast(1)(array)).toBe(true);

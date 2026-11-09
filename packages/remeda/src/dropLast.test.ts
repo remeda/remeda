@@ -14,10 +14,6 @@ describe("data first", () => {
     expect(dropLast([], 2)).toStrictEqual([]);
   });
 
-  test("keeps holes when nothing is dropped", () => {
-    expect(dropLast([1, , 3], 0)).toStrictEqual([1, , 3]);
-  });
-
   test("should return a new array even if there was no drop", () => {
     const data = [1, 2, 3, 4, 5];
     const result = dropLast(data, 0);

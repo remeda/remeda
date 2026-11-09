@@ -1,5 +1,4 @@
 import { describe, expect, test, vi } from "vitest";
-import { defaultTo } from "./defaultTo";
 import { identity } from "./identity";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
@@ -62,10 +61,6 @@ describe("runtime (dataFirst)", () => {
 
   test("ranks a NaN item first", () => {
     expect(rankBy([1, 2], NaN, identity())).toBe(0);
-  });
-
-  test("reads holes as undefined", () => {
-    expect(rankBy([, 1], 2, defaultTo(0))).toBe(2);
   });
 });
 

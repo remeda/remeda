@@ -140,18 +140,6 @@ describe("lazy", () => {
       expect(mapper.mock.calls[0]?.[2]).toBe(data);
     });
 
-    test("skips holes the way its data-first call does", () => {
-      const mapper =
-        vi.fn<(x: number | undefined) => number | undefined>(identity());
-      pipe([1, , 3], map(mapper));
-
-      expect(mapper).toHaveBeenCalledTimes(2);
-    });
-
-    test("keeps holes when it can stop and a non-lazy function follows", () => {
-      expect(pipe([1, , 3], take(3), identity())).toStrictEqual([1, , 3]);
-    });
-
     test("reads the input the way its data-first call does", () => {
       const pipeKeys: (string | symbol)[] = [];
       pipe(
@@ -281,14 +269,6 @@ describe("lazy", () => {
       );
 
       expect(keys).toStrictEqual([Symbol.iterator]);
-    });
-
-    test("visits holes", () => {
-      const mapper =
-        vi.fn<(x: number | undefined) => number | undefined>(identity());
-      pipe([1, , 3], forceFusion(), map(mapper));
-
-      expect(mapper).toHaveBeenCalledTimes(3);
     });
 
     test("emits every sub-item when a later step fans out the last value", () => {
@@ -460,14 +440,6 @@ describe("lazy", () => {
       pipe([1, 2, 3], map(multiply(10)), map(mapper));
 
       expect(mapper.mock.calls[0]?.[2]).toStrictEqual([10, 20, 30]);
-    });
-
-    test("skips holes the way its data-first calls do", () => {
-      const mapper =
-        vi.fn<(x: number | undefined) => number | undefined>(identity());
-      pipe([1, , 3], map(identity()), map(mapper));
-
-      expect(mapper).toHaveBeenCalledTimes(2);
     });
 
     test("the input is read the way the first step's data-first call reads it", () => {

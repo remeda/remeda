@@ -4,11 +4,7 @@ import { forceFusion } from "../test/forceFusion";
 import { dropWhile } from "./dropWhile";
 import { pipe } from "./pipe";
 
-// Dense only: data-first slices the input, which keeps its holes, while a
-// fused sequence reads each hole as `undefined`.
-const items = fc.array(fc.anything());
-
-test.prop([items, fc.func(fc.boolean())])(
+test.prop([fc.array(fc.anything()), fc.func(fc.boolean())])(
   "data-first and a fused sequence produce the same result",
   (data, predicateOf) => {
     // The predicate ignores `data`, which differs between the two on purpose:
@@ -22,7 +18,7 @@ test.prop([items, fc.func(fc.boolean())])(
   },
 );
 
-test.prop([items, fc.func(fc.boolean())])(
+test.prop([fc.array(fc.anything()), fc.func(fc.boolean())])(
   "data-first and a fused sequence call the predicate the same way",
   (data, predicateOf) => {
     const dataFirstCalls: [unknown, number][] = [];
