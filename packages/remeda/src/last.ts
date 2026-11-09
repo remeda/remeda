@@ -36,7 +36,7 @@ export function last(): <T extends IterableContainer>(
 ) => LastArrayElement<T>;
 
 export function last(...args: readonly unknown[]): unknown {
-  return purry(lastImplementation, args);
+  return purry(lastImplementation, 1, args);
 }
 
 const lastImplementation = <T>(array: readonly T[]): T | undefined =>

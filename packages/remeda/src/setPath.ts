@@ -81,7 +81,7 @@ export function setPath<
 >(path: Path, value: Value): (data: T) => T;
 
 export function setPath(...args: readonly unknown[]): unknown {
-  return purry(setPathImplementation, args);
+  return purry(setPathImplementation, 3, args);
 }
 
 function setPathImplementation(
@@ -95,8 +95,7 @@ function setPathImplementation(
   }
 
   if (Array.isArray(data)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const copy = [...data];
+    const copy = data.concat();
     copy[pivot as number] = setPathImplementation(
       data[pivot as number],
       rest,

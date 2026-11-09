@@ -223,7 +223,7 @@ export function endsWith<Suffix extends string>(
 export function endsWith(suffix: string): (data: string) => boolean;
 
 export function endsWith(...args: readonly unknown[]): unknown {
-  return purry(endsWithImplementation, args);
+  return purry(endsWithImplementation, 2, args);
 }
 
 const endsWithImplementation = (data: string, suffix: string): boolean =>

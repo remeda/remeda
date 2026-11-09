@@ -52,7 +52,7 @@ export function map<T extends IterableContainer, U>(
 ): (data: T) => Mapped<T, U>;
 
 export function map(...args: readonly unknown[]): unknown {
-  return purryWithLazy(mapImplementation, args, lazyImplementation);
+  return purryWithLazy(mapImplementation, 2, lazyImplementation, args);
 }
 
 const mapImplementation = <T, U>(
@@ -63,7 +63,7 @@ const mapImplementation = <T, U>(
 const lazyImplementation = <T, U>(
   callbackfn: (value: T, index: number, data: readonly T[]) => U,
 ): LazyEvaluator<T, U> =>
-  canReadData(callbackfn)
+  canReadData(callbackfn, 2)
     ? requireData((value, index, data) => callbackfn(value, index, data))
     : // A callback that doesn't read `data` already is a complete evaluator,
       // and using it directly saves a call per item.

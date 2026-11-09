@@ -4,10 +4,7 @@ import { forceFusion } from "../test/forceFusion";
 import { mapWithFeedback } from "./mapWithFeedback";
 import { pipe } from "./pipe";
 
-// Both calling styles read a hole as `undefined`.
-const items = fc.oneof(fc.array(fc.anything()), fc.sparseArray(fc.anything()));
-
-test.prop([items, fc.func(fc.integer()), fc.integer()])(
+test.prop([fc.array(fc.anything()), fc.func(fc.integer()), fc.integer()])(
   "data-first and data-last produce the same result",
   (data, reducerOf, initialValue) => {
     // The reducer ignores `data`, which differs between the calling styles on

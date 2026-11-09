@@ -74,7 +74,7 @@ export function mapToObj<T, K extends PropertyKey, V>(
 ): (array: readonly T[]) => Record<K, V>;
 
 export function mapToObj(...args: readonly unknown[]): unknown {
-  return purry(mapToObjImplementation, args);
+  return purry(mapToObjImplementation, 2, args);
 }
 
 function mapToObjImplementation(
@@ -87,7 +87,7 @@ function mapToObjImplementation(
 ): Record<PropertyKey, unknown> {
   const out: Record<PropertyKey, unknown> = {};
 
-  for (const [index, element] of array.entries()) {
+  array.forEach((element, index) => {
     const [key, value] = fn(element, index, array);
     if (key === "__proto__") {
       // We want `__proto__` to act just like any other key, but assigning it
@@ -103,7 +103,7 @@ function mapToObjImplementation(
     } else {
       out[key] = value;
     }
-  }
+  });
 
   return out;
 }

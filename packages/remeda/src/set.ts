@@ -44,7 +44,7 @@ export function set<T, K extends keyof T, V extends Required<T>[K]>(
 ): (obj: T) => UpsertProp<T, K, V>;
 
 export function set(...args: readonly unknown[]): unknown {
-  return purry(setImplementation, args);
+  return purry(setImplementation, 3, args);
 }
 
 const setImplementation = <T, K extends keyof T, V extends Required<T>[K]>(

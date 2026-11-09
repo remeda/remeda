@@ -52,7 +52,7 @@ export function countBy<T, K extends PropertyKey>(
 ): (data: readonly T[]) => BoundedPartial<Record<K, number>>;
 
 export function countBy(...args: readonly unknown[]): unknown {
-  return purry(countByImplementation, args);
+  return purry(countByImplementation, 2, args);
 }
 
 const countByImplementation = <T>(
@@ -66,17 +66,18 @@ const countByImplementation = <T>(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- `Object.create` is typed as returning `any`. Without a prototype the object only has the keys *we* add to it, so a category such as `toString` or `__proto__` is counted like any other.
   const out: Record<PropertyKey, number> = Object.create(null);
 
-  for (const [index, item] of data.entries()) {
+  data.forEach((item, index) => {
     const category = categorizationFn(item, index, data);
     if (category !== undefined) {
       // Counted per property key, so the categories that share one (e.g., `1`
       // and `"1"`) share its count.
       out[category] = (out[category] ?? 0) + 1;
     }
-  }
+  });
 
   // Set the prototype as if the object was created as a normal one (e.g.,
   // `{}`), so the built-in object methods work on it.
+  // TODO [>2]: Consider removing this line and returning the object with its null prototype, as `Object.groupBy` does. In V8 this call gives every result a hidden class of its own, which costs about 85ns per call and 55ns per read of a fresh result. It needs a major version because a null prototype breaks inherited methods (e.g., `hasOwnProperty`), string coercion, `toStrictEqual` assertions, and passing the result from a React Server Component to a Client Component, none of which are type errors.
   Object.setPrototypeOf(out, Object.prototype);
 
   return out;

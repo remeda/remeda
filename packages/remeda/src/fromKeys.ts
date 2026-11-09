@@ -73,16 +73,16 @@ export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
 ): (data: T) => Simplify<FromKeys<T, V>>;
 
 export function fromKeys(...args: readonly unknown[]): unknown {
-  return purry(fromKeysImplementation, args);
+  return purry(fromKeysImplementation, 2, args);
 }
 
-function fromKeysImplementation<T extends IterableContainer<PropertyKey>, V>(
-  data: T,
-  mapper: (item: T[number], index: number, data: T) => V,
-): FromKeys<T, V> {
-  const result: Partial<FromKeys<T, V>> = {};
+function fromKeysImplementation<K extends PropertyKey, V>(
+  data: readonly K[],
+  mapper: (item: K, index: number, data: readonly K[]) => V,
+): Partial<Record<K, V>> {
+  const result: Partial<Record<K, V>> = {};
 
-  for (const [index, key] of data.entries()) {
+  data.forEach((key, index) => {
     const value = mapper(key, index, data);
     if (key === "__proto__") {
       // We want `__proto__` to act just like any other key, but assigning it
@@ -96,10 +96,9 @@ function fromKeysImplementation<T extends IterableContainer<PropertyKey>, V>(
         writable: true,
       });
     } else {
-      // @ts-expect-error [ts7053] - There's no easy way to make Typescript aware that the items in T would be keys in the output object because it's type is built recursively and the "being an item of an array" property of a type is not "carried over" in the recursive type definition.
       result[key] = value;
     }
-  }
+  });
 
-  return result as FromKeys<T, V>;
+  return result;
 }

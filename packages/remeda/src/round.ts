@@ -39,5 +39,5 @@ export function round(value: number, precision: number): number;
 export function round(precision: number): (value: number) => number;
 
 export function round(...args: readonly unknown[]): unknown {
-  return purry(withPrecision(Math.round), args);
+  return purry(withPrecision(Math.round), 2, args);
 }

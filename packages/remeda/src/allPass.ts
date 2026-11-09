@@ -46,7 +46,7 @@ export function allPass<T>(
 ): (data: T) => boolean;
 
 export function allPass(...args: readonly unknown[]): unknown {
-  return purry(allPassImplementation, args);
+  return purry(allPassImplementation, 2, args);
 }
 
 const allPassImplementation = <T>(

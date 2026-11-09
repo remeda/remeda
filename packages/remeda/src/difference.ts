@@ -53,7 +53,7 @@ export function difference<T>(
 ) => D[];
 
 export function difference(...args: readonly unknown[]): unknown {
-  return purryWithLazy(differenceImplementation, args, lazyImplementation);
+  return purryWithLazy(differenceImplementation, 2, lazyImplementation, args);
 }
 
 function differenceImplementation<T>(

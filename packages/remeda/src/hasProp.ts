@@ -83,7 +83,7 @@ export function hasProp<T extends object>(
 ): (data: T) => boolean;
 
 export function hasProp(...args: readonly unknown[]): unknown {
-  return purry(hasPropImplementation, args);
+  return purry(hasPropImplementation, 2, args);
 }
 
 function hasPropImplementation<T extends object, Key extends KeysOfUnion<T>>(

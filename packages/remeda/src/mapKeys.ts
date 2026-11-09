@@ -87,7 +87,7 @@ export function mapKeys<T extends {}, Key extends PropertyKey>(
 ): (data: T) => MappedKeys<T, Key>;
 
 export function mapKeys(...args: readonly unknown[]): unknown {
-  return purry(mapKeysImplementation, args);
+  return purry(mapKeysImplementation, 2, args);
 }
 
 function mapKeysImplementation<T extends {}, Key extends PropertyKey>(
@@ -96,8 +96,9 @@ function mapKeysImplementation<T extends {}, Key extends PropertyKey>(
 ): Partial<Record<Key, unknown>> {
   const out: Partial<Record<Key, unknown>> = {};
 
-  for (const [key, value] of Object.entries(data)) {
-    const mappedKey = keyMapper(key, value, data);
+  for (const entry of Object.entries(data)) {
+    const value: unknown = entry[1];
+    const mappedKey = keyMapper(entry[0], value, data);
     if (mappedKey === "__proto__") {
       // We want `__proto__` to act just like any other key, but assigning it
       // runs the setter inherited from `Object.prototype` instead of creating

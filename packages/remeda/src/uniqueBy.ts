@@ -50,7 +50,7 @@ export function uniqueBy<T extends IterableContainer>(
 ): (data: T) => Deduped<T>;
 
 export function uniqueBy(...args: readonly unknown[]): unknown {
-  return purryWithLazy(uniqueByImplementation, args, lazyImplementation);
+  return purryWithLazy(uniqueByImplementation, 2, lazyImplementation, args);
 }
 
 function uniqueByImplementation<T>(
@@ -81,7 +81,7 @@ function lazyImplementation<T>(
 ): LazyEvaluator<T> {
   const seenKeys = new Set<unknown>();
 
-  return requireDataByArity(keyFunction, (value, index, data) => {
+  return requireDataByArity(keyFunction, 2, (value, index, data) => {
     const key = keyFunction(value, index, data);
     // `add` leaves the set unchanged for a key it already holds, so the size
     // tells duplicates apart with a single hash lookup per item.

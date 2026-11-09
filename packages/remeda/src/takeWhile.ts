@@ -67,7 +67,7 @@ export function takeWhile<
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function takeWhile(...args: readonly unknown[]): unknown {
-  return purryWithLazy(takeWhileImplementation, args, lazyImplementation);
+  return purryWithLazy(takeWhileImplementation, 2, lazyImplementation, args);
 }
 
 function takeWhileImplementation<T>(
@@ -75,11 +75,13 @@ function takeWhileImplementation<T>(
   predicate: (item: T, index: number, data: readonly T[]) => boolean,
 ): T[] {
   const ret: T[] = [];
-  for (const [index, item] of data.entries()) {
+  let index = 0;
+  for (const item of data) {
     if (!predicate(item, index, data)) {
       break;
     }
     ret.push(item);
+    index += 1;
   }
   return ret;
 }
@@ -88,7 +90,7 @@ const lazyImplementation = makeStoppable(
   <T>(
     predicate: (item: T, index: number, data: readonly T[]) => boolean,
   ): StoppableLazyEvaluator<T> =>
-    requireDataByArity(predicate, (item, index, data) =>
+    requireDataByArity(predicate, 2, (item, index, data) =>
       predicate(item, index, data) ? item : STOP,
     ),
 );

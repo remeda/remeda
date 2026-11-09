@@ -81,28 +81,24 @@ export function sumBy<T extends IterableContainer>(
 ): SumBy<T, bigint>;
 
 export function sumBy(...args: readonly unknown[]): unknown {
-  return purry(sumByImplementation, args);
+  return purry(sumByImplementation, 2, args);
 }
 
 const sumByImplementation = <T>(
   array: readonly T[],
   callbackfn: (value: T, index: number, data: readonly T[]) => bigint | number,
 ): bigint | number => {
-  const iter = array.entries();
+  let sum: bigint | number = 0;
 
-  const firstEntry = iter.next();
-  if ("done" in firstEntry && firstEntry.done) {
-    return 0;
-  }
-
-  const { value } = firstEntry;
-  let sum = callbackfn(value[1], 0, array);
-  for (const [index, item] of iter) {
+  let index = 0;
+  for (const item of array) {
     const summand = callbackfn(item, index, array);
 
     // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-    sum += summand;
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands, @typescript-eslint/no-unsafe-assignment -- Every summand has the same type, so the sum keeps it.
+    sum = index === 0 ? summand : sum + summand;
+    index += 1;
   }
+
   return sum;
 };

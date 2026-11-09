@@ -78,7 +78,7 @@ export function filter<
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function filter(...args: readonly unknown[]): unknown {
-  return purryWithLazy(filterImplementation, args, lazyImplementation);
+  return purryWithLazy(filterImplementation, 2, lazyImplementation, args);
 }
 
 const filterImplementation = <T>(
@@ -89,6 +89,6 @@ const filterImplementation = <T>(
 const lazyImplementation = <T>(
   predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): LazyEvaluator<T> =>
-  requireDataByArity(predicate, (value, index, data) =>
+  requireDataByArity(predicate, 2, (value, index, data) =>
     predicate(value, index, data) ? value : SKIP_ITEM,
   );

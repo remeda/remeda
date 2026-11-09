@@ -64,8 +64,9 @@ export function intersectionWith<T, S>(
 export function intersectionWith(...args: readonly unknown[]): unknown {
   return purryWithLazy(
     intersectionWithImplementation,
-    args,
+    3,
     lazyImplementation,
+    args,
   );
 }
 

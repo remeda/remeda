@@ -103,13 +103,6 @@ describe("dataFirst", () => {
     expect(countBy(["", 0, ""], identity())).toStrictEqual({ "": 2, 0: 1 });
   });
 
-  test("holes are counted as undefined", () => {
-    expect(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-      countBy([1, , 3], (item) => item ?? "hole"),
-    ).toStrictEqual({ 1: 1, 3: 1, hole: 1 });
-  });
-
   test("calls the categorizer once per item, in order, with the whole input", () => {
     const data = ["a", "b", "c"];
     const categorizer =

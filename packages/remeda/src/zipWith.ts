@@ -139,14 +139,10 @@ const lazyImplementation = makeStoppable(
   ): StoppableLazyEvaluator<T1, Value> =>
     second.length === 0
       ? LAZY_EMPTY_EVALUATOR
-      : requireDataByArity(
-          fn,
-          (value, index, data, slot) => {
-            const zipped = fn(value, second[index], index, [data, second]);
-            return index >= second.length - 1
-              ? lastLazyValue(zipped, slot)
-              : zipped;
-          },
-          { dataParameterIndex: 3 },
-        ),
+      : requireDataByArity(fn, 3, (value, index, data, slot) => {
+          const zipped = fn(value, second[index], index, [data, second]);
+          return index >= second.length - 1
+            ? lastLazyValue(zipped, slot)
+            : zipped;
+        }),
 );

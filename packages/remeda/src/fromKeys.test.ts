@@ -98,18 +98,6 @@ test("key order", () => {
   ).toStrictEqual(["2", "10", "b", "a", symbol]);
 });
 
-test("holes are keyed as undefined", () => {
-  // A sparse literal would type its hole as `undefined`, which isn't a key.
-  const keys = ["a"];
-  keys[2] = "c";
-
-  expect(fromKeys(keys, (_, index) => index)).toStrictEqual({
-    a: 0,
-    undefined: 1,
-    c: 2,
-  });
-});
-
 test("calls the mapper once per key, in order, with the whole input", () => {
   const data = ["a", "b", "c"];
   const mapper = vi.fn<

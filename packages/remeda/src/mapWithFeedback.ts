@@ -68,7 +68,12 @@ export function mapWithFeedback<T extends IterableContainer, U>(
 ): (data: T) => Mapped<T, U>;
 
 export function mapWithFeedback(...args: readonly unknown[]): unknown {
-  return purryWithLazy(mapWithFeedbackImplementation, args, lazyImplementation);
+  return purryWithLazy(
+    mapWithFeedbackImplementation,
+    3,
+    lazyImplementation,
+    args,
+  );
 }
 
 function mapWithFeedbackImplementation<T, U>(
@@ -98,12 +103,8 @@ function lazyImplementation<T, U>(
 ): LazyEvaluator<T, U> {
   let previousValue = initialValue;
 
-  return requireDataByArity(
-    callbackfn,
-    (currentValue, index, data) => {
-      previousValue = callbackfn(previousValue, currentValue, index, data);
-      return previousValue;
-    },
-    { dataParameterIndex: 3 },
-  );
+  return requireDataByArity(callbackfn, 3, (currentValue, index, data) => {
+    previousValue = callbackfn(previousValue, currentValue, index, data);
+    return previousValue;
+  });
 }

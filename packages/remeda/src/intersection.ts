@@ -48,7 +48,7 @@ export function intersection<S>(
 ): <T>(data: readonly T[]) => (T & S)[];
 
 export function intersection(...args: readonly unknown[]): unknown {
-  return purryWithLazy(intersectionImplementation, args, lazyImplementation);
+  return purryWithLazy(intersectionImplementation, 2, lazyImplementation, args);
 }
 
 function intersectionImplementation<T, S>(

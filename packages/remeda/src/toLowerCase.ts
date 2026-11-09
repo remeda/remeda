@@ -50,7 +50,7 @@ export function toLowerCase<T extends string>(data: T): Lowercase<T>;
 export function toLowerCase(): <T extends string>(data: T) => Lowercase<T>;
 
 export function toLowerCase(...args: readonly unknown[]): unknown {
-  return purry(toLowerCaseImplementation, args);
+  return purry(toLowerCaseImplementation, 1, args);
 }
 
 const toLowerCaseImplementation = <T extends string>(data: T): Lowercase<T> =>

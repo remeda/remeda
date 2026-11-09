@@ -151,6 +151,10 @@ export default defineConfig(
       // arrow function. Our typing provides the safety needed here.
       "unicorn/no-array-callback-reference": "off",
 
+      // Each utility uses the loop that measures fastest for it, and for some
+      // (e.g., `groupBy`, `partition`) that's `forEach`.
+      "unicorn/no-for-each": "off",
+
       // We prefer `jsdoc/require-asterisk-prefix`.
       "unicorn/no-asterisk-prefix-in-documentation-comments": "off",
 
@@ -170,8 +174,13 @@ export default defineConfig(
       "@typescript-eslint/naming-convention": "off",
       "unicorn/name-replacements": "off",
 
-      // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and remove this suppression to allow the rule to find these cases.
+      // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and consider enabling this rule. Its fixes replace sorting a copy with `toSorted`, which measured slower than `concat().sort()` in `sortBy` on small arrays, so each one should be benchmarked.
       "unicorn/no-array-sort": "off",
+
+      // This rule trades perf for readability by suggesting the spread
+      // operator, which is slower than built-ins like `concat` in real-world
+      // scenarios. If enabling, each suggested fix should be benchmarked.
+      "unicorn/prefer-spread": "off",
 
       // === ESLint ============================================================
       // (We are assuming that the config is extended by eslint's: recommended
@@ -338,7 +347,18 @@ export default defineConfig(
       ],
 
       "@typescript-eslint/class-methods-use-this": "warn",
-      "@typescript-eslint/prefer-destructuring": "warn",
+      "@typescript-eslint/prefer-destructuring": [
+        "warn",
+        {
+          // Destructuring arrays is actually a more expensive operation that
+          // involves the array's iterator vs a direct indexed access. This
+          // results in less performant code.
+          array: false,
+          // An options object turns off every kind it leaves out, so object
+          // destructuring has to be listed to stay enforced.
+          object: true,
+        },
+      ],
       "@typescript-eslint/promise-function-async": "error",
       "@typescript-eslint/no-use-before-define": [
         "error",
@@ -369,7 +389,7 @@ export default defineConfig(
       "@typescript-eslint/no-magic-numbers": [
         "warn",
         {
-          ignore: [-1, 0, 1, 2],
+          ignore: [-1, 0, 1, 2, 3],
           ignoreNumericLiteralTypes: true,
         },
       ],

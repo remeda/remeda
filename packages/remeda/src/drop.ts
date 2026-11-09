@@ -138,13 +138,13 @@ export function drop<N extends number>(
 ): <T extends IterableContainer>(array: T) => Drop<T, N>;
 
 export function drop(...args: readonly unknown[]): unknown {
-  return purryWithLazy(dropImplementation, args, lazyImplementation);
+  return purryWithLazy(dropImplementation, 2, lazyImplementation, args);
 }
 
 const dropImplementation = <T extends IterableContainer>(
   array: T,
   n: number,
-): T[number][] => (n < 0 ? [...array] : array.slice(n));
+): T[number][] => (n < 0 ? array.concat() : array.slice(n));
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (Number.isNaN(n) || n < 1) {

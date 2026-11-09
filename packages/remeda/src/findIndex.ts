@@ -54,7 +54,7 @@ export function findIndex<T>(
 ): (data: readonly T[]) => number;
 
 export function findIndex(...args: readonly unknown[]): unknown {
-  return purry(findIndexImplementation, args);
+  return purry(findIndexImplementation, 2, args);
 }
 
 const findIndexImplementation = <T>(

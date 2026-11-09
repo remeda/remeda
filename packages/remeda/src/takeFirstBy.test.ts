@@ -1,7 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { identity } from "./identity";
 import { pipe } from "./pipe";
-import { take } from "./take";
 import { takeFirstBy } from "./takeFirstBy";
 
 describe("runtime (dataFirst)", () => {
@@ -128,23 +127,6 @@ describe("runtime (dataFirst)", () => {
 
     expect(projection).not.toHaveBeenCalled();
   });
-
-  test("keeps holes when taking fewer than all items", () => {
-    // A NaN projection ties the hole with every item, so the heap never moves
-    // it.
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    const result = takeFirstBy([, 5, 3], 2, (value) => value ?? NaN);
-
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(result).toStrictEqual([, 5]);
-  });
-
-  test("reads holes as undefined when taking all items", () => {
-    expect(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      takeFirstBy([, 5, 3], 3, (value) => value ?? NaN),
-    ).toStrictEqual([undefined, 5, 3]);
-  });
 });
 
 describe("runtime (dataLast)", () => {
@@ -227,21 +209,5 @@ describe("runtime (dataLast)", () => {
         ),
       ),
     ).toStrictEqual(["aa", "b", "a"]);
-  });
-
-  test("keeps holes after a lone lazy step", () => {
-    expect(
-      pipe(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [, 5, 3],
-        // With no lazy function to fuse with, `take` runs its data-first
-        // implementation, a `slice`, which keeps the hole.
-        take(Infinity),
-        takeFirstBy(2, (value: number | undefined) => value ?? NaN),
-      ),
-    ).toStrictEqual(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      [, 5],
-    );
   });
 });

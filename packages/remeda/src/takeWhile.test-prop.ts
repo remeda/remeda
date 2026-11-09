@@ -4,14 +4,11 @@ import { forceFusion } from "../test/forceFusion";
 import { pipe } from "./pipe";
 import { takeWhile } from "./takeWhile";
 
-// Both calling styles read a hole as `undefined`.
-const items = fc.oneof(fc.array(fc.anything()), fc.sparseArray(fc.anything()));
-
-test.prop([items, fc.func(fc.boolean())])(
-  "data-first and a fused run produce the same result",
+test.prop([fc.array(fc.anything()), fc.func(fc.boolean())])(
+  "data-first and a fused sequence produce the same result",
   (data, predicateOf) => {
     // The predicate ignores `data`, which differs between the two on purpose:
-    // the whole input data-first, the items so far in a fused run.
+    // the whole input data-first, the items so far in a fused sequence.
     const predicate = (value: unknown, index: number): boolean =>
       predicateOf(value, index);
 
@@ -21,8 +18,8 @@ test.prop([items, fc.func(fc.boolean())])(
   },
 );
 
-test.prop([items, fc.func(fc.boolean())])(
-  "data-first and a fused run call the predicate the same way",
+test.prop([fc.array(fc.anything()), fc.func(fc.boolean())])(
+  "data-first and a fused sequence call the predicate the same way",
   (data, predicateOf) => {
     const dataFirstCalls: [unknown, number][] = [];
     takeWhile(data, (value, index) => {

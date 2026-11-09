@@ -66,7 +66,7 @@ export function zip<S extends IterableContainer>(
 ): <F extends IterableContainer>(first: F) => Zipped<F, S>;
 
 export function zip(...args: readonly unknown[]): unknown {
-  return purryWithLazy(zipImplementation, args, lazyImplementation);
+  return purryWithLazy(zipImplementation, 2, lazyImplementation, args);
 }
 
 const zipImplementation = <

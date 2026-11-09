@@ -44,18 +44,21 @@ export function dropWhile<T extends IterableContainer>(
 ): (data: T) => T[number][];
 
 export function dropWhile(...args: readonly unknown[]): unknown {
-  return purryWithLazy(dropWhileImplementation, args, lazyImplementation);
+  return purryWithLazy(dropWhileImplementation, 2, lazyImplementation, args);
 }
 
 function dropWhileImplementation<T>(
   data: readonly T[],
   predicate: (item: T, index: number, data: readonly T[]) => boolean,
 ): T[] {
-  for (const [index, item] of data.entries()) {
+  let index = 0;
+  for (const item of data) {
     if (!predicate(item, index, data)) {
       return data.slice(index);
     }
+    index += 1;
   }
+
   return [];
 }
 
@@ -63,7 +66,7 @@ function lazyImplementation<T>(
   predicate: (item: T, index: number, data: readonly T[]) => boolean,
 ): LazyEvaluator<T> {
   let isDropping = true;
-  return requireDataByArity(predicate, (item, index, data) => {
+  return requireDataByArity(predicate, 2, (item, index, data) => {
     if (isDropping && predicate(item, index, data)) {
       return SKIP_ITEM;
     }

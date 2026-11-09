@@ -91,6 +91,10 @@ describe("non-integer inputs", () => {
     expect(range(0, { end: 3, step: 0.1 })).toHaveLength(30);
   });
 
+  test("floating-point step doesn't accumulate rounding errors", () => {
+    expect(range(0, { end: 1, step: 0.1 }).at(-1)).toBe(0.9);
+  });
+
   test("very small range near zero is not snapped away", () => {
     expect(range(0, 1e-13)).toStrictEqual([0]);
   });

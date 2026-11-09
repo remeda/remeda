@@ -62,15 +62,14 @@ function takeFirstByImplementation<T>(
   }
 
   if (n >= data.length) {
-    return [...data];
+    return data.concat();
   }
 
   const heap = data.slice(0, n);
   heapify(heap, compareFn);
 
-  const rest = data.slice(n);
-  for (const item of rest) {
-    heapMaybeInsert(heap, compareFn, item);
+  for (let index = heap.length; index < data.length; index += 1) {
+    heapMaybeInsert(heap, compareFn, data[index]!);
   }
 
   return heap;

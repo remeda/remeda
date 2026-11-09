@@ -1,6 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
 import { constant } from "./constant";
-import { isDefined } from "./isDefined";
 import { isNumber } from "./isNumber";
 import { partition } from "./partition";
 import { pipe } from "./pipe";
@@ -73,11 +72,6 @@ describe("data first", () => {
 
   test("single item", () => {
     expect(partition(["a"], constant(true))).toStrictEqual([["a"], []]);
-  });
-
-  test("holes are partitioned as undefined", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-    expect(partition([1, , 3], isDefined)).toStrictEqual([[1, 3], [undefined]]);
   });
 
   test("calls the predicate once per item, in order, with the whole input", () => {

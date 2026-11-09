@@ -60,7 +60,7 @@ describe("data last", () => {
     [2.5, [1, 2]],
     [1.5, [1]],
     [0.5, []],
-  ])("truncates a count of %s in a fused run", (n, expected) => {
+  ])("truncates a count of %s in a fused sequence", (n, expected) => {
     expect(pipe([1, 2, 3, 4, 5], map(identity()), take(n))).toStrictEqual(
       expected,
     );
@@ -70,7 +70,7 @@ describe("data last", () => {
     expect(pipe([1, 2, 3, 4, 5], take(NaN))).toStrictEqual([]);
   });
 
-  test("reads a NaN count as 0 in a fused run", () => {
+  test("reads a NaN count as 0 in a fused sequence", () => {
     expect(pipe([1, 2, 3, 4, 5], map(identity()), take(NaN))).toStrictEqual([]);
   });
 
@@ -80,7 +80,7 @@ describe("data last", () => {
     ]);
   });
 
-  test("takes everything for an Infinity count in a fused run", () => {
+  test("takes everything for an Infinity count in a fused sequence", () => {
     expect(
       pipe([1, 2, 3, 4, 5], map(identity()), take(Infinity)),
     ).toStrictEqual([1, 2, 3, 4, 5]);

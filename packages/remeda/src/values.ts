@@ -39,5 +39,5 @@ export function values<T extends object>(data: T): Values<T>;
 export function values(): <T extends object>(data: T) => Values<T>;
 
 export function values(...args: readonly unknown[]): unknown {
-  return purry(Object.values, args);
+  return purry(Object.values, 1, args);
 }

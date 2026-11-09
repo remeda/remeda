@@ -28,7 +28,7 @@ export function length<T>(items: Enumerable<T>): number;
 export function length<T>(): (items: Enumerable<T>) => number;
 
 export function length(...args: readonly unknown[]): unknown {
-  return purry(lengthImplementation, args);
+  return purry(lengthImplementation, 1, args);
 }
 
 const lengthImplementation = <T>(items: Enumerable<T>): number =>

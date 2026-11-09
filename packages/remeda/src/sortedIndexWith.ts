@@ -77,5 +77,5 @@ export function sortedIndexWith<T>(
 ): (data: readonly T[]) => number;
 
 export function sortedIndexWith(...args: readonly unknown[]): unknown {
-  return purry(binarySearchCutoffIndex, args);
+  return purry(binarySearchCutoffIndex, 2, args);
 }

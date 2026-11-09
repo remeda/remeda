@@ -41,14 +41,14 @@ export function sort<T extends IterableContainer>(
 ): (items: T) => ReorderedArray<T>;
 
 export function sort(...args: readonly unknown[]): unknown {
-  return purry(sortImplementation, args);
+  return purry(sortImplementation, 2, args);
 }
 
 function sortImplementation<T extends IterableContainer>(
   items: T,
   cmp: (a: T[number], b: T[number]) => number,
 ): ReorderedArray<T> {
-  const ret = [...items];
+  const ret = items.concat();
   ret.sort(cmp);
   return ret as ReorderedArray<T>;
 }

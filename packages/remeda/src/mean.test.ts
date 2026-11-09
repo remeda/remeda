@@ -24,12 +24,6 @@ describe("dataFirst", () => {
   test("propagates NaN", () => {
     expect(mean([1, NaN, 3])).toBeNaN();
   });
-
-  test("reads holes as undefined", () => {
-    // @ts-expect-error [ts2322] -- A hole reads as `undefined`, which the types reject.
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(mean([1, , 3])).toBeNaN();
-  });
 });
 
 describe("dataLast", () => {

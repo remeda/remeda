@@ -5,7 +5,28 @@ Lazy implementations are no longer supported: the function doesn't look for a
 implementation as a third argument. Functions built with `purry` run eagerly
 inside `pipe`.
 
+The second argument is the data-first arity: the number of parameters of the
+dataFirst function implementation, as a literal. A call with at least that many
+arguments runs data-first, and a shorter one returns the data-last function.
+The arguments move to the third position.
+
 ##### Examples
+
+###### Basic
+
+```ts
+function myFunc(...args: readonly unknown[]): unknown {
+  // Was:
+  return purry(dataFirstImpl, args);
+
+  // Now:
+  return purry(dataFirstImpl, 2, args);
+}
+
+function dataFirstImpl(data: readonly unknown[], value: unknown) {
+  // ...
+}
+```
 
 ###### Implicit lazy removed (with Object.assign)
 
@@ -15,10 +36,10 @@ function myFunc(...args: readonly unknown[]): unknown {
   return purry(withLazy, args);
 
   // Now:
-  return purry(dataFirstImpl, args);
+  return purry(dataFirstImpl, 2, args);
 }
 
-function dataFirstImpl(...) {
+function dataFirstImpl(data, value) {
   // ...
 }
 
@@ -34,11 +55,14 @@ function lazyImpl(...): LazyEvaluator {
 
 ```ts
 function myFunc(...args: readonly unknown[]): unknown {
-  // Unchanged:
+  // Was:
   return purry(dataFirstImpl, args);
+
+  // Now:
+  return purry(dataFirstImpl, 2, args);
 }
 
-function dataFirstImpl(...) {
+function dataFirstImpl(data, value) {
   // ...
 }
 
@@ -60,10 +84,10 @@ function myFunc(...args: readonly unknown[]): unknown {
   return purry(dataFirstImpl, args, lazyImpl);
 
   // Now:
-  return purry(dataFirstImpl, args);
+  return purry(dataFirstImpl, 2, args);
 }
 
-function dataFirstImpl(...) {
+function dataFirstImpl(data, value) {
   // ...
 }
 

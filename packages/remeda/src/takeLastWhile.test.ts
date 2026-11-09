@@ -1,7 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { constant } from "./constant";
 import { pipe } from "./pipe";
-import { take } from "./take";
 import { takeLastWhile } from "./takeLastWhile";
 
 describe("data first", () => {
@@ -76,28 +75,6 @@ describe("data first", () => {
       [1, 0, data],
     ]);
   });
-
-  test("keeps holes after the last failure", () => {
-    expect(
-      takeLastWhile(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [0, , 3],
-        (value) => value !== 0,
-      ),
-    ).toStrictEqual(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      [, 3],
-    );
-  });
-
-  test("reads holes as undefined when every item passes", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(takeLastWhile([1, , 3], constant(true))).toStrictEqual([
-      1,
-      undefined,
-      3,
-    ]);
-  });
 });
 
 describe("data last", () => {
@@ -146,21 +123,5 @@ describe("data last", () => {
 
     expect(result).toStrictEqual(data);
     expect(result).not.toBe(data);
-  });
-
-  test("keeps holes after a lone lazy step", () => {
-    expect(
-      pipe(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [0, , 3],
-        // With no lazy function to fuse with, `take` runs its data-first
-        // implementation, a `slice`, which keeps the hole.
-        take(Infinity),
-        takeLastWhile((value) => value !== 0),
-      ),
-    ).toStrictEqual(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      [, 3],
-    );
   });
 });

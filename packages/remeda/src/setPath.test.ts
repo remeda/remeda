@@ -33,6 +33,13 @@ describe("data first", () => {
     });
   });
 
+  test("should not mutate nested arrays", () => {
+    const data = { a: [{ b: 1 }] };
+    setPath(data, ["a", 0, "b"], 2);
+
+    expect(data).toStrictEqual({ a: [{ b: 1 }] });
+  });
+
   test("should work with undefined / optional types", () => {
     expect(setPath(TEST_OBJECT, ["a", "z"], undefined)).toStrictEqual({
       ...TEST_OBJECT,

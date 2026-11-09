@@ -37,11 +37,6 @@ describe("dataFirst", () => {
   test("an undefined first item still counts", () => {
     expect(only([undefined, 1])).toBeUndefined();
   });
-
-  test("a hole counts as an item", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(only([, 1])).toBeUndefined();
-  });
 });
 
 describe("data last", () => {

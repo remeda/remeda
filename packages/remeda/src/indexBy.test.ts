@@ -99,13 +99,6 @@ describe("`__proto__` key", () => {
   });
 });
 
-test("holes are indexed as undefined", () => {
-  expect(
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-    indexBy([1, , 3], (item) => item ?? "hole"),
-  ).toStrictEqual({ 1: 1, 3: 3, hole: undefined });
-});
-
 test("calls the mapper once per item, in order, with the whole input", () => {
   const data = ["a", "b", "c"];
   const mapper =

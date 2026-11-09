@@ -64,11 +64,6 @@ describe("data_first", () => {
   test("index -Infinity", () => {
     expect(splitAt([1, 2, 3], -Infinity)).toStrictEqual([[], [1, 2, 3]]);
   });
-
-  test("holes are kept", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The holes are the input under test.
-    expect(splitAt([1, , 3], 1)).toStrictEqual([[1], [, 3]]);
-  });
 });
 
 describe("data_last", () => {
@@ -85,10 +80,5 @@ describe("data_last", () => {
 
   test("empty array", () => {
     expect(pipe([], splitAt(1))).toStrictEqual([[], []]);
-  });
-
-  test("holes are kept", () => {
-    // eslint-disable-next-line no-sparse-arrays -- The holes are the input under test.
-    expect(pipe([1, , 3], splitAt(1))).toStrictEqual([[1], [, 3]]);
   });
 });

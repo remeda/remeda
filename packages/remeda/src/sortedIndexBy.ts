@@ -99,7 +99,7 @@ export function sortedIndexBy<T>(
 ): (data: readonly NoInfer<T>[]) => number;
 
 export function sortedIndexBy(...args: readonly unknown[]): unknown {
-  return purry(sortedIndexByImplementation, args);
+  return purry(sortedIndexByImplementation, 3, args);
 }
 
 function sortedIndexByImplementation<T>(

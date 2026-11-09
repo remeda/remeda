@@ -88,7 +88,7 @@ export function partition<
 ];
 
 export function partition(...args: readonly unknown[]): unknown {
-  return purry(partitionImplementation, args);
+  return purry(partitionImplementation, 2, args);
 }
 
 const partitionImplementation = <T, S extends T>(
@@ -96,12 +96,12 @@ const partitionImplementation = <T, S extends T>(
   predicate: (value: T, index: number, data: readonly T[]) => value is S,
 ): [S[], T[]] => {
   const ret: [S[], T[]] = [[], []];
-  for (const [index, item] of data.entries()) {
+  data.forEach((item, index) => {
     if (predicate(item, index, data)) {
       ret[0].push(item);
     } else {
       ret[1].push(item);
     }
-  }
+  });
   return ret;
 };

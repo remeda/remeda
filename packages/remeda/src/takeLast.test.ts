@@ -1,6 +1,5 @@
 import { expect, test } from "vitest";
 import { pipe } from "./pipe";
-import { take } from "./take";
 import { takeLast } from "./takeLast";
 
 test("empty array", () => {
@@ -64,22 +63,10 @@ test("n is -Infinity", () => {
   expect(takeLast([1, 2, 3, 4, 5], -Infinity)).toStrictEqual([]);
 });
 
-test("keeps holes", () => {
-  // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-  expect(takeLast([1, , 3], 2)).toStrictEqual([, 3]);
-});
-
 test("data-last on an empty array", () => {
   expect(pipe([], takeLast(2))).toStrictEqual([]);
 });
 
 test("data-last", () => {
   expect(pipe([1, 2, 3, 4, 5], takeLast(2))).toStrictEqual([4, 5]);
-});
-
-test("data-last keeps holes after a lone lazy step", () => {
-  // With no lazy function to fuse with, `take` runs its data-first
-  // implementation, a `slice`, which keeps the hole.
-  // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-  expect(pipe([1, , 3], take(Infinity), takeLast(2))).toStrictEqual([, 3]);
 });

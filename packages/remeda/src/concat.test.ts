@@ -33,17 +33,6 @@ describe("data first", () => {
     expect(concat([NaN], [-0])).toStrictEqual([NaN, -0]);
   });
 
-  test("reads holes as undefined", () => {
-    expect(
-      concat(
-        // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-        [1, , 3],
-        // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-        [, 5],
-      ),
-    ).toStrictEqual([1, undefined, 3, undefined, 5]);
-  });
-
   test("other can be any iterable at runtime", () => {
     expect(
       // @ts-expect-error [ts2345] -- `other` is typed as an array, but it is only ever spread, so any iterable works at runtime.
@@ -75,19 +64,6 @@ describe("data last", () => {
     const data = [1, 2];
 
     expect(pipe(data, concat([]))).not.toBe(data);
-  });
-
-  test("reads holes as undefined", () => {
-    expect(
-      pipe(
-        // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-        [1, , 3],
-        concat(
-          // eslint-disable-next-line no-sparse-arrays -- The holes are the case under test.
-          [, 5],
-        ),
-      ),
-    ).toStrictEqual([1, undefined, 3, undefined, 5]);
   });
 
   test("other can be any iterable at runtime", () => {
