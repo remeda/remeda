@@ -2,16 +2,16 @@ import { purry3 } from "./internal/purryByArity";
 import type { UpsertProp } from "./internal/types/UpsertProp";
 
 /**
- * Sets the `value` at `prop` of `object`.
+ * Sets the `value` at `prop` of `data`.
  *
  * To add a new property to an object, or to override its type, use `addProp`
  * instead, and to set a property within a nested object use `setPath`.
  *
- * @param data - The target method.
+ * @param data - The target object.
  * @param prop - The property name.
  * @param value - The value to set.
  * @signature
- *    set(obj, prop, value)
+ *    set(data, prop, value)
  * @example
  *    set({ a: 1 }, 'a', 2) // => { a: 2 }
  * @dataFirst
@@ -24,7 +24,7 @@ export function set<T, K extends keyof T, V extends Required<T>[K]>(
 ): UpsertProp<T, K, V>;
 
 /**
- * Sets the `value` at `prop` of `object`.
+ * Sets the `value` at `prop` of `data`.
  *
  * To add a new property to an object, or to override it's type use `addProp`
  * instead.
@@ -32,7 +32,7 @@ export function set<T, K extends keyof T, V extends Required<T>[K]>(
  * @param prop - The property name.
  * @param value - The value to set.
  * @signature
- *    set(prop, value)(obj)
+ *    set(prop, value)(data)
  * @example
  *    pipe({ a: 1 }, set('a', 2)) // => { a: 2 }
  * @dataLast

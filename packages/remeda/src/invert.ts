@@ -18,7 +18,7 @@ type Inverted<T extends object> = Simplify<{
  *
  * @param data - The object.
  * @signature
- *    invert(object)
+ *    invert(data)
  * @example
  *    invert({ a: "d", b: "e", c: "f" }) // => { d: "a", e: "b", f: "c" }
  * @dataFirst
@@ -31,7 +31,7 @@ export function invert<T extends object>(data: T): Inverted<T>;
  * subsequent values will overwrite previous values.
  *
  * @signature
- *    invert()(object)
+ *    invert()(data)
  * @example
  *    pipe({ a: "d", b: "e", c: "f" }, invert()); // => { d: "a", e: "b", f: "c" }
  * @dataLast

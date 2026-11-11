@@ -57,11 +57,11 @@ export function findIndex(
 ): unknown {
   return typeof dataOrPredicate === "function"
     ? dataLast(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrPredicate,
       )
     : findIndexImplementation(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrPredicate,
         predicate,
       );

@@ -8,7 +8,7 @@ import { purryWithLazy2 } from "./internal/purryWithLazyByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
- * Returns the first `n` elements of `array`.
+ * Returns the first `n` elements of `data`.
  *
  * Related operations:
  * - `drop` - to skip past the first `n` instead.
@@ -18,7 +18,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @param data - The array.
  * @param n - The number of elements to take.
  * @signature
- *    take(array, n)
+ *    take(data, n)
  * @example
  *    take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
  * @dataFirst
@@ -31,7 +31,7 @@ export function take<T extends IterableContainer>(
 ): T[number][];
 
 /**
- * Returns the first `n` elements of `array`.
+ * Returns the first `n` elements of `data`.
  *
  * Related operations:
  * - `drop` - to skip past the first `n` instead.
@@ -40,7 +40,7 @@ export function take<T extends IterableContainer>(
  *
  * @param n - The number of elements to take.
  * @signature
- *    take(n)(array)
+ *    take(n)(data)
  * @example
  *    pipe([1, 2, 3, 4, 3, 2, 1], take(3)) // => [1, 2, 3]
  * @dataLast

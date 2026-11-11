@@ -3,13 +3,13 @@ import { purry2 } from "./internal/purryByArity";
 import { isPlainObject } from "./isPlainObject";
 
 /**
- * Merges the `source` object into the `destination` object. The merge is similar to performing `{ ...destination, ... source }` (where disjoint values from each object would be copied as-is, and for any overlapping props the value from `source` would be used); But for *each prop* (`p`), if **both** `destination` and `source` have a **plain-object** as a value, the value would be taken as the result of recursively deepMerging them (`result.p === deepMerge(destination.p, source.p)`).
+ * Merges the `source` object into the `data` object. The merge is similar to performing `{ ...data, ...source }` (where disjoint values from each object would be copied as-is, and for any overlapping props the value from `source` would be used); But for *each prop* (`p`), if **both** `data` and `source` have a **plain-object** as a value, the value would be taken as the result of recursively deepMerging them (`result.p === deepMerge(data.p, source.p)`).
  *
- * @param data - The object to merge into. In general, this object would have it's values overridden.
+ * @param data - The object to merge into. In general, this object would have its values overridden.
  * @param source - The object to merge from. In general, shared keys would be taken from this object.
  * @returns The merged object.
  * @signature
- *    mergeDeep(destination, source)
+ *    mergeDeep(data, source)
  * @example
  *    mergeDeep({ foo: 'bar', x: 1 }, { foo: 'baz', y: 2 }) // => { foo: 'baz', x: 1, y: 2 }
  * @dataFirst
@@ -21,12 +21,12 @@ export function mergeDeep<Destination extends object, Source extends object>(
 ): MergeDeep<Destination, Source>;
 
 /**
- * Merges the `source` object into the `destination` object. The merge is similar to performing `{ ...destination, ... source }` (where disjoint values from each object would be copied as-is, and for any overlapping props the value from `source` would be used); But for *each prop* (`p`), if **both** `destination` and `source` have a **plain-object** as a value, the value would be taken as the result of recursively deepMerging them (`result.p === deepMerge(destination.p, source.p)`).
+ * Merges the `source` object into the `data` object. The merge is similar to performing `{ ...data, ...source }` (where disjoint values from each object would be copied as-is, and for any overlapping props the value from `source` would be used); But for *each prop* (`p`), if **both** `data` and `source` have a **plain-object** as a value, the value would be taken as the result of recursively deepMerging them (`result.p === deepMerge(data.p, source.p)`).
  *
  * @param source - The object to merge from. In general, shared keys would be taken from this object.
  * @returns The merged object.
  * @signature
- *    mergeDeep(source)(destination)
+ *    mergeDeep(source)(data)
  * @example
  *    pipe(
  *      { foo: 'bar', x: 1 },

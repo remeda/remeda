@@ -4,7 +4,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
- * Removes last `n` elements from the `array`.
+ * Removes last `n` elements from `data`.
  *
  * Related operations:
  * - `drop` - same, but from the start of the array.
@@ -14,7 +14,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  * @param data - The target array.
  * @param n - The number of elements to drop, rounded up. If `n` is 0 or less (or `NaN`) no elements are dropped and a *clone* of the input is returned.
  * @signature
- *    dropLast(array, n)
+ *    dropLast(data, n)
  * @example
  *    dropLast([1, 2, 3, 4, 5], 2) // => [1, 2, 3]
  * @dataFirst
@@ -27,7 +27,7 @@ export function dropLast<T extends IterableContainer>(
 ): T[number][];
 
 /**
- * Removes last `n` elements from the `array`.
+ * Removes last `n` elements from `data`.
  *
  * Related operations:
  * - `drop` - same, but from the start of the array.
@@ -36,7 +36,7 @@ export function dropLast<T extends IterableContainer>(
  *
  * @param n - The number of elements to drop, rounded up. If `n` is 0 or less (or `NaN`) no elements are dropped and a *clone* of the input is returned.
  * @signature
- *    dropLast(n)(array)
+ *    dropLast(n)(data)
  * @example
  *    dropLast(2)([1, 2, 3, 4, 5]) // => [1, 2, 3]
  * @dataLast
@@ -47,12 +47,12 @@ export function dropLast(
   n: number,
 ): <T extends IterableContainer>(data: T) => T[number][];
 
-export function dropLast(arrayOrN: unknown, n?: unknown): unknown {
+export function dropLast(dataOrN: unknown, n?: unknown): unknown {
   return purryWithLazy2(
     dropLastImplementation,
     lazyImplementation,
     arguments.length,
-    arrayOrN,
+    dataOrN,
     n,
   );
 }

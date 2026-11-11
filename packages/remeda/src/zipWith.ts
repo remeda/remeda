@@ -40,7 +40,7 @@ type LazyZippingFunction<
  *
  * @param fn - The function applied to each position of the list.
  * @signature
- *   zipWith(fn)(first, second)
+ *   zipWith(fn)(data, other)
  * @example
  *   zipWith((a: string, b: string) => a + b)(['1', '2', '3'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
  * @category Array
@@ -56,7 +56,7 @@ export function zipWith<TItem1, TItem2, Value>(
  * @param other - The second input list.
  * @param fn - The function applied to each position of the list.
  * @signature
- *   zipWith(second, fn)(first)
+ *   zipWith(other, fn)(data)
  * @example
  *   pipe(['1', '2', '3'], zipWith(['a', 'b', 'c'], (a, b) => a + b)) // => ['1a', '2b', '3c']
  * @dataLast
@@ -77,7 +77,7 @@ export function zipWith<
  * @param other - The second input list.
  * @param fn - The function applied to each position of the list.
  * @signature
- *   zipWith(first, second, fn)
+ *   zipWith(data, other, fn)
  * @example
  *   zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
  * @dataFirst
@@ -90,7 +90,7 @@ export function zipWith<
   Value,
 >(data: T1, other: T2, fn: ZippingFunction<T1, T2, Value>): Value[];
 
-// TODO [>2]: Consider removing this function. `map(zip(data, other), ([first, second]) => fn(first, second))`, or `pipe(data, zip(other), map(...))` inside a `pipe`, covers it and also keeps tuple shapes in the output type. All it adds is passing a binary callback without destructuring and skipping the pair allocated per item.
+// TODO [>2]: Consider removing this function. `map(zip(data, other), ([first, second], index) => fn(first, second, index, [data, other]))`, or `zip(other)` then `map(...)` inside a `pipe`, covers it and also keeps tuple shapes in the output type, and an arrow function over `zip` covers the `zipWith(fn)` form. All it adds is a callback that takes the pair unpacked, with no pair allocated per item.
 export function zipWith(
   arg0: IterableContainer | ZippingFunction,
   arg1?: IterableContainer | LazyZippingFunction | ZippingFunction,
@@ -147,7 +147,7 @@ function zipWithImplementation<
 
 const lazyImplementation = makeStoppable(
   <T1, T2 extends IterableContainer, Value>([other, fn]: readonly [
-    second: T2,
+    other: T2,
     fn: ZippingFunction<readonly T1[], T2, Value>,
   ]): StoppableLazyEvaluator<T1, Value> =>
     other.length === 0

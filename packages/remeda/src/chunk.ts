@@ -192,7 +192,7 @@ type TuplePrefix<T extends IterableContainer> = [
 ];
 
 /**
- * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
+ * Split an array into groups the length of `size`. If `data` can't be split evenly, the final chunk will be the remaining elements.
  *
  * @param data - The array.
  * @param size - The length of the chunk.
@@ -210,11 +210,11 @@ export function chunk<T extends IterableContainer, N extends number>(
 ): Chunk<T, N>;
 
 /**
- * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
+ * Split an array into groups the length of `size`. If `data` can't be split evenly, the final chunk will be the remaining elements.
  *
  * @param size - The length of the chunk.
  * @signature
- *    chunk(size)(array)
+ *    chunk(size)(data)
  * @example
  *    chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]
  *    chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]

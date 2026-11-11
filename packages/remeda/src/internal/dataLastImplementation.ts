@@ -28,7 +28,7 @@ export const dataLastImplementation0 =
  * one argument after the data.
  */
 export const dataLastImplementation1 =
-  <T, P extends readonly [unknown?], R>(
+  <T, P extends readonly [unknown], R>(
     dataFirst: DataFirst<T, P, R>,
     argument: P[0],
   ): UnaryFunction<T, R> =>

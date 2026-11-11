@@ -62,8 +62,8 @@ export function purryOrderRules<T>(
   func: (data: readonly T[], compareFn: CompareFunction<T>) => unknown,
   inputArgs: readonly unknown[],
 ): unknown {
-  // We rely on casting blindly here, but we rely on casting blindly everywhere
-  // else when we call purry so it's fine...
+  // The overloads guarantee one of these two shapes, which the `isOrderRule`
+  // check below tells apart.
   const [dataOrRule, ...rules] = inputArgs as
     | Readonly<NonEmptyArray<OrderRule<T>>>
     | [

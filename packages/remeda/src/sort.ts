@@ -10,7 +10,7 @@ import type { ReorderedArray } from "./internal/types/ReorderedArray";
  * @param data - The array to sort.
  * @param cmp - The comparator function.
  * @signature
- *    sort(items, cmp)
+ *    sort(data, cmp)
  * @example
  *    sort([4, 2, 7, 5], (a, b) => a - b); // => [2, 4, 5, 7]
  * @dataFirst
@@ -29,7 +29,7 @@ export function sort<T extends IterableContainer>(
  *
  * @param cmp - The comparator function.
  * @signature
- *    sort(cmp)(items)
+ *    sort(cmp)(data)
  * @example
  *    pipe([4, 2, 7, 5], sort((a, b) => a - b)) // => [2, 4, 5, 7]
  * @dataLast
@@ -42,11 +42,11 @@ export function sort<T extends IterableContainer>(
 export function sort(dataOrCmp: unknown, cmp?: unknown): unknown {
   return typeof dataOrCmp === "function"
     ? dataLast(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrCmp,
       )
     : sortImplementation(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrCmp,
         cmp,
       );

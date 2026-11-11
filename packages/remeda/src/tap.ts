@@ -10,7 +10,7 @@ import { purry2 } from "./internal/purryByArity";
  * @param data - The value to pass into the function.
  * @param fn - The function to call.
  * @signature
- *    tap(value, fn)
+ *    tap(data, fn)
  * @example
  *    tap("foo", console.log) // => "foo"
  * @dataFirst
@@ -27,7 +27,7 @@ export function tap<T>(data: T, fn: (value: T) => void): T;
  *
  * @param fn - The function to call.
  * @signature
- *    tap(fn)(value)
+ *    tap(fn)(data)
  * @example
  *    pipe(
  *      [-5, -1, 2, 3],

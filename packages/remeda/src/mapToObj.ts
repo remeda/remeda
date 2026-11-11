@@ -23,7 +23,7 @@
  * @param fn - The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries.
  * @returns The new mapped object.
  * @signature
- *    mapToObj(array, fn)
+ *    mapToObj(data, fn)
  * @example
  *    mapToObj([1, 2, 3], x => [String(x), x * 2]) // => {1: 2, 2: 4, 3: 6}
  * @dataFirst
@@ -58,7 +58,7 @@ export function mapToObj<T, K extends PropertyKey, V>(
  * @param fn - The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries.
  * @returns The new mapped object.
  * @signature
- *    mapToObj(fn)(array)
+ *    mapToObj(fn)(data)
  * @example
  *    pipe(
  *      [1, 2, 3],
@@ -74,11 +74,11 @@ export function mapToObj<T, K extends PropertyKey, V>(
 export function mapToObj(dataOrFn: unknown, fn?: unknown): unknown {
   return typeof dataOrFn === "function"
     ? dataLast(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrFn,
       )
     : mapToObjImplementation(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrFn,
         fn,
       );

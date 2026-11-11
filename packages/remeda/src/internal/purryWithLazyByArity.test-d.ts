@@ -1,6 +1,10 @@
 import { describe, expectTypeOf, test } from "vitest";
 import type { LazyUnaryFunction } from "./lazyDataLastImplementation";
-import { purryWithLazy1, purryWithLazy2 } from "./purryWithLazyByArity";
+import {
+  purryWithLazy1,
+  purryWithLazy2,
+  purryWithLazy3,
+} from "./purryWithLazyByArity";
 import type { IterableContainer } from "./types/IterableContainer";
 import type { LazyEvaluator } from "./types/LazyEvaluator";
 
@@ -19,6 +23,16 @@ declare function genericTakeImplementation<T extends IterableContainer>(
 ): T[number][];
 
 declare function genericLazyImplementation<T>(count: number): LazyEvaluator<T>;
+
+declare function differenceWithImplementation<T, Other>(
+  data: readonly T[],
+  other: readonly Other[],
+  isEqual: (a: T, b: Other) => boolean,
+): T[];
+
+declare function lazyImplementationOfOther<T>(
+  other: readonly unknown[],
+): LazyEvaluator<T>;
 
 test("return type", () => {
   expectTypeOf(
@@ -76,6 +90,25 @@ describe("generic implementation", () => {
       2 /* argumentsLength */,
       [1],
       1,
+    );
+  });
+});
+
+describe("known issues!", () => {
+  test("a lazy implementation that takes the tuple as its first argument", () => {
+    // Expected: the call is rejected, since the lazy implementation receives
+    // the tuple `[other, isEqual]` rather than `other`.
+    //
+    // Actual: it compiles, because the tuple is assignable to an array
+    // parameter. In `pipe`, the lazy implementation then reads the tuple as
+    // `other`.
+    purryWithLazy3(
+      differenceWithImplementation,
+      lazyImplementationOfOther,
+      3 /* argumentsLength */,
+      [1],
+      [1],
+      () => true,
     );
   });
 });

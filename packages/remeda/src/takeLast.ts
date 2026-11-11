@@ -2,7 +2,7 @@ import { purry2 } from "./internal/purryByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
- * Takes the last `n` elements from the `array`.
+ * Takes the last `n` elements from `data`.
  *
  * Related operations:
  * - `dropLast` - to skip past the last `n` instead.
@@ -12,7 +12,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @param data - The target array.
  * @param n - The number of elements to take.
  * @signature
- *    takeLast(array, n)
+ *    takeLast(data, n)
  * @example
  *    takeLast([1, 2, 3, 4, 5], 2) // => [4, 5]
  * @dataFirst
@@ -24,7 +24,7 @@ export function takeLast<T extends IterableContainer>(
 ): T[number][];
 
 /**
- * Take the last `n` elements from the `array`.
+ * Take the last `n` elements from `data`.
  *
  * Related operations:
  * - `dropLast` - to skip past the last `n` instead.
@@ -33,7 +33,7 @@ export function takeLast<T extends IterableContainer>(
  *
  * @param n - The number of elements to take.
  * @signature
- *    takeLast(n)(array)
+ *    takeLast(n)(data)
  * @example
  *    takeLast(2)([1, 2, 3, 4, 5]) // => [4, 5]
  * @dataLast

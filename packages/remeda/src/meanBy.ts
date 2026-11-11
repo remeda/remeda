@@ -3,7 +3,7 @@
  *
  * @param fn - Predicate function.
  * @signature
- *   meanBy(fn)(array)
+ *   meanBy(fn)(data)
  * @example
  *    pipe(
  *      [{a: 5}, {a: 1}, {a: 3}],
@@ -23,7 +23,7 @@ export function meanBy<T>(
  * @param data - The array.
  * @param fn - Predicate function.
  * @signature
- *   meanBy(array, fn)
+ *   meanBy(data, fn)
  * @example
  *    meanBy(
  *      [{a: 5}, {a: 1}, {a: 3}],
@@ -41,11 +41,11 @@ export function meanBy<T>(
 export function meanBy(dataOrFn: unknown, fn?: unknown): unknown {
   return typeof dataOrFn === "function"
     ? dataLast(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrFn,
       )
     : meanByImplementation(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrFn,
         fn,
       );

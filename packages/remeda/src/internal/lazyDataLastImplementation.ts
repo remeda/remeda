@@ -53,8 +53,8 @@ type LazyDefinitionOf<T extends IterableContainer, Argument> = {
 
 /**
  * The one value a lazy implementation is built from, for the arguments `P` of
- * a data-last call: nothing, the single argument itself, or the arguments as a
- * tuple.
+ * a data-last call: `undefined`, the single argument itself, or the arguments
+ * as a tuple.
  */
 export type LazyArgument<P extends readonly unknown[]> = P extends readonly []
   ? undefined
@@ -74,7 +74,7 @@ export function withLazyImplementation<
   Argument,
   R,
 >(
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional! This is the only place these props are written.
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional! Writing `lazy` and `lazyArgument` onto `dataLast` is what this function is for.
   dataLast: UnaryFunction<T, R> &
     Partial<SimplifiedWritable<LazyDefinitionOf<T, Argument>>>,
   lazy: LazyEvaluatorFactoryOf<T, readonly [lazyArgument: Argument]>,
@@ -88,8 +88,8 @@ export function withLazyImplementation<
 }
 
 /**
- * `lazyDataLastImplementation` for a `dataFirst` implementation that takes
- * only the data.
+ * Builds the data-last function for a `dataFirst` implementation that takes
+ * only the data, with the lazy implementation attached for `pipe`.
  */
 export function lazyDataLastImplementation0<
   T extends IterableContainer,
@@ -112,12 +112,13 @@ export function lazyDataLastImplementation0<
 }
 
 /**
- * `lazyDataLastImplementation` for a `dataFirst` implementation that takes
- * one argument after the data.
+ * Builds the data-last function for a `dataFirst` implementation that takes
+ * one argument after the data, with the lazy implementation attached for
+ * `pipe`.
  */
 export function lazyDataLastImplementation1<
   T extends IterableContainer,
-  P extends readonly [unknown?],
+  P extends readonly [unknown],
   R,
 >(
   dataFirst: DataFirst<T, P, R>,
@@ -138,8 +139,9 @@ export function lazyDataLastImplementation1<
 }
 
 /**
- * `lazyDataLastImplementation` for a `dataFirst` implementation that takes
- * two arguments after the data.
+ * Builds the data-last function for a `dataFirst` implementation that takes
+ * two arguments after the data, with the lazy implementation attached for
+ * `pipe`.
  */
 export function lazyDataLastImplementation2<
   T extends IterableContainer,

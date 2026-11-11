@@ -8,16 +8,30 @@ import {
 describe("data-first from the arity on", () => {
   test("purryWithLazy1", () => {
     expect(
-      purryWithLazy1(foo, lazyImplementation, 1 /* argumentsLength */, [
-        "data",
-      ]),
+      purryWithLazy1(
+        collectArguments,
+        lazyImplementation,
+        1 /* argumentsLength */,
+        ["data"],
+      ),
     ).toStrictEqual([["data"]]);
+  });
+
+  test("purryWithLazy1, undefined data is still data-first", () => {
+    expect(
+      purryWithLazy1(
+        collectArguments,
+        lazyImplementation,
+        1 /* argumentsLength */,
+        undefined,
+      ),
+    ).toStrictEqual([undefined]);
   });
 
   test("purryWithLazy2, an undefined argument is still data-first", () => {
     expect(
       purryWithLazy2(
-        foo,
+        collectArguments,
         lazyImplementation,
         2 /* argumentsLength */,
         ["data"],
@@ -26,10 +40,23 @@ describe("data-first from the arity on", () => {
     ).toStrictEqual([["data"], undefined]);
   });
 
-  test("purryWithLazy3, extra arguments don't reach the implementation", () => {
+  test("purryWithLazy3, undefined arguments are still data-first", () => {
     expect(
       purryWithLazy3(
-        foo,
+        collectArguments,
+        lazyImplementation,
+        3 /* argumentsLength */,
+        ["data"],
+        undefined,
+        undefined,
+      ),
+    ).toStrictEqual([["data"], undefined, undefined]);
+  });
+
+  test("purryWithLazy3, more arguments than its arity", () => {
+    expect(
+      purryWithLazy3(
+        collectArguments,
         lazyImplementation,
         4 /* argumentsLength */,
         ["data"],
@@ -44,7 +71,7 @@ describe("data-last below the arity", () => {
   describe(purryWithLazy1, () => {
     test("declares a single parameter", () => {
       const dataLast = purryWithLazy1(
-        foo,
+        collectArguments,
         lazyImplementation,
         0 /* argumentsLength */,
         undefined,
@@ -56,7 +83,7 @@ describe("data-last below the arity", () => {
 
     test("passes the data alone", () => {
       const dataLast = purryWithLazy1(
-        foo,
+        collectArguments,
         lazyImplementation,
         0 /* argumentsLength */,
         undefined,
@@ -75,7 +102,7 @@ describe("data-last below the arity", () => {
 
     test("carries the lazy implementation, with no argument for it", () => {
       const dataLast = purryWithLazy1(
-        foo,
+        collectArguments,
         lazyImplementation,
         0 /* argumentsLength */,
         undefined,
@@ -94,7 +121,7 @@ describe("data-last below the arity", () => {
   describe(purryWithLazy2, () => {
     test("declares a single parameter", () => {
       const dataLast = purryWithLazy2(
-        foo,
+        collectArguments,
         lazyImplementation,
         1 /* argumentsLength */,
         1,
@@ -107,7 +134,7 @@ describe("data-last below the arity", () => {
 
     test("passes the data and the argument", () => {
       const dataLast = purryWithLazy2(
-        foo,
+        collectArguments,
         lazyImplementation,
         1 /* argumentsLength */,
         1,
@@ -127,7 +154,7 @@ describe("data-last below the arity", () => {
 
     test("carries the lazy implementation, with the argument itself", () => {
       const dataLast = purryWithLazy2(
-        foo,
+        collectArguments,
         lazyImplementation,
         1 /* argumentsLength */,
         1,
@@ -145,7 +172,7 @@ describe("data-last below the arity", () => {
   describe(purryWithLazy3, () => {
     test("declares a single parameter", () => {
       const dataLast = purryWithLazy3(
-        foo,
+        collectArguments,
         lazyImplementation,
         2 /* argumentsLength */,
         1,
@@ -159,7 +186,7 @@ describe("data-last below the arity", () => {
 
     test("passes the data and both arguments", () => {
       const dataLast = purryWithLazy3(
-        foo,
+        collectArguments,
         lazyImplementation,
         2 /* argumentsLength */,
         1,
@@ -180,7 +207,7 @@ describe("data-last below the arity", () => {
 
     test("carries the lazy implementation, with the arguments as a tuple", () => {
       const dataLast = purryWithLazy3(
-        foo,
+        collectArguments,
         lazyImplementation,
         2 /* argumentsLength */,
         1,
@@ -199,7 +226,7 @@ describe("data-last below the arity", () => {
   });
 });
 
-const foo = (
+const collectArguments = (
   ...args: readonly [readonly unknown[], ...(readonly unknown[])]
 ): readonly unknown[] => args;
 

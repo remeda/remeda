@@ -7,7 +7,7 @@ import type { ReorderedArray } from "./internal/types/ReorderedArray";
  *
  * @param data - The array to shuffle.
  * @signature
- *    shuffle(array)
+ *    shuffle(data)
  * @example
  *    shuffle([4, 2, 7, 5]) // => [7, 5, 4, 2]
  * @dataFirst
@@ -21,7 +21,7 @@ export function shuffle<T extends IterableContainer>(
  * Shuffles the input array, returning a new array with the same elements in a random order.
  *
  * @signature
- *    shuffle()(array)
+ *    shuffle()(data)
  * @example
  *    pipe([4, 2, 7, 5], shuffle()) // => [7, 5, 4, 2]
  * @dataLast

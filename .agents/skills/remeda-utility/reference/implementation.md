@@ -1,15 +1,16 @@
 # Function Implementation Conventions
 
-## Purry: the dual-API skeleton
+## Dispatch: the dual-API skeleton
 
 Every function with a data-first / data-last API picks the calling style at runtime. The structure is fixed:
 
 - Two overload signatures: data-first **and** data-last, each with its own JSDoc block.
 - One implementation signature - no JSDoc, returns `unknown`, with one parameter per data-first parameter, named for both calling styles (`dataOrCallbackfn, callbackfn`). The dispatch below reads the arguments at runtime, not the typed overloads.
-- The data-first implementation declares exactly the function's public parameters, none of them optional, defaulted or rest: the dispatch helpers type-check only its required parameters, and pass it exactly as many arguments as their arity, so an optional parameter past that is silently dropped. Recursion state goes in a separate helper, as `clone`'s `cloneValue` does.
+- The data-first implementation declares exactly the function's public parameters, none of them optional, defaulted or rest: the dispatch helpers type-check only the parameters up to their arity and pass a data-first call exactly that many arguments, while `purry1`'s data-last function is the implementation itself, which a point-free caller hands its own extra arguments (`data.map(reverse())` passes the index and the array). Recursion state goes in a separate helper, as `clone`'s `cloneValue` does.
 - An array function whose first data-last argument is a function (`map`, `filter`, `sortedIndexWith`) dispatches on `typeof dataOrCallbackfn === "function"`: a data-last call goes to a module-level builder of the utility's own, placed right after the dispatch, `const dataLast = (callbackfn: Parameters<typeof mapImplementation>[1]) => (data: Parameters<typeof mapImplementation>[0]) => mapImplementation(data, callbackfn)`, and a lazy one returns `withLazyImplementation(dataLast(dataOrCallbackfn), lazyImplementation, dataOrCallbackfn)` (`src/internal/lazyDataLastImplementation.ts`; two arguments go as a tuple); any other first argument runs the implementation. A closure created inside the dispatch makes every call, data-first included, allocate a context for the captured parameter, and a closure from a builder shared by several utilities has its call feedback polluted by all of them.
-- Every other function passes `arguments.length` and its parameters to the helper for its data-first arity, data included: `purry1`/`2`/`3` (`src/internal/purryByArity.ts`), or `purryWithLazy1`/`2`/`3` (`src/internal/purryWithLazyByArity.ts`) with the lazy evaluator. At least that many arguments runs the implementation; fewer builds the data-last function.
-- The arguments reach the implementation as parameters, never through an array (`...args`): only a callback that arrives as a parameter can be inlined by the engine into the implementation's loop, which makes data-first `map` and `filter` 2-3x faster.
+- Most other functions pass `arguments.length` and their parameters to the helper for their data-first arity, data included: `purry1`/`2`/`3` (`src/internal/purryByArity.ts`), or `purryWithLazy1`/`2`/`3` (`src/internal/purryWithLazyByArity.ts`) with the lazy evaluator. At least that many arguments runs the implementation; fewer builds the data-last function.
+- A function whose argument count doesn't tell the call styles apart (an optional parameter, as in `flat`, `dropFirstBy`, `zipWith`) checks the type of an argument instead, with the same module-level `dataLast` builder, and a lazy one attaches its evaluator with `withLazyImplementation`. Functions taking a list of order rules (`sortBy`, `firstBy`, `nthBy`, `rankBy`, `takeFirstBy`) dispatch through `purryOrderRules`, and `splice` through `purryOn`; both receive the arguments as an array.
+- Everywhere else the arguments reach the implementation as parameters, not through an array (`...args`): only a callback that arrives as a parameter can be inlined by the engine into the implementation's loop, which makes data-first `map` and `filter` 2-3x faster.
 
 A lazy function still gets a plain eager implementation for its data-first call, even when it mirrors the evaluator (`unique`, `difference`): running the evaluator item by item outside `pipe` costs a call and a result classification per item, and bundles the lazy runner into every data-first import. The two must give the same result for every input, holes aside: a fused sequence reads a hole as `undefined`, while the eager implementation does with it whatever its native method does (`slice` keeps it, `filter` skips it). `pipe` picks between them per sequence and per input kind, so any other mismatch shows up as a pipe whose result changes when an unrelated step is added or removed.
 
@@ -41,7 +42,7 @@ For functions that return a single scalar (e.g., `first()`), wrap the lazy imple
 Buffering `data` costs an array push per item, so `pipe` only does it for steps that ask for it, via a `requiresData: true` marker on the evaluator. Set it with one of two helpers from `src/internal/requireData.ts`:
 
 - `requireData(evaluator)` - the evaluator always needs `data`: `uniqueWith`'s reads it itself (it compares each item against every item seen so far), and `map`'s wrapper forwards it after `map` has run the arity check itself (see the `map` paragraph below).
-- `requireDataByArity(callback, evaluator, { dataParameterIndex })` - the evaluator only forwards `data` to a user-supplied `callback`. `dataParameterIndex` is where `data` sits in that callback's own parameter list: 2 (the default) for `filter`, `flatMap`, `forEach`, `find`, `uniqueBy`; 3 for `mapWithFeedback`, `zipWith`.
+- `requireDataByArity(callback, dataParameterIndex, evaluator)` - the evaluator only forwards `data` to a user-supplied `callback`. `dataParameterIndex` is where `data` sits in that callback's own parameter list: 2 for `filter`, `flatMap`, `forEach`, `find`, `uniqueBy`; 3 for `mapWithFeedback`, `zipWith`.
 
 `requireDataByArity` buffers when `callback.length === 0` - this covers a callback whose first parameter is a rest parameter (a rest parameter after named parameters instead reports the named count), plus bare mocks (`vi.fn()`) and wrappers that forward `arguments`, neither of which can be inspected further, so we buffer defensively - or when `callback.length > dataParameterIndex` (the callback declares enough named parameters to reach it). Three holes are known and left unguarded: a default value on `data` or any parameter before it truncates `Function.length` (`(x, i = 0, data = []) => ...` reports 1, not 3), a callback that reaches `data` through `arguments[i]` instead of a named parameter, and a trailing rest parameter such as `(value, index, ...rest)` (reports 2, not 3) - all three fall through to the non-buffering path. `bind` with partial application reports the remaining arity, so bound callbacks are gated correctly.
 
@@ -59,10 +60,10 @@ How to type a lazy overload:
 
 - Standard `(value, index, data)` callback: `LazyCallback<T, R>` (`src/internal/types/LazyCallback.ts`). For a type predicate use `LazyTypePredicate<T, S>`; TypeScript can't route `value is S` through a generic return type.
 - Any other shape (extra parameters like `mapWithFeedback`'s `previousValue`, or `data` nested inside a tuple like `zipWith`): declare a local alias next to the eager one and type the slot as `Readonly<NonEmptyPrefix<T>>`. Never drop the `Readonly`: `pipe` hands the same array to every invocation, so a callback that mutates it changes what later invocations see.
-- Only the array flowing through the pipe is a prefix. Arrays passed as arguments (`zipWith`'s `second`) are complete and keep their type.
+- Only the array flowing through the pipe is a prefix. Arrays passed as arguments (`zipWith`'s `other`) are complete and keep their type.
 - If the implementation signature unions the eager and lazy callback types (as `zipWith` does), include the lazy alias in that union; without it the data-last overload fails with `ts2394`, because a callback accepting the full `T` is not assignable to one accepting only its prefix.
 
-Callbacks that never receive `data` (`uniqueWith`'s comparator, `differenceWith`'s `isEquals`) are unaffected.
+Callbacks that never receive `data` (`uniqueWith`'s comparator, `differenceWith`'s `isEqual`) are unaffected.
 
 Known limitations:
 

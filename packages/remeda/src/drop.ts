@@ -94,7 +94,7 @@ type DropFixedTuple<
     : [];
 
 /**
- * Removes first `n` elements from the `array`.
+ * Removes first `n` elements from `data`.
  *
  * Related operations:
  * - `dropLast` - same, but from the end of the array.
@@ -117,7 +117,7 @@ export function drop<T extends IterableContainer, N extends number>(
 ): Drop<T, N>;
 
 /**
- * Removes first `n` elements from the `array`.
+ * Removes first `n` elements from `data`.
  *
  * Related operations:
  * - `dropLast` - same, but from the end of the array.

@@ -6,7 +6,7 @@ import { purry2 } from "./internal/purryByArity";
  * @param data - The array to split.
  * @param index - The index to split at.
  * @signature
- *    splitAt(array, index)
+ *    splitAt(data, index)
  * @example
  *    splitAt([1, 2, 3], 1) // => [[1], [2, 3]]
  *    splitAt([1, 2, 3, 4, 5], -1) // => [[1, 2, 3, 4], [5]]
@@ -20,7 +20,7 @@ export function splitAt<T>(data: readonly T[], index: number): [T[], T[]];
  *
  * @param index - The index to split at.
  * @signature
- *    splitAt(index)(array)
+ *    splitAt(index)(data)
  * @example
  *    splitAt(1)([1, 2, 3]) // => [[1], [2, 3]]
  *    splitAt(-1)([1, 2, 3, 4, 5]) // => [[1, 2, 3, 4], [5]]

@@ -71,7 +71,7 @@ type PathValue3<
 > = StrictlyRequired<Pathable2<T, A, B>>[C];
 
 /**
- * Gets the value at `path` of `object`. If the resolved value is `null` or `undefined`, the `defaultValue` is returned in its place.
+ * Gets the value at `path` of `data`. If the resolved value is `null` or `undefined`, the `defaultValue` is returned in its place.
  *
  * **DEPRECATED**: Use `defaultTo(prop(object, ...path), defaultValue)`
  * instead!
@@ -121,7 +121,7 @@ export function pathOr<
 ): PathValue3<T, A, B, C>;
 
 /**
- * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
+ * Gets the value at `path` of `data`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
  *
  * **DEPRECATED**: Use `($) => defaultTo(prop($, ...path), defaultValue)`
  * instead, or if already inside a `pipe`, replace the call to `pathOr` with:

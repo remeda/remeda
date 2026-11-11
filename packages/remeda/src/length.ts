@@ -7,7 +7,7 @@ type Enumerable<T> = ArrayLike<T> | Iterable<T>;
  *
  * @param data - The input data.
  * @signature
- *    length(array)
+ *    length(data)
  * @example
  *    length([1, 2, 3]) // => 3
  * @dataFirst
@@ -19,7 +19,7 @@ export function length<T>(data: Enumerable<T>): number;
  * Counts values of the collection or iterable.
  *
  * @signature
- *    length()(array)
+ *    length()(data)
  * @example
  *    pipe([1, 2, 3], length()) // => 3
  * @dataLast
