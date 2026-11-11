@@ -24,14 +24,8 @@ describe("data-first from the arity on", () => {
 });
 
 describe("data-last below the arity", () => {
-  test("purry1", () => {
-    const dataLast = purry1(foo, 0 /* argumentsLength */, undefined);
-
-    expect(dataLast).toBeTypeOf("function");
-    expect(dataLast).toHaveLength(1);
-    expect(typeof dataLast === "function" && dataLast("data")).toStrictEqual([
-      "data",
-    ]);
+  test("purry1, the implementation itself", () => {
+    expect(purry1(foo, 0 /* argumentsLength */, undefined)).toBe(foo);
   });
 
   test("purry2", () => {

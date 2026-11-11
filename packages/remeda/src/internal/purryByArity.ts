@@ -1,5 +1,4 @@
 import {
-  dataLastImplementation0,
   dataLastImplementation1,
   dataLastImplementation2,
   type DataFirst,
@@ -10,6 +9,8 @@ import {
  * `purry` for a data-first implementation that takes only the data. The data
  * reaches `dataFirst` as a parameter, with no array built or spread, and
  * `arguments.length` picks the call style because `undefined` is valid data.
+ * The data-last function is `dataFirst` itself, so `dataFirst` has to ignore
+ * any arguments after the data (`map` passes the index and the array).
  *
  * @param argumentsLength - The utility's `arguments.length`.
  * @example
@@ -36,7 +37,10 @@ export const purry1 = <
         // @ts-expect-error [ts2345] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
         data,
       )
-    : dataLastImplementation0(dataFirst);
+    : // A closure around `dataFirst` would only add a call to every data-last
+      // invocation.
+      // @ts-expect-error [ts2322] -- `P` is always empty, which TypeScript can't use to drop the rest parameter from `dataFirst`'s type.
+      dataFirst;
 
 /**
  * `purry` for a data-first implementation that takes one argument after the
