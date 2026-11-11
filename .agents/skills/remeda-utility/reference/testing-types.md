@@ -1,15 +1,14 @@
-- Use `expectTypeOf(...).toEqualTypeOf<...>()` (not `assertType`)
-- When a call's inferred return type is a deferred union of a non-primitive type and `undefined`, assign the result to a `const` first; asserting inline on the unresolved type makes the assertion fail even when the types match (suspected expect-type limitation).
-- Before writing, open a similar function's `.test-d.ts` to see which variation axes were covered (literal vs primitive, single vs union vs template-literal, exact-position vs spread vs optional tuple slots, bounded vs unbounded record, readonly vs mutable). The relevant subset varies per function.
-- `interface` tests are NOT redundant with `type` tests of the same shape — they exercise different TS-level paths through `Record`-extending constraints.
-- Cast empty arrays for type data: `[] as Array<{ name: string }>`
-- Prefer casting (`as`) over explicit typing (`: Type`) — they don't always behave the same
-- Don't annotate generics explicitly — define types on data, not via `<T>` on the call
-- Only test inferred or "magic" types, not trivial signature parts with no inference
-- Use `unknown` in type slots you don't care about — `Record<string, unknown>` not `Record<string, string>`
-- Use disjoint value types in union tests — `Record<string, number> | Record<string, boolean>`, not `Record<string, number> | Record<string, number>` (identical sides don't test union logic)
-- `as const` doesn't affect runtime behavior and isn't needed in `.test.ts` files — only use it in `.test-d.ts` where it narrows types
-- When `@typescript-eslint/no-unnecessary-type-assertion` flags an inference-controlling cast, replace `value as T` with `$typed<T>()` from `test/$typed` rather than autofixing
-  - Safe when the rule's reason is "This assertion is unnecessary since the receiver accepts the original type of the expression"
-  - Proceed cautiously for other reasons; for `interface` types, suppress per-site with a reason comment instead — see `$typed` JSDoc
-- Lazy callbacks (any overload typed with `LazyCallback`, `LazyTypePredicate`, or `NonEmptyPrefix`): assert the exact `data` type inside the callback body, on an `as const` tuple (`readonly [1, 2?, 3?]`) and on a plain array (`readonly [number, ...number[]]`). For `purryWithLazy`-based functions also assert that the data-first overload still receives the complete input. Data-last assertions must run inside `pipe` to hit the lazy overload. Template: the `callback data param` block in `map.test-d.ts`
+- Use `expectTypeOf(...).toEqualTypeOf<...>()`, not `assertType`.
+- When a call's inferred return type is a deferred union of a non-primitive type and `undefined`, assign the result to a `const` first: asserting inline on the unresolved type fails even when the types match (suspected expect-type limitation).
+- Before writing, open a similar function's `.test-d.ts` to see which variation axes it covers (literal vs primitive, single vs union vs template-literal, exact-position vs spread vs optional tuple slots, bounded vs unbounded record, readonly vs mutable); the relevant subset varies per function.
+- Cast empty arrays for type data: `[] as Array<{ name: string }>`.
+- Prefer casting (`as`) over annotating (`: Type`); they don't always behave the same.
+- Define types on the data, never via explicit generics (`<T>`) on the call.
+- Test only inferred or "magic" types, not trivial signature parts.
+- Use `unknown` in type slots that don't matter: `Record<string, unknown>`, not `Record<string, string>`.
+- Union tests use disjoint value types (`Record<string, number> | Record<string, boolean>`); identical sides don't exercise union logic.
+- `as const` belongs in `.test-d.ts`, where it narrows types; it doesn't affect runtime behavior, so `.test.ts` files don't need it.
+- When `@typescript-eslint/no-unnecessary-type-assertion` flags an inference-controlling cast, replace `value as T` with `$typed<T>()` from `test/$typed` instead of autofixing:
+  - Safe when the rule's reason is "This assertion is unnecessary since the receiver accepts the original type of the expression".
+  - Proceed cautiously for other reasons; for `interface` types, suppress per site with a reason comment instead (see `$typed`'s JSDoc).
+- Lazy callbacks (any overload typed with `LazyCallback`, `LazyTypePredicate`, or `NonEmptyPrefix`): assert the exact `data` type inside the callback body, on an `as const` tuple (`readonly [1, 2?, 3?]`) and on a plain array (`readonly [number, ...number[]]`). For `purryWithLazy`-based functions, also assert that the data-first overload receives the complete input. Data-last assertions run inside `pipe` to hit the lazy overload. Template: the `callback data param` block in `map.test-d.ts`.

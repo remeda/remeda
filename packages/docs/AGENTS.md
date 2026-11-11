@@ -3,61 +3,39 @@
 ## Commands
 
 ```bash
-npm run dev          # start Astro dev server (watches library source via TypeDoc)
-npx astro dev status # check the running dev server (pid, port, uptime)
-npx astro dev logs   # read dev server output (add --follow to tail)
-npx astro dev stop   # stop the dev server
-npm run build        # production static build
-npm run preview      # preview production build locally
-npm run check        # Astro type checking
-npm run sync         # regenerate Astro content types
-npm run lint         # eslint with autofix
+npm run dev # Astro dev server; TypeDoc watches the library source
+npm run build
+npm run preview
+npm run check # Astro type checking
+npm run sync  # regenerate Astro content types
+npm run lint  # eslint with autofix
 ```
 
 ## Overview
 
-This is the documentation site for [Remeda](https://remedajs.com), built with **Astro** and deployed as a static site. Function documentation is **auto-generated** from the library's JSDoc/TypeDoc comments — there are no hand-written pages for individual functions.
+The [Remeda](https://remedajs.com) docs site, built with Astro and deployed as a static site. Function docs are generated from the library's JSDoc; no function has a hand-written page. This package has no tests.
 
-There are no tests in this package.
+## Content Collections
 
-## Architecture
+`src/content.config.ts` aggregates the collections, each defined in a `content.config.ts` inside its content directory:
 
-### Content Pipeline
+- **functions**: a custom TypeDoc loader (`src/lib/typedoc/loader.ts`) parses `packages/remeda/src/index.ts` and validates each exported function with `src/lib/typedoc/schema.ts`. In dev it watches the source and updates only the functions whose digest changed.
+- **functions-v1**, **categories-v1**: static V1 docs from `functions.json`, for the V1 migration page.
+- **docs-articles**: hand-written markdown; frontmatter `title`, `category` and optional `priority` (order within the category).
+- **mapping**: migration guides at `src/content/mapping/{library}/{function}.md`. File names are case-sensitive: a custom `generateId` keeps the casing Astro lowercases by default.
+- **v1-migration**: V1 to V2 migration content.
 
-The site has six content collections, each with its own `content.config.ts` co-located in its content directory, aggregated by `src/content.config.ts`:
+## Pages and Components
 
-1. **functions** — Auto-generated at build/dev time via a custom TypeDoc Astro Loader (`src/lib/typedoc/loader.ts`). TypeDoc parses `packages/remeda/src/index.ts`, extracts all exported functions, and feeds them through a Zod schema (`src/lib/typedoc/schema.ts`). During dev, TypeDoc watches the library source and incrementally updates the store (only changed functions, via digest comparison).
+- `/` (`src/pages/index.mdx`): homepage
+- `/docs`: every function on one page, anchored as `/docs#functionName`
+- `/migrate/[library]`: one page per migration library
+- `/migrate/v1`: V1 migration guide
 
-2. **functions-v1** / **categories-v1** — Legacy V1 function docs loaded from a static `functions.json` file. Used for the V1 migration page.
+`src/lib/functions/entries.ts` groups and sorts functions by `@category`; `src/lib/tags.ts` turns JSDoc tags such as `@lazy` into UI badges.
 
-3. **docs-articles** — Hand-written markdown articles in `src/content/docs-articles/`. Frontmatter has `title`, `category`, and optional `priority` (controls sort order within category).
+## Gotchas
 
-4. **mapping** — Migration guides from other libraries (Ramda, Lodash, etc.) in `src/content/mapping/{library}/{function}.md`. Frontmatter has `category` and optional `remeda` reference linking to a Remeda function. **File names are case-sensitive** — the loader uses a custom `generateId` to preserve casing (Astro lowercases by default).
-
-5. **v1-migration** — V1 to V2 migration content.
-
-### Page Routing
-
-- `/` — Homepage (`src/pages/index.mdx`)
-- `/docs` — Function reference page, all functions rendered on a single page with anchor links (`/docs#functionName`)
-- `/migrate/[library]` — Dynamic pages for each migration library (Ramda, Lodash, etc.)
-- `/migrate/v1` — V1 migration guide
-
-### Component Pattern
-
-Astro components (`.astro`) handle data loading and server rendering. React components (`.tsx`) are hydrated as islands using `client:*` directives — `client:visible` for interactive UI (navbar, collapsible signatures), `client:idle` for low-priority (theme switcher), `client:only="react"` for search (Algolia DocSearch). The `src/components/ui/` directory contains shadcn/ui components (Radix UI + Tailwind).
-
-### Key Directories
-
-- `src/lib/typedoc/` — Custom Astro content loader that bridges TypeDoc and Astro's content system
-- `src/lib/functions/entries.ts` — `getFunctions()` and `forNavbar()` helpers that group and sort functions by `@category` tag
-- `src/lib/tags.ts` — Extracts `@lazy` and other tags from JSDoc for UI badges
-- `src/components/ui/` — shadcn/ui components (Radix UI + Tailwind)
-- `src/scripts/` — Static scripts compiled by a custom Vite plugin in `astro.config.ts` (e.g., theme init)
-
-### Gotchas
-
-- **Static scripts are NOT hot-reloaded** — `src/scripts/` are compiled by a separate Vite build at server start. Restart the dev server after changing them (`npx astro dev stop && npm run dev`).
-- **`.astro/types.d.ts` is regenerated by the turn-end hook** — the docs Stop hook runs `sync` on every turn end, so you rarely need to run `npm run sync` yourself. Run it mid-turn only if you want `LSP` / `check` to reflect content-loader or Zod-schema changes before the turn completes.
-- **TypeDoc custom block tags** — The loader defines custom tags beyond TypeDoc defaults (`@dataFirst`, `@dataLast`, `@lazy`, `@signature`). These are parsed and validated by the Zod schema.
-- **Theme init runs inline** — `src/scripts/init-theme.ts` uses `<script is:inline>` to execute before hydration and prevent dark mode FOUC.
+- **Static scripts aren't hot-reloaded**: a Vite plugin in `astro.config.ts` builds `src/scripts/` once at server start, so restart the dev server after changing them. Pages load them with `<script is:inline>` so they run before hydration (`init-theme.ts` prevents the dark-mode flash).
+- **Custom JSDoc block tags** (`@dataFirst`, `@dataLast`, `@lazy`, `@signature`) are registered with TypeDoc in `src/content/functions/content.config.ts`.
+- **Content types**: `check` syncs on its own, but the IDE only sees content config or schema changes after `npm run sync`.

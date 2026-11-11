@@ -77,25 +77,25 @@ Use `icon={CheckIcon}`, not a string key to a lookup map.
 const iconMap = {
   check: CheckIcon,
   alert: AlertIcon,
-};
-
-function StatusBadge({ icon }: { icon: string }) {
-  const Icon = iconMap[icon];
-  return <Icon />;
 }
 
-<StatusBadge icon="check" />;
+function StatusBadge({ icon }: { icon: string }) {
+  const Icon = iconMap[icon]
+  return <Icon />
+}
+
+<StatusBadge icon="check" />
 ```
 
 **Correct:**
 
 ```tsx
 // Import from the project's configured iconLibrary (e.g. lucide-react, @tabler/icons-react).
-import { CheckIcon } from "lucide-react";
+import { CheckIcon } from "lucide-react"
 
 function StatusBadge({ icon: Icon }: { icon: React.ComponentType }) {
-  return <Icon />;
+  return <Icon />
 }
 
-<StatusBadge icon={CheckIcon} />;
+<StatusBadge icon={CheckIcon} />
 ```

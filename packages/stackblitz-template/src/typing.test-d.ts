@@ -5,7 +5,7 @@
  * [ExpectTypeOf](https://vitest.dev/api/expect-typeof.html), or
  * [AssertType](https://vitest.dev/api/assert-type.html).
  *
- * !The tests aren't run when the running the test suite!
+ * !The tests aren't run when running the test suite!
  *
  * For runtime tests use: `./runtime.test.ts`.
  *
@@ -17,6 +17,6 @@ import { expectTypeOf, test } from "vitest";
 
 test.skip("example", () => {
   expectTypeOf(pick({ a: 1, b: "hello" } as const, ["a"])).toEqualTypeOf<{
-    readonly a: 1;
+    a: 1;
   }>();
 });

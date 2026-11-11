@@ -25,6 +25,12 @@ await handleClaudeCodeHook<"PostToolUse">(async ({ tool_name, tool_input }) => {
 
     const { ignored, inferredParser } = await getFileInfo(filePath, {
       resolveConfig: true,
+      // Unlike the CLI (and lint-staged), the API reads no ignore files by
+      // default; these are the CLI's defaults, so both skip the same files.
+      ignorePath: [
+        new URL("../../.gitignore", import.meta.url),
+        new URL("../../.prettierignore", import.meta.url),
+      ],
     });
     if (ignored || inferredParser === null) {
       // Prettier doesn't want to, or doesn't know how to, work with this file.
