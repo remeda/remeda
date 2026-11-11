@@ -23,17 +23,20 @@ export type LazyUnaryFunction<
 export type LazyEvaluatorFactory<
   T extends IterableContainer,
   P extends readonly unknown[],
-> = LazyEvaluatorFactoryOf<T, LazyArgument<P>>;
+> = LazyEvaluatorFactoryOf<T, readonly [lazyArgument: LazyArgument<P>]>;
 
-type LazyEvaluatorFactoryOf<T extends IterableContainer, Argument> =
+export type LazyEvaluatorFactoryOf<
+  T extends IterableContainer,
+  LazyParameters extends readonly unknown[],
+> =
   // `pipe` reads both marks off any lazy implementation, so neither is
   // required in general; a factory whose evaluators can stop must carry the
   // `makeStoppable` mark.
   Partial<ReducingMetadata & StoppableMetadata> &
     (
-      | ((lazyArgument: Argument) => LazyEvaluator<T[number], unknown>)
+      | ((...lazyArgument: LazyParameters) => LazyEvaluator<T[number], unknown>)
       | (((
-          lazyArgument: Argument,
+          ...lazyArgument: LazyParameters
         ) => StoppableLazyEvaluator<T[number], unknown>) &
           StoppableMetadata)
     );
@@ -44,7 +47,7 @@ type LazyDefinition<
 > = LazyDefinitionOf<T, LazyArgument<P>>;
 
 type LazyDefinitionOf<T extends IterableContainer, Argument> = {
-  readonly lazy: LazyEvaluatorFactoryOf<T, Argument>;
+  readonly lazy: LazyEvaluatorFactoryOf<T, readonly [lazyArgument: Argument]>;
   readonly lazyArgument: Argument;
 };
 
@@ -74,7 +77,7 @@ export function withLazyImplementation<
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional! This is the only place these props are written.
   dataLast: UnaryFunction<T, R> &
     Partial<SimplifiedWritable<LazyDefinitionOf<T, Argument>>>,
-  lazy: LazyEvaluatorFactoryOf<T, Argument>,
+  lazy: LazyEvaluatorFactoryOf<T, readonly [lazyArgument: Argument]>,
   lazyArgument: NoInfer<Argument>,
 ): UnaryFunction<T, R> & LazyDefinitionOf<T, Argument> {
   dataLast.lazy = lazy;
@@ -118,13 +121,14 @@ export function lazyDataLastImplementation1<
   R,
 >(
   dataFirst: DataFirst<T, P, R>,
-  lazy: LazyEvaluatorFactory<T, P>,
+  lazy: LazyEvaluatorFactoryOf<T, P>,
   argument: P[0],
 ): LazyUnaryFunction<T, P, R> {
   // @ts-expect-error [ts2559] -- Allows us to build the lazy definition dynamically at runtime.
   const dataLast: Partial<SimplifiedWritable<LazyDefinition<T, P>>> =
     dataLastImplementation1(dataFirst, argument);
 
+  // @ts-expect-error [ts2322] -- A function taking the parameters `P` is one taking `LazyArgument<P>` when `P` holds a single argument, but `LazyArgument` of a generic tuple stays deferred, so TypeScript can't match the two.
   dataLast.lazy = lazy;
   // @ts-expect-error [ts2322] -- `LazyArgument` of a generic tuple stays deferred, so TypeScript can't match the stored value to it.
   dataLast.lazyArgument = argument;

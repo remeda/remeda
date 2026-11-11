@@ -4,6 +4,7 @@ import {
   lazyDataLastImplementation1,
   lazyDataLastImplementation2,
   type LazyEvaluatorFactory,
+  type LazyEvaluatorFactoryOf,
   type LazyUnaryFunction,
 } from "./lazyDataLastImplementation";
 import type { IterableContainer } from "./types/IterableContainer";
@@ -66,7 +67,7 @@ export const purryWithLazy2 = <
   R,
 >(
   dataFirst: DataFirst<T, P, R>,
-  lazy: LazyEvaluatorFactory<T, P>,
+  lazy: LazyEvaluatorFactoryOf<T, P>,
   argumentsLength: number,
   dataOrArgument: unknown,
   argument: unknown,

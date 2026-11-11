@@ -49,7 +49,6 @@ export function intersection<S>(
 
 export function intersection(dataOrOther: unknown, other?: unknown): unknown {
   return purryWithLazy2(
-    // @ts-expect-error [ts2345] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
     intersectionImplementation,
     lazyImplementation,
     arguments.length,
