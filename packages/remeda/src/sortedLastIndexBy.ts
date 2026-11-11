@@ -3,8 +3,8 @@
  * which is exactly what `{}` means.
  */
 
-import { purry } from "./purry";
 import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
+import { purry3 } from "./internal/purryByArity";
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -99,21 +99,31 @@ export function sortedLastIndexBy<T>(
   ) => {},
 ): (data: readonly NoInfer<T>[]) => number;
 
-export function sortedLastIndexBy(...args: readonly unknown[]): unknown {
-  return purry(sortedLastIndexByImplementation, 3, args);
+export function sortedLastIndexBy(
+  dataOrItem: unknown,
+  itemOrValueFunction?: unknown,
+  valueFunction?: unknown,
+): unknown {
+  return purry3(
+    sortedLastIndexByImplementation,
+    arguments.length,
+    dataOrItem,
+    itemOrValueFunction,
+    valueFunction,
+  );
 }
 
 function sortedLastIndexByImplementation<T>(
-  array: readonly T[],
+  data: readonly T[],
   item: T,
   valueFunction: (item: T, index: number | undefined, data: readonly T[]) => {},
 ): number {
-  const value = valueFunction(item, undefined /* index */, array);
+  const value = valueFunction(item, undefined /* index */, data);
   return binarySearchCutoffIndex(
-    array,
+    data,
     // The only difference between the regular implementation and the "last"
     // variation is that we consider the pivot with equality too, so that we
     // skip all equal values in addition to the lower ones.
-    (pivot, index) => valueFunction(pivot, index, array) <= value,
+    (pivot, index) => valueFunction(pivot, index, data) <= value,
   );
 }

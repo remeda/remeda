@@ -1,5 +1,5 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { lazyDataLastImplementation1 } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -77,13 +77,24 @@ export function filter<
   predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
-export function filter(...args: readonly unknown[]): unknown {
-  return purryWithLazy(filterImplementation, 2, lazyImplementation, args);
+export function filter(dataOrPredicate: unknown, predicate?: unknown): unknown {
+  return typeof dataOrPredicate === "function"
+    ? lazyDataLastImplementation1(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        filterImplementation,
+        lazyImplementation,
+        dataOrPredicate,
+      )
+    : filterImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+        predicate,
+      );
 }
 
 const filterImplementation = <T>(
   data: readonly T[],
-  predicate: (value: T, index: number, array: readonly T[]) => boolean,
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): T[] => data.filter(predicate);
 
 const lazyImplementation = <T>(

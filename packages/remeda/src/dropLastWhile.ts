@@ -1,5 +1,5 @@
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 /**
  * Removes elements from the end of the array until the predicate returns false.
@@ -37,8 +37,21 @@ export function dropLastWhile<T extends IterableContainer>(
   predicate: (item: T[number], index: number, data: T) => boolean,
 ): (data: T) => T[number][];
 
-export function dropLastWhile(...args: readonly unknown[]): unknown {
-  return purry(dropLastWhileImplementation, 2, args);
+export function dropLastWhile(
+  dataOrPredicate: unknown,
+  predicate?: unknown,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? dataLastImplementation1(
+        dropLastWhileImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+      )
+    : dropLastWhileImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+        predicate,
+      );
 }
 
 function dropLastWhileImplementation<T extends IterableContainer>(

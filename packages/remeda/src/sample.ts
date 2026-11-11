@@ -1,10 +1,10 @@
 import type { IsNever, NonNegativeInteger, Writable } from "type-fest";
+import { purry2 } from "./internal/purryByArity";
 import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NTuple } from "./internal/types/NTuple";
 import type { PartialArray } from "./internal/types/PartialArray";
 import type { TupleParts } from "./internal/types/TupleParts";
-import { purry } from "./purry";
 
 type Sampled<T extends IterableContainer, N extends number> = [N] extends [0]
   ? // Short-circuit on trivial inputs.
@@ -164,8 +164,16 @@ export function sample<const T extends IterableContainer, N extends number>(
   sampleSize: N,
 ): (data: T) => Sampled<T, N>;
 
-export function sample(...args: readonly unknown[]): unknown {
-  return purry(sampleImplementation, 2, args);
+export function sample(
+  dataOrSampleSize: unknown,
+  sampleSize?: unknown,
+): unknown {
+  return purry2(
+    sampleImplementation,
+    arguments.length,
+    dataOrSampleSize,
+    sampleSize,
+  );
 }
 
 function sampleImplementation<T>(data: readonly T[], sampleSize: number): T[] {

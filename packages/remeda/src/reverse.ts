@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry1 } from "./internal/purryByArity";
 
 type Reverse<
   T extends readonly unknown[],
@@ -40,8 +40,8 @@ export function reverse<T extends readonly unknown[]>(): (
   data: T,
 ) => Reverse<T>;
 
-export function reverse(...args: readonly unknown[]): unknown {
-  return purry(reverseImplementation, 1, args);
+export function reverse(data?: unknown): unknown {
+  return purry1(reverseImplementation, arguments.length, data);
 }
 
 const reverseImplementation = <T>(data: readonly T[]): T[] =>

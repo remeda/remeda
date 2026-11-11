@@ -1,6 +1,6 @@
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
-import { purry } from "./purry";
 
 /**
  * Groups the elements of a given iterable according to the string values
@@ -68,10 +68,23 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
   callbackfn: (value: T, index: number, data: readonly T[]) => Key | undefined,
-): (items: readonly T[]) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
+): (data: readonly T[]) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
-export function groupBy(...args: readonly unknown[]): unknown {
-  return purry(groupByImplementation, 2, args);
+export function groupBy(
+  dataOrCallbackfn: unknown,
+  callbackfn?: unknown,
+): unknown {
+  return typeof dataOrCallbackfn === "function"
+    ? dataLastImplementation1(
+        groupByImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrCallbackfn,
+      )
+    : groupByImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrCallbackfn,
+        callbackfn,
+      );
 }
 
 const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(

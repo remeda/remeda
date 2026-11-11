@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry1 } from "./internal/purryByArity";
 
 /**
  * Replaces all lowercase characters with their uppercase equivalents.
@@ -49,8 +49,8 @@ export function toUpperCase<T extends string>(data: T): Uppercase<T>;
  */
 export function toUpperCase(): <T extends string>(data: T) => Uppercase<T>;
 
-export function toUpperCase(...args: readonly unknown[]): unknown {
-  return purry(toUpperCaseImplementation, 1, args);
+export function toUpperCase(data?: unknown): unknown {
+  return purry1(toUpperCaseImplementation, arguments.length, data);
 }
 
 const toUpperCaseImplementation = <T extends string>(data: T): Uppercase<T> =>

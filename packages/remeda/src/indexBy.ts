@@ -1,5 +1,5 @@
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
-import { purry } from "./purry";
 
 /**
  * Converts a list of objects into an object indexing the objects by the given
@@ -52,8 +52,18 @@ export function indexBy<T, K extends PropertyKey>(
   mapper: (item: T, index: number, data: readonly T[]) => K,
 ): (data: readonly T[]) => BoundedPartial<Record<K, T>>;
 
-export function indexBy(...args: readonly unknown[]): unknown {
-  return purry(indexByImplementation, 2, args);
+export function indexBy(dataOrMapper: unknown, mapper?: unknown): unknown {
+  return typeof dataOrMapper === "function"
+    ? dataLastImplementation1(
+        indexByImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrMapper,
+      )
+    : indexByImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrMapper,
+        mapper,
+      );
 }
 
 function indexByImplementation<T, K extends PropertyKey>(

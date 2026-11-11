@@ -1,5 +1,5 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { purryWithLazy2 } from "./internal/purryWithLazyByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
@@ -11,7 +11,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  * - `splice` - to remove or insert at an arbitrary index.
  * - `takeLast` - to keep the last `n` instead.
  *
- * @param array - The target array.
+ * @param data - The target array.
  * @param n - The number of elements to drop, rounded up. If `n` is 0 or less (or `NaN`) no elements are dropped and a *clone* of the input is returned.
  * @signature
  *    dropLast(array, n)
@@ -22,7 +22,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  * @category Array
  */
 export function dropLast<T extends IterableContainer>(
-  array: T,
+  data: T,
   n: number,
 ): T[number][];
 
@@ -45,23 +45,30 @@ export function dropLast<T extends IterableContainer>(
  */
 export function dropLast(
   n: number,
-): <T extends IterableContainer>(array: T) => T[number][];
+): <T extends IterableContainer>(data: T) => T[number][];
 
-export function dropLast(...args: readonly unknown[]): unknown {
-  return purryWithLazy(dropLastImplementation, 2, lazyImplementation, args);
+export function dropLast(arrayOrN: unknown, n?: unknown): unknown {
+  return purryWithLazy2(
+    // @ts-expect-error [ts2345] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
+    dropLastImplementation,
+    lazyImplementation,
+    arguments.length,
+    arrayOrN,
+    n,
+  );
 }
 
 const dropLastImplementation = <T extends IterableContainer>(
-  array: T,
+  data: T,
   n: number,
 ): T[number][] =>
   n > 0
-    ? array.slice(
+    ? data.slice(
         0,
         // Rounded up because we can't drop an item partially!
         -Math.ceil(n),
       )
-    : array.concat();
+    : data.concat();
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (Number.isNaN(n) || n <= 0) {

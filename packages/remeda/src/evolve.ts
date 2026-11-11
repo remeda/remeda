@@ -1,5 +1,5 @@
+import { purry2 } from "./internal/purryByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 /**
  * Basic structure of `evolver` parameter of the function `evolve`.
@@ -64,7 +64,7 @@ type Evolved<T, E> = T extends object
  * Also, values included in `data` object will be kept as is
  * if its corresponding key does not exist in the `evolver` object.
  *
- * @param object - Object whose value is applied to the corresponding function
+ * @param data - Object whose value is applied to the corresponding function
  * that is defined in `evolver` at the same path.
  * @param evolver - Object that include functions that is applied to
  * the corresponding value of `data` object at the same path.
@@ -90,7 +90,7 @@ type Evolved<T, E> = T extends object
  * @category Object
  */
 export function evolve<T extends object, E extends Evolver<T>>(
-  object: T,
+  data: T,
   evolver: E,
 ): Evolved<T, E>;
 
@@ -128,10 +128,10 @@ export function evolve<T extends object, E extends Evolver<T>>(
  */
 export function evolve<T extends object, E extends Evolver<T>>(
   evolver: E,
-): (object: T) => Evolved<T, E>;
+): (data: T) => Evolved<T, E>;
 
-export function evolve(...args: readonly unknown[]): unknown {
-  return purry(evolveImplementation, 2, args);
+export function evolve(dataOrEvolver: unknown, evolver?: unknown): unknown {
+  return purry2(evolveImplementation, arguments.length, dataOrEvolver, evolver);
 }
 
 function evolveImplementation(data: unknown, evolver: GenericEvolver): unknown {

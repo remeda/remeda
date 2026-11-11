@@ -12,20 +12,47 @@ export type DataFirstArity<T, P extends readonly unknown[]> = Extract<
 export type UnaryFunction<T = unknown, R = unknown> = (data: T) => R;
 
 /**
- * Builds the data-last function for a `dataFirst` implementation.
+ * Builds the data-last function for a `dataFirst` implementation that takes
+ * only the data.
  */
-export const dataLastImplementation = <T, P extends readonly unknown[], R>(
-  dataFirst: DataFirst<T, P, R>,
-  args: P,
-): UnaryFunction<T, R> =>
-  args.length === 1
-    ? // Spreading `args` into the call goes through a generic builtin on every
-      // invocation of the data-last function, so the most common data-last
-      // arity, a single argument, is passed directly.
-      (data) =>
-        dataFirst(
-          data,
-          // @ts-expect-error [ts2345] -- TypeScript can't bind a runtime concern (`args.length === 1`) with the type for args. Even if we use our `hasAtLeast` it won't be able to couple the expected type with the actual one.
-          args[0],
-        )
-    : (data) => dataFirst(data, ...args);
+export const dataLastImplementation0 =
+  <T, P extends readonly [], R>(
+    dataFirst: DataFirst<T, P, R>,
+  ): UnaryFunction<T, R> =>
+  (data) =>
+    // @ts-expect-error [ts2345] -- The arguments are the elements of `P`, which TypeScript can't match to a generic tuple one by one.
+    dataFirst(data);
+
+/**
+ * Builds the data-last function for a `dataFirst` implementation that takes
+ * one argument after the data.
+ */
+export const dataLastImplementation1 =
+  <T, P extends readonly [unknown?], R>(
+    dataFirst: DataFirst<T, P, R>,
+    argument: P[0],
+  ): UnaryFunction<T, R> =>
+  (data) =>
+    dataFirst(
+      data,
+      // @ts-expect-error [ts2345] -- The arguments are the elements of `P`, which TypeScript can't match to a generic tuple one by one.
+      argument,
+    );
+
+/**
+ * Builds the data-last function for a `dataFirst` implementation that takes
+ * two arguments after the data.
+ */
+export const dataLastImplementation2 =
+  <T, P extends readonly [unknown, unknown], R>(
+    dataFirst: DataFirst<T, P, R>,
+    first: P[0],
+    second: P[1],
+  ): UnaryFunction<T, R> =>
+  (data) =>
+    dataFirst(
+      data,
+      // @ts-expect-error [ts2345] -- The arguments are the elements of `P`, which TypeScript can't match to a generic tuple one by one.
+      first,
+      second,
+    );

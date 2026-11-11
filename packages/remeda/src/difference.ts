@@ -1,5 +1,5 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { purryWithLazy2 } from "./internal/purryWithLazyByArity";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
@@ -52,8 +52,15 @@ export function difference<T>(
   data: readonly D[],
 ) => D[];
 
-export function difference(...args: readonly unknown[]): unknown {
-  return purryWithLazy(differenceImplementation, 2, lazyImplementation, args);
+export function difference(dataOrOther: unknown, other?: unknown): unknown {
+  return purryWithLazy2(
+    // @ts-expect-error [ts2345] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
+    differenceImplementation,
+    lazyImplementation,
+    arguments.length,
+    dataOrOther,
+    other,
+  );
 }
 
 function differenceImplementation<T>(

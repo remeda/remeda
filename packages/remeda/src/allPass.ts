@@ -3,7 +3,7 @@
  * more clearly that it returns a boolean value.
  */
 
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 /**
  * Determines whether all predicates return true for the input data.
@@ -45,8 +45,8 @@ export function allPass<T>(
   fns: readonly ((data: T) => boolean)[],
 ): (data: T) => boolean;
 
-export function allPass(...args: readonly unknown[]): unknown {
-  return purry(allPassImplementation, 2, args);
+export function allPass(dataOrFns: unknown, fns?: unknown): unknown {
+  return purry2(allPassImplementation, arguments.length, dataOrFns, fns);
 }
 
 const allPassImplementation = <T>(

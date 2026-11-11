@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
@@ -17,12 +17,12 @@ import { purry } from "./purry";
 
 export function meanBy<T>(
   fn: (value: T, index: number, data: readonly T[]) => number,
-): (items: readonly T[]) => number;
+): (data: readonly T[]) => number;
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
  *
- * @param items - The array.
+ * @param data - The array.
  * @param fn - Predicate function.
  * @signature
  *   meanBy(array, fn)
@@ -36,29 +36,39 @@ export function meanBy<T>(
  */
 
 export function meanBy<T>(
-  items: readonly T[],
+  data: readonly T[],
   fn: (value: T, index: number, data: readonly T[]) => number,
 ): number;
 
-export function meanBy(...args: readonly unknown[]): unknown {
-  return purry(meanByImplementation, 2, args);
+export function meanBy(dataOrFn: unknown, fn?: unknown): unknown {
+  return typeof dataOrFn === "function"
+    ? dataLastImplementation1(
+        meanByImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrFn,
+      )
+    : meanByImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrFn,
+        fn,
+      );
 }
 
 const meanByImplementation = <T>(
-  array: readonly T[],
+  data: readonly T[],
   fn: (value: T, index: number, data: readonly T[]) => number,
 ): number => {
-  if (array.length === 0) {
+  if (data.length === 0) {
     return NaN;
   }
 
   let sum = 0;
 
   let index = 0;
-  for (const item of array) {
-    sum += fn(item, index, array);
+  for (const item of data) {
+    sum += fn(item, index, data);
     index += 1;
   }
 
-  return sum / array.length;
+  return sum / data.length;
 };

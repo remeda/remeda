@@ -1,0 +1,61 @@
+import { describe, expect, test } from "vitest";
+import { purry1, purry2, purry3 } from "./purryByArity";
+
+describe("data-first from the arity on", () => {
+  test("purry1", () => {
+    expect(purry1(foo, 1 /* argumentsLength */, "data")).toStrictEqual([
+      "data",
+    ]);
+  });
+
+  test("purry2, an undefined argument is still data-first", () => {
+    expect(
+      purry2(foo, 2 /* argumentsLength */, "data", undefined),
+    ).toStrictEqual(["data", undefined]);
+  });
+
+  test("purry3, extra arguments don't reach the implementation", () => {
+    expect(purry3(foo, 4 /* argumentsLength */, "data", 1, 2)).toStrictEqual([
+      "data",
+      1,
+      2,
+    ]);
+  });
+});
+
+describe("data-last below the arity", () => {
+  test("purry1", () => {
+    const dataLast = purry1(foo, 0 /* argumentsLength */, undefined);
+
+    expect(dataLast).toBeTypeOf("function");
+    expect(dataLast).toHaveLength(1);
+    expect(typeof dataLast === "function" && dataLast("data")).toStrictEqual([
+      "data",
+    ]);
+  });
+
+  test("purry2", () => {
+    const dataLast = purry2(foo, 1 /* argumentsLength */, 1, undefined);
+
+    expect(dataLast).toBeTypeOf("function");
+    expect(dataLast).toHaveLength(1);
+    expect(typeof dataLast === "function" && dataLast("data")).toStrictEqual([
+      "data",
+      1,
+    ]);
+  });
+
+  test("purry3", () => {
+    const dataLast = purry3(foo, 2 /* argumentsLength */, 1, 2, undefined);
+
+    expect(dataLast).toBeTypeOf("function");
+    expect(dataLast).toHaveLength(1);
+    expect(typeof dataLast === "function" && dataLast("data")).toStrictEqual([
+      "data",
+      1,
+      2,
+    ]);
+  });
+});
+
+const foo = (...args: readonly unknown[]): readonly unknown[] => args;

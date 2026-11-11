@@ -1,4 +1,4 @@
-TypeScript-first utility library with 160+ functions. Dual calling styles via `purry`: data-first (`filter(array, fn)`) and data-last (`pipe(array, filter(fn))`). Many functions support lazy evaluation in `pipe` chains.
+TypeScript-first utility library with 160+ functions. Dual calling styles: data-first (`filter(array, fn)`) and data-last (`pipe(array, filter(fn))`). Many functions support lazy evaluation in `pipe` chains.
 
 All conventions in [CONTRIBUTING.md](CONTRIBUTING.md) apply to agent contributors too. Read it before opening a PR, fixing a bug, or adding a function. This file complements it with agent-specific guidance rather than replacing it.
 
@@ -87,9 +87,9 @@ Each function is a single file with up to 3 companion test files:
 
 Internal helpers: `src/internal/`. Type utilities: `src/internal/types/`.
 
-### Purry & Pipe
+### Calling styles & Pipe
 
-`purry` enables dual calling styles by counting arguments against the arity each utility passes it (its implementation's parameter count, as a literal): at least that many = data-first (calls directly, extra arguments included), fewer = data-last (returns curried function). Every exported function that operates on data uses `purry`, or its internal lazy counterpart `purryWithLazy` (`src/internal/`) when it also has a lazy implementation.
+Each exported function that operates on data picks its calling style at runtime and passes its arguments to the implementation as parameters, never as an array, so the engine can inline a callback into the implementation's loop. Array functions whose first data-last argument is a callback (`map`, `filter`) check `typeof` on their first argument: a function means data-last. The others pass `arguments.length` to the internal helper for their arity (`purry1`-`purry3`, or `purryWithLazy1`-`purryWithLazy3` with a lazy implementation, in `src/internal/`): at least that many = data-first, fewer = data-last (returns the curried function). The public `purry` does the same for users' own functions.
 
 `pipe(data, fn1, fn2, fn3)` chains data-last functions. When consecutive functions in a pipe have a `lazy` property (attached by the internal lazy helpers in `src/internal/`) and one of them can end the iteration early (marked with `makeStoppable`, e.g., `take(3)` stops after 3 items), `pipe` fuses them into a sequence and processes items **one-by-one** through it, skipping the rest of the input and the intermediate arrays. On arrays, any other lazy function runs its data-first implementation; other iterables always run lazily.
 

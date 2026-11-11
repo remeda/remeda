@@ -1,4 +1,4 @@
-import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
+import { lazyDataLastImplementation2 } from "./internal/lazyDataLastImplementation";
 import {
   lastLazyValue,
   LAZY_EMPTY_EVALUATOR,
@@ -47,13 +47,13 @@ type LazyZippingFunction<
  */
 export function zipWith<TItem1, TItem2, Value>(
   fn: ZippingFunction<readonly TItem1[], readonly TItem2[], Value>,
-): (first: readonly TItem1[], second: readonly TItem2[]) => Value[];
+): (data: readonly TItem1[], other: readonly TItem2[]) => Value[];
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
  * with the same-positioned element from each list.
  *
- * @param second - The second input list.
+ * @param other - The second input list.
  * @param fn - The function applied to each position of the list.
  * @signature
  *   zipWith(second, fn)(first)
@@ -67,14 +67,14 @@ export function zipWith<
   T1 extends IterableContainer,
   T2 extends IterableContainer,
   Value,
->(second: T2, fn: LazyZippingFunction<T1, T2, Value>): (first: T1) => Value[];
+>(other: T2, fn: LazyZippingFunction<T1, T2, Value>): (data: T1) => Value[];
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
  * with the same-positioned element from each list.
  *
- * @param first - The first input list.
- * @param second - The second input list.
+ * @param data - The first input list.
+ * @param other - The second input list.
  * @param fn - The function applied to each position of the list.
  * @signature
  *   zipWith(first, second, fn)
@@ -88,8 +88,9 @@ export function zipWith<
   T1 extends IterableContainer,
   T2 extends IterableContainer,
   Value,
->(first: T1, second: T2, fn: ZippingFunction<T1, T2, Value>): Value[];
+>(data: T1, other: T2, fn: ZippingFunction<T1, T2, Value>): Value[];
 
+// TODO [>2]: Consider removing this function. `map(zip(data, other), ([first, second]) => fn(first, second))`, or `pipe(data, zip(other), map(...))` inside a `pipe`, covers it and also keeps tuple shapes in the output type. All it adds is passing a binary callback without destructuring and skipping the pair allocated per item.
 export function zipWith(
   arg0: IterableContainer | ZippingFunction,
   arg1?: IterableContainer | LazyZippingFunction | ZippingFunction,
@@ -103,14 +104,12 @@ export function zipWith(
 
   if (typeof arg1 === "function") {
     // dataLast
-    return lazyDataLastImplementation(
+    return lazyDataLastImplementation2(
       zipWithImplementation,
-      [
-        arg0,
-        // @ts-expect-error [ts2322] -- Outside a pipe the data-last function hands the implementation the full first list, which is a valid non-empty prefix whenever `fn` is invoked (it never is for an empty list); TypeScript can't relate `T1` to `NonEmptyPrefix<T1>`.
-        arg1,
-      ],
       lazyImplementation,
+      arg0,
+      // @ts-expect-error [ts2345] -- Outside a pipe the data-last function hands the implementation the full first list, which is a valid non-empty prefix whenever `fn` is invoked (it never is for an empty list); TypeScript can't relate `T1` to `NonEmptyPrefix<T1>`.
+      arg1,
     );
   }
 
@@ -125,23 +124,23 @@ function zipWithImplementation<
   T1 extends IterableContainer,
   T2 extends IterableContainer,
   Value,
->(first: T1, second: T2, fn: ZippingFunction<T1, T2, Value>): Value[] {
-  const datum = [first, second] as const;
-  return first.length < second.length
-    ? first.map((item, index) => fn(item, second[index], index, datum))
-    : second.map((item, index) => fn(first[index], item, index, datum));
+>(data: T1, other: T2, fn: ZippingFunction<T1, T2, Value>): Value[] {
+  const datum = [data, other] as const;
+  return data.length < other.length
+    ? data.map((item, index) => fn(item, other[index], index, datum))
+    : other.map((item, index) => fn(data[index], item, index, datum));
 }
 
 const lazyImplementation = makeStoppable(
-  <T1, T2 extends IterableContainer, Value>(
+  <T1, T2 extends IterableContainer, Value>([other, fn]: readonly [
     second: T2,
     fn: ZippingFunction<readonly T1[], T2, Value>,
-  ): StoppableLazyEvaluator<T1, Value> =>
-    second.length === 0
+  ]): StoppableLazyEvaluator<T1, Value> =>
+    other.length === 0
       ? LAZY_EMPTY_EVALUATOR
       : requireDataByArity(fn, 3, (value, index, data, slot) => {
-          const zipped = fn(value, second[index], index, [data, second]);
-          return index >= second.length - 1
+          const zipped = fn(value, other[index], index, [data, other]);
+          return index >= other.length - 1
             ? lastLazyValue(zipped, slot)
             : zipped;
         }),

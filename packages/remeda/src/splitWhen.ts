@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 
 /**
  * Splits a given array at the first index where the given predicate returns true.
@@ -30,10 +30,23 @@ export function splitWhen<T>(
  */
 export function splitWhen<T>(
   predicate: (item: T, index: number, data: readonly T[]) => boolean,
-): (array: readonly T[]) => [T[], T[]];
+): (data: readonly T[]) => [T[], T[]];
 
-export function splitWhen(...args: readonly unknown[]): unknown {
-  return purry(splitWhenImplementation, 2, args);
+export function splitWhen(
+  dataOrPredicate: unknown,
+  predicate?: unknown,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? dataLastImplementation1(
+        splitWhenImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+      )
+    : splitWhenImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+        predicate,
+      );
 }
 
 function splitWhenImplementation<T>(

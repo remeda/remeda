@@ -1,7 +1,7 @@
 import type { Simplify } from "type-fest";
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 // Takes a union of literals and creates a union of records with the value V for
 // each key **separately**
@@ -72,8 +72,18 @@ export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
   mapper: (item: T[number], index: number, data: T) => V,
 ): (data: T) => Simplify<FromKeys<T, V>>;
 
-export function fromKeys(...args: readonly unknown[]): unknown {
-  return purry(fromKeysImplementation, 2, args);
+export function fromKeys(dataOrMapper: unknown, mapper?: unknown): unknown {
+  return typeof dataOrMapper === "function"
+    ? dataLastImplementation1(
+        fromKeysImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrMapper,
+      )
+    : fromKeysImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrMapper,
+        mapper,
+      );
 }
 
 function fromKeysImplementation<K extends PropertyKey, V>(

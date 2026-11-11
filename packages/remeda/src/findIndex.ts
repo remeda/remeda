@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 
 /**
  * Returns the index of the first element in an array that satisfies the
@@ -23,7 +23,7 @@ import { purry } from "./purry";
  */
 export function findIndex<T>(
   data: readonly T[],
-  predicate: (value: T, index: number, obj: readonly T[]) => boolean,
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): number;
 
 /**
@@ -50,14 +50,27 @@ export function findIndex<T>(
  * @category Array
  */
 export function findIndex<T>(
-  predicate: (value: T, index: number, obj: readonly T[]) => boolean,
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): (data: readonly T[]) => number;
 
-export function findIndex(...args: readonly unknown[]): unknown {
-  return purry(findIndexImplementation, 2, args);
+export function findIndex(
+  dataOrPredicate: unknown,
+  predicate?: unknown,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? dataLastImplementation1(
+        findIndexImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+      )
+    : findIndexImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+        predicate,
+      );
 }
 
 const findIndexImplementation = <T>(
   data: readonly T[],
-  predicate: (value: T, index: number, obj: readonly T[]) => boolean,
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): number => data.findIndex(predicate);

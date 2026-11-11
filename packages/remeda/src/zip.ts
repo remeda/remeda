@@ -4,7 +4,7 @@ import {
   makeStoppable,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { purryWithLazy2 } from "./internal/purryWithLazyByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
@@ -32,10 +32,10 @@ type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
  * items. The length of the returned list will match the shortest of the two
  * inputs.
  *
- * @param first - The first input list.
- * @param second - The second input list.
+ * @param data - The first input list.
+ * @param other - The second input list.
  * @signature
- *   zip(first, second)
+ *   zip(data, other)
  * @example
  *   zip([1, 2], ['a', 'b']) // => [[1, 'a'], [2, 'b']]
  * @dataFirst
@@ -43,8 +43,8 @@ type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
  * @category Array
  */
 export function zip<F extends IterableContainer, S extends IterableContainer>(
-  first: F,
-  second: S,
+  data: F,
+  other: S,
 ): Zipped<F, S>;
 
 /**
@@ -52,9 +52,9 @@ export function zip<F extends IterableContainer, S extends IterableContainer>(
  * items. The length of the returned list will match the shortest of the two
  * inputs.
  *
- * @param second - The second input list.
+ * @param other - The second input list.
  * @signature
- *   zip(second)(first)
+ *   zip(other)(data)
  * @example
  *   zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']]
  * @dataLast
@@ -62,32 +62,39 @@ export function zip<F extends IterableContainer, S extends IterableContainer>(
  * @category Array
  */
 export function zip<S extends IterableContainer>(
-  second: S,
-): <F extends IterableContainer>(first: F) => Zipped<F, S>;
+  other: S,
+): <F extends IterableContainer>(data: F) => Zipped<F, S>;
 
-export function zip(...args: readonly unknown[]): unknown {
-  return purryWithLazy(zipImplementation, 2, lazyImplementation, args);
+export function zip(dataOrOther: unknown, other?: unknown): unknown {
+  return purryWithLazy2(
+    // @ts-expect-error [ts2345] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
+    zipImplementation,
+    lazyImplementation,
+    arguments.length,
+    dataOrOther,
+    other,
+  );
 }
 
 const zipImplementation = <
   F extends IterableContainer,
   S extends IterableContainer,
 >(
-  first: F,
-  second: S,
+  data: F,
+  other: S,
 ): Zipped<F, S> =>
-  (first.length < second.length
-    ? first.map((item, index) => [item, second[index]])
-    : second.map((item, index) => [first[index], item])) as Zipped<F, S>;
+  (data.length < other.length
+    ? data.map((item, index) => [item, other[index]])
+    : other.map((item, index) => [data[index], item])) as Zipped<F, S>;
 
 const lazyImplementation = makeStoppable(
   <F extends IterableContainer, S extends IterableContainer>(
-    second: S,
+    other: S,
   ): StoppableLazyEvaluator<F[number], [F[number], S[number]]> =>
-    second.length === 0
+    other.length === 0
       ? LAZY_EMPTY_EVALUATOR
       : (value, index, _data, slot) => {
-          const pair: [F[number], S[number]] = [value, second[index]];
-          return index >= second.length - 1 ? lastLazyValue(pair, slot) : pair;
+          const pair: [F[number], S[number]] = [value, other[index]];
+          return index >= other.length - 1 ? lastLazyValue(pair, slot) : pair;
         },
 );

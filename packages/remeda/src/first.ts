@@ -4,7 +4,7 @@ import {
   makeStoppable,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { purryWithLazy1 } from "./internal/purryWithLazyByArity";
 import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
@@ -43,8 +43,13 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  */
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
-export function first(...args: readonly unknown[]): unknown {
-  return purryWithLazy(firstImplementation, 1, lazyImplementation, args);
+export function first(data?: unknown): unknown {
+  return purryWithLazy1(
+    firstImplementation,
+    lazyImplementation,
+    arguments.length,
+    data,
+  );
 }
 
 const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;

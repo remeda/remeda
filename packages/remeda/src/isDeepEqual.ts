@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 /**
  * Performs a *deep structural* comparison between two values to determine if
@@ -78,8 +78,13 @@ export function isDeepEqual<T, S extends T>(
 ): (data: T) => data is S;
 export function isDeepEqual<T>(other: T): (data: T) => boolean;
 
-export function isDeepEqual(...args: readonly unknown[]): unknown {
-  return purry(isDeepEqualImplementation, 2, args);
+export function isDeepEqual(dataOrOther: unknown, other?: unknown): unknown {
+  return purry2(
+    isDeepEqualImplementation,
+    arguments.length,
+    dataOrOther,
+    other,
+  );
 }
 
 function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {

@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 type SumBy<
@@ -39,10 +39,10 @@ type SumBy<
  */
 export function sumBy<T extends IterableContainer>(
   callbackfn: (value: T[number], index: number, data: T) => number,
-): (items: T) => SumBy<T, number>;
+): (data: T) => SumBy<T, number>;
 export function sumBy<T extends IterableContainer>(
   callbackfn: (value: T[number], index: number, data: T) => bigint,
-): (items: T) => SumBy<T, bigint>;
+): (data: T) => SumBy<T, bigint>;
 
 /**
  * Returns the sum of the elements of an array using the provided mapper.
@@ -80,19 +80,32 @@ export function sumBy<T extends IterableContainer>(
   callbackfn: (value: T[number], index: number, data: T) => bigint,
 ): SumBy<T, bigint>;
 
-export function sumBy(...args: readonly unknown[]): unknown {
-  return purry(sumByImplementation, 2, args);
+export function sumBy(
+  dataOrCallbackfn: unknown,
+  callbackfn?: unknown,
+): unknown {
+  return typeof dataOrCallbackfn === "function"
+    ? dataLastImplementation1(
+        sumByImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrCallbackfn,
+      )
+    : sumByImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrCallbackfn,
+        callbackfn,
+      );
 }
 
 const sumByImplementation = <T>(
-  array: readonly T[],
+  data: readonly T[],
   callbackfn: (value: T, index: number, data: readonly T[]) => bigint | number,
 ): bigint | number => {
   let sum: bigint | number = 0;
 
   let index = 0;
-  for (const item of array) {
-    const summand = callbackfn(item, index, array);
+  for (const item of data) {
+    const summand = callbackfn(item, index, data);
 
     // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands, @typescript-eslint/no-unsafe-assignment -- Every summand has the same type, so the sum keeps it.

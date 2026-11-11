@@ -1,6 +1,6 @@
+import { purry2 } from "./internal/purryByArity";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
-import { purry } from "./purry";
 
 /**
  * Iterate an object using a defined callback function.
@@ -25,7 +25,7 @@ export function forEachObj<T extends object>(
   callbackfn: (
     value: EnumerableStringKeyedValueOf<T>,
     key: EnumerableStringKeyOf<T>,
-    obj: T,
+    data: T,
   ) => void,
 ): void;
 
@@ -52,12 +52,20 @@ export function forEachObj<T extends object>(
   callbackfn: (
     value: EnumerableStringKeyedValueOf<T>,
     key: EnumerableStringKeyOf<T>,
-    obj: T,
+    data: T,
   ) => void,
-): (object: T) => T;
+): (data: T) => T;
 
-export function forEachObj(...args: readonly unknown[]): unknown {
-  return purry(forEachObjImplementation, 2, args);
+export function forEachObj(
+  dataOrCallbackfn: unknown,
+  callbackfn?: unknown,
+): unknown {
+  return purry2(
+    forEachObjImplementation,
+    arguments.length,
+    dataOrCallbackfn,
+    callbackfn,
+  );
 }
 
 function forEachObjImplementation<T extends object>(

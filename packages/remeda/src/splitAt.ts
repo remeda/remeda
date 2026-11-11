@@ -1,9 +1,9 @@
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 /**
  * Splits a given array at a given index.
  *
- * @param array - The array to split.
+ * @param data - The array to split.
  * @param index - The index to split at.
  * @signature
  *    splitAt(array, index)
@@ -13,7 +13,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function splitAt<T>(array: readonly T[], index: number): [T[], T[]];
+export function splitAt<T>(data: readonly T[], index: number): [T[], T[]];
 
 /**
  * Splits a given array at a given index.
@@ -27,19 +27,19 @@ export function splitAt<T>(array: readonly T[], index: number): [T[], T[]];
  * @dataLast
  * @category Array
  */
-export function splitAt<T>(index: number): (array: readonly T[]) => [T[], T[]];
+export function splitAt<T>(index: number): (data: readonly T[]) => [T[], T[]];
 
-export function splitAt(...args: readonly unknown[]): unknown {
-  return purry(splitAtImplementation, 2, args);
+export function splitAt(dataOrIndex: unknown, index?: unknown): unknown {
+  return purry2(splitAtImplementation, arguments.length, dataOrIndex, index);
 }
 
 function splitAtImplementation<T>(
-  array: readonly T[],
+  data: readonly T[],
   index: number,
 ): [T[], T[]] {
   const effectiveIndex = Math.max(
-    Math.min(index < 0 ? array.length + index : index, array.length),
+    Math.min(index < 0 ? data.length + index : index, data.length),
     0,
   );
-  return [array.slice(0, effectiveIndex), array.slice(effectiveIndex)];
+  return [data.slice(0, effectiveIndex), data.slice(effectiveIndex)];
 }

@@ -1,11 +1,11 @@
-import { purry } from "./purry";
+import { purry1 } from "./internal/purryByArity";
 
 type Enumerable<T> = ArrayLike<T> | Iterable<T>;
 
 /**
  * Counts values of the collection or iterable.
  *
- * @param items - The input data.
+ * @param data - The input data.
  * @signature
  *    length(array)
  * @example
@@ -13,7 +13,7 @@ type Enumerable<T> = ArrayLike<T> | Iterable<T>;
  * @dataFirst
  * @category Array
  */
-export function length<T>(items: Enumerable<T>): number;
+export function length<T>(data: Enumerable<T>): number;
 
 /**
  * Counts values of the collection or iterable.
@@ -25,11 +25,11 @@ export function length<T>(items: Enumerable<T>): number;
  * @dataLast
  * @category Array
  */
-export function length<T>(): (items: Enumerable<T>) => number;
+export function length<T>(): (data: Enumerable<T>) => number;
 
-export function length(...args: readonly unknown[]): unknown {
-  return purry(lengthImplementation, 1, args);
+export function length(data?: unknown): unknown {
+  return purry1(lengthImplementation, arguments.length, data);
 }
 
-const lengthImplementation = <T>(items: Enumerable<T>): number =>
-  "length" in items ? items.length : [...items].length;
+const lengthImplementation = <T>(data: Enumerable<T>): number =>
+  "length" in data ? data.length : [...data].length;

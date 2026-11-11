@@ -1,5 +1,5 @@
 import type { GreaterThan } from "type-fest";
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 // This number was picked by trial-and-error until typescript stops failing with
 // "Type instantiation is excessively deep and possibly infinite. (ts2589)".
@@ -74,8 +74,8 @@ export function times<T>(
   fn: (index: number) => T,
 ): <N extends number>(count: N) => TimesArray<T, N>;
 
-export function times(...args: readonly unknown[]): unknown {
-  return purry(timesImplementation, 2, args);
+export function times(countOrFn: unknown, fn?: unknown): unknown {
+  return purry2(timesImplementation, arguments.length, countOrFn, fn);
 }
 
 function timesImplementation<T>(count: number, fn: (index: number) => T): T[] {

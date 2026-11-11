@@ -1,9 +1,9 @@
 import type { IsNever, Simplify } from "type-fest";
+import { purry2 } from "./internal/purryByArity";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { ToString } from "./internal/types/ToString";
-import { purry } from "./purry";
 
 // When the predicate isn't a type-guard we don't know which properties would be
 // part of the output and which wouldn't so we can only safely downgrade the
@@ -187,8 +187,13 @@ export function pickBy<T extends object>(
   ) => boolean,
 ): (data: T) => EnumeratedPartial<T>;
 
-export function pickBy(...args: readonly unknown[]): unknown {
-  return purry(pickByImplementation, 2, args);
+export function pickBy(dataOrPredicate: unknown, predicate?: unknown): unknown {
+  return purry2(
+    pickByImplementation,
+    arguments.length,
+    dataOrPredicate,
+    predicate,
+  );
 }
 
 function pickByImplementation<T extends object>(

@@ -1,4 +1,4 @@
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { lazyDataLastImplementation2 } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -67,13 +67,25 @@ export function mapWithFeedback<T extends IterableContainer, U>(
   initialValue: U,
 ): (data: T) => Mapped<T, U>;
 
-export function mapWithFeedback(...args: readonly unknown[]): unknown {
-  return purryWithLazy(
-    mapWithFeedbackImplementation,
-    3,
-    lazyImplementation,
-    args,
-  );
+export function mapWithFeedback(
+  dataOrCallbackfn: unknown,
+  callbackfnOrInitialValue: unknown,
+  initialValue?: unknown,
+): unknown {
+  return typeof dataOrCallbackfn === "function"
+    ? lazyDataLastImplementation2(
+        mapWithFeedbackImplementation,
+        lazyImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrCallbackfn,
+        callbackfnOrInitialValue,
+      )
+    : mapWithFeedbackImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrCallbackfn,
+        callbackfnOrInitialValue,
+        initialValue,
+      );
 }
 
 function mapWithFeedbackImplementation<T, U>(
@@ -97,10 +109,10 @@ function mapWithFeedbackImplementation<T, U>(
   return result;
 }
 
-function lazyImplementation<T, U>(
+function lazyImplementation<T, U>([callbackfn, initialValue]: readonly [
   callbackfn: FeedbackCallback<readonly T[], U>,
   initialValue: U,
-): LazyEvaluator<T, U> {
+]): LazyEvaluator<T, U> {
   let previousValue = initialValue;
 
   return requireDataByArity(callbackfn, 3, (currentValue, index, data) => {

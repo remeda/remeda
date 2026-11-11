@@ -1,5 +1,5 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { purryWithLazy1 } from "./internal/purryWithLazyByArity";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -37,8 +37,13 @@ export function unique<T extends IterableContainer>(data: T): Deduped<T>;
  */
 export function unique(): <T extends IterableContainer>(data: T) => Deduped<T>;
 
-export function unique(...args: readonly unknown[]): unknown {
-  return purryWithLazy(uniqueImplementation, 1, lazyImplementation, args);
+export function unique(data?: unknown): unknown {
+  return purryWithLazy1(
+    uniqueImplementation,
+    lazyImplementation,
+    arguments.length,
+    data,
+  );
 }
 
 function uniqueImplementation<T>(data: readonly T[]): T[] {

@@ -1,5 +1,5 @@
+import { purry1 } from "./internal/purryByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 import { sum } from "./sum";
 
 type Mean<T extends IterableContainer<number>> =
@@ -51,8 +51,8 @@ export function mean(): <T extends IterableContainer<number>>(
   data: T,
 ) => Mean<T>;
 
-export function mean(...args: readonly unknown[]): unknown {
-  return purry(meanImplementation, 1, args);
+export function mean(data?: unknown): unknown {
+  return purry1(meanImplementation, arguments.length, data);
 }
 
 const meanImplementation = <T extends IterableContainer<number>>(

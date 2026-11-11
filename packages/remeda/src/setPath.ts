@@ -1,6 +1,6 @@
 import type { ValueOf } from "type-fest";
+import { purry3 } from "./internal/purryByArity";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
-import { purry } from "./purry";
 
 type Paths<T, Prefix extends readonly unknown[] = []> =
   | Prefix
@@ -80,8 +80,18 @@ export function setPath<
   Value extends ValueAtPath<T, Path>,
 >(path: Path, value: Value): (data: T) => T;
 
-export function setPath(...args: readonly unknown[]): unknown {
-  return purry(setPathImplementation, 3, args);
+export function setPath(
+  dataOrPath: unknown,
+  pathOrValue?: unknown,
+  value?: unknown,
+): unknown {
+  return purry3(
+    setPathImplementation,
+    arguments.length,
+    dataOrPath,
+    pathOrValue,
+    value,
+  );
 }
 
 function setPathImplementation(

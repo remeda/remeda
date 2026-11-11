@@ -3,8 +3,8 @@
  * which is exactly what `{}` means.
  */
 
-import { purry } from "./purry";
 import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
+import { purry3 } from "./internal/purryByArity";
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -98,8 +98,18 @@ export function sortedIndexBy<T>(
   ) => {},
 ): (data: readonly NoInfer<T>[]) => number;
 
-export function sortedIndexBy(...args: readonly unknown[]): unknown {
-  return purry(sortedIndexByImplementation, 3, args);
+export function sortedIndexBy(
+  dataOrItem: unknown,
+  itemOrValueFunction?: unknown,
+  valueFunction?: unknown,
+): unknown {
+  return purry3(
+    sortedIndexByImplementation,
+    arguments.length,
+    dataOrItem,
+    itemOrValueFunction,
+    valueFunction,
+  );
 }
 
 function sortedIndexByImplementation<T>(

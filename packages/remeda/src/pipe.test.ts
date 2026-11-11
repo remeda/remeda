@@ -8,7 +8,7 @@ import { flat } from "./flat";
 import { flatMap } from "./flatMap";
 import { identity } from "./identity";
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
+import { lazyDataLastImplementation0 } from "./internal/lazyDataLastImplementation";
 import { makeReducing } from "./internal/makeReducing";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import { join } from "./join";
@@ -502,10 +502,9 @@ describe("lazy", () => {
         }),
         // No utility reduces without being able to stop early, which would
         // fuse the sequence by itself.
-        lazyDataLastImplementation(
+        lazyDataLastImplementation0(
           (data: readonly (readonly number[])[]): readonly number[] =>
             data[0] ?? [],
-          [],
           makeReducing(
             // eslint-disable-next-line unicorn/consistent-function-scoping -- The evaluator captures nothing and could be hoisted; it stays inline so the test's fixture reads in one place.
             () => (value, index) => (index === 0 ? value : SKIP_ITEM),

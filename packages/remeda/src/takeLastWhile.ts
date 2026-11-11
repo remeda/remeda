@@ -1,7 +1,7 @@
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NarrowedArray } from "./internal/types/NarrowedArray";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
-import { purry } from "./purry";
 
 /**
  * Returns elements from the end of the array until the predicate returns false.
@@ -56,8 +56,21 @@ export function takeLastWhile<
   predicate: (item: T[number], index: number, data: T) => IsItemIncluded,
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
-export function takeLastWhile(...args: readonly unknown[]): unknown {
-  return purry(takeLastWhileImplementation, 2, args);
+export function takeLastWhile(
+  dataOrPredicate: unknown,
+  predicate?: unknown,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? dataLastImplementation1(
+        takeLastWhileImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+      )
+    : takeLastWhileImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+        predicate,
+      );
 }
 
 function takeLastWhileImplementation<T extends IterableContainer>(

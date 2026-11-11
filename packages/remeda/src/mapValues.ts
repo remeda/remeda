@@ -1,7 +1,7 @@
 import type { Simplify } from "type-fest";
+import { purry2 } from "./internal/purryByArity";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
-import { purry } from "./purry";
 
 type MappedValues<T extends object, Value> = Simplify<{
   -readonly [P in keyof T as P extends number | string ? P : never]: Value;
@@ -55,8 +55,16 @@ export function mapValues<T extends object, Value>(
   ) => Value,
 ): (data: T) => MappedValues<T, Value>;
 
-export function mapValues(...args: readonly unknown[]): unknown {
-  return purry(mapValuesImplementation, 2, args);
+export function mapValues(
+  dataOrValueMapper: unknown,
+  valueMapper?: unknown,
+): unknown {
+  return purry2(
+    mapValuesImplementation,
+    arguments.length,
+    dataOrValueMapper,
+    valueMapper,
+  );
 }
 
 function mapValuesImplementation<T extends object, Value>(

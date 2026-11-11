@@ -1,5 +1,5 @@
-import { purry } from "./purry";
 import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate
@@ -76,6 +76,19 @@ export function sortedIndexWith<T>(
   predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): (data: readonly T[]) => number;
 
-export function sortedIndexWith(...args: readonly unknown[]): unknown {
-  return purry(binarySearchCutoffIndex, 2, args);
+export function sortedIndexWith(
+  dataOrPredicate: unknown,
+  predicate?: unknown,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? dataLastImplementation1(
+        binarySearchCutoffIndex,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+      )
+    : binarySearchCutoffIndex(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+        predicate,
+      );
 }

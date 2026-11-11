@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 type Limits = {
   readonly min?: number;
@@ -36,8 +36,8 @@ export function clamp(value: number, limits: Limits): number;
  */
 export function clamp(limits: Limits): (value: number) => number;
 
-export function clamp(...args: readonly unknown[]): unknown {
-  return purry(clampImplementation, 2, args);
+export function clamp(valueOrLimits: unknown, limits?: unknown): unknown {
+  return purry2(clampImplementation, arguments.length, valueOrLimits, limits);
 }
 
 const clampImplementation = (value: number, { min, max }: Limits): number =>

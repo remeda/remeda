@@ -1,6 +1,6 @@
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { ReorderedArray } from "./internal/types/ReorderedArray";
-import { purry } from "./purry";
 
 /**
  * Sorts an array. The comparator function should accept two values at a time
@@ -8,7 +8,7 @@ import { purry } from "./purry";
  * if it's larger, and zero if they are equal. Sorting is based on a native
  * `sort` function.
  *
- * @param items - The array to sort.
+ * @param data - The array to sort.
  * @param cmp - The comparator function.
  * @signature
  *    sort(items, cmp)
@@ -18,7 +18,7 @@ import { purry } from "./purry";
  * @category Array
  */
 export function sort<T extends IterableContainer>(
-  items: T,
+  data: T,
   cmp: (a: T[number], b: T[number]) => number,
 ): ReorderedArray<T>;
 
@@ -38,17 +38,27 @@ export function sort<T extends IterableContainer>(
  */
 export function sort<T extends IterableContainer>(
   cmp: (a: T[number], b: T[number]) => number,
-): (items: T) => ReorderedArray<T>;
+): (data: T) => ReorderedArray<T>;
 
-export function sort(...args: readonly unknown[]): unknown {
-  return purry(sortImplementation, 2, args);
+export function sort(dataOrCmp: unknown, cmp?: unknown): unknown {
+  return typeof dataOrCmp === "function"
+    ? dataLastImplementation1(
+        sortImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrCmp,
+      )
+    : sortImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrCmp,
+        cmp,
+      );
 }
 
 function sortImplementation<T extends IterableContainer>(
-  items: T,
+  data: T,
   cmp: (a: T[number], b: T[number]) => number,
 ): ReorderedArray<T> {
-  const ret = items.concat();
+  const ret = data.concat();
   ret.sort(cmp);
   return ret as ReorderedArray<T>;
 }

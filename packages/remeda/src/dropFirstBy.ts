@@ -1,6 +1,6 @@
 import { heapify, heapMaybeInsert } from "./internal/heap";
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
+import { lazyDataLastImplementation2 } from "./internal/lazyDataLastImplementation";
 import { orderRuleComparer, type OrderRule } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -63,10 +63,11 @@ export function dropFirstBy(
       nOrRule,
       ...rules,
     );
-    return lazyDataLastImplementation(
+    return lazyDataLastImplementation2(
       dropFirstByImplementation,
-      [compareFn, dataOrN],
       lazyImplementation,
+      compareFn,
+      dataOrN,
     );
   }
 
@@ -106,10 +107,10 @@ function dropFirstByImplementation<T>(
   return out;
 }
 
-function lazyImplementation<T>(
+function lazyImplementation<T>([compareFn, n]: readonly [
   compareFn: CompareFunction<T>,
   n: number,
-): LazyEvaluator<T> {
+]): LazyEvaluator<T> {
   if (Number.isNaN(n) || n < 1) {
     // Trivially dropping nothing...
     return (item) => item;

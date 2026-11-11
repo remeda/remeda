@@ -3,7 +3,7 @@
  * possible!
  */
 import type { Simplify, ValueOf } from "type-fest";
-import { purry } from "./purry";
+import { purry1 } from "./internal/purryByArity";
 import type { ToString } from "./internal/types/ToString";
 
 type Entry<T> = Simplify<
@@ -45,6 +45,6 @@ export function entries<T extends {}>(data: T): Entry<T>[];
  */
 export function entries(): <T extends {}>(data: T) => Entry<T>[];
 
-export function entries(...args: readonly unknown[]): unknown {
-  return purry(Object.entries, 1, args);
+export function entries(data?: unknown): unknown {
+  return purry1(Object.entries, arguments.length, data);
 }

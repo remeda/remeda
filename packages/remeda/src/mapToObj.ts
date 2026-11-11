@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 
 // TODO [>2]: Once we allow fromEntries to run lazily on iterables we need to remove this utility as it's completely replaceable by `fromEntries(map(...))`.
 /**
@@ -21,7 +21,7 @@ import { purry } from "./purry";
  * or the composition `fromEntries(map(array, fn))`. This function will be
  * deprecated and **removed** in future versions of the library!
  *
- * @param array - The array to map.
+ * @param data - The array to map.
  * @param fn - The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries.
  * @returns The new mapped object.
  * @signature
@@ -32,7 +32,7 @@ import { purry } from "./purry";
  * @category Array
  */
 export function mapToObj<T, K extends PropertyKey, V>(
-  array: readonly T[],
+  data: readonly T[],
   fn: (value: T, index: number, data: readonly T[]) => [K, V],
 ): Record<K, V>;
 
@@ -71,14 +71,24 @@ export function mapToObj<T, K extends PropertyKey, V>(
  */
 export function mapToObj<T, K extends PropertyKey, V>(
   fn: (value: T, index: number, data: readonly T[]) => [K, V],
-): (array: readonly T[]) => Record<K, V>;
+): (data: readonly T[]) => Record<K, V>;
 
-export function mapToObj(...args: readonly unknown[]): unknown {
-  return purry(mapToObjImplementation, 2, args);
+export function mapToObj(dataOrFn: unknown, fn?: unknown): unknown {
+  return typeof dataOrFn === "function"
+    ? dataLastImplementation1(
+        mapToObjImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrFn,
+      )
+    : mapToObjImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrFn,
+        fn,
+      );
 }
 
 function mapToObjImplementation(
-  array: readonly unknown[],
+  data: readonly unknown[],
   fn: (
     value: unknown,
     index: number,
@@ -87,8 +97,8 @@ function mapToObjImplementation(
 ): Record<PropertyKey, unknown> {
   const out: Record<PropertyKey, unknown> = {};
 
-  array.forEach((element, index) => {
-    const [key, value] = fn(element, index, array);
+  data.forEach((element, index) => {
+    const [key, value] = fn(element, index, data);
     if (key === "__proto__") {
       // We want `__proto__` to act just like any other key, but assigning it
       // runs the setter inherited from `Object.prototype` instead of creating

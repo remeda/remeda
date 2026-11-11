@@ -1,6 +1,6 @@
 import type { IsNever, Simplify, Tagged } from "type-fest";
+import { purry2 } from "./internal/purryByArity";
 import { isDeepEqual } from "./isDeepEqual";
-import { purry } from "./purry";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- We want to confine the typing to a specific symbol
 declare const BRAND_HAS_SUB_OBJECT: unique symbol;
@@ -102,8 +102,16 @@ export function hasSubObject<S extends object>(
   data: T,
 ) => data is HasSubObjectGuard<T, S>;
 
-export function hasSubObject(...args: readonly unknown[]): unknown {
-  return purry(hasSubObjectImplementation, 2, args);
+export function hasSubObject(
+  dataOrSubObject: unknown,
+  subObject?: unknown,
+): unknown {
+  return purry2(
+    hasSubObjectImplementation,
+    arguments.length,
+    dataOrSubObject,
+    subObject,
+  );
 }
 
 function hasSubObjectImplementation<

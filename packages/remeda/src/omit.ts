@@ -1,11 +1,11 @@
 import type { EmptyObject, IsNever, KeysOfUnion } from "type-fest";
 import { hasAtLeast } from "./hasAtLeast";
+import { purry2 } from "./internal/purryByArity";
 import type { IsBounded } from "./internal/types/IsBounded";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { PartitionByUnion } from "./internal/types/PartitionByUnion";
 import type { SimplifiedWritable } from "./internal/types/SimplifiedWritable";
 import type { TupleParts } from "./internal/types/TupleParts";
-import { purry } from "./purry";
 
 type OmitFromArray<T, Keys extends readonly PropertyKey[]> =
   // Distribute unions for both object types and key arrays.
@@ -124,8 +124,8 @@ export function omit<T, const Keys extends readonly KeysOfUnion<T>[]>(
   keys: Keys,
 ): OmitFromArray<T, Keys>;
 
-export function omit(...args: readonly unknown[]): unknown {
-  return purry(omitImplementation, 2, args);
+export function omit(dataOrKeys: unknown, keys?: unknown): unknown {
+  return purry2(omitImplementation, arguments.length, dataOrKeys, keys);
 }
 
 function omitImplementation<

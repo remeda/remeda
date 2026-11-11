@@ -1,6 +1,6 @@
 import type { IsEqual, Join } from "type-fest";
+import { purry3 } from "./internal/purryByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 type Difference<A extends number, B extends number> =
   TupleOfLength<A> extends [...infer U, ...TupleOfLength<B>]
@@ -144,8 +144,18 @@ export function swapIndices<K1 extends number, K2 extends number>(
   index2: K2,
 ): <T extends IterableContainer | string>(data: T) => SwappedIndices<T, K1, K2>;
 
-export function swapIndices(...args: readonly unknown[]): unknown {
-  return purry(swapIndicesImplementation, 3, args);
+export function swapIndices(
+  dataOrIndex1: unknown,
+  index1OrIndex2?: unknown,
+  index2?: unknown,
+): unknown {
+  return purry3(
+    swapIndicesImplementation,
+    arguments.length,
+    dataOrIndex1,
+    index1OrIndex2,
+    index2,
+  );
 }
 
 const swapIndicesImplementation = (

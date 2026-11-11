@@ -4,7 +4,7 @@ import {
   makeStoppable,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { purryWithLazy2 } from "./internal/purryWithLazyByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
@@ -15,7 +15,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * - `splice` - to remove or insert at an arbitrary index.
  * - `takeLast` - same, but from the end of the array.
  *
- * @param array - The array.
+ * @param data - The array.
  * @param n - The number of elements to take.
  * @signature
  *    take(array, n)
@@ -26,7 +26,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @category Array
  */
 export function take<T extends IterableContainer>(
-  array: T,
+  data: T,
   n: number,
 ): T[number][];
 
@@ -49,16 +49,23 @@ export function take<T extends IterableContainer>(
  */
 export function take(
   n: number,
-): <T extends IterableContainer>(array: T) => T[number][];
+): <T extends IterableContainer>(data: T) => T[number][];
 
-export function take(...args: readonly unknown[]): unknown {
-  return purryWithLazy(takeImplementation, 2, lazyImplementation, args);
+export function take(dataOrN: unknown, n?: unknown): unknown {
+  return purryWithLazy2(
+    // @ts-expect-error [ts2345] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
+    takeImplementation,
+    lazyImplementation,
+    arguments.length,
+    dataOrN,
+    n,
+  );
 }
 
 const takeImplementation = <T extends IterableContainer>(
-  array: T,
+  data: T,
   n: number,
-): T[number][] => (n < 0 ? [] : array.slice(0, n));
+): T[number][] => (n < 0 ? [] : data.slice(0, n));
 
 const lazyImplementation = makeStoppable(
   <T>(n: number): StoppableLazyEvaluator<T> => {

@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { dataLastImplementation2 } from "./internal/dataLastImplementation";
 
 /**
  * Executes a user-supplied "reducer" callback function on each element of the
@@ -68,8 +68,24 @@ export function reduce<T, U>(
   initialValue: U,
 ): (data: readonly T[]) => U;
 
-export function reduce(...args: readonly unknown[]): unknown {
-  return purry(reduceImplementation, 3, args);
+export function reduce(
+  dataOrCallbackfn: unknown,
+  callbackfnOrInitialValue: unknown,
+  initialValue?: unknown,
+): unknown {
+  return typeof dataOrCallbackfn === "function"
+    ? dataLastImplementation2(
+        reduceImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrCallbackfn,
+        callbackfnOrInitialValue,
+      )
+    : reduceImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrCallbackfn,
+        callbackfnOrInitialValue,
+        initialValue,
+      );
 }
 
 const reduceImplementation = <T, U>(

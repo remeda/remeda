@@ -6,13 +6,13 @@ import type {
   Subtract,
   ValueOf,
 } from "type-fest";
+import { purry2 } from "./internal/purryByArity";
 import type { IntRangeInclusive } from "./internal/types/IntRangeInclusive";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NTuple } from "./internal/types/NTuple";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import type { PartialArray } from "./internal/types/PartialArray";
 import type { TupleParts } from "./internal/types/TupleParts";
-import { purry } from "./purry";
 
 // This prevents typescript from failing on complex arrays and large chunks. It
 // allows the typing to remain useful even when very large chunks are needed,
@@ -194,10 +194,10 @@ type TuplePrefix<T extends IterableContainer> = [
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
  *
- * @param array - The array.
+ * @param data - The array.
  * @param size - The length of the chunk.
  * @signature
- *    chunk(array, size)
+ *    chunk(data, size)
  * @example
  *    chunk(['a', 'b', 'c', 'd'], 2) // => [['a', 'b'], ['c', 'd']]
  *    chunk(['a', 'b', 'c', 'd'], 3) // => [['a', 'b', 'c'], ['d']]
@@ -205,7 +205,7 @@ type TuplePrefix<T extends IterableContainer> = [
  * @category Array
  */
 export function chunk<T extends IterableContainer, N extends number>(
-  array: T,
+  data: T,
   size: N,
 ): Chunk<T, N>;
 
@@ -223,10 +223,10 @@ export function chunk<T extends IterableContainer, N extends number>(
  */
 export function chunk<N extends number>(
   size: N,
-): <T extends IterableContainer>(array: T) => Chunk<T, N>;
+): <T extends IterableContainer>(data: T) => Chunk<T, N>;
 
-export function chunk(...args: readonly unknown[]): unknown {
-  return purry(chunkImplementation, 2, args);
+export function chunk(dataOrSize: unknown, size?: unknown): unknown {
+  return purry2(chunkImplementation, arguments.length, dataOrSize, size);
 }
 
 function chunkImplementation<T>(data: readonly T[], size: number): T[][] {

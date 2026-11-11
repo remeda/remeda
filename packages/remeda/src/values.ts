@@ -1,6 +1,6 @@
+import { purry1 } from "./internal/purryByArity";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 type Values<T extends object> = T extends IterableContainer
   ? T[number][]
@@ -38,6 +38,6 @@ export function values<T extends object>(data: T): Values<T>;
  */
 export function values(): <T extends object>(data: T) => Values<T>;
 
-export function values(...args: readonly unknown[]): unknown {
-  return purry(Object.values, 1, args);
+export function values(data?: unknown): unknown {
+  return purry1(Object.values, arguments.length, data);
 }

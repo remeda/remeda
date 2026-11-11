@@ -1,5 +1,7 @@
 import {
-  dataLastImplementation,
+  dataLastImplementation0,
+  dataLastImplementation1,
+  dataLastImplementation2,
   type DataFirst,
   type UnaryFunction,
 } from "./dataLastImplementation";
@@ -27,8 +29,10 @@ export type LazyEvaluatorFactory<
   // `makeStoppable` mark.
   Partial<ReducingMetadata & StoppableMetadata> &
     (
-      | ((...args: P) => LazyEvaluator<T[number], unknown>)
-      | (((...args: P) => StoppableLazyEvaluator<T[number], unknown>) &
+      | ((lazyArgument: LazyArgument<P>) => LazyEvaluator<T[number], unknown>)
+      | (((
+          lazyArgument: LazyArgument<P>,
+        ) => StoppableLazyEvaluator<T[number], unknown>) &
           StoppableMetadata)
     );
 
@@ -37,31 +41,90 @@ type LazyDefinition<
   P extends readonly unknown[],
 > = {
   readonly lazy: LazyEvaluatorFactory<T, P>;
-  readonly lazyArgs: P;
+  readonly lazyArgument: LazyArgument<P>;
 };
 
 /**
- * Use this helper function to build the data last implementation together with
- * a lazy implementation. Use this when you need to build your own purrying
- * logic when you want to decide between dataFirst and dataLast on something
- * that isn't the number of arguments provided. This is useful for implementing
- * functions with optional or variadic parameters.
+ * The one value a lazy implementation is built from, for the arguments `P` of
+ * a data-last call: nothing, the single argument itself, or the arguments as a
+ * tuple.
  */
-export function lazyDataLastImplementation<
+export type LazyArgument<P extends readonly unknown[]> = P extends readonly []
+  ? undefined
+  : P extends readonly [(infer Argument)?]
+    ? Argument
+    : P;
+
+/**
+ * `lazyDataLastImplementation` for a `dataFirst` implementation that takes
+ * only the data.
+ */
+export function lazyDataLastImplementation0<
   T extends IterableContainer,
-  P extends readonly unknown[],
+  P extends readonly [],
   R,
 >(
   dataFirst: DataFirst<T, P, R>,
-  args: P,
   lazy: LazyEvaluatorFactory<T, P>,
 ): LazyUnaryFunction<T, P, R> {
   // @ts-expect-error [ts2559] -- Allows us to build the lazy definition dynamically at runtime.
   const dataLast: Partial<SimplifiedWritable<LazyDefinition<T, P>>> =
-    dataLastImplementation(dataFirst, args);
+    dataLastImplementation0(dataFirst);
 
   dataLast.lazy = lazy;
-  dataLast.lazyArgs = args;
+  // @ts-expect-error [ts2412] -- `LazyArgument` of a generic tuple stays deferred, so TypeScript can't match the stored value to it.
+  dataLast.lazyArgument = undefined;
+
+  // @ts-expect-error [ts2322] -- TypeScript doesn't narrow an object's declared type after its optional props are assigned.
+  return dataLast;
+}
+
+/**
+ * `lazyDataLastImplementation` for a `dataFirst` implementation that takes
+ * one argument after the data.
+ */
+export function lazyDataLastImplementation1<
+  T extends IterableContainer,
+  P extends readonly [unknown?],
+  R,
+>(
+  dataFirst: DataFirst<T, P, R>,
+  lazy: LazyEvaluatorFactory<T, P>,
+  argument: P[0],
+): LazyUnaryFunction<T, P, R> {
+  // @ts-expect-error [ts2559] -- Allows us to build the lazy definition dynamically at runtime.
+  const dataLast: Partial<SimplifiedWritable<LazyDefinition<T, P>>> =
+    dataLastImplementation1(dataFirst, argument);
+
+  dataLast.lazy = lazy;
+  // @ts-expect-error [ts2322] -- `LazyArgument` of a generic tuple stays deferred, so TypeScript can't match the stored value to it.
+  dataLast.lazyArgument = argument;
+
+  // @ts-expect-error [ts2322] -- TypeScript doesn't narrow an object's declared type after its optional props are assigned.
+  return dataLast;
+}
+
+/**
+ * `lazyDataLastImplementation` for a `dataFirst` implementation that takes
+ * two arguments after the data.
+ */
+export function lazyDataLastImplementation2<
+  T extends IterableContainer,
+  P extends readonly [unknown, unknown],
+  R,
+>(
+  dataFirst: DataFirst<T, P, R>,
+  lazy: LazyEvaluatorFactory<T, P>,
+  first: P[0],
+  second: P[1],
+): LazyUnaryFunction<T, P, R> {
+  // @ts-expect-error [ts2559] -- Allows us to build the lazy definition dynamically at runtime.
+  const dataLast: Partial<SimplifiedWritable<LazyDefinition<T, P>>> =
+    dataLastImplementation2(dataFirst, first, second);
+
+  dataLast.lazy = lazy;
+  // @ts-expect-error [ts2322] -- `LazyArgument` of a generic tuple stays deferred, so TypeScript can't match the stored value to it.
+  dataLast.lazyArgument = [first, second];
 
   // @ts-expect-error [ts2322] -- TypeScript doesn't narrow an object's declared type after its optional props are assigned.
   return dataLast;

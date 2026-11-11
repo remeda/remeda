@@ -1,11 +1,11 @@
+import { purry1 } from "./internal/purryByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { ReorderedArray } from "./internal/types/ReorderedArray";
-import { purry } from "./purry";
 
 /**
  * Shuffles the input array, returning a new array with the same elements in a random order.
  *
- * @param items - The array to shuffle.
+ * @param data - The array to shuffle.
  * @signature
  *    shuffle(array)
  * @example
@@ -14,7 +14,7 @@ import { purry } from "./purry";
  * @category Array
  */
 export function shuffle<T extends IterableContainer>(
-  items: T,
+  data: T,
 ): ReorderedArray<T>;
 
 /**
@@ -28,17 +28,17 @@ export function shuffle<T extends IterableContainer>(
  * @category Array
  */
 export function shuffle(): <T extends IterableContainer>(
-  items: T,
+  data: T,
 ) => ReorderedArray<T>;
 
-export function shuffle(...args: readonly unknown[]): unknown {
-  return purry(shuffleImplementation, 1, args);
+export function shuffle(data?: unknown): unknown {
+  return purry1(shuffleImplementation, arguments.length, data);
 }
 
-function shuffleImplementation<T>(items: readonly T[]): T[] {
-  const result = items.concat();
-  for (let index = 0; index < items.length; index++) {
-    const rand = index + Math.floor(Math.random() * (items.length - index));
+function shuffleImplementation<T>(data: readonly T[]): T[] {
+  const result = data.concat();
+  for (let index = 0; index < data.length; index++) {
+    const rand = index + Math.floor(Math.random() * (data.length - index));
     const value = result[rand]!;
     result[rand] = result[index]!;
     result[index] = value;

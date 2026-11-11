@@ -1,11 +1,11 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
+import { lazyDataLastImplementation1 } from "./internal/lazyDataLastImplementation";
 import { makeReducing } from "./internal/makeReducing";
 import {
   lastLazyValue,
   makeStoppable,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
-import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
 import type { Assignability } from "./internal/types/Assignability";
 import type { First } from "./internal/types/First";
@@ -158,8 +158,19 @@ export function find<
   predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => FoundNonRefined<T, IsItemIncluded>;
 
-export function find(...args: readonly unknown[]): unknown {
-  return purryWithLazy(findImplementation, 2, lazyImplementation, args);
+export function find(dataOrPredicate: unknown, predicate?: unknown): unknown {
+  return typeof dataOrPredicate === "function"
+    ? lazyDataLastImplementation1(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        findImplementation,
+        lazyImplementation,
+        dataOrPredicate,
+      )
+    : findImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+        predicate,
+      );
 }
 
 const findImplementation = <T, S extends T>(

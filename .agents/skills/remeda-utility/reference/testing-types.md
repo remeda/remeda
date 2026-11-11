@@ -5,6 +5,7 @@
 - Cast empty arrays for type data: `[] as Array<{ name: string }>`
 - Prefer casting (`as`) over explicit typing (`: Type`) — they don't always behave the same
 - Don't annotate generics explicitly — define types on data, not via `<T>` on the call
+- Fixtures that only supply a type (a callback or implementation the test passes but never runs) are `declare function` / `declare const`: only the signature is under test, so a body is code the reader has to skip
 - Only test inferred or "magic" types, not trivial signature parts with no inference
 - Use `unknown` in type slots you don't care about — `Record<string, unknown>` not `Record<string, string>`
 - Use disjoint value types in union tests — `Record<string, number> | Record<string, boolean>`, not `Record<string, number> | Record<string, number>` (identical sides don't test union logic)
@@ -12,4 +13,4 @@
 - When `@typescript-eslint/no-unnecessary-type-assertion` flags an inference-controlling cast, replace `value as T` with `$typed<T>()` from `test/$typed` rather than autofixing
   - Safe when the rule's reason is "This assertion is unnecessary since the receiver accepts the original type of the expression"
   - Proceed cautiously for other reasons; for `interface` types, suppress per-site with a reason comment instead — see `$typed` JSDoc
-- Lazy callbacks (any overload typed with `LazyCallback`, `LazyTypePredicate`, or `NonEmptyPrefix`): assert the exact `data` type inside the callback body, on an `as const` tuple (`readonly [1, 2?, 3?]`) and on a plain array (`readonly [number, ...number[]]`). For `purryWithLazy`-based functions also assert that the data-first overload still receives the complete input. Data-last assertions must run inside `pipe` to hit the lazy overload. Template: the `callback data param` block in `map.test-d.ts`
+- Lazy callbacks (any overload typed with `LazyCallback`, `LazyTypePredicate`, or `NonEmptyPrefix`): assert the exact `data` type inside the callback body, on an `as const` tuple (`readonly [1, 2?, 3?]`) and on a plain array (`readonly [number, ...number[]]`). For lazy functions also assert that the data-first overload still receives the complete input. Data-last assertions must run inside `pipe` to hit the lazy overload. Template: the `callback data param` block in `map.test-d.ts`

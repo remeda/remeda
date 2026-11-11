@@ -1,6 +1,6 @@
 import type { KeysOfUnion, Simplify } from "type-fest";
+import { purry2 } from "./internal/purryByArity";
 import type { IsBounded } from "./internal/types/IsBounded";
-import { purry } from "./purry";
 
 // Arrays route to the `boolean`-returning overload below: their `keyof`
 // includes prototype methods (`push`, `pop`, …) that aren't own properties
@@ -82,8 +82,8 @@ export function hasProp<T extends object>(
   key: KeysOfUnion<T>,
 ): (data: T) => boolean;
 
-export function hasProp(...args: readonly unknown[]): unknown {
-  return purry(hasPropImplementation, 2, args);
+export function hasProp(dataOrKey: unknown, key?: unknown): unknown {
+  return purry2(hasPropImplementation, arguments.length, dataOrKey, key);
 }
 
 function hasPropImplementation<T extends object, Key extends KeysOfUnion<T>>(

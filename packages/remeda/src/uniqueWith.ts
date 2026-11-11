@@ -1,5 +1,5 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { lazyDataLastImplementation1 } from "./internal/lazyDataLastImplementation";
 import { requireData } from "./internal/requireData";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -52,8 +52,22 @@ export function uniqueWith<T extends IterableContainer>(
   isEquals: IsEquals<T[number]>,
 ): (data: T) => Deduped<T>;
 
-export function uniqueWith(...args: readonly unknown[]): unknown {
-  return purryWithLazy(uniqueWithImplementation, 2, lazyImplementation, args);
+export function uniqueWith(
+  dataOrIsEquals: unknown,
+  isEquals?: unknown,
+): unknown {
+  return typeof dataOrIsEquals === "function"
+    ? lazyDataLastImplementation1(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        uniqueWithImplementation,
+        lazyImplementation,
+        dataOrIsEquals,
+      )
+    : uniqueWithImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrIsEquals,
+        isEquals,
+      );
 }
 
 const uniqueWithImplementation = <T>(

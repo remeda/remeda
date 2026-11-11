@@ -1,8 +1,8 @@
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
 import type { Not } from "./internal/types/Not";
-import { purry } from "./purry";
 
 /**
  * Splits a collection into two groups, the first of which contains elements the
@@ -87,8 +87,21 @@ export function partition<
   NonRefinedFilteredArray<T, Not<IsItemIncluded>>,
 ];
 
-export function partition(...args: readonly unknown[]): unknown {
-  return purry(partitionImplementation, 2, args);
+export function partition(
+  dataOrPredicate: unknown,
+  predicate?: unknown,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? dataLastImplementation1(
+        partitionImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+      )
+    : partitionImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+        predicate,
+      );
 }
 
 const partitionImplementation = <T, S extends T>(

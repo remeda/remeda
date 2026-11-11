@@ -1,5 +1,5 @@
 import type { Simplify } from "type-fest";
-import { purry } from "./purry";
+import { purry1 } from "./internal/purryByArity";
 import type { ToString } from "./internal/types/ToString";
 
 type Inverted<T extends object> = Simplify<{
@@ -16,7 +16,7 @@ type Inverted<T extends object> = Simplify<{
  * Returns an object whose keys and values are swapped. If the object contains duplicate values,
  * subsequent values will overwrite previous values.
  *
- * @param object - The object.
+ * @param data - The object.
  * @signature
  *    invert(object)
  * @example
@@ -24,7 +24,7 @@ type Inverted<T extends object> = Simplify<{
  * @dataFirst
  * @category Object
  */
-export function invert<T extends object>(object: T): Inverted<T>;
+export function invert<T extends object>(data: T): Inverted<T>;
 
 /**
  * Returns an object whose keys and values are swapped. If the object contains duplicate values,
@@ -37,10 +37,10 @@ export function invert<T extends object>(object: T): Inverted<T>;
  * @dataLast
  * @category Object
  */
-export function invert<T extends object>(): (object: T) => Inverted<T>;
+export function invert<T extends object>(): (data: T) => Inverted<T>;
 
-export function invert(...args: readonly unknown[]): unknown {
-  return purry(invertImplementation, 1, args);
+export function invert(data?: unknown): unknown {
+  return purry1(invertImplementation, arguments.length, data);
 }
 
 function invertImplementation(

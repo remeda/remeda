@@ -1,5 +1,5 @@
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
-import { purry } from "./purry";
 
 /**
  * Categorize and count elements in an array using a defined callback function.
@@ -51,8 +51,21 @@ export function countBy<T, K extends PropertyKey>(
   ) => K | undefined,
 ): (data: readonly T[]) => BoundedPartial<Record<K, number>>;
 
-export function countBy(...args: readonly unknown[]): unknown {
-  return purry(countByImplementation, 2, args);
+export function countBy(
+  dataOrCategorizationFn: unknown,
+  categorizationFn?: unknown,
+): unknown {
+  return typeof dataOrCategorizationFn === "function"
+    ? dataLastImplementation1(
+        countByImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrCategorizationFn,
+      )
+    : countByImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrCategorizationFn,
+        categorizationFn,
+      );
 }
 
 const countByImplementation = <T>(

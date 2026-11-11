@@ -1,9 +1,9 @@
+import { lazyDataLastImplementation1 } from "./internal/lazyDataLastImplementation";
 import {
   makeStoppable,
   STOP,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
-import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type {
@@ -66,8 +66,22 @@ export function takeWhile<
   predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
-export function takeWhile(...args: readonly unknown[]): unknown {
-  return purryWithLazy(takeWhileImplementation, 2, lazyImplementation, args);
+export function takeWhile(
+  dataOrPredicate: unknown,
+  predicate?: unknown,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? lazyDataLastImplementation1(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        takeWhileImplementation,
+        lazyImplementation,
+        dataOrPredicate,
+      )
+    : takeWhileImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+        predicate,
+      );
 }
 
 function takeWhileImplementation<T>(

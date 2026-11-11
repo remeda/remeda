@@ -5,7 +5,7 @@ import {
   makeStoppable,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { purryWithLazy2 } from "./internal/purryWithLazyByArity";
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the
@@ -47,8 +47,15 @@ export function intersection<S>(
   other: readonly S[],
 ): <T>(data: readonly T[]) => (T & S)[];
 
-export function intersection(...args: readonly unknown[]): unknown {
-  return purryWithLazy(intersectionImplementation, 2, lazyImplementation, args);
+export function intersection(dataOrOther: unknown, other?: unknown): unknown {
+  return purryWithLazy2(
+    // @ts-expect-error [ts2345] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
+    intersectionImplementation,
+    lazyImplementation,
+    arguments.length,
+    dataOrOther,
+    other,
+  );
 }
 
 function intersectionImplementation<T, S>(

@@ -478,6 +478,29 @@ export default defineConfig(
     },
   },
   {
+    files: ["src/**/*.ts"],
+    ignores: [
+      "src/index.ts",
+      "src/**/*.test.ts",
+      "src/**/*.test-d.ts",
+      "src/**/*.test-prop.ts",
+    ],
+    rules: {
+      "@typescript-eslint/no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex: "/purry$",
+              message:
+                "Dispatch with purry1-3 or purryWithLazy1-3 from src/internal instead.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ["*.config.js", "*.config.ts"],
     rules: {
       "@typescript-eslint/prefer-readonly-parameter-types": "off",

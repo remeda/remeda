@@ -1,8 +1,8 @@
 import type { IsNever, Simplify } from "type-fest";
+import { purry2 } from "./internal/purryByArity";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
-import { purry } from "./purry";
 
 // Symbols are not passed to the predicate (because they can't be enumerated
 // with the `Object.entries` function) and the enumerable ones are copied to the
@@ -160,8 +160,13 @@ export function omitBy<T extends object>(
   ) => boolean,
 ): (data: T) => PartialEnumerableKeys<T>;
 
-export function omitBy(...args: readonly unknown[]): unknown {
-  return purry(omitByImplementation, 2, args);
+export function omitBy(dataOrPredicate: unknown, predicate?: unknown): unknown {
+  return purry2(
+    omitByImplementation,
+    arguments.length,
+    dataOrPredicate,
+    predicate,
+  );
 }
 
 function omitByImplementation<T extends object>(

@@ -1,5 +1,5 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { lazyDataLastImplementation1 } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -49,8 +49,22 @@ export function uniqueBy<T extends IterableContainer>(
   keyFunction: LazyCallback<T, unknown>,
 ): (data: T) => Deduped<T>;
 
-export function uniqueBy(...args: readonly unknown[]): unknown {
-  return purryWithLazy(uniqueByImplementation, 2, lazyImplementation, args);
+export function uniqueBy(
+  dataOrKeyFunction: unknown,
+  keyFunction?: unknown,
+): unknown {
+  return typeof dataOrKeyFunction === "function"
+    ? lazyDataLastImplementation1(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        uniqueByImplementation,
+        lazyImplementation,
+        dataOrKeyFunction,
+      )
+    : uniqueByImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrKeyFunction,
+        keyFunction,
+      );
 }
 
 function uniqueByImplementation<T>(

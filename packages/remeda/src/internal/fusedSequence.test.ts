@@ -12,7 +12,8 @@ import {
 } from "./fusedSequence";
 import { manyLazyValues, SKIP_ITEM } from "./lazyControl";
 import {
-  lazyDataLastImplementation,
+  lazyDataLastImplementation0,
+  lazyDataLastImplementation2,
   type LazyEvaluatorFactory,
   type LazyUnaryFunction,
 } from "./lazyDataLastImplementation";
@@ -51,30 +52,28 @@ describe(buildFusedSequence, () => {
     ).toHaveLength(2);
   });
 
-  test("builds evaluators with their lazy arguments", () => {
+  test("builds evaluators with their lazy argument", () => {
     const lazyImplementation = vi.fn<
-      (first: number, second: string) => LazyEvaluator
+      (lazyArgument: readonly [number, string]) => LazyEvaluator
     >(() => (value) => value);
     buildFusedSequence(
       [
-        // @ts-expect-error [ts2322] -- The `never` arguments of the default `LazyUnaryFunction` are what let it hold any lazy function, and the helper only spreads `lazyArgs` into the `lazy` they were built with.
-        lazyDataLastImplementation(
-          (
-            _data: readonly unknown[],
-            ..._args: Readonly<Parameters<typeof lazyImplementation>>
-          ) => {
+        // @ts-expect-error [ts2322] -- The `never` arguments of the default `LazyUnaryFunction` are what let it hold any lazy function, and the helper only passes `lazyArgument` to the `lazy` it was built with.
+        lazyDataLastImplementation2(
+          (_data: readonly unknown[], _first: number, _second: string) => {
             throw new Error(
               "Intentional! a fused sequence doesn't call the data-first",
             );
           },
-          [1, "a"],
           lazyImplementation,
+          1,
+          "a",
         ),
       ],
       0,
     );
 
-    expect(lazyImplementation).toHaveBeenCalledExactlyOnceWith(1, "a");
+    expect(lazyImplementation).toHaveBeenCalledExactlyOnceWith([1, "a"]);
   });
 
   test("builds evaluators anew each time, as they can hold state", () => {
@@ -534,16 +533,11 @@ const lazy = (): LazyUnaryFunction => lazyFunction(() => (value) => value);
 const lazyFunction = (
   lazyImplementation: LazyEvaluatorFactory<readonly unknown[], never>,
 ): LazyUnaryFunction =>
-  lazyDataLastImplementation(
-    () => {
-      throw new Error(
-        "Intentional! a fused sequence doesn't call the data-first",
-      );
-    },
-    // @ts-expect-error [ts2345] -- These functions take no arguments, so the empty ones can stand in for the `never` of the default `LazyUnaryFunction`, which is what lets it hold any lazy function.
-    [],
-    lazyImplementation,
-  );
+  lazyDataLastImplementation0(() => {
+    throw new Error(
+      "Intentional! a fused sequence doesn't call the data-first",
+    );
+  }, lazyImplementation);
 
 const step = (lazyEvaluator: StoppableLazyEvaluator = (value) => value) =>
   ({

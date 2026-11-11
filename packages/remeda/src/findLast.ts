@@ -1,9 +1,9 @@
 import type { LastArrayElement } from "type-fest";
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { Assignability } from "./internal/types/Assignability";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
-import { purry } from "./purry";
 
 type FoundLast<T extends IterableContainer, Condition> =
   // We distribute the array type to support unions of arrays/tuples.
@@ -144,8 +144,21 @@ export function findLast<
   predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
 ): (data: T) => FoundLastNonRefined<T, IsItemIncluded>;
 
-export function findLast(...args: readonly unknown[]): unknown {
-  return purry(findLastImplementation, 2, args);
+export function findLast(
+  dataOrPredicate: unknown,
+  predicate?: unknown,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? dataLastImplementation1(
+        findLastImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+      )
+    : findLastImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+        predicate,
+      );
 }
 
 const findLastImplementation = <T, S extends T>(

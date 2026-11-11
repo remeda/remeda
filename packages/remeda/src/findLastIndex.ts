@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 
 /**
  * Iterates the array in reverse order and returns the index of the first
@@ -51,10 +51,23 @@ export function findLastIndex<T>(
  */
 export function findLastIndex<T>(
   predicate: (value: T, index: number, data: readonly T[]) => boolean,
-): (array: readonly T[]) => number;
+): (data: readonly T[]) => number;
 
-export function findLastIndex(...args: readonly unknown[]): unknown {
-  return purry(findLastIndexImplementation, 2, args);
+export function findLastIndex(
+  dataOrPredicate: unknown,
+  predicate?: unknown,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? dataLastImplementation1(
+        findLastIndexImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+      )
+    : findLastIndexImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrPredicate,
+        predicate,
+      );
 }
 
 const findLastIndexImplementation = <T>(

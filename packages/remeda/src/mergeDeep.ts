@@ -1,11 +1,11 @@
 import type { MergeDeep } from "type-fest";
+import { purry2 } from "./internal/purryByArity";
 import { isPlainObject } from "./isPlainObject";
-import { purry } from "./purry";
 
 /**
  * Merges the `source` object into the `destination` object. The merge is similar to performing `{ ...destination, ... source }` (where disjoint values from each object would be copied as-is, and for any overlapping props the value from `source` would be used); But for *each prop* (`p`), if **both** `destination` and `source` have a **plain-object** as a value, the value would be taken as the result of recursively deepMerging them (`result.p === deepMerge(destination.p, source.p)`).
  *
- * @param destination - The object to merge into. In general, this object would have it's values overridden.
+ * @param data - The object to merge into. In general, this object would have it's values overridden.
  * @param source - The object to merge from. In general, shared keys would be taken from this object.
  * @returns The merged object.
  * @signature
@@ -16,7 +16,7 @@ import { purry } from "./purry";
  * @category Object
  */
 export function mergeDeep<Destination extends object, Source extends object>(
-  destination: Destination,
+  data: Destination,
   source: Source,
 ): MergeDeep<Destination, Source>;
 
@@ -38,19 +38,24 @@ export function mergeDeep<Destination extends object, Source extends object>(
 export function mergeDeep<Source extends object>(
   source: Source,
 ): <Destination extends object>(
-  target: Destination,
+  data: Destination,
 ) => MergeDeep<Destination, Source>;
 
-export function mergeDeep(...args: readonly unknown[]): unknown {
-  return purry(mergeDeepImplementation, 2, args);
+export function mergeDeep(dataOrSource: unknown, source?: unknown): unknown {
+  return purry2(
+    mergeDeepImplementation,
+    arguments.length,
+    dataOrSource,
+    source,
+  );
 }
 
 function mergeDeepImplementation<
   Destination extends object,
   Source extends object,
->(destination: Destination, source: Source): MergeDeep<Destination, Source> {
+>(data: Destination, source: Source): MergeDeep<Destination, Source> {
   // At this point the output is already merged, simply not deeply merged.
-  const output = { ...destination, ...source } as Record<
+  const output = { ...data, ...source } as Record<
     keyof Destination | keyof Source,
     unknown
   >;
@@ -59,10 +64,10 @@ function mergeDeepImplementation<
   // merged
   for (const key in source) {
     if (
-      Object.hasOwn(destination, key) &&
+      Object.hasOwn(data, key) &&
       isPlainObject(
         // @ts-expect-error [ts2536] -- TypeScript isn't narrowing `key` although we checked that it exists in both objects, so it can't see this access is valid.
-        destination[key],
+        data[key],
       ) &&
       isPlainObject(source[key])
     ) {
@@ -70,7 +75,7 @@ function mergeDeepImplementation<
       // recursively merge them.
       output[key] = mergeDeepImplementation(
         // @ts-expect-error [ts2536] -- TypeScript isn't narrowing `key` although we checked that it exists in both objects, so it can't see this access is valid.
-        destination[key],
+        data[key],
         source[key],
       );
     }

@@ -1,6 +1,6 @@
+import { dataLastImplementation2 } from "./internal/dataLastImplementation";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 /**
  * Creates an object that maps the result of `valueExtractor` with a key
@@ -79,8 +79,24 @@ export function pullObject<
   valueExtractor: (item: T[number], index: number, data: T) => V,
 ): (data: T) => BoundedPartial<Record<K, V>>;
 
-export function pullObject(...args: readonly unknown[]): unknown {
-  return purry(pullObjectImplementation, 3, args);
+export function pullObject(
+  dataOrKeyExtractor: unknown,
+  keyExtractorOrValueExtractor: unknown,
+  valueExtractor?: unknown,
+): unknown {
+  return typeof dataOrKeyExtractor === "function"
+    ? dataLastImplementation2(
+        pullObjectImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrKeyExtractor,
+        keyExtractorOrValueExtractor,
+      )
+    : pullObjectImplementation(
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+        dataOrKeyExtractor,
+        keyExtractorOrValueExtractor,
+        valueExtractor,
+      );
 }
 
 function pullObjectImplementation<T, K extends PropertyKey, V>(

@@ -1,5 +1,5 @@
-import { purry } from "./purry";
 import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
+import { purry2 } from "./internal/purryByArity";
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -53,16 +53,21 @@ export function sortedLastIndex<T>(
   item: T,
 ): (data: readonly NoInfer<T>[]) => number;
 
-export function sortedLastIndex(...args: readonly unknown[]): unknown {
-  return purry(sortedLastIndexImplementation, 2, args);
+export function sortedLastIndex(dataOrItem: unknown, item?: unknown): unknown {
+  return purry2(
+    sortedLastIndexImplementation,
+    arguments.length,
+    dataOrItem,
+    item,
+  );
 }
 
 const sortedLastIndexImplementation = <T>(
-  array: readonly T[],
+  data: readonly T[],
   item: T,
 ): number =>
   binarySearchCutoffIndex(
-    array,
+    data,
     // The only difference between the regular implementation and the "last"
     // variation is that we consider the pivot with equality too, so that we
     // skip all equal values in addition to the lower ones.

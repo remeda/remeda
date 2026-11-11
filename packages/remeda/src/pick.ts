@@ -1,9 +1,9 @@
 import type { EmptyObject, IsNever, KeysOfUnion, Writable } from "type-fest";
+import { purry2 } from "./internal/purryByArity";
 import type { IsBounded } from "./internal/types/IsBounded";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { PartitionByUnion } from "./internal/types/PartitionByUnion";
 import type { TupleParts } from "./internal/types/TupleParts";
-import { purry } from "./purry";
 
 type PickFromArray<T, Keys extends readonly KeysOfUnion<T>[]> =
   // Distribute unions for both object types and key arrays.
@@ -111,8 +111,8 @@ export function pick<
   const Keys extends readonly KeysOfUnion<T>[],
 >(data: T, keys: Keys): PickFromArray<T, Keys>;
 
-export function pick(...args: readonly unknown[]): unknown {
-  return purry(pickImplementation, 2, args);
+export function pick(dataOrKeys: unknown, keys?: unknown): unknown {
+  return purry2(pickImplementation, arguments.length, dataOrKeys, keys);
 }
 
 function pickImplementation<

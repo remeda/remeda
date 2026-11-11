@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 /**
  * Creates an object containing a single `key:value` pair.
@@ -25,8 +25,8 @@ export function objOf<T, K extends string>(value: T, key: K): Record<K, T>;
  */
 export function objOf<T, K extends string>(key: K): (value: T) => Record<K, T>;
 
-export function objOf(...args: readonly unknown[]): unknown {
-  return purry(objOfImplementation, 2, args);
+export function objOf(valueOrKey: unknown, key?: unknown): unknown {
+  return purry2(objOfImplementation, arguments.length, valueOrKey, key);
 }
 
 const objOfImplementation = <T, K extends string>(
