@@ -1,5 +1,5 @@
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { manyLazyValues, type LazyResult } from "./internal/lazyControl";
-import { lazyDataLastImplementation1 } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -59,10 +59,13 @@ export function flatMap(
   callbackfn?: unknown,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
-    ? lazyDataLastImplementation1(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
-        flatMapImplementation,
+    ? withLazyImplementation(
+        dataLast(
+          // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+          dataOrCallbackfn,
+        ),
         lazyImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrCallbackfn,
       )
     : flatMapImplementation(
@@ -71,6 +74,11 @@ export function flatMap(
         callbackfn,
       );
 }
+
+const dataLast =
+  (callbackfn: Parameters<typeof flatMapImplementation>[1]) =>
+  (data: Parameters<typeof flatMapImplementation>[0]) =>
+    flatMapImplementation(data, callbackfn);
 
 const flatMapImplementation = <T, U>(
   data: readonly T[],

@@ -1,4 +1,4 @@
-import { lazyDataLastImplementation1 } from "./internal/lazyDataLastImplementation";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import {
   makeStoppable,
   STOP,
@@ -71,10 +71,13 @@ export function takeWhile(
   predicate?: unknown,
 ): unknown {
   return typeof dataOrPredicate === "function"
-    ? lazyDataLastImplementation1(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
-        takeWhileImplementation,
+    ? withLazyImplementation(
+        dataLast(
+          // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+          dataOrPredicate,
+        ),
         lazyImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrPredicate,
       )
     : takeWhileImplementation(
@@ -83,6 +86,11 @@ export function takeWhile(
         predicate,
       );
 }
+
+const dataLast =
+  (predicate: Parameters<typeof takeWhileImplementation>[1]) =>
+  (data: Parameters<typeof takeWhileImplementation>[0]) =>
+    takeWhileImplementation(data, predicate);
 
 function takeWhileImplementation<T>(
   data: readonly T[],

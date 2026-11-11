@@ -1,5 +1,4 @@
 import type { LastArrayElement } from "type-fest";
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { Assignability } from "./internal/types/Assignability";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { Narrowed } from "./internal/types/Narrowed";
@@ -149,8 +148,7 @@ export function findLast(
   predicate?: unknown,
 ): unknown {
   return typeof dataOrPredicate === "function"
-    ? dataLastImplementation1(
-        findLastImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrPredicate,
       )
@@ -160,6 +158,11 @@ export function findLast(
         predicate,
       );
 }
+
+const dataLast =
+  (predicate: Parameters<typeof findLastImplementation>[1]) =>
+  (data: Parameters<typeof findLastImplementation>[0]) =>
+    findLastImplementation(data, predicate);
 
 const findLastImplementation = <T, S extends T>(
   data: readonly T[],

@@ -1,4 +1,4 @@
-import { lazyDataLastImplementation2 } from "./internal/lazyDataLastImplementation";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -73,12 +73,18 @@ export function mapWithFeedback(
   initialValue?: unknown,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
-    ? lazyDataLastImplementation2(
-        mapWithFeedbackImplementation,
+    ? withLazyImplementation(
+        dataLast(
+          // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+          dataOrCallbackfn,
+          callbackfnOrInitialValue,
+        ),
         lazyImplementation,
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
-        dataOrCallbackfn,
-        callbackfnOrInitialValue,
+        [
+          // @ts-expect-error [ts2322] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+          dataOrCallbackfn,
+          callbackfnOrInitialValue,
+        ],
       )
     : mapWithFeedbackImplementation(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
@@ -87,6 +93,14 @@ export function mapWithFeedback(
         initialValue,
       );
 }
+
+const dataLast =
+  (
+    callbackfn: Parameters<typeof mapWithFeedbackImplementation>[1],
+    initialValue: Parameters<typeof mapWithFeedbackImplementation>[2],
+  ) =>
+  (data: Parameters<typeof mapWithFeedbackImplementation>[0]) =>
+    mapWithFeedbackImplementation(data, callbackfn, initialValue);
 
 function mapWithFeedbackImplementation<T, U>(
   data: readonly T[],

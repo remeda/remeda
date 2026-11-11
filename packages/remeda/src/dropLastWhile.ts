@@ -1,4 +1,3 @@
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
@@ -42,8 +41,7 @@ export function dropLastWhile(
   predicate?: unknown,
 ): unknown {
   return typeof dataOrPredicate === "function"
-    ? dataLastImplementation1(
-        dropLastWhileImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrPredicate,
       )
@@ -53,6 +51,11 @@ export function dropLastWhile(
         predicate,
       );
 }
+
+const dataLast =
+  (predicate: Parameters<typeof dropLastWhileImplementation>[1]) =>
+  (data: Parameters<typeof dropLastWhileImplementation>[0]) =>
+    dropLastWhileImplementation(data, predicate);
 
 function dropLastWhileImplementation<T extends IterableContainer>(
   data: T,

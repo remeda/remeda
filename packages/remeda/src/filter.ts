@@ -1,5 +1,5 @@
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { lazyDataLastImplementation1 } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -79,10 +79,13 @@ export function filter<
 
 export function filter(dataOrPredicate: unknown, predicate?: unknown): unknown {
   return typeof dataOrPredicate === "function"
-    ? lazyDataLastImplementation1(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
-        filterImplementation,
+    ? withLazyImplementation(
+        dataLast(
+          // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+          dataOrPredicate,
+        ),
         lazyImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrPredicate,
       )
     : filterImplementation(
@@ -91,6 +94,11 @@ export function filter(dataOrPredicate: unknown, predicate?: unknown): unknown {
         predicate,
       );
 }
+
+const dataLast =
+  (predicate: Parameters<typeof filterImplementation>[1]) =>
+  (data: Parameters<typeof filterImplementation>[0]) =>
+    filterImplementation(data, predicate);
 
 const filterImplementation = <T>(
   data: readonly T[],

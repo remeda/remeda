@@ -1,4 +1,3 @@
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { ReorderedArray } from "./internal/types/ReorderedArray";
 
@@ -42,8 +41,7 @@ export function sort<T extends IterableContainer>(
 
 export function sort(dataOrCmp: unknown, cmp?: unknown): unknown {
   return typeof dataOrCmp === "function"
-    ? dataLastImplementation1(
-        sortImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrCmp,
       )
@@ -53,6 +51,11 @@ export function sort(dataOrCmp: unknown, cmp?: unknown): unknown {
         cmp,
       );
 }
+
+const dataLast =
+  (cmp: Parameters<typeof sortImplementation>[1]) =>
+  (data: Parameters<typeof sortImplementation>[0]) =>
+    sortImplementation(data, cmp);
 
 function sortImplementation<T extends IterableContainer>(
   data: T,

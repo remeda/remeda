@@ -1,4 +1,3 @@
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 type SumBy<
@@ -85,8 +84,7 @@ export function sumBy(
   callbackfn?: unknown,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
-    ? dataLastImplementation1(
-        sumByImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrCallbackfn,
       )
@@ -96,6 +94,11 @@ export function sumBy(
         callbackfn,
       );
 }
+
+const dataLast =
+  (callbackfn: Parameters<typeof sumByImplementation>[1]) =>
+  (data: Parameters<typeof sumByImplementation>[0]) =>
+    sumByImplementation(data, callbackfn);
 
 const sumByImplementation = <T>(
   data: readonly T[],

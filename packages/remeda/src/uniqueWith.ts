@@ -1,5 +1,5 @@
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { lazyDataLastImplementation1 } from "./internal/lazyDataLastImplementation";
 import { requireData } from "./internal/requireData";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -57,10 +57,13 @@ export function uniqueWith(
   isEquals?: unknown,
 ): unknown {
   return typeof dataOrIsEquals === "function"
-    ? lazyDataLastImplementation1(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
-        uniqueWithImplementation,
+    ? withLazyImplementation(
+        dataLast(
+          // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+          dataOrIsEquals,
+        ),
         lazyImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrIsEquals,
       )
     : uniqueWithImplementation(
@@ -69,6 +72,14 @@ export function uniqueWith(
         isEquals,
       );
 }
+
+const dataLast =
+  (
+    // eslint-disable-next-line unicorn/consistent-boolean-name -- `isEquals` is the comparator function, named as in the implementation; the rule can't resolve the indexed access type to a function.
+    isEquals: Parameters<typeof uniqueWithImplementation>[1],
+  ) =>
+  (data: Parameters<typeof uniqueWithImplementation>[0]) =>
+    uniqueWithImplementation(data, isEquals);
 
 const uniqueWithImplementation = <T>(
   data: readonly T[],

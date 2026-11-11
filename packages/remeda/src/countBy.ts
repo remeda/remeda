@@ -1,4 +1,3 @@
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 
 /**
@@ -56,8 +55,7 @@ export function countBy(
   categorizationFn?: unknown,
 ): unknown {
   return typeof dataOrCategorizationFn === "function"
-    ? dataLastImplementation1(
-        countByImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrCategorizationFn,
       )
@@ -67,6 +65,11 @@ export function countBy(
         categorizationFn,
       );
 }
+
+const dataLast =
+  (categorizationFn: Parameters<typeof countByImplementation>[1]) =>
+  (data: Parameters<typeof countByImplementation>[0]) =>
+    countByImplementation(data, categorizationFn);
 
 const countByImplementation = <T>(
   data: readonly T[],

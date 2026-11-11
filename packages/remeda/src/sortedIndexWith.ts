@@ -1,5 +1,4 @@
 import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate
@@ -81,8 +80,7 @@ export function sortedIndexWith(
   predicate?: unknown,
 ): unknown {
   return typeof dataOrPredicate === "function"
-    ? dataLastImplementation1(
-        binarySearchCutoffIndex,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrPredicate,
       )
@@ -92,3 +90,8 @@ export function sortedIndexWith(
         predicate,
       );
 }
+
+const dataLast =
+  (predicate: Parameters<typeof binarySearchCutoffIndex>[1]) =>
+  (data: Parameters<typeof binarySearchCutoffIndex>[0]) =>
+    binarySearchCutoffIndex(data, predicate);

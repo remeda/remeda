@@ -1,5 +1,4 @@
 import type { Simplify } from "type-fest";
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
@@ -74,8 +73,7 @@ export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
 
 export function fromKeys(dataOrMapper: unknown, mapper?: unknown): unknown {
   return typeof dataOrMapper === "function"
-    ? dataLastImplementation1(
-        fromKeysImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrMapper,
       )
@@ -85,6 +83,11 @@ export function fromKeys(dataOrMapper: unknown, mapper?: unknown): unknown {
         mapper,
       );
 }
+
+const dataLast =
+  (mapper: Parameters<typeof fromKeysImplementation>[1]) =>
+  (data: Parameters<typeof fromKeysImplementation>[0]) =>
+    fromKeysImplementation(data, mapper);
 
 function fromKeysImplementation<K extends PropertyKey, V>(
   data: readonly K[],

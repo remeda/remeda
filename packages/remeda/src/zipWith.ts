@@ -1,4 +1,4 @@
-import { lazyDataLastImplementation2 } from "./internal/lazyDataLastImplementation";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import {
   lastLazyValue,
   LAZY_EMPTY_EVALUATOR,
@@ -104,12 +104,18 @@ export function zipWith(
 
   if (typeof arg1 === "function") {
     // dataLast
-    return lazyDataLastImplementation2(
-      zipWithImplementation,
+    return withLazyImplementation(
+      dataLast(
+        arg0,
+        // @ts-expect-error [ts2345] -- Outside a pipe the data-last function hands the implementation the full first list, which is a valid non-empty prefix whenever `fn` is invoked (it never is for an empty list); TypeScript can't relate `T1` to `NonEmptyPrefix<T1>`.
+        arg1,
+      ),
       lazyImplementation,
-      arg0,
-      // @ts-expect-error [ts2345] -- Outside a pipe the data-last function hands the implementation the full first list, which is a valid non-empty prefix whenever `fn` is invoked (it never is for an empty list); TypeScript can't relate `T1` to `NonEmptyPrefix<T1>`.
-      arg1,
+      [
+        arg0,
+        // @ts-expect-error [ts2322] -- `lazyImplementation` calls `fn` only once the first list has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T1[]` type.
+        arg1,
+      ],
     );
   }
 
@@ -119,6 +125,14 @@ export function zipWith(
   // are protected by the function typing itself this is fine!
   return zipWithImplementation(arg0, arg1!, arg2!);
 }
+
+const dataLast =
+  (
+    other: Parameters<typeof zipWithImplementation>[1],
+    fn: Parameters<typeof zipWithImplementation>[2],
+  ) =>
+  (data: Parameters<typeof zipWithImplementation>[0]) =>
+    zipWithImplementation(data, other, fn);
 
 function zipWithImplementation<
   T1 extends IterableContainer,

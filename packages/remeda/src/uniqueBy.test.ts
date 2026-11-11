@@ -74,6 +74,15 @@ test("provides the whole input to the key function", () => {
 });
 
 describe(pipe, () => {
+  test("on its own", () => {
+    expect(
+      pipe(
+        [1, 2, 3, 4, 5],
+        uniqueBy((item) => item % 3),
+      ),
+    ).toStrictEqual([1, 2, 3]);
+  });
+
   test("provides the items processed so far to the key function", () => {
     const keyFunction = vi.fn<LazyCallback<unknown[], unknown>>(
       (_item, _index, data) => [...data],

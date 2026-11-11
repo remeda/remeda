@@ -1,5 +1,3 @@
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
-
 // TODO [>2]: Once we allow fromEntries to run lazily on iterables we need to remove this utility as it's completely replaceable by `fromEntries(map(...))`.
 /**
  * Map each element of an array into an object using a defined mapper that
@@ -75,8 +73,7 @@ export function mapToObj<T, K extends PropertyKey, V>(
 
 export function mapToObj(dataOrFn: unknown, fn?: unknown): unknown {
   return typeof dataOrFn === "function"
-    ? dataLastImplementation1(
-        mapToObjImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrFn,
       )
@@ -86,6 +83,11 @@ export function mapToObj(dataOrFn: unknown, fn?: unknown): unknown {
         fn,
       );
 }
+
+const dataLast =
+  (fn: Parameters<typeof mapToObjImplementation>[1]) =>
+  (data: Parameters<typeof mapToObjImplementation>[0]) =>
+    mapToObjImplementation(data, fn);
 
 function mapToObjImplementation(
   data: readonly unknown[],

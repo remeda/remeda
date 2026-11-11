@@ -1,5 +1,3 @@
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
-
 /**
  * Returns the index of the first element in an array that satisfies the
  * provided testing function. If no elements satisfy the testing function, -1 is
@@ -58,8 +56,7 @@ export function findIndex(
   predicate?: unknown,
 ): unknown {
   return typeof dataOrPredicate === "function"
-    ? dataLastImplementation1(
-        findIndexImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrPredicate,
       )
@@ -69,6 +66,11 @@ export function findIndex(
         predicate,
       );
 }
+
+const dataLast =
+  (predicate: Parameters<typeof findIndexImplementation>[1]) =>
+  (data: Parameters<typeof findIndexImplementation>[0]) =>
+    findIndexImplementation(data, predicate);
 
 const findIndexImplementation = <T>(
   data: readonly T[],

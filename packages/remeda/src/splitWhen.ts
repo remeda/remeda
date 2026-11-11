@@ -1,5 +1,3 @@
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
-
 /**
  * Splits a given array at the first index where the given predicate returns true.
  *
@@ -37,8 +35,7 @@ export function splitWhen(
   predicate?: unknown,
 ): unknown {
   return typeof dataOrPredicate === "function"
-    ? dataLastImplementation1(
-        splitWhenImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrPredicate,
       )
@@ -48,6 +45,11 @@ export function splitWhen(
         predicate,
       );
 }
+
+const dataLast =
+  (predicate: Parameters<typeof splitWhenImplementation>[1]) =>
+  (data: Parameters<typeof splitWhenImplementation>[0]) =>
+    splitWhenImplementation(data, predicate);
 
 function splitWhenImplementation<T>(
   data: readonly T[],

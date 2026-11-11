@@ -23,15 +23,17 @@ export type LazyUnaryFunction<
 export type LazyEvaluatorFactory<
   T extends IterableContainer,
   P extends readonly unknown[],
-> =
+> = LazyEvaluatorFactoryOf<T, LazyArgument<P>>;
+
+type LazyEvaluatorFactoryOf<T extends IterableContainer, Argument> =
   // `pipe` reads both marks off any lazy implementation, so neither is
   // required in general; a factory whose evaluators can stop must carry the
   // `makeStoppable` mark.
   Partial<ReducingMetadata & StoppableMetadata> &
     (
-      | ((lazyArgument: LazyArgument<P>) => LazyEvaluator<T[number], unknown>)
+      | ((lazyArgument: Argument) => LazyEvaluator<T[number], unknown>)
       | (((
-          lazyArgument: LazyArgument<P>,
+          lazyArgument: Argument,
         ) => StoppableLazyEvaluator<T[number], unknown>) &
           StoppableMetadata)
     );
@@ -39,9 +41,11 @@ export type LazyEvaluatorFactory<
 type LazyDefinition<
   T extends IterableContainer,
   P extends readonly unknown[],
-> = {
-  readonly lazy: LazyEvaluatorFactory<T, P>;
-  readonly lazyArgument: LazyArgument<P>;
+> = LazyDefinitionOf<T, LazyArgument<P>>;
+
+type LazyDefinitionOf<T extends IterableContainer, Argument> = {
+  readonly lazy: LazyEvaluatorFactoryOf<T, Argument>;
+  readonly lazyArgument: Argument;
 };
 
 /**
@@ -54,6 +58,31 @@ export type LazyArgument<P extends readonly unknown[]> = P extends readonly []
   : P extends readonly [(infer Argument)?]
     ? Argument
     : P;
+
+/**
+ * Attaches a lazy implementation to a data-last function that the utility
+ * builds itself. A closure from a shared builder shares its call feedback with
+ * every utility built there, so the engine can't inline the implementation
+ * into it once several utilities use it; a closure of the utility's own keeps
+ * that call monomorphic.
+ */
+export function withLazyImplementation<
+  T extends IterableContainer,
+  Argument,
+  R,
+>(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional! This is the only place these props are written.
+  dataLast: UnaryFunction<T, R> &
+    Partial<SimplifiedWritable<LazyDefinitionOf<T, Argument>>>,
+  lazy: LazyEvaluatorFactoryOf<T, Argument>,
+  lazyArgument: NoInfer<Argument>,
+): UnaryFunction<T, R> & LazyDefinitionOf<T, Argument> {
+  dataLast.lazy = lazy;
+  dataLast.lazyArgument = lazyArgument;
+
+  // @ts-expect-error [ts2322] -- TypeScript doesn't narrow an object's declared type after its optional props are assigned.
+  return dataLast;
+}
 
 /**
  * `lazyDataLastImplementation` for a `dataFirst` implementation that takes

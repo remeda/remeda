@@ -1,4 +1,3 @@
-import { dataLastImplementation2 } from "./internal/dataLastImplementation";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
@@ -85,8 +84,7 @@ export function pullObject(
   valueExtractor?: unknown,
 ): unknown {
   return typeof dataOrKeyExtractor === "function"
-    ? dataLastImplementation2(
-        pullObjectImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrKeyExtractor,
         keyExtractorOrValueExtractor,
@@ -98,6 +96,14 @@ export function pullObject(
         valueExtractor,
       );
 }
+
+const dataLast =
+  (
+    keyExtractor: Parameters<typeof pullObjectImplementation>[1],
+    valueExtractor: Parameters<typeof pullObjectImplementation>[2],
+  ) =>
+  (data: Parameters<typeof pullObjectImplementation>[0]) =>
+    pullObjectImplementation(data, keyExtractor, valueExtractor);
 
 function pullObjectImplementation<T, K extends PropertyKey, V>(
   data: readonly T[],

@@ -1,5 +1,3 @@
-import { dataLastImplementation2 } from "./internal/dataLastImplementation";
-
 /**
  * Executes a user-supplied "reducer" callback function on each element of the
  * array, in order, passing in the return value from the calculation on the
@@ -74,8 +72,7 @@ export function reduce(
   initialValue?: unknown,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
-    ? dataLastImplementation2(
-        reduceImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrCallbackfn,
         callbackfnOrInitialValue,
@@ -87,6 +84,14 @@ export function reduce(
         initialValue,
       );
 }
+
+const dataLast =
+  (
+    callbackfn: Parameters<typeof reduceImplementation>[1],
+    initialValue: Parameters<typeof reduceImplementation>[2],
+  ) =>
+  (data: Parameters<typeof reduceImplementation>[0]) =>
+    reduceImplementation(data, callbackfn, initialValue);
 
 const reduceImplementation = <T, U>(
   data: readonly T[],

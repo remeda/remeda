@@ -1,5 +1,5 @@
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { lazyDataLastImplementation1 } from "./internal/lazyDataLastImplementation";
 import { makeReducing } from "./internal/makeReducing";
 import {
   lastLazyValue,
@@ -160,10 +160,13 @@ export function find<
 
 export function find(dataOrPredicate: unknown, predicate?: unknown): unknown {
   return typeof dataOrPredicate === "function"
-    ? lazyDataLastImplementation1(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
-        findImplementation,
+    ? withLazyImplementation(
+        dataLast(
+          // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+          dataOrPredicate,
+        ),
         lazyImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrPredicate,
       )
     : findImplementation(
@@ -172,6 +175,11 @@ export function find(dataOrPredicate: unknown, predicate?: unknown): unknown {
         predicate,
       );
 }
+
+const dataLast =
+  (predicate: Parameters<typeof findImplementation>[1]) =>
+  (data: Parameters<typeof findImplementation>[0]) =>
+    findImplementation(data, predicate);
 
 const findImplementation = <T, S extends T>(
   data: readonly T[],

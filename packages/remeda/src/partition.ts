@@ -1,4 +1,3 @@
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
@@ -92,8 +91,7 @@ export function partition(
   predicate?: unknown,
 ): unknown {
   return typeof dataOrPredicate === "function"
-    ? dataLastImplementation1(
-        partitionImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrPredicate,
       )
@@ -103,6 +101,11 @@ export function partition(
         predicate,
       );
 }
+
+const dataLast =
+  (predicate: Parameters<typeof partitionImplementation>[1]) =>
+  (data: Parameters<typeof partitionImplementation>[0]) =>
+    partitionImplementation(data, predicate);
 
 const partitionImplementation = <T, S extends T>(
   data: readonly T[],

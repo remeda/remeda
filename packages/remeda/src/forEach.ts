@@ -1,4 +1,4 @@
-import { lazyDataLastImplementation1 } from "./internal/lazyDataLastImplementation";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
@@ -66,10 +66,13 @@ export function forEach(
   callbackfn?: unknown,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
-    ? lazyDataLastImplementation1(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
-        forEachImplementation,
+    ? withLazyImplementation(
+        dataLast(
+          // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+          dataOrCallbackfn,
+        ),
         lazyImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrCallbackfn,
       )
     : forEachImplementation(
@@ -78,6 +81,11 @@ export function forEach(
         callbackfn,
       );
 }
+
+const dataLast =
+  (callbackfn: Parameters<typeof forEachImplementation>[1]) =>
+  (data: Parameters<typeof forEachImplementation>[0]) =>
+    forEachImplementation(data, callbackfn);
 
 function forEachImplementation<T>(
   data: readonly T[],

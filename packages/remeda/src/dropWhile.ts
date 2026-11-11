@@ -1,5 +1,5 @@
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { lazyDataLastImplementation1 } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
@@ -48,10 +48,13 @@ export function dropWhile(
   predicate?: unknown,
 ): unknown {
   return typeof dataOrPredicate === "function"
-    ? lazyDataLastImplementation1(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
-        dropWhileImplementation,
+    ? withLazyImplementation(
+        dataLast(
+          // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+          dataOrPredicate,
+        ),
         lazyImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrPredicate,
       )
     : dropWhileImplementation(
@@ -60,6 +63,11 @@ export function dropWhile(
         predicate,
       );
 }
+
+const dataLast =
+  (predicate: Parameters<typeof dropWhileImplementation>[1]) =>
+  (data: Parameters<typeof dropWhileImplementation>[0]) =>
+    dropWhileImplementation(data, predicate);
 
 function dropWhileImplementation<T>(
   data: readonly T[],

@@ -1,4 +1,3 @@
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
@@ -75,8 +74,7 @@ export function groupBy(
   callbackfn?: unknown,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
-    ? dataLastImplementation1(
-        groupByImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrCallbackfn,
       )
@@ -86,6 +84,11 @@ export function groupBy(
         callbackfn,
       );
 }
+
+const dataLast =
+  (callbackfn: Parameters<typeof groupByImplementation>[1]) =>
+  (data: Parameters<typeof groupByImplementation>[0]) =>
+    groupByImplementation(data, callbackfn);
 
 const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(
   data: readonly T[],

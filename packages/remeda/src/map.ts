@@ -1,4 +1,4 @@
-import { lazyDataLastImplementation1 } from "./internal/lazyDataLastImplementation";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { canReadData, requireData } from "./internal/requireData";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
@@ -53,10 +53,13 @@ export function map<T extends IterableContainer, U>(
 
 export function map(dataOrCallbackfn: unknown, callbackfn?: unknown): unknown {
   return typeof dataOrCallbackfn === "function"
-    ? lazyDataLastImplementation1(
-        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
-        mapImplementation,
+    ? withLazyImplementation(
+        dataLast(
+          // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
+          dataOrCallbackfn,
+        ),
         lazyImplementation,
+        // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrCallbackfn,
       )
     : mapImplementation(
@@ -65,6 +68,11 @@ export function map(dataOrCallbackfn: unknown, callbackfn?: unknown): unknown {
         callbackfn,
       );
 }
+
+const dataLast =
+  (callbackfn: Parameters<typeof mapImplementation>[1]) =>
+  (data: Parameters<typeof mapImplementation>[0]) =>
+    mapImplementation(data, callbackfn);
 
 const mapImplementation = <T, U>(
   data: readonly T[],

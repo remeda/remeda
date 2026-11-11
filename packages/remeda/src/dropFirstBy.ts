@@ -1,6 +1,6 @@
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { heapify, heapMaybeInsert } from "./internal/heap";
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { lazyDataLastImplementation2 } from "./internal/lazyDataLastImplementation";
 import { orderRuleComparer, type OrderRule } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -63,11 +63,10 @@ export function dropFirstBy(
       nOrRule,
       ...rules,
     );
-    return lazyDataLastImplementation2(
-      dropFirstByImplementation,
+    return withLazyImplementation(
+      dataLast(compareFn, dataOrN),
       lazyImplementation,
-      compareFn,
-      dataOrN,
+      [compareFn, dataOrN],
     );
   }
 
@@ -81,6 +80,14 @@ export function dropFirstBy(
     nOrRule,
   );
 }
+
+const dataLast =
+  (
+    compareFn: Parameters<typeof dropFirstByImplementation>[1],
+    n: Parameters<typeof dropFirstByImplementation>[2],
+  ) =>
+  (data: Parameters<typeof dropFirstByImplementation>[0]) =>
+    dropFirstByImplementation(data, compareFn, n);
 
 function dropFirstByImplementation<T>(
   data: readonly T[],

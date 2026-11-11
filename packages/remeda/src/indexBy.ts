@@ -1,4 +1,3 @@
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 
 /**
@@ -54,8 +53,7 @@ export function indexBy<T, K extends PropertyKey>(
 
 export function indexBy(dataOrMapper: unknown, mapper?: unknown): unknown {
   return typeof dataOrMapper === "function"
-    ? dataLastImplementation1(
-        indexByImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrMapper,
       )
@@ -65,6 +63,11 @@ export function indexBy(dataOrMapper: unknown, mapper?: unknown): unknown {
         mapper,
       );
 }
+
+const dataLast =
+  (mapper: Parameters<typeof indexByImplementation>[1]) =>
+  (data: Parameters<typeof indexByImplementation>[0]) =>
+    indexByImplementation(data, mapper);
 
 function indexByImplementation<T, K extends PropertyKey>(
   data: readonly T[],

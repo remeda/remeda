@@ -1,5 +1,3 @@
-import { dataLastImplementation1 } from "./internal/dataLastImplementation";
-
 /**
  * Returns the mean of the elements of an array using the provided predicate.
  *
@@ -42,8 +40,7 @@ export function meanBy<T>(
 
 export function meanBy(dataOrFn: unknown, fn?: unknown): unknown {
   return typeof dataOrFn === "function"
-    ? dataLastImplementation1(
-        meanByImplementation,
+    ? dataLast(
         // @ts-expect-error [ts2345] -- Only a data-last call passes a function first; TypeScript can't narrow the other parameters from that, and the overloads guarantee their types.
         dataOrFn,
       )
@@ -53,6 +50,11 @@ export function meanBy(dataOrFn: unknown, fn?: unknown): unknown {
         fn,
       );
 }
+
+const dataLast =
+  (fn: Parameters<typeof meanByImplementation>[1]) =>
+  (data: Parameters<typeof meanByImplementation>[0]) =>
+    meanByImplementation(data, fn);
 
 const meanByImplementation = <T>(
   data: readonly T[],
