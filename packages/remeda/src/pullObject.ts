@@ -1,4 +1,5 @@
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
@@ -97,12 +98,8 @@ export function pullObject(
       );
 }
 
-const dataLast =
-  (
-    keyExtractor: Parameters<typeof pullObjectImplementation>[1],
-    valueExtractor: Parameters<typeof pullObjectImplementation>[2],
-  ) =>
-  (data: Parameters<typeof pullObjectImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof pullObjectImplementation> =
+  (keyExtractor, valueExtractor) => (data) =>
     pullObjectImplementation(data, keyExtractor, valueExtractor);
 
 function pullObjectImplementation<T, K extends PropertyKey, V>(

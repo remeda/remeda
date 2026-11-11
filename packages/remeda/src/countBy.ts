@@ -1,4 +1,5 @@
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
 /**
  * Categorize and count elements in an array using a defined callback function.
@@ -66,9 +67,8 @@ export function countBy(
       );
 }
 
-const dataLast =
-  (categorizationFn: Parameters<typeof countByImplementation>[1]) =>
-  (data: Parameters<typeof countByImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof countByImplementation> =
+  (categorizationFn) => (data) =>
     countByImplementation(data, categorizationFn);
 
 const countByImplementation = <T>(

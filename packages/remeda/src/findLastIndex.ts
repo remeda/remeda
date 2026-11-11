@@ -1,3 +1,5 @@
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
+
 /**
  * Iterates the array in reverse order and returns the index of the first
  * element that satisfies the provided testing function. If no elements satisfy
@@ -67,9 +69,8 @@ export function findLastIndex(
       );
 }
 
-const dataLast =
-  (predicate: Parameters<typeof findLastIndexImplementation>[1]) =>
-  (data: Parameters<typeof findLastIndexImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof findLastIndexImplementation> =
+  (predicate) => (data) =>
     findLastIndexImplementation(data, predicate);
 
 const findLastIndexImplementation = <T>(

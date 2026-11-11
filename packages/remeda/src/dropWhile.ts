@@ -1,6 +1,7 @@
-import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { SKIP_ITEM } from "./internal/lazyControl";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -64,9 +65,8 @@ export function dropWhile(
       );
 }
 
-const dataLast =
-  (predicate: Parameters<typeof dropWhileImplementation>[1]) =>
-  (data: Parameters<typeof dropWhileImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof dropWhileImplementation> =
+  (predicate) => (data) =>
     dropWhileImplementation(data, predicate);
 
 function dropWhileImplementation<T>(

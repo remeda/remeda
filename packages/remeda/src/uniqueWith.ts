@@ -1,6 +1,7 @@
-import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { SKIP_ITEM } from "./internal/lazyControl";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireData } from "./internal/requireData";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -73,12 +74,8 @@ export function uniqueWith(
       );
 }
 
-const dataLast =
-  (
-    // eslint-disable-next-line unicorn/consistent-boolean-name -- `isEquals` is the comparator function, named as in the implementation; the rule can't resolve the indexed access type to a function.
-    isEquals: Parameters<typeof uniqueWithImplementation>[1],
-  ) =>
-  (data: Parameters<typeof uniqueWithImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof uniqueWithImplementation> =
+  (isEquals) => (data) =>
     uniqueWithImplementation(data, isEquals);
 
 const uniqueWithImplementation = <T>(

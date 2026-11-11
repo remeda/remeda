@@ -1,6 +1,7 @@
-import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { SKIP_ITEM } from "./internal/lazyControl";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
@@ -70,9 +71,8 @@ export function uniqueBy(
       );
 }
 
-const dataLast =
-  (keyFunction: Parameters<typeof uniqueByImplementation>[1]) =>
-  (data: Parameters<typeof uniqueByImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof uniqueByImplementation> =
+  (keyFunction) => (data) =>
     uniqueByImplementation(data, keyFunction);
 
 function uniqueByImplementation<T>(

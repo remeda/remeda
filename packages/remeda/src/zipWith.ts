@@ -6,6 +6,7 @@ import {
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
 import { requireDataByArity } from "./internal/requireData";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
 
@@ -126,12 +127,8 @@ export function zipWith(
   return zipWithImplementation(arg0, arg1!, arg2!);
 }
 
-const dataLast =
-  (
-    other: Parameters<typeof zipWithImplementation>[1],
-    fn: Parameters<typeof zipWithImplementation>[2],
-  ) =>
-  (data: Parameters<typeof zipWithImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof zipWithImplementation> =
+  (other, fn) => (data) =>
     zipWithImplementation(data, other, fn);
 
 function zipWithImplementation<

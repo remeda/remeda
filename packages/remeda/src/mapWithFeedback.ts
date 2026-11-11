@@ -1,5 +1,6 @@
 import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
@@ -94,12 +95,8 @@ export function mapWithFeedback(
       );
 }
 
-const dataLast =
-  (
-    callbackfn: Parameters<typeof mapWithFeedbackImplementation>[1],
-    initialValue: Parameters<typeof mapWithFeedbackImplementation>[2],
-  ) =>
-  (data: Parameters<typeof mapWithFeedbackImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof mapWithFeedbackImplementation> =
+  (callbackfn, initialValue) => (data) =>
     mapWithFeedbackImplementation(data, callbackfn, initialValue);
 
 function mapWithFeedbackImplementation<T, U>(

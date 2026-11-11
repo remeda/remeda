@@ -1,5 +1,6 @@
 import type { LastArrayElement } from "type-fest";
 import type { Assignability } from "./internal/types/Assignability";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
@@ -159,9 +160,8 @@ export function findLast(
       );
 }
 
-const dataLast =
-  (predicate: Parameters<typeof findLastImplementation>[1]) =>
-  (data: Parameters<typeof findLastImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof findLastImplementation> =
+  (predicate) => (data) =>
     findLastImplementation(data, predicate);
 
 const findLastImplementation = <T, S extends T>(

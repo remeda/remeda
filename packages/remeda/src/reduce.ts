@@ -1,3 +1,5 @@
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
+
 /**
  * Executes a user-supplied "reducer" callback function on each element of the
  * array, in order, passing in the return value from the calculation on the
@@ -85,12 +87,8 @@ export function reduce(
       );
 }
 
-const dataLast =
-  (
-    callbackfn: Parameters<typeof reduceImplementation>[1],
-    initialValue: Parameters<typeof reduceImplementation>[2],
-  ) =>
-  (data: Parameters<typeof reduceImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof reduceImplementation> =
+  (callbackfn, initialValue) => (data) =>
     reduceImplementation(data, callbackfn, initialValue);
 
 const reduceImplementation = <T, U>(

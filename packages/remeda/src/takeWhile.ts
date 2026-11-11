@@ -5,6 +5,7 @@ import {
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
 import { requireDataByArity } from "./internal/requireData";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type {
   LazyCallback,
@@ -87,9 +88,8 @@ export function takeWhile(
       );
 }
 
-const dataLast =
-  (predicate: Parameters<typeof takeWhileImplementation>[1]) =>
-  (data: Parameters<typeof takeWhileImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof takeWhileImplementation> =
+  (predicate) => (data) =>
     takeWhileImplementation(data, predicate);
 
 function takeWhileImplementation<T>(

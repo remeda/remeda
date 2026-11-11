@@ -1,3 +1,4 @@
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { ReorderedArray } from "./internal/types/ReorderedArray";
 
@@ -52,10 +53,8 @@ export function sort(dataOrCmp: unknown, cmp?: unknown): unknown {
       );
 }
 
-const dataLast =
-  (cmp: Parameters<typeof sortImplementation>[1]) =>
-  (data: Parameters<typeof sortImplementation>[0]) =>
-    sortImplementation(data, cmp);
+const dataLast: DataLastBuilder<typeof sortImplementation> = (cmp) => (data) =>
+  sortImplementation(data, cmp);
 
 function sortImplementation<T extends IterableContainer>(
   data: T,

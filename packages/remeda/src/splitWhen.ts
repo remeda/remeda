@@ -1,3 +1,5 @@
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
+
 /**
  * Splits a given array at the first index where the given predicate returns true.
  *
@@ -46,9 +48,8 @@ export function splitWhen(
       );
 }
 
-const dataLast =
-  (predicate: Parameters<typeof splitWhenImplementation>[1]) =>
-  (data: Parameters<typeof splitWhenImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof splitWhenImplementation> =
+  (predicate) => (data) =>
     splitWhenImplementation(data, predicate);
 
 function splitWhenImplementation<T>(

@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vitest";
+import { describe, expect, test } from "vitest";
 import { purry } from "./purry";
 
 // A regular arrow function would only return these keys when inspected via

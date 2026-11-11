@@ -1,3 +1,4 @@
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
@@ -52,9 +53,8 @@ export function dropLastWhile(
       );
 }
 
-const dataLast =
-  (predicate: Parameters<typeof dropLastWhileImplementation>[1]) =>
-  (data: Parameters<typeof dropLastWhileImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof dropLastWhileImplementation> =
+  (predicate) => (data) =>
     dropLastWhileImplementation(data, predicate);
 
 function dropLastWhileImplementation<T extends IterableContainer>(

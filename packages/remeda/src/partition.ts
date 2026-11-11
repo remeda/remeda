@@ -1,3 +1,4 @@
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
@@ -102,9 +103,8 @@ export function partition(
       );
 }
 
-const dataLast =
-  (predicate: Parameters<typeof partitionImplementation>[1]) =>
-  (data: Parameters<typeof partitionImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof partitionImplementation> =
+  (predicate) => (data) =>
     partitionImplementation(data, predicate);
 
 const partitionImplementation = <T, S extends T>(

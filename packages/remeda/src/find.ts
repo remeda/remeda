@@ -1,5 +1,5 @@
-import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { SKIP_ITEM } from "./internal/lazyControl";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { makeReducing } from "./internal/makeReducing";
 import {
   lastLazyValue,
@@ -8,6 +8,7 @@ import {
 } from "./internal/makeStoppable";
 import { requireDataByArity } from "./internal/requireData";
 import type { Assignability } from "./internal/types/Assignability";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type {
@@ -176,9 +177,8 @@ export function find(dataOrPredicate: unknown, predicate?: unknown): unknown {
       );
 }
 
-const dataLast =
-  (predicate: Parameters<typeof findImplementation>[1]) =>
-  (data: Parameters<typeof findImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof findImplementation> =
+  (predicate) => (data) =>
     findImplementation(data, predicate);
 
 const findImplementation = <T, S extends T>(

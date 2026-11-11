@@ -1,10 +1,11 @@
-import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import type { IsInteger } from "type-fest";
 import {
   manyLazyValues,
   type LazyResult,
   type LazySlot,
 } from "./internal/lazyControl";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
@@ -125,9 +126,8 @@ export function flat(
       );
 }
 
-const dataLast =
-  (depth: Parameters<typeof flatImplementation>[1]) =>
-  (data: Parameters<typeof flatImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof flatImplementation> =
+  (depth) => (data) =>
     flatImplementation(data, depth);
 
 const flatImplementation = (

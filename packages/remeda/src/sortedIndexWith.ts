@@ -1,4 +1,5 @@
 import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate
@@ -91,7 +92,6 @@ export function sortedIndexWith(
       );
 }
 
-const dataLast =
-  (predicate: Parameters<typeof binarySearchCutoffIndex>[1]) =>
-  (data: Parameters<typeof binarySearchCutoffIndex>[0]) =>
+const dataLast: DataLastBuilder<typeof binarySearchCutoffIndex> =
+  (predicate) => (data) =>
     binarySearchCutoffIndex(data, predicate);

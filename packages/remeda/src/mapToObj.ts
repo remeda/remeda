@@ -1,3 +1,5 @@
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
+
 // TODO [>2]: Once we allow fromEntries to run lazily on iterables we need to remove this utility as it's completely replaceable by `fromEntries(map(...))`.
 /**
  * Map each element of an array into an object using a defined mapper that
@@ -84,9 +86,8 @@ export function mapToObj(dataOrFn: unknown, fn?: unknown): unknown {
       );
 }
 
-const dataLast =
-  (fn: Parameters<typeof mapToObjImplementation>[1]) =>
-  (data: Parameters<typeof mapToObjImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof mapToObjImplementation> =
+  (fn) => (data) =>
     mapToObjImplementation(data, fn);
 
 function mapToObjImplementation(

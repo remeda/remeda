@@ -1,5 +1,6 @@
 import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { canReadData, requireData } from "./internal/requireData";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -69,9 +70,8 @@ export function map(dataOrCallbackfn: unknown, callbackfn?: unknown): unknown {
       );
 }
 
-const dataLast =
-  (callbackfn: Parameters<typeof mapImplementation>[1]) =>
-  (data: Parameters<typeof mapImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof mapImplementation> =
+  (callbackfn) => (data) =>
     mapImplementation(data, callbackfn);
 
 const mapImplementation = <T, U>(

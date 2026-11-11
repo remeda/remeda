@@ -1,4 +1,5 @@
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
 /**
@@ -85,9 +86,8 @@ export function groupBy(
       );
 }
 
-const dataLast =
-  (callbackfn: Parameters<typeof groupByImplementation>[1]) =>
-  (data: Parameters<typeof groupByImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof groupByImplementation> =
+  (callbackfn) => (data) =>
     groupByImplementation(data, callbackfn);
 
 const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(

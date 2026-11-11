@@ -1,3 +1,4 @@
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 type SumBy<
@@ -95,9 +96,8 @@ export function sumBy(
       );
 }
 
-const dataLast =
-  (callbackfn: Parameters<typeof sumByImplementation>[1]) =>
-  (data: Parameters<typeof sumByImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof sumByImplementation> =
+  (callbackfn) => (data) =>
     sumByImplementation(data, callbackfn);
 
 const sumByImplementation = <T>(

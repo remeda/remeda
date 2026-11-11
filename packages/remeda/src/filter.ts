@@ -1,6 +1,7 @@
-import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { SKIP_ITEM } from "./internal/lazyControl";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type {
@@ -95,9 +96,8 @@ export function filter(dataOrPredicate: unknown, predicate?: unknown): unknown {
       );
 }
 
-const dataLast =
-  (predicate: Parameters<typeof filterImplementation>[1]) =>
-  (data: Parameters<typeof filterImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof filterImplementation> =
+  (predicate) => (data) =>
     filterImplementation(data, predicate);
 
 const filterImplementation = <T>(

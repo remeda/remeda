@@ -1,4 +1,5 @@
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
 /**
  * Converts a list of objects into an object indexing the objects by the given
@@ -64,9 +65,8 @@ export function indexBy(dataOrMapper: unknown, mapper?: unknown): unknown {
       );
 }
 
-const dataLast =
-  (mapper: Parameters<typeof indexByImplementation>[1]) =>
-  (data: Parameters<typeof indexByImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof indexByImplementation> =
+  (mapper) => (data) =>
     indexByImplementation(data, mapper);
 
 function indexByImplementation<T, K extends PropertyKey>(

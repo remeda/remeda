@@ -1,3 +1,5 @@
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
+
 /**
  * Returns the mean of the elements of an array using the provided predicate.
  *
@@ -51,10 +53,8 @@ export function meanBy(dataOrFn: unknown, fn?: unknown): unknown {
       );
 }
 
-const dataLast =
-  (fn: Parameters<typeof meanByImplementation>[1]) =>
-  (data: Parameters<typeof meanByImplementation>[0]) =>
-    meanByImplementation(data, fn);
+const dataLast: DataLastBuilder<typeof meanByImplementation> = (fn) => (data) =>
+  meanByImplementation(data, fn);
 
 const meanByImplementation = <T>(
   data: readonly T[],

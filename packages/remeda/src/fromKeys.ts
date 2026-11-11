@@ -1,5 +1,6 @@
 import type { Simplify } from "type-fest";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 // Takes a union of literals and creates a union of records with the value V for
@@ -84,9 +85,8 @@ export function fromKeys(dataOrMapper: unknown, mapper?: unknown): unknown {
       );
 }
 
-const dataLast =
-  (mapper: Parameters<typeof fromKeysImplementation>[1]) =>
-  (data: Parameters<typeof fromKeysImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof fromKeysImplementation> =
+  (mapper) => (data) =>
     fromKeysImplementation(data, mapper);
 
 function fromKeysImplementation<K extends PropertyKey, V>(

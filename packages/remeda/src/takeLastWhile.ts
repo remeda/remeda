@@ -1,3 +1,4 @@
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NarrowedArray } from "./internal/types/NarrowedArray";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
@@ -71,9 +72,8 @@ export function takeLastWhile(
       );
 }
 
-const dataLast =
-  (predicate: Parameters<typeof takeLastWhileImplementation>[1]) =>
-  (data: Parameters<typeof takeLastWhileImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof takeLastWhileImplementation> =
+  (predicate) => (data) =>
     takeLastWhileImplementation(data, predicate);
 
 function takeLastWhileImplementation<T extends IterableContainer>(

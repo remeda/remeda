@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
-import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { forceFusion } from "../test/forceFusion";
+import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { identity } from "./identity";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import { pipe } from "./pipe";

@@ -1,6 +1,7 @@
-import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { manyLazyValues, type LazyResult } from "./internal/lazyControl";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
@@ -75,9 +76,8 @@ export function flatMap(
       );
 }
 
-const dataLast =
-  (callbackfn: Parameters<typeof flatMapImplementation>[1]) =>
-  (data: Parameters<typeof flatMapImplementation>[0]) =>
+const dataLast: DataLastBuilder<typeof flatMapImplementation> =
+  (callbackfn) => (data) =>
     flatMapImplementation(data, callbackfn);
 
 const flatMapImplementation = <T, U>(
