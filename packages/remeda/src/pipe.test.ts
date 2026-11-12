@@ -10,7 +10,7 @@ import { identity } from "./identity";
 import { SKIP_ITEM } from "./internal/lazyControl";
 import { lazyDataLastImplementation0 } from "./internal/lazyDataLastImplementation";
 import { makeReducing } from "./internal/makeReducing";
-import type { LazyCallback } from "./internal/types/LazyCallback";
+import type { LazyCallback } from "./internal/types/Callback";
 import { join } from "./join";
 import { map } from "./map";
 import { multiply } from "./multiply";

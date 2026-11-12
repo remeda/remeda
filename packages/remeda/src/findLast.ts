@@ -1,9 +1,9 @@
 import type { LastArrayElement } from "type-fest";
+import type { Assignability } from "./internal/types/Assignability";
 import type {
   ArrayCallback,
   ArrayTypePredicate,
-} from "./internal/types/ArrayCallback";
-import type { Assignability } from "./internal/types/Assignability";
+} from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { Narrowed } from "./internal/types/Narrowed";

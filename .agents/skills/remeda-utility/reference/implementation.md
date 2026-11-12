@@ -58,7 +58,7 @@ Only the data-last overload is lazy. The data-first overload runs the eager impl
 
 How to type a lazy overload:
 
-- Standard `(value, index, data)` callback: `LazyCallback<T, R>` (`src/internal/types/LazyCallback.ts`). For a type predicate use `LazyTypePredicate<T, S>`; TypeScript can't route `value is S` through a generic return type.
+- Standard `(value, index, data)` callback: `LazyCallback<T, R>` (`src/internal/types/Callback.ts`). For a type predicate use `LazyTypePredicate<T, S>`; TypeScript can't route `value is S` through a generic return type.
 - Any other shape (extra parameters like `mapWithFeedback`'s `previousValue`, or `data` nested inside a tuple like `zipWith`): declare a local alias next to the eager one and type the slot as `Readonly<NonEmptyPrefix<T>>`. Never drop the `Readonly`: `pipe` hands the same array to every invocation, so a callback that mutates it changes what later invocations see.
 - Only the array flowing through the pipe is a prefix. Arrays passed as arguments (`zipWith`'s `other`) are complete and keep their type.
 - If the implementation signature unions the eager and lazy callback types (as `zipWith` does), include the lazy alias in that union; without it the data-last overload fails with `ts2394`, because a callback accepting the full `T` is not assignable to one accepting only its prefix.

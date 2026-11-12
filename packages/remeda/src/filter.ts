@@ -4,14 +4,12 @@ import { requireDataByArity } from "./internal/requireData";
 import type {
   ArrayCallback,
   ArrayTypePredicate,
-} from "./internal/types/ArrayCallback";
+  LazyCallback,
+  LazyTypePredicate,
+} from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type {
-  LazyCallback,
-  LazyTypePredicate,
-} from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
 

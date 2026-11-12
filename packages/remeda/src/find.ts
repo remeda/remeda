@@ -7,18 +7,16 @@ import {
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
 import { requireDataByArity } from "./internal/requireData";
+import type { Assignability } from "./internal/types/Assignability";
 import type {
   ArrayCallback,
   ArrayTypePredicate,
-} from "./internal/types/ArrayCallback";
-import type { Assignability } from "./internal/types/Assignability";
+  LazyCallback,
+  LazyTypePredicate,
+} from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type {
-  LazyCallback,
-  LazyTypePredicate,
-} from "./internal/types/LazyCallback";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
 

@@ -1,4 +1,4 @@
-import type { ArrayCallback } from "./internal/types/ArrayCallback";
+import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 

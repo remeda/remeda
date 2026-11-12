@@ -1,10 +1,10 @@
 import { describe, expect, test, vi } from "vitest";
-import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { forceFusion } from "../test/forceFusion";
+import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { add } from "./add";
 import { find } from "./find";
 import { flatMap } from "./flatMap";
-import type { LazyCallback } from "./internal/types/LazyCallback";
+import type { LazyCallback } from "./internal/types/Callback";
 import { pipe } from "./pipe";
 
 describe("dataFirst", () => {

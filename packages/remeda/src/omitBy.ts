@@ -1,12 +1,12 @@
 import type { IsNever, Simplify } from "type-fest";
 import { purry2 } from "./internal/purryByArity";
-import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
-import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
-import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type {
   ObjectCallback,
   ObjectTypePredicate,
-} from "./internal/types/ObjectCallback";
+} from "./internal/types/Callback";
+import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
+import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
+import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 
 // Symbols are not passed to the predicate (because they can't be enumerated
 // with the `Object.entries` function) and the enumerable ones are copied to the

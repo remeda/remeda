@@ -1,6 +1,6 @@
 import type { Simplify } from "type-fest";
-import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
+import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 

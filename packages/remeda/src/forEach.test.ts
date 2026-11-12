@@ -1,7 +1,7 @@
 import { expect, test, vi } from "vitest";
 import { forceFusion } from "../test/forceFusion";
 import { forEach } from "./forEach";
-import type { LazyCallback } from "./internal/types/LazyCallback";
+import type { LazyCallback } from "./internal/types/Callback";
 import { pipe } from "./pipe";
 import { take } from "./take";
 

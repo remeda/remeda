@@ -1,7 +1,7 @@
 import type {
   ArrayCallback,
   ArrayTypePredicate,
-} from "./internal/types/ArrayCallback";
+} from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";

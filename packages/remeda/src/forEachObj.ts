@@ -1,5 +1,5 @@
 import { purry2 } from "./internal/purryByArity";
-import type { ObjectCallback } from "./internal/types/ObjectCallback";
+import type { ObjectCallback } from "./internal/types/Callback";
 
 /**
  * Iterate an object using a defined callback function.
