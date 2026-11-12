@@ -40,9 +40,11 @@ export function round(precision: number): (value: number) => number;
 
 export function round(valueOrPrecision: number, precision?: number): unknown {
   return purry2(
-    withPrecision(Math.round),
+    roundImplementation,
     arguments.length,
     valueOrPrecision,
     precision,
   );
 }
+
+const roundImplementation = withPrecision(Math.round);

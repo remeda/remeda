@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import { pipe } from "./pipe";
 import { sortedLastIndex } from "./sortedLastIndex";
 
 test("empty array", () => {
@@ -59,4 +60,8 @@ describe("string array", () => {
   test("item in array", () => {
     expect(sortedLastIndex(["a", "b", "c", "d", "e"], "c")).toBe(3);
   });
+});
+
+test("data-last", () => {
+  expect(pipe([1, 2, 2, 3], sortedLastIndex(2))).toBe(3);
 });

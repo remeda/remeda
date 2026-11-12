@@ -53,6 +53,29 @@ describe("data-first from the arity on", () => {
     ).toStrictEqual([["data"], undefined, undefined]);
   });
 
+  test("purryWithLazy1, more arguments than its arity", () => {
+    expect(
+      purryWithLazy1(
+        collectArguments,
+        lazyImplementation,
+        2 /* argumentsLength */,
+        ["data"],
+      ),
+    ).toStrictEqual([["data"]]);
+  });
+
+  test("purryWithLazy2, more arguments than its arity", () => {
+    expect(
+      purryWithLazy2(
+        collectArguments,
+        lazyImplementation,
+        3 /* argumentsLength */,
+        ["data"],
+        1,
+      ),
+    ).toStrictEqual([["data"], 1]);
+  });
+
   test("purryWithLazy3, more arguments than its arity", () => {
     expect(
       purryWithLazy3(
@@ -94,7 +117,7 @@ describe("data-last below the arity", () => {
         typeof dataLast === "function" &&
           dataLast(
             ["data"],
-            // @ts-expect-error [ts2554] -- Intentional! what we're testing!
+            // @ts-expect-error [ts2554] -- Intentional! A point-free caller passes extra arguments (`map` passes the index and the array), which the data-last function must not forward.
             "extra",
           ),
       ).toStrictEqual([["data"]]);
@@ -112,9 +135,7 @@ describe("data-last below the arity", () => {
       expect(typeof dataLast === "function" && dataLast.lazy).toBe(
         lazyImplementation,
       );
-      expect(
-        typeof dataLast === "function" && dataLast.lazyArgument,
-      ).toBeUndefined();
+      expect(dataLast).toHaveProperty("lazyArgument", undefined);
     });
   });
 
@@ -146,7 +167,7 @@ describe("data-last below the arity", () => {
         typeof dataLast === "function" &&
           dataLast(
             ["data"],
-            // @ts-expect-error [ts2554] -- Intentional! what we're testing!
+            // @ts-expect-error [ts2554] -- Intentional! A point-free caller passes extra arguments (`map` passes the index and the array), which the data-last function must not forward.
             "extra",
           ),
       ).toStrictEqual([["data"], 1]);
@@ -199,7 +220,7 @@ describe("data-last below the arity", () => {
         typeof dataLast === "function" &&
           dataLast(
             ["data"],
-            // @ts-expect-error [ts2554] -- Intentional! what we're testing!
+            // @ts-expect-error [ts2554] -- Intentional! A point-free caller passes extra arguments (`map` passes the index and the array), which the data-last function must not forward.
             "extra",
           ),
       ).toStrictEqual([["data"], 1, 2]);

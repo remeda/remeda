@@ -14,7 +14,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @param data - The array.
  * @returns The first element of the array.
  * @signature
- *    first(array)
+ *    first(data)
  * @example
  *    first([1, 2, 3]) // => 1
  *    first([]) // => undefined
@@ -29,7 +29,7 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  *
  * @returns The first element of the array.
  * @signature
- *    first()(array)
+ *    first()(data)
  * @example
  *    pipe(
  *      [1, 2, 4, 8, 16],

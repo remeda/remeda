@@ -7,7 +7,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  *
  * @param data - The array.
  * @signature
- *    last(array)
+ *    last(data)
  * @example
  *    last([1, 2, 3]) // => 3
  *    last([]) // => undefined
@@ -20,7 +20,7 @@ export function last<T extends IterableContainer>(data: T): LastArrayElement<T>;
  * Gets the last element of `array`.
  *
  * @signature
- *    last()(array)
+ *    last()(data)
  * @example
  *    pipe(
  *      [1, 2, 4, 8, 16],

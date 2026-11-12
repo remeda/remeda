@@ -11,7 +11,7 @@ import type { ObjectCallback } from "./internal/types/ObjectCallback";
  * @param data - The object who'se entries would be iterated on.
  * @param callbackfn - A function to execute for each element in the array.
  * @signature
- *    forEachObj(object, fn)
+ *    forEachObj(data, callbackfn)
  * @example
  *    forEachObj({a: 1}, (val, key, obj) => {
  *      console.log(`${key}: ${val}`)
@@ -34,7 +34,7 @@ export function forEachObj<T extends object>(
  * @param callbackfn - A function to execute for each element in the array.
  * @returns The original object (the ref itself, not a shallow copy of it).
  * @signature
- *    forEachObj(fn)(object)
+ *    forEachObj(callbackfn)(data)
  * @example
  *    pipe(
  *      {a: 1},

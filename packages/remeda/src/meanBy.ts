@@ -4,9 +4,9 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 /**
  * Returns the mean of the elements of an array using the provided predicate.
  *
- * @param fn - Predicate function.
+ * @param callbackfn - Predicate function.
  * @signature
- *   meanBy(fn)(data)
+ *   meanBy(callbackfn)(data)
  * @example
  *    pipe(
  *      [{a: 5}, {a: 1}, {a: 3}],
@@ -17,16 +17,16 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  */
 
 export function meanBy<T>(
-  fn: ArrayCallback<readonly T[], number>,
+  callbackfn: ArrayCallback<readonly T[], number>,
 ): (data: readonly T[]) => number;
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
  *
  * @param data - The array.
- * @param fn - Predicate function.
+ * @param callbackfn - Predicate function.
  * @signature
- *   meanBy(data, fn)
+ *   meanBy(data, callbackfn)
  * @example
  *    meanBy(
  *      [{a: 5}, {a: 1}, {a: 3}],
@@ -38,28 +38,30 @@ export function meanBy<T>(
 
 export function meanBy<T>(
   data: readonly T[],
-  fn: ArrayCallback<readonly T[], number>,
+  callbackfn: ArrayCallback<readonly T[], number>,
 ): number;
 
 export function meanBy(
-  dataOrFn: readonly unknown[] | ArrayCallback<readonly unknown[], number>,
-  fn?: ArrayCallback<readonly unknown[], number>,
+  dataOrCallbackfn:
+    readonly unknown[] | ArrayCallback<readonly unknown[], number>,
+  callbackfn?: ArrayCallback<readonly unknown[], number>,
 ): unknown {
-  return typeof dataOrFn === "function"
-    ? dataLast(dataOrFn)
+  return typeof dataOrCallbackfn === "function"
+    ? dataLast(dataOrCallbackfn)
     : meanByImplementation(
-        dataOrFn,
+        dataOrCallbackfn,
         // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
-        fn,
+        callbackfn,
       );
 }
 
-const dataLast: DataLastBuilder<typeof meanByImplementation> = (fn) => (data) =>
-  meanByImplementation(data, fn);
+const dataLast: DataLastBuilder<typeof meanByImplementation> =
+  (callbackfn) => (data) =>
+    meanByImplementation(data, callbackfn);
 
 const meanByImplementation = <T>(
   data: readonly T[],
-  fn: (value: T, index: number, data: readonly T[]) => number,
+  callbackfn: (value: T, index: number, data: readonly T[]) => number,
 ): number => {
   if (data.length === 0) {
     return NaN;
@@ -69,7 +71,7 @@ const meanByImplementation = <T>(
 
   let index = 0;
   for (const item of data) {
-    sum += fn(item, index, data);
+    sum += callbackfn(item, index, data);
     index += 1;
   }
 

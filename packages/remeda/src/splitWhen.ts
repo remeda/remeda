@@ -7,7 +7,7 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * @param data - The array to split.
  * @param predicate - The predicate.
  * @signature
- *    splitWhen(array, fn)
+ *    splitWhen(data, predicate)
  * @example
  *    splitWhen([1, 2, 3], x => x === 2) // => [[1], [2, 3]]
  * @dataFirst
@@ -23,7 +23,7 @@ export function splitWhen<T>(
  *
  * @param predicate - The predicate.
  * @signature
- *    splitWhen(fn)(array)
+ *    splitWhen(predicate)(data)
  * @example
  *    splitWhen(x => x === 2)([1, 2, 3]) // => [[1], [2, 3]]
  * @dataLast

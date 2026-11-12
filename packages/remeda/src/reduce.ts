@@ -54,7 +54,7 @@ export function reduce<T, U>(
  * @returns The value that results from running the "reducer" callback function
  * to completion over the entire array.
  * @signature
- *    reduce(fn, initialValue)(array)
+ *    reduce(callbackfn, initialValue)(data)
  * @example
  *    pipe([1, 2, 3, 4, 5], reduce((acc, x) => acc + x, 100)) // => 115
  * @dataLast

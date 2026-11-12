@@ -132,7 +132,7 @@ export function omitBy<T extends object>(
  * Returns a partial copy of an object omitting the keys matching predicate.
  *
  * @param predicate - The predicate.
- * @signature omitBy(fn)(object)
+ * @signature omitBy(predicate)(data)
  * @example
  *    omitBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {a: 1, b: 2}
  * @dataLast

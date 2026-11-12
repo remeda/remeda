@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import { pipe } from "./pipe";
 import { sortedIndexBy } from "./sortedIndexBy";
 
 describe("runtime correctness", () => {
@@ -271,3 +272,12 @@ function indicesSeen<T>(
   });
   return indices;
 }
+
+test("data-last", () => {
+  expect(
+    pipe(
+      [{ value: 1 }, { value: 3 }],
+      sortedIndexBy({ value: 2 }, ({ value }) => value),
+    ),
+  ).toBe(1);
+});

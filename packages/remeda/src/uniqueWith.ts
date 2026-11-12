@@ -14,7 +14,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  * @param data - The array to filter.
  * @param isEquals - The comparator.
  * @signature
- *    uniqueWith(array, isEquals)
+ *    uniqueWith(data, isEquals)
  * @example
  *    uniqueWith(
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
@@ -34,7 +34,7 @@ export function uniqueWith<T extends IterableContainer>(
  * list. Elements are compared by custom comparator isEquals.
  *
  * @param isEquals - The comparator.
- * @signature uniqueWith(isEquals)(array)
+ * @signature uniqueWith(isEquals)(data)
  * @example
  *    uniqueWith(equals)(
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],

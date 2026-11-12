@@ -13,6 +13,12 @@ declare function takeImplementation(
   count: number,
 ): number[];
 
+declare function firstImplementation(
+  data: readonly number[],
+): number | undefined;
+
+declare function firstLazyImplementation(): LazyEvaluator<number>;
+
 declare function lazyImplementation(_count: number): LazyEvaluator<number>;
 
 declare const passThrough: LazyEvaluator<number>;
@@ -29,6 +35,12 @@ declare function differenceWithImplementation<T, Other>(
   other: readonly Other[],
   isEqual: (a: T, b: Other) => boolean,
 ): T[];
+
+declare function intersectionWithImplementation(
+  data: readonly number[],
+  other: readonly number[],
+  isEqual: (a: number, b: number) => boolean,
+): number[];
 
 declare function lazyImplementationOfOther<T>(
   other: readonly unknown[],
@@ -67,6 +79,21 @@ describe("arity", () => {
       2 /* argumentsLength */,
       [1],
       1,
+    );
+  });
+
+  test("the lazy implementation takes two arguments as one tuple", () => {
+    purryWithLazy3(
+      intersectionWithImplementation,
+      // @ts-expect-error [ts2345] -- A lazy implementation receives two arguments as one tuple, not spread.
+      (
+        _other: readonly number[],
+        _isEqual: (a: number, b: number) => boolean,
+      ) => passThrough,
+      3 /* argumentsLength */,
+      [1],
+      [1],
+      () => true,
     );
   });
 });
@@ -109,6 +136,23 @@ describe("known issues!", () => {
       [1],
       [1],
       () => true,
+    );
+  });
+
+  test("an implementation with fewer parameters than the helper", () => {
+    // Expected: the call is rejected, like `purryWithLazy1(takeImplementation)`
+    // is (see "matches the data-first parameters").
+    //
+    // Actual: it compiles when the lazy implementation takes nothing too,
+    // because a function with fewer parameters is assignable to one with more.
+    // A one-argument call to the utility then returns its data-last function
+    // instead of running it.
+    purryWithLazy2(
+      firstImplementation,
+      firstLazyImplementation,
+      1 /* argumentsLength */,
+      [1],
+      undefined,
     );
   });
 });

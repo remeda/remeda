@@ -91,29 +91,27 @@ export function zipWith<
   Value,
 >(data: T, other: S, fn: ZippingFunction<T, S, Value>): Value[];
 
-// TODO [>2]: Consider removing this function. `map(zip(data, other), ([first, second], index) => fn(first, second, index, [data, other]))`, or `zip(other)` then `map(...)` inside a `pipe`, covers it and also keeps tuple shapes in the output type, and an arrow function over `zip` covers the `zipWith(fn)` form. All it adds is a callback that takes the pair unpacked, with no pair allocated per item.
+// TODO [>2]: Consider removing this function. `map(zip(data, other), ([first, second], index) => fn(first, second, index, [data, other]))` covers it, as does `zip(other)` then `map(...)` inside a `pipe` for a callback that doesn't read its fourth argument, and both keep tuple shapes in the output type; an arrow function over `zip` covers the `zipWith(fn)` form. All it adds is a callback that takes the pair unpacked, with no pair allocated per item.
 export function zipWith(
   dataOtherOrFn: IterableContainer | ZippingFunction,
   otherOrFn?: IterableContainer | LazyZippingFunction | ZippingFunction,
   fn?: ZippingFunction,
 ): unknown {
   if (typeof dataOtherOrFn === "function") {
-    // Both datum's last
-    return (data1: IterableContainer, data2: IterableContainer) =>
-      zipWithImplementation(data1, data2, dataOtherOrFn);
+    return bothListsLast(dataOtherOrFn);
   }
 
   if (typeof otherOrFn === "function") {
     return withLazyImplementation(
       dataLast(
         dataOtherOrFn,
-        // @ts-expect-error [ts2345] -- Outside a pipe the data-last function hands the implementation the full first list, which is a valid non-empty prefix whenever `fn` is invoked (it never is for an empty list); TypeScript can't relate `T1` to `NonEmptyPrefix<T1>`.
+        // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands `fn` the complete first list, a valid non-empty prefix whenever `fn` is invoked (it never is for an empty list); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
         otherOrFn,
       ),
       lazyImplementation,
       [
         dataOtherOrFn,
-        // @ts-expect-error [ts2322] -- `lazyImplementation` calls `fn` only once the first list has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T1[]` type.
+        // @ts-expect-error [ts2322] -- `lazyImplementation` calls `fn` only once the first list has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
         otherOrFn,
       ],
     );
@@ -128,6 +126,11 @@ export function zipWith(
 
 const dataLast: DataLastBuilder<typeof zipWithImplementation> =
   (other, fn) => (data) =>
+    zipWithImplementation(data, other, fn);
+
+const bothListsLast =
+  (fn: ZippingFunction) =>
+  (data: IterableContainer, other: IterableContainer) =>
     zipWithImplementation(data, other, fn);
 
 function zipWithImplementation<

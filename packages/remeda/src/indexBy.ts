@@ -16,7 +16,7 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * @param data - The array.
  * @param mapper - The indexing function.
  * @signature
- *    indexBy(array, fn)
+ *    indexBy(data, mapper)
  * @example
  *    indexBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
  * @dataFirst
@@ -40,7 +40,7 @@ export function indexBy<T, K extends PropertyKey>(
  *
  * @param mapper - The indexing function.
  * @signature
- *    indexBy(fn)(array)
+ *    indexBy(mapper)(data)
  * @example
  *    pipe(
  *      ['one', 'two', 'three'],

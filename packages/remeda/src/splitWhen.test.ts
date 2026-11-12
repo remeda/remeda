@@ -63,3 +63,12 @@ test("calls the predicate once per item when nothing matches", () => {
 test("empty array in a pipe", () => {
   expect(pipe([], splitWhen(constant(true)))).toStrictEqual([[], []]);
 });
+
+test("in a pipe", () => {
+  expect(
+    pipe(
+      [1, 2, 3],
+      splitWhen((x) => x === 2),
+    ),
+  ).toStrictEqual([[1], [2, 3]]);
+});

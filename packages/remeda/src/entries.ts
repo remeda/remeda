@@ -25,7 +25,7 @@ type Entry<T> = Simplify<
  *
  * @param data - Object to return keys and values of.
  * @signature
- *    entries(object)
+ *    entries(data)
  * @example
  *    entries({ a: 1, b: 2, c: 3 }); // => [['a', 1], ['b', 2], ['c', 3]]
  * @dataFirst
@@ -37,7 +37,7 @@ export function entries<T extends {}>(data: T): Entry<T>[];
  * Returns an array of key/values of the enumerable properties of an object.
  *
  * @signature
- *    entries()(object)
+ *    entries()(data)
  * @example
  *    pipe({ a: 1, b: 2, c: 3 }, entries()); // => [['a', 1], ['b', 2], ['c', 3]]
  * @dataLast

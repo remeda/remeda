@@ -41,7 +41,7 @@ export function findLastIndex<T>(
  * @returns The index of the last (highest-index) element in the array that
  * passes the test. Otherwise -1 if no matching element is found.
  * @signature
- *    findLastIndex(fn)(items)
+ *    findLastIndex(predicate)(data)
  * @example
  *    pipe(
  *      [1, 3, 4, 6],

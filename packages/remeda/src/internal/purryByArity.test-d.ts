@@ -13,6 +13,8 @@ declare function subtractOptionalImplementation(
 
 declare function negateImplementation(data: number): number;
 
+declare function isEqualImplementation(data: unknown, other: unknown): boolean;
+
 test("return type", () => {
   expectTypeOf(
     purry2(subtractImplementation, 2 /* argumentsLength */, 1, 2),
@@ -27,14 +29,6 @@ describe("arity", () => {
       1 /* argumentsLength */,
       1,
     );
-    purry3(
-      // @ts-expect-error [ts2345] -- `subtractImplementation` takes 2 parameters, so `purry3` doesn't fit it.
-      subtractImplementation,
-      3 /* argumentsLength */,
-      1,
-      2,
-      3,
-    );
   });
 
   test("rejects optional parameters", () => {
@@ -45,26 +39,26 @@ describe("arity", () => {
       1,
       2,
     );
+    purry1(
+      // @ts-expect-error [ts2345] -- `purry1`'s data-last function is the implementation itself, so a point-free caller's extra arguments would fill the optional parameter.
+      subtractOptionalImplementation,
+      1 /* argumentsLength */,
+      1,
+    );
   });
 });
 
 describe("known issues!", () => {
   test("an implementation with fewer parameters than the helper", () => {
-    // Expected: the call is rejected, like `purry1(subtractImplementation)`
+    // Expected: both calls are rejected, like `purry1(subtractImplementation)`
     // is (see "matches the data-first parameters").
     //
-    // Actual: it compiles, because a function with fewer parameters is
-    // assignable to one with more. A one-argument call to the utility then
+    // Actual: they compile whenever the parameters after the data accept
+    // `unknown`, because a function with fewer parameters is assignable to one
+    // with more, and `P` falls back to `unknown` for every parameter it can't
+    // infer. A call to the utility with the implementation's arity then
     // returns its data-last function instead of running it.
     purry2(negateImplementation, 1 /* argumentsLength */, 1, undefined);
-  });
-
-  test("an optional parameter beyond the helper", () => {
-    // Expected: the call is rejected, like `purry2` is for the same
-    // implementation (see "rejects optional parameters").
-    //
-    // Actual: it compiles, because a function is assignable to one that
-    // lacks its optional parameters. The utility then drops that argument.
-    purry1(subtractOptionalImplementation, 2 /* argumentsLength */, 1);
+    purry3(isEqualImplementation, 2 /* argumentsLength */, 1, 2, undefined);
   });
 });

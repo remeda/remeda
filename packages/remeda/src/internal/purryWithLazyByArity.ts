@@ -71,6 +71,9 @@ export const purryWithLazy2 = <
   R,
 >(
   dataFirst: DataFirst<T, P, R>,
+  // A single argument reaches the lazy implementation as is, so its own
+  // parameters are `P`; typing it by them lets TypeScript infer `P` from it
+  // too, which `LazyEvaluatorFactory`'s deferred `LazyArgument` blocks.
   lazy: LazyEvaluatorFactoryOf<T, P>,
   argumentsLength: number,
   dataOrArgument: unknown,

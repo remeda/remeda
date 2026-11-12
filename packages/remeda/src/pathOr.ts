@@ -73,19 +73,19 @@ type PathValue3<
 /**
  * Gets the value at `path` of `data`. If the resolved value is `null` or `undefined`, the `defaultValue` is returned in its place.
  *
- * **DEPRECATED**: Use `defaultTo(prop(object, ...path), defaultValue)`
+ * **DEPRECATED**: Use `defaultTo(prop(data, ...path), defaultValue)`
  * instead!
  *
  * @param data - The target object.
  * @param path - The path of the property to get.
  * @param defaultValue - The default value.
- * @signature pathOr(object, array, defaultValue)
+ * @signature pathOr(data, path, defaultValue)
  * @example
  *    pathOr({x: 10}, ['y'], 2) // 2
  *    pathOr({y: 10}, ['y'], 2) // 10
  * @dataFirst
  * @category Object
- * @deprecated Use `defaultTo(prop(object, ...path), defaultValue)` instead.
+ * @deprecated Use `defaultTo(prop(data, ...path), defaultValue)` instead.
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
   data: T,
@@ -94,7 +94,7 @@ export function pathOr<T, A extends keyof Pathable<T>>(
 ): PathValue1<T, A>;
 
 /**
- * @deprecated Use `defaultTo(prop(object, ...path), defaultValue)` instead.
+ * @deprecated Use `defaultTo(prop(data, ...path), defaultValue)` instead.
  */
 export function pathOr<
   T,
@@ -107,7 +107,7 @@ export function pathOr<
 ): PathValue2<T, A, B>;
 
 /**
- * @deprecated Use `defaultTo(prop(object, ...path), defaultValue)` instead.
+ * @deprecated Use `defaultTo(prop(data, ...path), defaultValue)` instead.
  */
 export function pathOr<
   T,
@@ -121,7 +121,8 @@ export function pathOr<
 ): PathValue3<T, A, B, C>;
 
 /**
- * Gets the value at `path` of `data`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
+ * Gets the value at `path` of `data`. If the resolved value is `null` or
+ * `undefined`, the `defaultValue` is returned in its place.
  *
  * **DEPRECATED**: Use `($) => defaultTo(prop($, ...path), defaultValue)`
  * instead, or if already inside a `pipe`, replace the call to `pathOr` with:
@@ -129,7 +130,7 @@ export function pathOr<
  *
  * @param path - The path of the property to get.
  * @param defaultValue - The default value.
- * @signature pathOr(array, defaultValue)(object)
+ * @signature pathOr(path, defaultValue)(data)
  * @example
  *    pipe({x: 10}, pathOr(['y'], 2)) // 2
  *    pipe({y: 10}, pathOr(['y'], 2)) // 10

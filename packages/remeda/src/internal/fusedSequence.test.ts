@@ -58,7 +58,7 @@ describe(buildFusedSequence, () => {
     >(() => (value) => value);
     buildFusedSequence(
       [
-        // @ts-expect-error [ts2322] -- The `never` arguments of the default `LazyUnaryFunction` are what let it hold any lazy function, and the helper only passes `lazyArgument` to the `lazy` it was built with.
+        // @ts-expect-error [ts2322] -- The default `LazyUnaryFunction` types `lazyArgument` as `never`, which no stored argument matches; `buildFusedSequence` only passes a function's `lazyArgument` to that function's own `lazy`.
         lazyDataLastImplementation2(
           (_data: readonly unknown[], _first: number, _second: string) => {
             throw new Error(

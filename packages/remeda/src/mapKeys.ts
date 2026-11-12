@@ -58,7 +58,7 @@ type CouldBeEmpty<T> = {} extends T ? true : false;
  * @param data - The object to map.
  * @param keyMapper - The mapping function.
  * @signature
- *    mapKeys(object, fn)
+ *    mapKeys(data, keyMapper)
  * @example
  *    mapKeys({a: 1, b: 2}, (key, value) => key + value) // => { a1: 1, b2: 2 }
  * @dataFirst
@@ -74,7 +74,7 @@ export function mapKeys<T extends {}, Key extends PropertyKey>(
  *
  * @param keyMapper - The mapping function.
  * @signature
- *    mapKeys(fn)(object)
+ *    mapKeys(keyMapper)(data)
  * @example
  *    pipe({a: 1, b: 2}, mapKeys((key, value) => key + value)) // => { a1: 1, b2: 2 }
  * @dataLast

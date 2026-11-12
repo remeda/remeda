@@ -492,7 +492,8 @@ export default defineConfig(
           patterns: [
             {
               regex: "/purry$",
-              message: "Dispatch with purry1-3 or purryWithLazy1-3 instead.",
+              message:
+                "Pass the arguments as parameters: purry1-3, purryWithLazy1-3, or a typeof check.",
             },
           ],
         },

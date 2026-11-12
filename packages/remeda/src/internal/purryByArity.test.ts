@@ -32,6 +32,18 @@ describe("data-first from the arity on", () => {
     ).toStrictEqual(["data", undefined, undefined]);
   });
 
+  test("purry1, more arguments than its arity", () => {
+    expect(
+      purry1(collectArguments, 2 /* argumentsLength */, "data"),
+    ).toStrictEqual(["data"]);
+  });
+
+  test("purry2, more arguments than its arity", () => {
+    expect(
+      purry2(collectArguments, 3 /* argumentsLength */, "data", 1),
+    ).toStrictEqual(["data", 1]);
+  });
+
   test("purry3, more arguments than its arity", () => {
     expect(
       purry3(collectArguments, 4 /* argumentsLength */, "data", 1, 2),
@@ -46,38 +58,72 @@ describe("data-last below the arity", () => {
     );
   });
 
-  test("purry2", () => {
-    const dataLast = purry2(
-      collectArguments,
-      1 /* argumentsLength */,
-      1,
-      undefined,
-    );
+  describe(purry2, () => {
+    test("declares a single parameter", () => {
+      const dataLast = purry2(
+        collectArguments,
+        1 /* argumentsLength */,
+        1,
+        undefined,
+      );
 
-    expect(dataLast).toBeTypeOf("function");
-    expect(dataLast).toHaveLength(1);
-    expect(typeof dataLast === "function" && dataLast("data")).toStrictEqual([
-      "data",
-      1,
-    ]);
+      expect(dataLast).toBeTypeOf("function");
+      expect(dataLast).toHaveLength(1);
+    });
+
+    test("passes the data and the argument", () => {
+      const dataLast = purry2(
+        collectArguments,
+        1 /* argumentsLength */,
+        1,
+        undefined,
+      );
+
+      expect(dataLast).toBeTypeOf("function");
+      expect(
+        typeof dataLast === "function" &&
+          dataLast(
+            "data",
+            // @ts-expect-error [ts2554] -- Intentional! A point-free caller passes extra arguments (`map` passes the index and the array), which the data-last function must not forward.
+            "extra",
+          ),
+      ).toStrictEqual(["data", 1]);
+    });
   });
 
-  test("purry3", () => {
-    const dataLast = purry3(
-      collectArguments,
-      2 /* argumentsLength */,
-      1,
-      2,
-      undefined,
-    );
+  describe(purry3, () => {
+    test("declares a single parameter", () => {
+      const dataLast = purry3(
+        collectArguments,
+        2 /* argumentsLength */,
+        1,
+        2,
+        undefined,
+      );
 
-    expect(dataLast).toBeTypeOf("function");
-    expect(dataLast).toHaveLength(1);
-    expect(typeof dataLast === "function" && dataLast("data")).toStrictEqual([
-      "data",
-      1,
-      2,
-    ]);
+      expect(dataLast).toBeTypeOf("function");
+      expect(dataLast).toHaveLength(1);
+    });
+
+    test("passes the data and both arguments", () => {
+      const dataLast = purry3(
+        collectArguments,
+        2 /* argumentsLength */,
+        1,
+        2,
+        undefined,
+      );
+
+      expect(dataLast).toBeTypeOf("function");
+      expect(
+        typeof dataLast === "function" &&
+          dataLast(
+            "data",
+            // @ts-expect-error [ts2554] -- Intentional! A point-free caller passes extra arguments (`map` passes the index and the array), which the data-last function must not forward.
+            "extra",
+          ),
+      ).toStrictEqual(["data", 1, 2]);
+    });
   });
 });
 

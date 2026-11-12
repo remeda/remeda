@@ -5,7 +5,6 @@
 - Cast empty arrays for type data: `[] as Array<{ name: string }>`
 - Prefer casting (`as`) over explicit typing (`: Type`) — they don't always behave the same
 - Don't annotate generics explicitly — define types on data, not via `<T>` on the call
-- Fixtures that only supply a type (a callback or implementation the test passes but never runs) are `declare function` / `declare const`: only the signature is under test, so a body is code the reader has to skip
 - Only test inferred or "magic" types, not trivial signature parts with no inference
 - Use `unknown` in type slots you don't care about — `Record<string, unknown>` not `Record<string, string>`
 - Use disjoint value types in union tests — `Record<string, number> | Record<string, boolean>`, not `Record<string, number> | Record<string, number>` (identical sides don't test union logic)

@@ -19,14 +19,14 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * **Warning**: We strongly advise against using this function unless it is
  * used with a huge input array and your app has stringent memory/gc
  * constraints. We recommend that in most cases you should use `pullObject`,
- * or the composition `fromEntries(map(array, fn))`. This function will be
+ * or the composition `fromEntries(map(data, mapper))`. This function will be
  * deprecated and **removed** in future versions of the library!
  *
  * @param data - The array to map.
- * @param fn - The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries.
+ * @param mapper - The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries.
  * @returns The new mapped object.
  * @signature
- *    mapToObj(data, fn)
+ *    mapToObj(data, mapper)
  * @example
  *    mapToObj([1, 2, 3], x => [String(x), x * 2]) // => {1: 2, 2: 4, 3: 6}
  * @dataFirst
@@ -34,7 +34,7 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  */
 export function mapToObj<T, K extends PropertyKey, V>(
   data: readonly T[],
-  fn: ArrayCallback<readonly T[], [K, V]>,
+  mapper: ArrayCallback<readonly T[], [K, V]>,
 ): Record<K, V>;
 
 // TODO [>2]: Once we allow fromEntries to run lazily on iterables we need to remove this utility as it's completely replaceable by `fromEntries(map(...))`.
@@ -55,13 +55,13 @@ export function mapToObj<T, K extends PropertyKey, V>(
  * **Warning**: We strongly advise against using this function unless it is
  * used with a huge input array and your app has stringent memory/gc
  * constraints. We recommend that in most cases you should use `pullObject`,
- * or the composition `fromEntries(map(array, fn))`. This function will be
+ * or the composition `fromEntries(map(data, mapper))`. This function will be
  * deprecated and **removed** in future versions of the library!
  *
- * @param fn - The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries.
+ * @param mapper - The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries.
  * @returns The new mapped object.
  * @signature
- *    mapToObj(fn)(data)
+ *    mapToObj(mapper)(data)
  * @example
  *    pipe(
  *      [1, 2, 3],
@@ -71,31 +71,31 @@ export function mapToObj<T, K extends PropertyKey, V>(
  * @category Array
  */
 export function mapToObj<T, K extends PropertyKey, V>(
-  fn: ArrayCallback<readonly T[], [K, V]>,
+  mapper: ArrayCallback<readonly T[], [K, V]>,
 ): (data: readonly T[]) => Record<K, V>;
 
 export function mapToObj(
-  dataOrFn:
+  dataOrMapper:
     | readonly unknown[]
     | ArrayCallback<readonly unknown[], [PropertyKey, unknown]>,
-  fn?: ArrayCallback<readonly unknown[], [PropertyKey, unknown]>,
+  mapper?: ArrayCallback<readonly unknown[], [PropertyKey, unknown]>,
 ): unknown {
-  return typeof dataOrFn === "function"
-    ? dataLast(dataOrFn)
+  return typeof dataOrMapper === "function"
+    ? dataLast(dataOrMapper)
     : mapToObjImplementation(
-        dataOrFn,
+        dataOrMapper,
         // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
-        fn,
+        mapper,
       );
 }
 
 const dataLast: DataLastBuilder<typeof mapToObjImplementation> =
-  (fn) => (data) =>
-    mapToObjImplementation(data, fn);
+  (mapper) => (data) =>
+    mapToObjImplementation(data, mapper);
 
 function mapToObjImplementation(
   data: readonly unknown[],
-  fn: (
+  mapper: (
     value: unknown,
     index: number,
     data: readonly unknown[],
@@ -104,7 +104,7 @@ function mapToObjImplementation(
   const out: Record<PropertyKey, unknown> = {};
 
   data.forEach((element, index) => {
-    const [key, value] = fn(element, index, data);
+    const [key, value] = mapper(element, index, data);
     if (key === "__proto__") {
       // We want `__proto__` to act just like any other key, but assigning it
       // runs the setter inherited from `Object.prototype` instead of creating

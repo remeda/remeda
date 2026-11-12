@@ -5,7 +5,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Excludes the values from `other` array.
- * Elements are compared by custom comparator isEquals.
+ * Elements are compared by custom comparator isEqual.
  *
  * @param data - The source array.
  * @param other - The values to exclude.
@@ -30,7 +30,7 @@ export function differenceWith<T, Other>(
 
 /**
  * Excludes the values from `other` array.
- * Elements are compared by custom comparator isEquals.
+ * Elements are compared by custom comparator isEqual.
  *
  * @param other - The values to exclude.
  * @param isEqual - The comparator.

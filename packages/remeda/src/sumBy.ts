@@ -24,7 +24,7 @@ type SumBy<
  *
  * @param callbackfn - Predicate function.
  * @signature
- *   sumBy(fn)(array)
+ *   sumBy(callbackfn)(data)
  * @example
  *    pipe(
  *      [{a: 5}, {a: 1}, {a: 3}],
@@ -59,7 +59,7 @@ export function sumBy<T extends IterableContainer>(
  * @param data - The array.
  * @param callbackfn - Predicate function.
  * @signature
- *   sumBy(array, fn)
+ *   sumBy(data, callbackfn)
  * @example
  *    sumBy(
  *      [{a: 5}, {a: 1}, {a: 3}],

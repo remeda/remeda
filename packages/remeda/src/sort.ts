@@ -10,9 +10,9 @@ import type { ReorderedArray } from "./internal/types/ReorderedArray";
  * `sort` function.
  *
  * @param data - The array to sort.
- * @param cmp - The comparator function.
+ * @param comparator - The comparator function.
  * @signature
- *    sort(data, cmp)
+ *    sort(data, comparator)
  * @example
  *    sort([4, 2, 7, 5], (a, b) => a - b); // => [2, 4, 5, 7]
  * @dataFirst
@@ -20,7 +20,7 @@ import type { ReorderedArray } from "./internal/types/ReorderedArray";
  */
 export function sort<T extends IterableContainer>(
   data: T,
-  cmp: CompareFunction<T[number]>,
+  comparator: CompareFunction<T[number]>,
 ): ReorderedArray<T>;
 
 /**
@@ -29,39 +29,40 @@ export function sort<T extends IterableContainer>(
  * if it's larger, and zero if they are equal. Sorting is based on a native
  * `sort` function.
  *
- * @param cmp - The comparator function.
+ * @param comparator - The comparator function.
  * @signature
- *    sort(cmp)(data)
+ *    sort(comparator)(data)
  * @example
  *    pipe([4, 2, 7, 5], sort((a, b) => a - b)) // => [2, 4, 5, 7]
  * @dataLast
  * @category Array
  */
 export function sort<T extends IterableContainer>(
-  cmp: CompareFunction<T[number]>,
+  comparator: CompareFunction<T[number]>,
 ): (data: T) => ReorderedArray<T>;
 
 export function sort(
-  dataOrCmp: IterableContainer | CompareFunction,
-  cmp?: CompareFunction,
+  dataOrComparator: IterableContainer | CompareFunction,
+  comparator?: CompareFunction,
 ): unknown {
-  return typeof dataOrCmp === "function"
-    ? dataLast(dataOrCmp)
+  return typeof dataOrComparator === "function"
+    ? dataLast(dataOrComparator)
     : sortImplementation(
-        dataOrCmp,
+        dataOrComparator,
         // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
-        cmp,
+        comparator,
       );
 }
 
-const dataLast: DataLastBuilder<typeof sortImplementation> = (cmp) => (data) =>
-  sortImplementation(data, cmp);
+const dataLast: DataLastBuilder<typeof sortImplementation> =
+  (comparator) => (data) =>
+    sortImplementation(data, comparator);
 
 function sortImplementation<T extends IterableContainer>(
   data: T,
-  cmp: (a: T[number], b: T[number]) => number,
+  comparator: (a: T[number], b: T[number]) => number,
 ): ReorderedArray<T> {
   const ret = data.concat();
-  ret.sort(cmp);
+  ret.sort(comparator);
   return ret as ReorderedArray<T>;
 }

@@ -3,8 +3,8 @@ import type { StrictFunction } from "./StrictFunction";
 
 /**
  * The type of a utility's data-last builder, derived from the data-first
- * implementation so the two are kept tightly coupled and to remove the need to
- * retype the `data` and all `params`.
+ * implementation so the two stay coupled and the builder's parameters and
+ * `data` aren't retyped by hand.
  *
  * A generic implementation's type parameters resolve to their constraints; the
  * utility's overloads carry the precise types.

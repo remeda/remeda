@@ -28,13 +28,16 @@ export const purry1 = <
   P extends readonly [],
   R,
 >(
-  dataFirst: DataFirst<T, P, R>,
+  // The intersection rejects an optional parameter after the data, which a
+  // point-free caller's extra arguments would fill.
+  dataFirst: DataFirst<T, P, R> &
+    ((data: never, ...extraArguments: readonly unknown[]) => unknown),
   argumentsLength: number,
   data: unknown,
 ): R | UnaryFunction<T, R> =>
   argumentsLength >= 1
     ? dataFirst(
-        // @ts-expect-error [ts2345] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
+        // @ts-expect-error [ts2769] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
         data,
       )
     : // A closure around `dataFirst` would only add a call to every data-last

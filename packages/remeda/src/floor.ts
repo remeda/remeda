@@ -40,9 +40,11 @@ export function floor(precision: number): (value: number) => number;
 
 export function floor(valueOrPrecision: number, precision?: number): unknown {
   return purry2(
-    withPrecision(Math.floor),
+    floorImplementation,
     arguments.length,
     valueOrPrecision,
     precision,
   );
 }
+
+const floorImplementation = withPrecision(Math.floor);

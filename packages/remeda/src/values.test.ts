@@ -1,4 +1,5 @@
 import { expect, test } from "vitest";
+import { pipe } from "./pipe";
 import { values } from "./values";
 
 test("works with arrays", () => {
@@ -17,4 +18,8 @@ test("shouldn't skip symbol values", () => {
   const mySymbol = Symbol("mySymbol");
 
   expect(values({ a: mySymbol })).toStrictEqual([mySymbol]);
+});
+
+test("data-last", () => {
+  expect(pipe({ a: 1 }, values())).toStrictEqual([1]);
 });

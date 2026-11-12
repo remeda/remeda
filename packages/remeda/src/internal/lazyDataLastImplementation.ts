@@ -19,11 +19,18 @@ export type LazyUnaryFunction<
   R = unknown,
 > = UnaryFunction<T, R> & LazyDefinition<T, P>;
 
+/**
+ * The lazy implementation of a utility whose data-last parameters are `P`: it
+ * takes them as one `LazyArgument`.
+ */
 export type LazyEvaluatorFactory<
   T extends IterableContainer,
   P extends readonly unknown[],
 > = LazyEvaluatorFactoryOf<T, readonly [lazyArgument: LazyArgument<P>]>;
 
+/**
+ * A lazy implementation by its own parameters `P`.
+ */
 export type LazyEvaluatorFactoryOf<
   T extends IterableContainer,
   P extends readonly unknown[],
@@ -38,14 +45,14 @@ export type LazyEvaluatorFactoryOf<
           StoppableMetadata)
     );
 
+// The empty case comes first, as an empty tuple also matches
+// `[(infer Single)?]`. A single argument is stored as is, which spares every
+// data-last call an array.
 export type LazyArgument<P extends readonly unknown[]> = P extends readonly []
-  ? // Fallback when no parameters are defined...
-    undefined
+  ? undefined
   : P extends readonly [(infer Single)?]
-    ? // Unbox a single argument
-      Single
-    : // Otherwise return it as-is.
-      P;
+    ? Single
+    : P;
 
 type LazyDefinition<
   T extends IterableContainer,
@@ -59,11 +66,11 @@ type LazyDefinitionOf<T extends IterableContainer, P> = {
 
 /**
  * Attaches a lazy implementation to a data-last function that the utility
- * builds itself, instead of going through a `purryWithLazy` helper. The
- * builders behind `purryWithLazy2` and `purryWithLazy3` give every utility the
- * same closure, whose call feedback then covers all their implementations, so
- * the engine can't inline any of them into it; a closure of the utility's own
- * keeps that call monomorphic.
+ * builds itself, instead of going through a `purryWithLazy1`-`3` helper. Those
+ * build every utility's data-last function at one shared closure site, whose
+ * call feedback then covers all their implementations, so the engine can't
+ * inline any of them into it; a builder of the utility's own keeps that call
+ * monomorphic.
  *
  * @param lazyArgument - The value `lazy` is built from: the argument itself
  * for one, or the arguments as a tuple for several.
@@ -107,7 +114,7 @@ export function lazyDataLastImplementation0<
   // is written onto the data-last function, and `dataFirst` is shared by every
   // call of the utility.
   const dataLast = (data: T): R =>
-    // @ts-expect-error [ts2345] -- The arguments are the elements of `P`, which TypeScript can't match to a generic tuple one by one.
+    // @ts-expect-error [ts2345] -- `P` is always empty, but TypeScript can't match the call's empty argument list to a generic tuple.
     dataFirst(data);
 
   dataLast.lazy = lazy;
@@ -131,11 +138,13 @@ export function lazyDataLastImplementation1<
   lazy: LazyEvaluatorFactoryOf<T, P>,
   argument: P[0],
 ): LazyUnaryFunction<T, P, R> {
-  // @ts-expect-error [ts2559] -- Allows us to build the lazy definition dynamically at runtime.
-  const dataLast: Partial<SimplifiedWritable<LazyDefinition<T, P>>> =
-    dataLastImplementation1(dataFirst, argument);
+  const dataLast: UnaryFunction<T, R> &
+    Partial<SimplifiedWritable<LazyDefinition<T, P>>> = dataLastImplementation1(
+    dataFirst,
+    argument,
+  );
 
-  // @ts-expect-error [ts2322] -- A function taking the parameters `P` is one taking `LazyArgument<P>` when `P` holds a single argument, but `LazyArgument` of a generic tuple stays deferred, so TypeScript can't match the two.
+  // @ts-expect-error [ts2375] -- A function taking the parameters `P` is one taking `LazyArgument<P>` when `P` holds a single argument, but `LazyArgument` of a generic tuple stays deferred, so TypeScript can't match the two.
   dataLast.lazy = lazy;
   // @ts-expect-error [ts2322] -- `LazyArgument` of a generic tuple stays deferred, so TypeScript can't match the stored value to it.
   dataLast.lazyArgument = argument;
@@ -159,9 +168,12 @@ export function lazyDataLastImplementation2<
   first: P[0],
   second: P[1],
 ): LazyUnaryFunction<T, P, R> {
-  // @ts-expect-error [ts2559] -- Allows us to build the lazy definition dynamically at runtime.
-  const dataLast: Partial<SimplifiedWritable<LazyDefinition<T, P>>> =
-    dataLastImplementation2(dataFirst, first, second);
+  const dataLast: UnaryFunction<T, R> &
+    Partial<SimplifiedWritable<LazyDefinition<T, P>>> = dataLastImplementation2(
+    dataFirst,
+    first,
+    second,
+  );
 
   dataLast.lazy = lazy;
   // @ts-expect-error [ts2322] -- `LazyArgument` of a generic tuple stays deferred, so TypeScript can't match the stored value to it.

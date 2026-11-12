@@ -1,5 +1,6 @@
 import { expect, test } from "vitest";
 import { entries } from "./entries";
+import { pipe } from "./pipe";
 
 test("should return pairs", () => {
   expect(entries({ a: 1, b: 2, c: 3 })).toStrictEqual([
@@ -27,4 +28,8 @@ test("works with complex objects as values", () => {
   const complexObject = { a: { b: { c: [{ d: true }, { d: false }] } } };
 
   expect(entries({ a: complexObject })).toStrictEqual([["a", complexObject]]);
+});
+
+test("data-last", () => {
+  expect(pipe({ a: 1 }, entries())).toStrictEqual([["a", 1]]);
 });

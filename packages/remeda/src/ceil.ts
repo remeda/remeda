@@ -40,9 +40,11 @@ export function ceil(precision: number): (value: number) => number;
 
 export function ceil(valueOrPrecision: number, precision?: number): unknown {
   return purry2(
-    withPrecision(Math.ceil),
+    ceilImplementation,
     arguments.length,
     valueOrPrecision,
     precision,
   );
 }
+
+const ceilImplementation = withPrecision(Math.ceil);
