@@ -1,10 +1,9 @@
 import { heapify, heapMaybeInsert } from "./internal/heap";
 import {
   purryOrderRulesWithArgument,
-  type OrderRule,
+  type OrderRules,
 } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
-import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
 /**
  * Take the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before taking the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.
@@ -25,7 +24,7 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 export function takeFirstBy<T>(
   data: readonly T[],
   n: number,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
+  ...rules: OrderRules<T>
 ): T[];
 
 /**
@@ -45,7 +44,7 @@ export function takeFirstBy<T>(
  */
 export function takeFirstBy<T>(
   n: number,
-  ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
+  ...rules: OrderRules<NoInfer<T>>
 ): (data: readonly T[]) => T[];
 
 export function takeFirstBy(...args: readonly unknown[]): unknown {

@@ -1,7 +1,6 @@
-import { purryOrderRules, type OrderRule } from "./internal/purryOrderRules";
+import { purryOrderRules, type OrderRules } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import type { ReorderedArray } from "./internal/types/ReorderedArray";
 
 /**
@@ -35,7 +34,7 @@ import type { ReorderedArray } from "./internal/types/ReorderedArray";
  * @category Array
  */
 export function sortBy<T extends IterableContainer>(
-  ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
+  ...sortRules: OrderRules<T[number]>
 ): (data: T) => ReorderedArray<T>;
 
 /**
@@ -86,7 +85,7 @@ export function sortBy<T extends IterableContainer>(
  */
 export function sortBy<T extends IterableContainer>(
   data: T,
-  ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
+  ...sortRules: OrderRules<T[number]>
 ): ReorderedArray<T>;
 
 export function sortBy(...args: readonly unknown[]): unknown {

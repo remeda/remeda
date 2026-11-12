@@ -1,9 +1,8 @@
 import {
   purryOrderRulesWithArgument,
-  type OrderRule,
+  type OrderRules,
 } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
-import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
 /**
  * Calculates the rank of an item in an array based on `rules`. The rank is the position where the item would appear in the sorted array. This function provides an efficient way to determine the rank in *O(n)* time, compared to *O(nlogn)* for the equivalent `sortedIndex(sortBy(data, ...rules), item)`.
@@ -26,7 +25,7 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 export function rankBy<T>(
   data: readonly T[],
   item: T,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
+  ...rules: OrderRules<T>
 ): number;
 
 /**
@@ -50,13 +49,13 @@ export function rankBy<T = never>(
   // We first try to infer T through the callback to allow the type to be pulled
   // from the call site it is used in (like `pipe`).
   item: NoInfer<T>,
-  ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
+  ...rules: OrderRules<NoInfer<T>>
 ): (data: readonly T[]) => number;
 
 export function rankBy<T>(
   // Otherwise we allow T to be inferred directly from the operand.
   item: T,
-  ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
+  ...rules: OrderRules<NoInfer<T>>
 ): (data: readonly NoInfer<T>[]) => number;
 
 export function rankBy(...args: readonly unknown[]): unknown {
