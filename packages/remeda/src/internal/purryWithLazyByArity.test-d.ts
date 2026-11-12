@@ -71,7 +71,17 @@ describe("arity", () => {
     );
   });
 
-  test("the lazy implementation takes the one argument itself", () => {
+  test("a single argument reaches the lazy implementation as is", () => {
+    purryWithLazy2(
+      takeImplementation,
+      (_count: number) => passThrough,
+      2 /* argumentsLength */,
+      [1],
+      1,
+    );
+  });
+
+  test("rejects a lazy implementation taking a single argument in a tuple", () => {
     purryWithLazy2(
       takeImplementation,
       // @ts-expect-error [ts2345] -- A lazy implementation receives a single argument as is, not in a tuple.
@@ -82,7 +92,23 @@ describe("arity", () => {
     );
   });
 
-  test("the lazy implementation takes two arguments as one tuple", () => {
+  test("two arguments reach the lazy implementation as one tuple", () => {
+    purryWithLazy3(
+      intersectionWithImplementation,
+      (
+        _lazyArgument: readonly [
+          other: readonly number[],
+          isEqual: (a: number, b: number) => boolean,
+        ],
+      ) => passThrough,
+      3 /* argumentsLength */,
+      [1],
+      [1],
+      () => true,
+    );
+  });
+
+  test("rejects a lazy implementation taking two arguments spread", () => {
     purryWithLazy3(
       intersectionWithImplementation,
       // @ts-expect-error [ts2345] -- A lazy implementation receives two arguments as one tuple, not spread.
