@@ -15,7 +15,7 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  */
 export function splitWhen<T>(
   data: readonly T[],
-  predicate: (item: T, index: number, data: readonly T[]) => boolean,
+  predicate: ArrayCallback<readonly T[], boolean>,
 ): [T[], T[]];
 
 /**
@@ -30,7 +30,7 @@ export function splitWhen<T>(
  * @category Array
  */
 export function splitWhen<T>(
-  predicate: (item: T, index: number, data: readonly T[]) => boolean,
+  predicate: ArrayCallback<readonly T[], boolean>,
 ): (data: readonly T[]) => [T[], T[]];
 
 export function splitWhen(

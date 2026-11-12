@@ -1,7 +1,10 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
 import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
-import type { ArrayCallback } from "./internal/types/ArrayCallback";
+import type {
+  ArrayCallback,
+  ArrayTypePredicate,
+} from "./internal/types/ArrayCallback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -36,7 +39,7 @@ import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFiltere
  */
 export function filter<T extends IterableContainer, Condition>(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: ArrayTypePredicate<T, Condition>,
 ): FilteredArray<T, Condition>;
 
 export function filter<
@@ -44,7 +47,7 @@ export function filter<
   IsItemIncluded extends boolean,
 >(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: ArrayCallback<T, IsItemIncluded>,
 ): NonRefinedFilteredArray<T, IsItemIncluded>;
 
 /**

@@ -38,7 +38,7 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  */
 export function sortedIndexWith<T>(
   data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+  predicate: ArrayCallback<readonly T[], boolean>,
 ): number;
 
 /**
@@ -74,7 +74,7 @@ export function sortedIndexWith<T>(
  * @category Array
  */
 export function sortedIndexWith<T>(
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+  predicate: ArrayCallback<readonly T[], boolean>,
 ): (data: readonly T[]) => number;
 
 export function sortedIndexWith(

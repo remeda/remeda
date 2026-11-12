@@ -7,7 +7,10 @@ import {
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
 import { requireDataByArity } from "./internal/requireData";
-import type { ArrayCallback } from "./internal/types/ArrayCallback";
+import type {
+  ArrayCallback,
+  ArrayTypePredicate,
+} from "./internal/types/ArrayCallback";
 import type { Assignability } from "./internal/types/Assignability";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { First } from "./internal/types/First";
@@ -109,7 +112,7 @@ type FoundNonRefined<
  */
 export function find<T extends IterableContainer, Condition>(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: ArrayTypePredicate<T, Condition>,
 ): Found<T, Condition>;
 
 export function find<
@@ -117,7 +120,7 @@ export function find<
   IsItemIncluded extends boolean,
 >(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: ArrayCallback<T, IsItemIncluded>,
 ): FoundNonRefined<T, IsItemIncluded>;
 
 /**

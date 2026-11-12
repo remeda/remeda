@@ -24,7 +24,7 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  */
 export function findIndex<T>(
   data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+  predicate: ArrayCallback<readonly T[], boolean>,
 ): number;
 
 /**
@@ -51,7 +51,7 @@ export function findIndex<T>(
  * @category Array
  */
 export function findIndex<T>(
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+  predicate: ArrayCallback<readonly T[], boolean>,
 ): (data: readonly T[]) => number;
 
 export function findIndex(

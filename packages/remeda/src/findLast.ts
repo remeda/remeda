@@ -1,5 +1,8 @@
 import type { LastArrayElement } from "type-fest";
-import type { ArrayCallback } from "./internal/types/ArrayCallback";
+import type {
+  ArrayCallback,
+  ArrayTypePredicate,
+} from "./internal/types/ArrayCallback";
 import type { Assignability } from "./internal/types/Assignability";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -95,7 +98,7 @@ type FoundLastNonRefined<
  */
 export function findLast<T extends IterableContainer, Condition>(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: ArrayTypePredicate<T, Condition>,
 ): FoundLast<T, Condition>;
 
 export function findLast<
@@ -103,7 +106,7 @@ export function findLast<
   IsItemIncluded extends boolean,
 >(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: ArrayCallback<T, IsItemIncluded>,
 ): FoundLastNonRefined<T, IsItemIncluded>;
 
 /**
@@ -135,14 +138,14 @@ export function findLast<
  * @category Array
  */
 export function findLast<T extends IterableContainer, Condition>(
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: ArrayTypePredicate<T, Condition>,
 ): (data: T) => FoundLast<T, Condition>;
 
 export function findLast<
   T extends IterableContainer,
   IsItemIncluded extends boolean,
 >(
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: ArrayCallback<T, IsItemIncluded>,
 ): (data: T) => FoundLastNonRefined<T, IsItemIncluded>;
 
 export function findLast(

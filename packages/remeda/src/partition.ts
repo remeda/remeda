@@ -1,4 +1,7 @@
-import type { ArrayCallback } from "./internal/types/ArrayCallback";
+import type {
+  ArrayCallback,
+  ArrayTypePredicate,
+} from "./internal/types/ArrayCallback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -29,7 +32,7 @@ import type { Not } from "./internal/types/Not";
  */
 export function partition<T extends IterableContainer, Condition>(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: ArrayTypePredicate<T, Condition>,
 ): [
   FilteredArray<T, Condition>,
   FilteredArray<T, Condition, true /* IsNegated */>,
@@ -40,7 +43,7 @@ export function partition<
   IsItemIncluded extends boolean,
 >(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: ArrayCallback<T, IsItemIncluded>,
 ): [
   NonRefinedFilteredArray<T, IsItemIncluded>,
   NonRefinedFilteredArray<T, Not<IsItemIncluded>>,
@@ -68,7 +71,7 @@ export function partition<
  * @category Array
  */
 export function partition<T extends IterableContainer, Condition>(
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: ArrayTypePredicate<T, Condition>,
 ): (
   data: T,
 ) => [
@@ -80,7 +83,7 @@ export function partition<
   T extends IterableContainer,
   IsItemIncluded extends boolean,
 >(
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: ArrayCallback<T, IsItemIncluded>,
 ): (
   data: T,
 ) => [
