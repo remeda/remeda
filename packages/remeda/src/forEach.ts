@@ -1,7 +1,8 @@
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
+import type { ArrayCallback, LazyCallback } from "./internal/types/Callback";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
@@ -28,7 +29,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  */
 export function forEach<T extends IterableContainer>(
   data: T,
-  callbackfn: (value: T[number], index: number, data: T) => void,
+  callbackfn: ArrayCallback<T, void>,
 ): void;
 
 /**
@@ -61,9 +62,30 @@ export function forEach<T extends IterableContainer>(
   callbackfn: LazyCallback<T, void>,
 ): (data: T) => T;
 
-export function forEach(...args: readonly unknown[]): unknown {
-  return purryWithLazy(forEachImplementation, 2, lazyImplementation, args);
+export function forEach(
+  dataOrCallbackfn: IterableContainer | LazyCallback<IterableContainer, void>,
+  callbackfn?: ArrayCallback<IterableContainer, void>,
+): unknown {
+  return typeof dataOrCallbackfn === "function"
+    ? withLazyImplementation(
+        dataLast(
+          // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands the callback the complete input, a valid non-empty prefix whenever the callback is invoked (it never is for an empty input); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
+          dataOrCallbackfn,
+        ),
+        lazyImplementation,
+        // @ts-expect-error [ts2345] -- `lazyImplementation` invokes the callback only once the input has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
+        dataOrCallbackfn,
+      )
+    : forEachImplementation(
+        dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        callbackfn,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof forEachImplementation> =
+  (callbackfn) => (data) =>
+    forEachImplementation(data, callbackfn);
 
 function forEachImplementation<T>(
   data: readonly T[],

@@ -1,5 +1,6 @@
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
-import { purry } from "./purry";
+import type { ArrayCallback } from "./internal/types/Callback";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
 /**
  * Categorize and count elements in an array using a defined callback function.
@@ -20,11 +21,7 @@ import { purry } from "./purry";
  */
 export function countBy<T, K extends PropertyKey>(
   data: readonly T[],
-  categorizationFn: (
-    value: T,
-    index: number,
-    data: readonly T[],
-  ) => K | undefined,
+  categorizationFn: ArrayCallback<readonly T[], K | undefined>,
 ): BoundedPartial<Record<K, number>>;
 
 /**
@@ -44,16 +41,27 @@ export function countBy<T, K extends PropertyKey>(
  * @category Array
  */
 export function countBy<T, K extends PropertyKey>(
-  categorizationFn: (
-    value: T,
-    index: number,
-    data: readonly T[],
-  ) => K | undefined,
+  categorizationFn: ArrayCallback<readonly T[], K | undefined>,
 ): (data: readonly T[]) => BoundedPartial<Record<K, number>>;
 
-export function countBy(...args: readonly unknown[]): unknown {
-  return purry(countByImplementation, 2, args);
+export function countBy(
+  dataOrCategorizationFn:
+    | readonly unknown[]
+    | ArrayCallback<readonly unknown[], PropertyKey | undefined>,
+  categorizationFn?: ArrayCallback<readonly unknown[], PropertyKey | undefined>,
+): unknown {
+  return typeof dataOrCategorizationFn === "function"
+    ? dataLast(dataOrCategorizationFn)
+    : countByImplementation(
+        dataOrCategorizationFn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        categorizationFn,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof countByImplementation> =
+  (categorizationFn) => (data) =>
+    countByImplementation(data, categorizationFn);
 
 const countByImplementation = <T>(
   data: readonly T[],

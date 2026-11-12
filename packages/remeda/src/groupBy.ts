@@ -1,6 +1,7 @@
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
+import type { ArrayCallback } from "./internal/types/Callback";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
-import { purry } from "./purry";
 
 /**
  * Groups the elements of a given iterable according to the string values
@@ -31,7 +32,7 @@ import { purry } from "./purry";
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
   data: readonly T[],
-  callbackfn: (value: T, index: number, data: readonly T[]) => Key | undefined,
+  callbackfn: ArrayCallback<readonly T[], Key | undefined>,
 ): BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
 /**
@@ -67,12 +68,27 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  * @category Array
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
-  callbackfn: (value: T, index: number, data: readonly T[]) => Key | undefined,
-): (items: readonly T[]) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
+  callbackfn: ArrayCallback<readonly T[], Key | undefined>,
+): (data: readonly T[]) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
-export function groupBy(...args: readonly unknown[]): unknown {
-  return purry(groupByImplementation, 2, args);
+export function groupBy(
+  dataOrCallbackfn:
+    | readonly unknown[]
+    | ArrayCallback<readonly unknown[], PropertyKey | undefined>,
+  callbackfn?: ArrayCallback<readonly unknown[], PropertyKey | undefined>,
+): unknown {
+  return typeof dataOrCallbackfn === "function"
+    ? dataLast(dataOrCallbackfn)
+    : groupByImplementation(
+        dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        callbackfn,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof groupByImplementation> =
+  (callbackfn) => (data) =>
+    groupByImplementation(data, callbackfn);
 
 const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(
   data: readonly T[],

@@ -4,10 +4,16 @@
  */
 
 import type { IsUnion } from "type-fest";
+import { purry2 } from "./internal/purryByArity";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { IsBounded } from "./internal/types/IsBounded";
-import { purry } from "./purry";
+
+type KeyMapper<T = {}, Key = PropertyKey> = (
+  key: EnumerableStringKeyOf<T>,
+  value: EnumerableStringKeyedValueOf<T>,
+  data: T,
+) => Key;
 
 type MappedKeys<T, Key extends PropertyKey> = MaybePartial<
   T,
@@ -52,7 +58,7 @@ type CouldBeEmpty<T> = {} extends T ? true : false;
  * @param data - The object to map.
  * @param keyMapper - The mapping function.
  * @signature
- *    mapKeys(object, fn)
+ *    mapKeys(data, keyMapper)
  * @example
  *    mapKeys({a: 1, b: 2}, (key, value) => key + value) // => { a1: 1, b2: 2 }
  * @dataFirst
@@ -60,11 +66,7 @@ type CouldBeEmpty<T> = {} extends T ? true : false;
  */
 export function mapKeys<T extends {}, Key extends PropertyKey>(
   data: T,
-  keyMapper: (
-    key: EnumerableStringKeyOf<T>,
-    value: EnumerableStringKeyedValueOf<T>,
-    data: T,
-  ) => Key,
+  keyMapper: KeyMapper<T, Key>,
 ): MappedKeys<T, Key>;
 
 /**
@@ -72,22 +74,26 @@ export function mapKeys<T extends {}, Key extends PropertyKey>(
  *
  * @param keyMapper - The mapping function.
  * @signature
- *    mapKeys(fn)(object)
+ *    mapKeys(keyMapper)(data)
  * @example
  *    pipe({a: 1, b: 2}, mapKeys((key, value) => key + value)) // => { a1: 1, b2: 2 }
  * @dataLast
  * @category Object
  */
 export function mapKeys<T extends {}, Key extends PropertyKey>(
-  keyMapper: (
-    key: EnumerableStringKeyOf<T>,
-    value: EnumerableStringKeyedValueOf<T>,
-    data: T,
-  ) => Key,
+  keyMapper: KeyMapper<T, Key>,
 ): (data: T) => MappedKeys<T, Key>;
 
-export function mapKeys(...args: readonly unknown[]): unknown {
-  return purry(mapKeysImplementation, 2, args);
+export function mapKeys(
+  dataOrKeyMapper: KeyMapper | {},
+  keyMapper?: KeyMapper,
+): unknown {
+  return purry2(
+    mapKeysImplementation,
+    arguments.length,
+    dataOrKeyMapper,
+    keyMapper,
+  );
 }
 
 function mapKeysImplementation<T extends {}, Key extends PropertyKey>(

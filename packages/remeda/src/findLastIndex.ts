@@ -1,4 +1,5 @@
-import { purry } from "./purry";
+import type { ArrayCallback } from "./internal/types/Callback";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
 /**
  * Iterates the array in reverse order and returns the index of the first
@@ -40,7 +41,7 @@ export function findLastIndex<T>(
  * @returns The index of the last (highest-index) element in the array that
  * passes the test. Otherwise -1 if no matching element is found.
  * @signature
- *    findLastIndex(fn)(items)
+ *    findLastIndex(predicate)(data)
  * @example
  *    pipe(
  *      [1, 3, 4, 6],
@@ -51,11 +52,25 @@ export function findLastIndex<T>(
  */
 export function findLastIndex<T>(
   predicate: (value: T, index: number, data: readonly T[]) => boolean,
-): (array: readonly T[]) => number;
+): (data: readonly T[]) => number;
 
-export function findLastIndex(...args: readonly unknown[]): unknown {
-  return purry(findLastIndexImplementation, 2, args);
+export function findLastIndex(
+  dataOrPredicate:
+    readonly unknown[] | ArrayCallback<readonly unknown[], boolean>,
+  predicate?: ArrayCallback<readonly unknown[], boolean>,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? dataLast(dataOrPredicate)
+    : findLastIndexImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof findLastIndexImplementation> =
+  (predicate) => (data) =>
+    findLastIndexImplementation(data, predicate);
 
 const findLastIndexImplementation = <T>(
   data: readonly T[],

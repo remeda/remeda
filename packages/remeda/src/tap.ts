@@ -1,4 +1,6 @@
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
+
+type Callback<T = unknown> = (value: T) => void;
 
 /**
  * Calls the given function with the given value, then returns the given value.
@@ -7,16 +9,16 @@ import { purry } from "./purry";
  * This allows "tapping into" a function sequence in a pipe, to perform side
  * effects on intermediate results.
  *
- * @param value - The value to pass into the function.
+ * @param data - The value to pass into the function.
  * @param fn - The function to call.
  * @signature
- *    tap(value, fn)
+ *    tap(data, fn)
  * @example
  *    tap("foo", console.log) // => "foo"
  * @dataFirst
  * @category Other
  */
-export function tap<T>(value: T, fn: (value: T) => void): T;
+export function tap<T>(data: T, fn: Callback<T>): T;
 
 /**
  * Calls the given function with the given value, then returns the given value.
@@ -27,7 +29,7 @@ export function tap<T>(value: T, fn: (value: T) => void): T;
  *
  * @param fn - The function to call.
  * @signature
- *    tap(fn)(value)
+ *    tap(fn)(data)
  * @example
  *    pipe(
  *      [-5, -1, 2, 3],
@@ -40,15 +42,15 @@ export function tap<T>(value: T, fn: (value: T) => void): T;
  */
 export function tap<
   T,
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- TODO [>2]: This is solvable by inlining F and wrapping the T parameter with `NoInfer` (e.g. `(value: NoInfer<T>) => unknown`); to prevent typescript from inferring it as `unknown`. This is only available in TS 5.4, which is above what we currently support (5.1).
-  F extends (value: T) => unknown,
->(fn: F): (value: T) => T;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- TODO [>2]: This is solvable by inlining F and wrapping the T parameter with `NoInfer` (e.g. `Callback<NoInfer<T>>`); to prevent typescript from inferring it as `unknown`. This is only available in TS 5.4, which is above what we currently support (5.1).
+  F extends Callback<T>,
+>(fn: F): (data: T) => T;
 
-export function tap(...args: readonly unknown[]): unknown {
-  return purry(tapImplementation, 2, args);
+export function tap(dataOrFn: unknown, fn?: Callback): unknown {
+  return purry2(tapImplementation, arguments.length, dataOrFn, fn);
 }
 
-function tapImplementation<T>(value: T, fn: (value: T) => void): T {
-  fn(value);
-  return value;
+function tapImplementation<T>(data: T, fn: (value: T) => void): T {
+  fn(data);
+  return data;
 }

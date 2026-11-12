@@ -1,21 +1,28 @@
 # Function Implementation Conventions
 
-## Purry: the dual-API skeleton
+## Dispatch: the dual-API skeleton
 
-Functions with a data-first / data-last API use `purry` (`src/purry.ts`), in a fixed structure:
+Functions with a data-first / data-last API pick the calling style at runtime, in a fixed structure:
 
 - Two overload signatures, data-first **and** data-last, each with its own JSDoc block.
-- One implementation signature, without JSDoc, returning `unknown`. `purry` dispatches by argument count at runtime, not by the typed overloads.
-- The implementation declares exactly the function's public parameters, none of them optional, defaulted or rest: a call with at least that many arguments runs data-first with the extras passed along, so a point-free callback (`data.map(clone)`) hands the implementation the index and the array too. Recursion state goes in a separate helper, as `clone`'s `cloneValue` does.
-- The body calls `purry(impl, arity, args)`, or `purryWithLazy(impl, arity, lazyImpl, args)` (`src/internal/purryWithLazy.ts`) when the function also has a lazy evaluator. `arity` is the number of parameters the implementation declares, as a literal; its type, `DataFirstArity` (`src/internal/dataLastImplementation.ts`), makes any other literal a compile error.
+- One implementation signature, without JSDoc, returning `unknown`. Each parameter is named for both styles (`dataOrCallbackfn, callbackfn`) and typed as the union of what the overloads accept there, with type parameters widened to their constraints (`chunk(dataOrSize: IterableContainer | number, size?: number)`), or `unknown` when unconstrained.
+- A data-first implementation declaring exactly the function's public parameters, none of them optional, defaulted or rest unless the public one is (`flat`'s `depth`): `purry1`'s data-last function is the implementation itself, so a point-free caller hands it extra arguments (`data.map(reverse())` passes the index and the array). Recursion state goes in a separate helper, as `clone`'s `cloneValue` does.
+- A dispatch passing the arguments to the implementation as parameters, not through an array: the engine inlines only a callback that arrives as a parameter into the implementation's loop, making data-first `map` and `filter` 2-3x faster.
 
-A few functions (`flat`, `split`, `truncate`, `zipWith`) have an optional parameter that makes the two styles' argument counts overlap, so they skip `purry` and dispatch on their first argument's type instead.
+The dispatch takes one of four forms:
+
+- A function as the first data-last argument (`map`, `filter`, `sortedIndexWith`): branch on `typeof dataOrCallbackfn === "function"`, sending a data-last call to a module-level builder right after the dispatch, `const dataLast: DataLastBuilder<typeof mapImplementation> = (callbackfn) => (data) => mapImplementation(data, callbackfn)`. A lazy function returns `withLazyImplementation(dataLast(dataOrCallbackfn), lazyImplementation, dataOrCallbackfn)` (`src/internal/lazyDataLastImplementation.ts`; two arguments go as a tuple). A closure created inside the dispatch allocates a context on every call, data-first included, and a builder shared by several utilities mixes their call feedback.
+- Most others pass `arguments.length` and every parameter to `purry1`-`3` (`src/internal/purryByArity.ts`), or `purryWithLazy1`-`3` (`src/internal/purryWithLazyByArity.ts`) with the lazy implementation: at least the arity runs the implementation, fewer builds the data-last function.
+- When the argument count can't tell the styles apart (an optional parameter in `flat`, a rest parameter in `dropFirstBy`, a third call style in `zipWith`): a `typeof` check on an argument, with the same builder and `withLazyImplementation`.
+- Order-rule functions (`sortBy`, `firstBy`, `nthBy`, `rankBy`, `takeFirstBy`) go through `purryOrderRules`, and `splice` and `conditional` through `purryOn`; these, like the variadic `prop` and `when`, take the arguments as an array.
 
 A lazy function still gets a plain eager implementation for its data-first call, even when it mirrors the evaluator (`unique`, `difference`): running the evaluator item by item outside `pipe` costs a call and a result classification per item, and bundles the lazy runner into every data-first import. The two give the same result for every input, holes aside (a fused sequence reads a hole as `undefined`; the eager implementation does whatever its native method does: `slice` keeps it, `filter` skips it). `pipe` picks between them per sequence and per input kind, so any other mismatch shows up as a pipe whose result changes when an unrelated step is added or removed.
 
 ## Lazy evaluation
 
 Every function that can be implemented with the lazy evaluator below supports lazy evaluation, so which functions are lazy stays predictable. Examples to study: `map`, `filter`, `take`, `first`, `flatMap`.
+
+The lazy implementation builds the evaluator from the data-last arguments, received as one value: `undefined` for none, the argument itself for one (`map`'s `callbackfn`, sparing that call an array), a tuple for two (`intersectionWith`'s `[other, isEqual]`).
 
 The evaluator has the shape `(item, index, data, slot) => LazyResult<T>`. Usually it returns the (possibly transformed) item. Anything else it tells `pipe` is a control: a registered symbol (`Symbol.for`) that `pipe` recognizes by identity. The two controls with a payload leave it in `slot` through their helper. From `src/internal/lazyControl.ts`, for any evaluator:
 
@@ -53,12 +60,12 @@ In a lazily run step, a callback that `requireDataByArity` lets see `data` recei
 
 Only the data-last overload is lazy. The data-first overload runs eagerly on the complete input and keeps the standard `(value: T[number], index: number, data: T) => R` shape. For the lazy overload:
 
-- Standard `(value, index, data)` callback: `LazyCallback<T, R>` (`src/internal/types/LazyCallback.ts`); for a type predicate, `LazyTypePredicate<T, S>`, since TypeScript can't route `value is S` through a generic return type.
+- Standard `(value, index, data)` callback: `LazyCallback<T, R>` (`src/internal/types/Callback.ts`); for a type predicate, `LazyTypePredicate<T, S>`, since TypeScript can't route `value is S` through a generic return type.
 - Any other shape (an extra parameter like `mapWithFeedback`'s `previousValue`, or `data` nested in a tuple like `zipWith`'s): declare a local alias next to the eager one, typing the slot as `Readonly<NonEmptyPrefix<T>>`. Keep the `Readonly`: `pipe` hands the same array to every invocation, so a callback mutating it changes what later invocations see.
-- Only the array flowing through the pipe is a prefix; arrays passed as arguments (`zipWith`'s `second`) are complete and keep their type.
+- Only the array flowing through the pipe is a prefix; arrays passed as arguments (`zipWith`'s `other`) are complete and keep their type.
 - If the implementation signature unions the eager and lazy callback types (as `zipWith`'s does), include the lazy alias in the union; otherwise the data-last overload fails with `ts2394`, as a callback accepting the full `T` isn't assignable to one accepting only its prefix.
 
-Callbacks that never receive `data` (`uniqueWith`'s comparator, `differenceWith`'s `isEquals`) are unaffected.
+Callbacks that never receive `data` (`uniqueWith`'s comparator, `differenceWith`'s `isEqual`) are unaffected.
 
 Known limitations:
 
@@ -70,10 +77,10 @@ Known limitations:
 `pipe` mostly runs short arrays on hot paths, so the protocol minimizes per-call and per-item cost, and what items and callbacks can observe. Each choice below was benchmarked against its alternatives; changing one takes new benchmarks.
 
 - **Bare items**: the common result is the item itself, so the common path allocates nothing.
-- **Controls are registered symbols compared by identity**, behind a single `typeof result === "symbol"` check that keeps the comparisons off the common path. `pipe` reads nothing from items, which can be proxies: probing them fires traps, throws on revoked proxies, and adds a tracked dependency per item in reactive frameworks. `Symbol.for` lets separate copies of Remeda in one program (two installed versions, or the ESM and CJS builds) interoperate while they share this protocol; a protocol change takes new keys, so a future shape is never read as this one.
+- **Controls are registered symbols compared by identity**, behind a single `typeof result === "symbol"` check that keeps the comparisons off the common path. `pipe` reads nothing from items, which can be proxies: probing them fires traps, throws on revoked proxies, and adds a tracked dependency per item in reactive frameworks. `Symbol.for` lets separate copies of Remeda in one program (two installed versions, or the ESM and CJS builds) interoperate while they share this protocol.
 - **The payload slot belongs to the calling pipe**: `runFusedSequence` (or `iterableDataFirst`) creates it once per sequence and passes it as the 4th argument, so copies interoperate without shared state, a nested pipe has its own slot, and controls allocate nothing. `MANY`'s values are read before later steps run, because those steps write to the same slot.
 - **Lazy sequences are built when `pipe`'s loop reaches them**, so a pipe without lazy steps builds nothing; building every step up front deoptimizes non-lazy pipes.
-- **Markers go only on closures created for them.** `requireData` writes `requiresData` onto the evaluator it receives: a module-level evaluator (`first`'s, `flat()`'s, `LAZY_EMPTY_EVALUATOR`) is shared by every pipe, so marking it would make all of them buffer, and a property written onto the user's callback travels wherever else they pass it. Markers and the `lazy`/`lazyArgs` props are direct property writes, which cost less per call than `Object.assign`. The `makeStoppable` and `makeReducing` marks go on the module-level lazy implementation once, at module load, costing nothing per call.
+- **Markers go only on closures created for them.** `requireData` writes `requiresData` onto the evaluator it receives: a module-level evaluator (`first`'s, `flat()`'s, `LAZY_EMPTY_EVALUATOR`) is shared by every pipe, so marking it would make all of them buffer, and a property written onto the user's callback travels wherever else they pass it. Markers and the `lazy`/`lazyArgument` props are direct property writes, which cost less per call than `Object.assign`. The `makeStoppable` and `makeReducing` marks go on the module-level lazy implementation once, at module load, costing nothing per call.
 - **Arrays get their own `for...of`**: `runFusedSequence` (`internal/fusedSequence.ts`) iterates arrays at a dedicated `for...of` site, which the engine specializes without the iterator protocol, and other iterables at a second, identical one. Reactive arrays track a `for...of` as one dependency, where an indexed loop tracks every index read. `iterableDataFirst` never sees arrays, so it has one loop.
 
 ## Handling `null`, `undefined`, and `NaN`

@@ -1,5 +1,5 @@
+import { purry1 } from "./internal/purryByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 type Median<T extends IterableContainer<number>> =
   | (T extends readonly [] ? never : number)
@@ -50,8 +50,8 @@ export function median(): <T extends IterableContainer<number>>(
   data: T,
 ) => Median<T>;
 
-export function median(...args: readonly unknown[]): unknown {
-  return purry(medianImplementation, 1, args);
+export function median(data?: IterableContainer<number>): unknown {
+  return purry1(medianImplementation, arguments.length, data);
 }
 
 const numberComparator = (a: number, b: number): number => a - b;

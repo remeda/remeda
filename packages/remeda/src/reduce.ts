@@ -1,4 +1,11 @@
-import { purry } from "./purry";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
+
+type Reducer<T = unknown, U = unknown> = (
+  previousValue: U,
+  currentValue: T,
+  currentIndex: number,
+  data: readonly T[],
+) => U;
 
 /**
  * Executes a user-supplied "reducer" callback function on each element of the
@@ -26,12 +33,7 @@ import { purry } from "./purry";
  */
 export function reduce<T, U>(
   data: readonly T[],
-  callbackfn: (
-    previousValue: U,
-    currentValue: T,
-    currentIndex: number,
-    data: readonly T[],
-  ) => U,
+  callbackfn: Reducer<T, U>,
   initialValue: U,
 ): U;
 
@@ -52,25 +54,35 @@ export function reduce<T, U>(
  * @returns The value that results from running the "reducer" callback function
  * to completion over the entire array.
  * @signature
- *    reduce(fn, initialValue)(array)
+ *    reduce(callbackfn, initialValue)(data)
  * @example
  *    pipe([1, 2, 3, 4, 5], reduce((acc, x) => acc + x, 100)) // => 115
  * @dataLast
  * @category Array
  */
 export function reduce<T, U>(
-  callbackfn: (
-    previousValue: U,
-    currentValue: T,
-    currentIndex: number,
-    data: readonly T[],
-  ) => U,
+  callbackfn: Reducer<T, U>,
   initialValue: U,
 ): (data: readonly T[]) => U;
 
-export function reduce(...args: readonly unknown[]): unknown {
-  return purry(reduceImplementation, 3, args);
+export function reduce(
+  dataOrCallbackfn: readonly unknown[] | Reducer,
+  callbackfnOrInitialValue: unknown,
+  initialValue?: unknown,
+): unknown {
+  return typeof dataOrCallbackfn === "function"
+    ? dataLast(dataOrCallbackfn, callbackfnOrInitialValue)
+    : reduceImplementation(
+        dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        callbackfnOrInitialValue,
+        initialValue,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof reduceImplementation> =
+  (callbackfn, initialValue) => (data) =>
+    reduceImplementation(data, callbackfn, initialValue);
 
 const reduceImplementation = <T, U>(
   data: readonly T[],

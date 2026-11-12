@@ -311,7 +311,7 @@ export function pipe(
             // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
             output,
             currentFunction.lazy,
-            currentFunction.lazyArgs,
+            currentFunction.lazyArgument,
           );
       continue;
     }

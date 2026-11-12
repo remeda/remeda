@@ -4,7 +4,8 @@ import {
   type LazyResult,
   type LazySlot,
 } from "./internal/lazyControl";
-import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
@@ -118,12 +119,16 @@ export function flat(
 ): unknown {
   return typeof dataOrDepth === "object"
     ? flatImplementation(dataOrDepth, depth)
-    : lazyDataLastImplementation(
-        flatImplementation,
-        dataOrDepth === undefined ? [] : [dataOrDepth],
+    : withLazyImplementation(
+        dataLast(dataOrDepth),
         lazyImplementation,
+        dataOrDepth,
       );
 }
+
+const dataLast: DataLastBuilder<typeof flatImplementation> =
+  (depth) => (data) =>
+    flatImplementation(data, depth);
 
 const flatImplementation = (
   data: IterableContainer,

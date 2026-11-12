@@ -141,7 +141,7 @@ export function isIncludedIn(
 ): unknown {
   if (container === undefined) {
     // === dataLast ===
-    // We don't use purry here because we can optimize the dataLast case by
+    // We don't use `purry2` here because we can optimize the dataLast case by
     // memoizing a set and accessing it in O(1) time instead of scanning the
     // array **each time** (O(n)) each time.
     const asSet = new Set(dataOrContainer as readonly unknown[]);

@@ -1,5 +1,5 @@
+import { purry2 } from "./internal/purryByArity";
 import { withPrecision } from "./internal/withPrecision";
-import { purry } from "./purry";
 
 /**
  * Rounds a given number to a specific precision.
@@ -38,6 +38,13 @@ export function round(value: number, precision: number): number;
  */
 export function round(precision: number): (value: number) => number;
 
-export function round(...args: readonly unknown[]): unknown {
-  return purry(withPrecision(Math.round), 2, args);
+export function round(valueOrPrecision: number, precision?: number): unknown {
+  return purry2(
+    roundImplementation,
+    arguments.length,
+    valueOrPrecision,
+    precision,
+  );
 }
+
+const roundImplementation = withPrecision(Math.round);

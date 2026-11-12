@@ -1,14 +1,46 @@
 import { describe, expectTypeOf, test } from "vitest";
-import type { DataFirstArity } from "./internal/dataLastImplementation";
 import { purry } from "./purry";
 import { sum } from "./sum";
 
-// @ts-expect-error [ts6133] -- The assertions are on the helpers themselves: one compiles, the other's mismatched overload fails (see its `@ts-expect-error`). These references only keep them from being unused.
-// eslint-disable-next-line no-underscore-dangle -- See above.
-const _DUMMY = {
-  subtractWithMatchingOverloads,
-  subtractWithMismatchedOverload,
-};
+declare function subtractImplementation(
+  minuend: number,
+  subtrahend: number,
+): number;
+
+declare function subtractOptionalImplementation(
+  minuend: number,
+  subtrahend?: number,
+): number;
+
+declare function subtractAllImplementation(
+  minuend: number,
+  ...subtrahends: readonly number[]
+): number;
+
+declare function firstImplementation<T>(data: readonly T[]): T | undefined;
+
+declare function dataLastDeclaredLast(
+  minuend: number,
+  subtrahend: number,
+): number;
+declare function dataLastDeclaredLast(
+  subtrahend: number,
+): (minuend: number) => number;
+
+declare function dataFirstDeclaredLast(
+  subtrahend: number,
+): (minuend: number) => number;
+declare function dataFirstDeclaredLast(
+  minuend: number,
+  subtrahend: number,
+): number;
+
+declare function genericDataFirstDeclaredLast(): <T>(
+  data: readonly T[],
+) => T | undefined;
+declare function genericDataFirstDeclaredLast<T>(
+  data: readonly T[],
+): T | undefined;
 
 test("return type", () => {
   expectTypeOf(purry(subtractImplementation, 2, [])).toEqualTypeOf<
@@ -45,9 +77,10 @@ describe("arity", () => {
 
 describe("known issues!", () => {
   test("a function **reference** is typed by its last declared overload, regardless of the arguments it's called with", () => {
-    // `map` calls its callback with 3 arguments (value, index, array), so purry
-    // runs both functions data-first and they return numbers at runtime. The
-    // index is a number, so the data-first signature fits the callback too.
+    // Both stand in for utilities built on `purry`. `map` calls its callback
+    // with 3 arguments (value, index, array), so such utilities run data-first
+    // and return numbers at runtime. The index is a number, so the data-first
+    // signature fits the callback too.
     //
     // When a function is passed by reference, TypeScript only looks at its last
     // declared overload.
@@ -118,75 +151,12 @@ describe("known issues!", () => {
   test("a rest parameter accepts any arity", () => {
     // Counting arguments can't tell a data-first call from a data-last one when
     // the implementation takes any number of them, so no literal is right for
-    // it. The length of a parameter tuple with a rest element is `number`,
-    // though, which every literal satisfies.
-    expectTypeOf<
-      DataFirstArity<number, readonly number[]>
-    >().not.toEqualTypeOf<never>();
+    // it and these calls should fail. The length of a parameter tuple with a
+    // rest element is `number`, though, which every literal satisfies.
 
     // Actual
-    expectTypeOf<
-      DataFirstArity<number, readonly number[]>
-    >().toEqualTypeOf<number>();
+    purry(subtractAllImplementation, 0, []);
+    purry(subtractAllImplementation, 1, []);
+    purry(subtractAllImplementation, 100, []);
   });
 });
-
-function dataLastDeclaredLast(minuend: number, subtrahend: number): number;
-function dataLastDeclaredLast(subtrahend: number): (minuend: number) => number;
-
-function dataLastDeclaredLast(...args: readonly unknown[]): unknown {
-  return purry(subtractImplementation, 2, args);
-}
-
-function dataFirstDeclaredLast(subtrahend: number): (minuend: number) => number;
-function dataFirstDeclaredLast(minuend: number, subtrahend: number): number;
-
-function dataFirstDeclaredLast(...args: readonly unknown[]): unknown {
-  return purry(subtractImplementation, 2, args);
-}
-
-function subtractWithMatchingOverloads(
-  minuend: number,
-  subtrahend: number,
-): number;
-function subtractWithMatchingOverloads(
-  subtrahend: number,
-): (minuend: number) => number;
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional! we want to test `purry`s inferred return type.
-function subtractWithMatchingOverloads(...args: readonly unknown[]) {
-  return purry(subtractImplementation, 2, args);
-}
-
-// @ts-expect-error [ts2394] -- Mismatched on purpose: the overload claims a `string`, but `subtractImplementation` returns a `number`.
-function subtractWithMismatchedOverload(
-  minuend: number,
-  subtrahend: number,
-): string;
-function subtractWithMismatchedOverload(
-  subtrahend: number,
-): (minuend: number) => number;
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional! we want to test `purry`s inferred return type.
-function subtractWithMismatchedOverload(...args: readonly unknown[]) {
-  return purry(subtractImplementation, 2, args);
-}
-
-const subtractImplementation = (minuend: number, subtrahend: number): number =>
-  minuend - subtrahend;
-
-const subtractOptionalImplementation = (
-  minuend: number,
-  subtrahend?: number,
-): number => (subtrahend === undefined ? minuend : minuend - subtrahend);
-
-function genericDataFirstDeclaredLast(): <T>(
-  data: readonly T[],
-) => T | undefined;
-function genericDataFirstDeclaredLast<T>(data: readonly T[]): T | undefined;
-
-function genericDataFirstDeclaredLast(...args: readonly unknown[]): unknown {
-  return purry(firstImplementation, 1, args);
-}
-
-const firstImplementation = <T>(data: readonly T[]): T | undefined => data[0];

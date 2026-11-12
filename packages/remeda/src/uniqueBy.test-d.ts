@@ -11,9 +11,9 @@ describe("callback data param", () => {
     });
   });
 
-  test("readonly for a mutable array in data-first", () => {
+  test("mutable array in data-first", () => {
     uniqueBy([1, 2, 3] as number[], (_item, _index, data) => {
-      expectTypeOf(data).toEqualTypeOf<readonly number[]>();
+      expectTypeOf(data).toEqualTypeOf<number[]>();
 
       return 0;
     });

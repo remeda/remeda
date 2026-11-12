@@ -4,7 +4,7 @@ import {
   makeStoppable,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { purryWithLazy1 } from "./internal/purryWithLazyByArity";
 import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
@@ -14,7 +14,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @param data - The array.
  * @returns The first element of the array.
  * @signature
- *    first(array)
+ *    first(data)
  * @example
  *    first([1, 2, 3]) // => 1
  *    first([]) // => undefined
@@ -29,7 +29,7 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  *
  * @returns The first element of the array.
  * @signature
- *    first()(array)
+ *    first()(data)
  * @example
  *    pipe(
  *      [1, 2, 4, 8, 16],
@@ -43,8 +43,13 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  */
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
-export function first(...args: readonly unknown[]): unknown {
-  return purryWithLazy(firstImplementation, 1, lazyImplementation, args);
+export function first(data?: IterableContainer): unknown {
+  return purryWithLazy1(
+    firstImplementation,
+    lazyImplementation,
+    arguments.length,
+    data,
+  );
 }
 
 const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;

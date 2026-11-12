@@ -1,5 +1,5 @@
 import type { Join } from "type-fest";
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 // Copied from type-fest, from the Join type.
 type JoinableItem = bigint | boolean | number | string | null | undefined;
@@ -51,8 +51,11 @@ export function join<
   Glue extends string,
 >(glue: Glue): (data: T) => Join<T, Glue>;
 
-export function join(...args: readonly unknown[]): unknown {
-  return purry(joinImplementation, 2, args);
+export function join(
+  dataOrGlue: readonly JoinableItem[] | string,
+  glue?: string,
+): unknown {
+  return purry2(joinImplementation, arguments.length, dataOrGlue, glue);
 }
 
 const joinImplementation = (data: readonly unknown[], glue: string): string =>

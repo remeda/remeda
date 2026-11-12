@@ -1,6 +1,6 @@
 import type { ValueOf } from "type-fest";
+import { purry3 } from "./internal/purryByArity";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
-import { purry } from "./purry";
 
 type Paths<T, Prefix extends readonly unknown[] = []> =
   | Prefix
@@ -40,15 +40,15 @@ type ValueAtPath<T, Path> = Path extends readonly [
   : T;
 
 /**
- * Sets the value at `path` of `object`.
+ * Sets the value at `path` of `data`.
  *
  * For simple cases where the path is only one level deep, prefer `set` instead.
  *
- * @param data - The target method.
+ * @param data - The target object.
  * @param path - The array of properties.
  * @param value - The value to set.
  * @signature
- *    setPath(obj, path, value)
+ *    setPath(data, path, value)
  * @example
  *    setPath({ a: { b: 1 } }, ['a', 'b'], 2) // => { a: { b: 2 } }
  * @dataFirst
@@ -61,12 +61,12 @@ export function setPath<T, Path extends Paths<T>>(
 ): T;
 
 /**
- * Sets the value at `path` of `object`.
+ * Sets the value at `path` of `data`.
  *
  * @param path - The array of properties.
  * @param value - The value to set.
  * @signature
- *    setPath(path, value)(obj)
+ *    setPath(path, value)(data)
  * @example
  *    pipe({ a: { b: 1 } }, setPath(['a', 'b'], 2)) // { a: { b: 2 } }
  * @dataLast
@@ -80,8 +80,18 @@ export function setPath<
   Value extends ValueAtPath<T, Path>,
 >(path: Path, value: Value): (data: T) => T;
 
-export function setPath(...args: readonly unknown[]): unknown {
-  return purry(setPathImplementation, 3, args);
+export function setPath(
+  dataOrPath: unknown,
+  pathOrValue?: unknown,
+  value?: unknown,
+): unknown {
+  return purry3(
+    setPathImplementation,
+    arguments.length,
+    dataOrPath,
+    pathOrValue,
+    value,
+  );
 }
 
 function setPathImplementation(

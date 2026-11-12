@@ -1,4 +1,4 @@
-TypeScript-first utility library with 160+ functions. Dual calling styles via `purry`: data-first (`filter(array, fn)`) and data-last (`pipe(array, filter(fn))`). Many functions support lazy evaluation in `pipe` chains.
+TypeScript-first utility library with 160+ functions. Dual calling styles: data-first (`filter(array, fn)`) and data-last (`pipe(array, filter(fn))`). Many functions support lazy evaluation in `pipe` chains.
 
 [CONTRIBUTING.md](CONTRIBUTING.md) applies to agents too: read it before opening a PR, fixing a bug, or adding a function. It owns scope, test rules and commit/PR titles (whose release semantics are inverted).
 
@@ -65,9 +65,9 @@ npm workspaces: `packages/remeda/` (the library, where nearly all work happens),
 
 Each function in `packages/remeda/src/` is one file, `functionName.ts`, with up to three companions: `.test.ts` (Vitest runtime tests), `.test-d.ts` (`expectTypeOf` type tests) and `.test-prop.ts` (fast-check property tests). Internal helpers live in `src/internal/`, type utilities in `src/internal/types/`.
 
-### Purry & Pipe
+### Calling styles & Pipe
 
-`purry` picks the calling style by counting arguments against the arity each utility passes it (its implementation's parameter count, as a literal): at least that many calls data-first directly, extra arguments included; fewer returns a data-last function. Most dual-style functions use `purry`, or `purryWithLazy` (`src/internal/`) when they also have a lazy implementation; a few (`flat`, `split`, `truncate`, `zipWith`) dispatch by hand.
+Each dual-style function picks its calling style at runtime, from a `typeof` check on an argument or from `arguments.length` (`purry1`-`3` and `purryWithLazy1`-`3` in `src/internal/`), and passes its arguments to the implementation as parameters, so the engine can inline a callback into its loop. The public `purry` applies the same arity rule to users' functions, taking their arguments as an array.
 
 `pipe(data, fn1, fn2, fn3)` chains data-last functions. When consecutive functions carry a `lazy` property (attached by the lazy helpers in `src/internal/`) and one can end the iteration early (marked with `makeStoppable`, e.g., `take(3)`), `pipe` fuses them and processes items **one-by-one**, skipping the rest of the input and the intermediate arrays. On arrays, any other lazy function runs its data-first implementation; other iterables always run lazily.
 

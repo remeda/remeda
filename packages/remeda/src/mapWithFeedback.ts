@@ -1,15 +1,20 @@
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
 
-type FeedbackCallback<T extends IterableContainer, U, Data = T> = (
+type FeedbackCallback<
+  T extends IterableContainer = IterableContainer,
+  U = unknown,
+  Data = T,
+> = (
   previousValue: U,
   currentValue: T[number],
   currentIndex: number,
-  data: Readonly<Data>,
+  data: Data,
 ) => U;
 
 /**
@@ -63,18 +68,46 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  * @category Array
  */
 export function mapWithFeedback<T extends IterableContainer, U>(
-  callbackfn: FeedbackCallback<T, U, NonEmptyPrefix<T>>,
+  callbackfn: FeedbackCallback<T, U, Readonly<NonEmptyPrefix<T>>>,
   initialValue: U,
 ): (data: T) => Mapped<T, U>;
 
-export function mapWithFeedback(...args: readonly unknown[]): unknown {
-  return purryWithLazy(
-    mapWithFeedbackImplementation,
-    3,
-    lazyImplementation,
-    args,
-  );
+export function mapWithFeedback(
+  dataOrCallbackfn:
+    | IterableContainer
+    | FeedbackCallback<
+        IterableContainer,
+        unknown,
+        Readonly<NonEmptyPrefix<IterableContainer>>
+      >,
+  callbackfnOrInitialValue: unknown,
+  initialValue?: unknown,
+): unknown {
+  return typeof dataOrCallbackfn === "function"
+    ? withLazyImplementation(
+        dataLast(
+          // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands the callback the complete input, a valid non-empty prefix whenever the callback is invoked (it never is for an empty input); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
+          dataOrCallbackfn,
+          callbackfnOrInitialValue,
+        ),
+        lazyImplementation,
+        [
+          // @ts-expect-error [ts2322] -- `lazyImplementation` invokes the callback only once the input has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
+          dataOrCallbackfn,
+          callbackfnOrInitialValue,
+        ],
+      )
+    : mapWithFeedbackImplementation(
+        dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        callbackfnOrInitialValue,
+        initialValue,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof mapWithFeedbackImplementation> =
+  (callbackfn, initialValue) => (data) =>
+    mapWithFeedbackImplementation(data, callbackfn, initialValue);
 
 function mapWithFeedbackImplementation<T, U>(
   data: readonly T[],
@@ -97,10 +130,10 @@ function mapWithFeedbackImplementation<T, U>(
   return result;
 }
 
-function lazyImplementation<T, U>(
+function lazyImplementation<T, U>([callbackfn, initialValue]: readonly [
   callbackfn: FeedbackCallback<readonly T[], U>,
   initialValue: U,
-): LazyEvaluator<T, U> {
+]): LazyEvaluator<T, U> {
   let previousValue = initialValue;
 
   return requireDataByArity(callbackfn, 3, (currentValue, index, data) => {

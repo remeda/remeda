@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 /**
  * Multiplies two numbers.
@@ -31,8 +31,16 @@ export function multiply(value: number, multiplicand: number): number;
 export function multiply(multiplicand: bigint): (value: bigint) => bigint;
 export function multiply(multiplicand: number): (value: number) => number;
 
-export function multiply(...args: readonly unknown[]): unknown {
-  return purry(multiplyImplementation, 2, args);
+export function multiply(
+  valueOrMultiplicand: bigint | number,
+  multiplicand?: bigint | number,
+): unknown {
+  return purry2(
+    multiplyImplementation,
+    arguments.length,
+    valueOrMultiplicand,
+    multiplicand,
+  );
 }
 
 // The implementation only uses `number` types, but that's just because it's

@@ -1,4 +1,5 @@
-import { purry } from "./purry";
+import type { ArrayCallback } from "./internal/types/Callback";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
 /**
  * Splits a given array at the first index where the given predicate returns true.
@@ -6,7 +7,7 @@ import { purry } from "./purry";
  * @param data - The array to split.
  * @param predicate - The predicate.
  * @signature
- *    splitWhen(array, fn)
+ *    splitWhen(data, predicate)
  * @example
  *    splitWhen([1, 2, 3], x => x === 2) // => [[1], [2, 3]]
  * @dataFirst
@@ -14,7 +15,7 @@ import { purry } from "./purry";
  */
 export function splitWhen<T>(
   data: readonly T[],
-  predicate: (item: T, index: number, data: readonly T[]) => boolean,
+  predicate: ArrayCallback<readonly T[], boolean>,
 ): [T[], T[]];
 
 /**
@@ -22,19 +23,33 @@ export function splitWhen<T>(
  *
  * @param predicate - The predicate.
  * @signature
- *    splitWhen(fn)(array)
+ *    splitWhen(predicate)(data)
  * @example
  *    splitWhen(x => x === 2)([1, 2, 3]) // => [[1], [2, 3]]
  * @dataLast
  * @category Array
  */
 export function splitWhen<T>(
-  predicate: (item: T, index: number, data: readonly T[]) => boolean,
-): (array: readonly T[]) => [T[], T[]];
+  predicate: ArrayCallback<readonly T[], boolean>,
+): (data: readonly T[]) => [T[], T[]];
 
-export function splitWhen(...args: readonly unknown[]): unknown {
-  return purry(splitWhenImplementation, 2, args);
+export function splitWhen(
+  dataOrPredicate:
+    readonly unknown[] | ArrayCallback<readonly unknown[], boolean>,
+  predicate?: ArrayCallback<readonly unknown[], boolean>,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? dataLast(dataOrPredicate)
+    : splitWhenImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof splitWhenImplementation> =
+  (predicate) => (data) =>
+    splitWhenImplementation(data, predicate);
 
 function splitWhenImplementation<T>(
   data: readonly T[],

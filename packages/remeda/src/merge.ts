@@ -1,5 +1,5 @@
 import type { Merge } from "type-fest";
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 /**
  * Merges two objects into one by combining their properties, effectively
@@ -53,8 +53,8 @@ export function merge<T, Source>(data: T, source: Source): Merge<T, Source>;
  */
 export function merge<Source>(source: Source): <T>(data: T) => Merge<T, Source>;
 
-export function merge(...args: readonly unknown[]): unknown {
-  return purry(mergeImplementation, 2, args);
+export function merge(dataOrSource: unknown, source?: unknown): unknown {
+  return purry2(mergeImplementation, arguments.length, dataOrSource, source);
 }
 
 const mergeImplementation = <T, Source>(

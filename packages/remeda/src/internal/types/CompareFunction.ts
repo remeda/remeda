@@ -3,4 +3,4 @@
  *
  * @returns >0 if `a` should come after `b`, 0 if they are equal, and <0 if `a` should come before `b`.
  */
-export type CompareFunction<T> = (a: T, b: T) => number;
+export type CompareFunction<T = unknown> = (a: T, b: T) => number;

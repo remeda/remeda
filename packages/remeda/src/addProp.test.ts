@@ -8,6 +8,13 @@ describe("data first", () => {
 
     expect(actual).toStrictEqual({ a: 1, b: 2 });
   });
+
+  test("an undefined value", () => {
+    expect(addProp({ a: 1 }, "b", undefined)).toStrictEqual({
+      a: 1,
+      b: undefined,
+    });
+  });
 });
 
 describe("data last", () => {

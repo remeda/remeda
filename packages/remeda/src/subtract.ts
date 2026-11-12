@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 /**
  * Subtracts two numbers.
@@ -33,8 +33,16 @@ export function subtract(value: number, subtrahend: number): number;
 export function subtract(subtrahend: bigint): (value: bigint) => bigint;
 export function subtract(subtrahend: number): (value: number) => number;
 
-export function subtract(...args: readonly unknown[]): unknown {
-  return purry(subtractImplementation, 2, args);
+export function subtract(
+  valueOrSubtrahend: bigint | number,
+  subtrahend?: bigint | number,
+): unknown {
+  return purry2(
+    subtractImplementation,
+    arguments.length,
+    valueOrSubtrahend,
+    subtrahend,
+  );
 }
 
 // The implementation only uses `number` types, but that's just because it's

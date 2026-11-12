@@ -5,12 +5,12 @@ import type {
   IsNever,
   Simplify,
 } from "type-fest";
+import { purry2 } from "./internal/purryByArity";
 import type { ArrayRequiredPrefix } from "./internal/types/ArrayRequiredPrefix";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { TupleParts } from "./internal/types/TupleParts";
-import { purry } from "./purry";
 
 type GroupByProp<T extends IterableContainer, Prop extends GroupableProps<T>> =
   // Distribute unions.
@@ -179,8 +179,11 @@ export function groupByProp<
   const Prop extends GroupableProps<T>,
 >(prop: Prop): (data: T) => GroupByProp<T, Prop>;
 
-export function groupByProp(...args: readonly unknown[]): unknown {
-  return purry(groupByPropImplementation, 2, args);
+export function groupByProp(
+  dataOrProp: IterableContainer | PropertyKey,
+  prop?: PropertyKey,
+): unknown {
+  return purry2(groupByPropImplementation, arguments.length, dataOrProp, prop);
 }
 
 function groupByPropImplementation<

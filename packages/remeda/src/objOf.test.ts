@@ -8,6 +8,10 @@ describe("data first", () => {
     expect(actual.a).toBe(10);
     expect(actual).toStrictEqual({ a: 10 });
   });
+
+  test("an undefined value", () => {
+    expect(objOf(undefined, "a")).toStrictEqual({ a: undefined });
+  });
 });
 
 describe("data last", () => {

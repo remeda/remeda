@@ -3,7 +3,7 @@
  * arrays.
  */
 
-import { purry } from "./purry";
+import { purry1 } from "./internal/purryByArity";
 
 /**
  * Creates a deep copy of the value. Supported types: [plain objects](#isPlainObject),
@@ -38,8 +38,8 @@ export function clone<T>(data: T): T;
  */
 export function clone(): <T>(data: T) => T;
 
-export function clone(...args: readonly unknown[]): unknown {
-  return purry(cloneImplementation, 1, args);
+export function clone(data?: unknown): unknown {
+  return purry1(cloneImplementation, arguments.length, data);
 }
 
 const cloneImplementation = <T>(value: T): T => cloneValue(value, [], []);

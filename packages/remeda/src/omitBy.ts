@@ -1,8 +1,12 @@
 import type { IsNever, Simplify } from "type-fest";
+import { purry2 } from "./internal/purryByArity";
+import type {
+  ObjectCallback,
+  ObjectTypePredicate,
+} from "./internal/types/Callback";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
-import { purry } from "./purry";
 
 // Symbols are not passed to the predicate (because they can't be enumerated
 // with the `Object.entries` function) and the enumerable ones are copied to the
@@ -117,26 +121,18 @@ export function omitBy<
   S extends EnumerableStringKeyedValueOf<T>,
 >(
   data: T,
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => value is S,
+  predicate: ObjectTypePredicate<T, S>,
 ): PartialEnumerableKeysNarrowed<T, S>;
 export function omitBy<T extends object>(
   data: T,
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => boolean,
+  predicate: ObjectCallback<T, boolean>,
 ): PartialEnumerableKeys<T>;
 
 /**
  * Returns a partial copy of an object omitting the keys matching predicate.
  *
  * @param predicate - The predicate.
- * @signature omitBy(fn)(object)
+ * @signature omitBy(predicate)(data)
  * @example
  *    omitBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {a: 1, b: 2}
  * @dataLast
@@ -146,22 +142,22 @@ export function omitBy<
   T extends object,
   S extends EnumerableStringKeyedValueOf<T>,
 >(
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => value is S,
+  predicate: ObjectTypePredicate<T, S>,
 ): (data: T) => PartialEnumerableKeysNarrowed<T, S>;
 export function omitBy<T extends object>(
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => boolean,
+  predicate: ObjectCallback<T, boolean>,
 ): (data: T) => PartialEnumerableKeys<T>;
 
-export function omitBy(...args: readonly unknown[]): unknown {
-  return purry(omitByImplementation, 2, args);
+export function omitBy(
+  dataOrPredicate: object | ObjectCallback<object, boolean>,
+  predicate?: ObjectCallback<object, boolean>,
+): unknown {
+  return purry2(
+    omitByImplementation,
+    arguments.length,
+    dataOrPredicate,
+    predicate,
+  );
 }
 
 function omitByImplementation<T extends object>(

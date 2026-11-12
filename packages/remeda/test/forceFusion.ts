@@ -1,4 +1,4 @@
-import { lazyDataLastImplementation } from "../src/internal/lazyDataLastImplementation";
+import { lazyDataLastImplementation0 } from "../src/internal/lazyDataLastImplementation";
 import {
   makeStoppable,
   type StoppableLazyEvaluator,
@@ -19,7 +19,7 @@ import type { IterableContainer } from "../src/internal/types/IterableContainer"
 export const forceFusion = <T extends IterableContainer>(): ((
   data: T,
 ) => T[number][]) =>
-  lazyDataLastImplementation(throwNotFused, [], lazyImplementation);
+  lazyDataLastImplementation0(throwNotFused, lazyImplementation);
 
 const throwNotFused = (): never => {
   throw new Error("forceFusion: the sequence wasn't evaluated lazily");

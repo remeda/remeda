@@ -1,15 +1,17 @@
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import {
   makeStoppable,
   STOP,
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
-import { purryWithLazy } from "./internal/purryWithLazy";
 import { requireDataByArity } from "./internal/requireData";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 import type {
+  ArrayCallback,
   LazyCallback,
   LazyTypePredicate,
-} from "./internal/types/LazyCallback";
+} from "./internal/types/Callback";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NarrowedArray } from "./internal/types/NarrowedArray";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
 
@@ -66,9 +68,30 @@ export function takeWhile<
   predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
-export function takeWhile(...args: readonly unknown[]): unknown {
-  return purryWithLazy(takeWhileImplementation, 2, lazyImplementation, args);
+export function takeWhile(
+  dataOrPredicate: IterableContainer | LazyCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? withLazyImplementation(
+        dataLast(
+          // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands the callback the complete input, a valid non-empty prefix whenever the callback is invoked (it never is for an empty input); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
+          dataOrPredicate,
+        ),
+        lazyImplementation,
+        // @ts-expect-error [ts2345] -- `lazyImplementation` invokes the callback only once the input has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
+        dataOrPredicate,
+      )
+    : takeWhileImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof takeWhileImplementation> =
+  (predicate) => (data) =>
+    takeWhileImplementation(data, predicate);
 
 function takeWhileImplementation<T>(
   data: readonly T[],

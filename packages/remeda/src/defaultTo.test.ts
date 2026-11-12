@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { defaultTo } from "./defaultTo";
 
 describe("falsy values", () => {
@@ -91,4 +91,12 @@ describe("object identity", () => {
 test("undefined fallback", () => {
   expect(defaultTo(undefined as string | undefined, undefined)).toBeUndefined();
   expect(defaultTo(null as string | null, null)).toBeNull();
+});
+
+test("a function as the data", () => {
+  const callback = vi.fn<() => number>();
+
+  expect(defaultTo(callback as (() => number) | undefined, () => 2)).toBe(
+    callback,
+  );
 });

@@ -1,13 +1,13 @@
 import type { LastArrayElement } from "type-fest";
+import { purry1 } from "./internal/purryByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 /**
  * Gets the last element of `array`.
  *
  * @param data - The array.
  * @signature
- *    last(array)
+ *    last(data)
  * @example
  *    last([1, 2, 3]) // => 3
  *    last([]) // => undefined
@@ -20,7 +20,7 @@ export function last<T extends IterableContainer>(data: T): LastArrayElement<T>;
  * Gets the last element of `array`.
  *
  * @signature
- *    last()(array)
+ *    last()(data)
  * @example
  *    pipe(
  *      [1, 2, 4, 8, 16],
@@ -35,9 +35,9 @@ export function last(): <T extends IterableContainer>(
   data: T,
 ) => LastArrayElement<T>;
 
-export function last(...args: readonly unknown[]): unknown {
-  return purry(lastImplementation, 1, args);
+export function last(data?: IterableContainer): unknown {
+  return purry1(lastImplementation, arguments.length, data);
 }
 
-const lastImplementation = <T>(array: readonly T[]): T | undefined =>
-  array.at(-1);
+const lastImplementation = <T>(data: readonly T[]): T | undefined =>
+  data.at(-1);

@@ -1,6 +1,6 @@
 import type { Join, Words } from "type-fest";
+import { purry1 } from "./internal/purryByArity";
 import { words } from "./internal/words";
-import { purry } from "./purry";
 
 type KebabCase<S extends string> = string extends S
   ? string
@@ -61,8 +61,8 @@ export function toKebabCase<S extends string>(data: S): KebabCase<S>;
  */
 export function toKebabCase(): <S extends string>(data: S) => KebabCase<S>;
 
-export function toKebabCase(...args: readonly unknown[]): unknown {
-  return purry(toKebabCaseImplementation, 1, args);
+export function toKebabCase(data?: string): unknown {
+  return purry1(toKebabCaseImplementation, arguments.length, data);
 }
 
 const toKebabCaseImplementation = <S extends string>(data: S): KebabCase<S> =>

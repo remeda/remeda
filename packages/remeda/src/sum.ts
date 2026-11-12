@@ -1,5 +1,5 @@
+import { purry1 } from "./internal/purryByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 type Sum<T extends IterableContainer<bigint> | IterableContainer<number>> =
   // Empty arrays would always result in a sum of (a non-bigint) 0.
@@ -65,8 +65,10 @@ export function sum(): <
   data: T,
 ) => Sum<T>;
 
-export function sum(...args: readonly unknown[]): unknown {
-  return purry(sumImplementation, 1, args);
+export function sum(
+  data?: IterableContainer<bigint> | IterableContainer<number>,
+): unknown {
+  return purry1(sumImplementation, arguments.length, data);
 }
 
 function sumImplementation<

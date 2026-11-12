@@ -1,11 +1,12 @@
-import { purry } from "./purry";
+import type { ArrayCallback } from "./internal/types/Callback";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
  *
- * @param fn - Predicate function.
+ * @param callbackfn - Predicate function.
  * @signature
- *   meanBy(fn)(array)
+ *   meanBy(callbackfn)(data)
  * @example
  *    pipe(
  *      [{a: 5}, {a: 1}, {a: 3}],
@@ -16,16 +17,16 @@ import { purry } from "./purry";
  */
 
 export function meanBy<T>(
-  fn: (value: T, index: number, data: readonly T[]) => number,
-): (items: readonly T[]) => number;
+  callbackfn: ArrayCallback<readonly T[], number>,
+): (data: readonly T[]) => number;
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
  *
- * @param items - The array.
- * @param fn - Predicate function.
+ * @param data - The array.
+ * @param callbackfn - Predicate function.
  * @signature
- *   meanBy(array, fn)
+ *   meanBy(data, callbackfn)
  * @example
  *    meanBy(
  *      [{a: 5}, {a: 1}, {a: 3}],
@@ -36,29 +37,43 @@ export function meanBy<T>(
  */
 
 export function meanBy<T>(
-  items: readonly T[],
-  fn: (value: T, index: number, data: readonly T[]) => number,
+  data: readonly T[],
+  callbackfn: ArrayCallback<readonly T[], number>,
 ): number;
 
-export function meanBy(...args: readonly unknown[]): unknown {
-  return purry(meanByImplementation, 2, args);
+export function meanBy(
+  dataOrCallbackfn:
+    readonly unknown[] | ArrayCallback<readonly unknown[], number>,
+  callbackfn?: ArrayCallback<readonly unknown[], number>,
+): unknown {
+  return typeof dataOrCallbackfn === "function"
+    ? dataLast(dataOrCallbackfn)
+    : meanByImplementation(
+        dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        callbackfn,
+      );
 }
 
+const dataLast: DataLastBuilder<typeof meanByImplementation> =
+  (callbackfn) => (data) =>
+    meanByImplementation(data, callbackfn);
+
 const meanByImplementation = <T>(
-  array: readonly T[],
-  fn: (value: T, index: number, data: readonly T[]) => number,
+  data: readonly T[],
+  callbackfn: (value: T, index: number, data: readonly T[]) => number,
 ): number => {
-  if (array.length === 0) {
+  if (data.length === 0) {
     return NaN;
   }
 
   let sum = 0;
 
   let index = 0;
-  for (const item of array) {
-    sum += fn(item, index, array);
+  for (const item of data) {
+    sum += callbackfn(item, index, data);
     index += 1;
   }
 
-  return sum / array.length;
+  return sum / data.length;
 };
