@@ -26,19 +26,26 @@ export type LazyEvaluatorFactory<
 
 export type LazyEvaluatorFactoryOf<
   T extends IterableContainer,
-  LazyParameters extends readonly unknown[],
+  P extends readonly unknown[],
 > =
   // `pipe` reads both marks off any lazy implementation, so neither is
   // required in general; a factory whose evaluators can stop must carry the
   // `makeStoppable` mark.
   Partial<ReducingMetadata & StoppableMetadata> &
     (
-      | ((...lazyArgument: LazyParameters) => LazyEvaluator<T[number], unknown>)
-      | (((
-          ...lazyArgument: LazyParameters
-        ) => StoppableLazyEvaluator<T[number], unknown>) &
+      | ((...args: P) => LazyEvaluator<T[number], unknown>)
+      | (((...args: P) => StoppableLazyEvaluator<T[number], unknown>) &
           StoppableMetadata)
     );
+
+export type LazyArgument<P extends readonly unknown[]> = P extends readonly []
+  ? // Fallback when no parameters are defined...
+    undefined
+  : P extends readonly [(infer Argument)?]
+    ? // Unbox a single argument
+      Argument
+    : // Otherwise return it as-is.
+      P;
 
 type LazyDefinition<
   T extends IterableContainer,
@@ -51,22 +58,24 @@ type LazyDefinitionOf<T extends IterableContainer, Argument> = {
 };
 
 /**
- * The one value a lazy implementation is built from, for the arguments `P` of
- * a data-last call: `undefined`, the single argument itself, or the arguments
- * as a tuple.
- */
-export type LazyArgument<P extends readonly unknown[]> = P extends readonly []
-  ? undefined
-  : P extends readonly [(infer Argument)?]
-    ? Argument
-    : P;
-
-/**
  * Attaches a lazy implementation to a data-last function that the utility
- * builds itself. A closure from a shared builder shares its call feedback with
- * every utility built there, so the engine can't inline the implementation
- * into it once several utilities use it; a closure of the utility's own keeps
- * that call monomorphic.
+ * builds itself, instead of going through a `purryWithLazy` helper. The
+ * builders behind `purryWithLazy2` and `purryWithLazy3` give every utility the
+ * same closure, whose call feedback then covers all their implementations, so
+ * the engine can't inline any of them into it; a closure of the utility's own
+ * keeps that call monomorphic.
+ *
+ * @param lazyArgument - The value `lazy` is built from: the argument itself
+ * for one, or the arguments as a tuple for several.
+ * @example
+ *    return typeof dataOrIsEquals === "function"
+ *      ? withLazyImplementation(
+ *          dataLast(dataOrIsEquals),
+ *          lazyImplementation,
+ *          dataOrIsEquals,
+ *        )
+ *      : uniqueWithImplementation(dataOrIsEquals, isEquals);
+ * @see purryWithLazy2
  */
 export function withLazyImplementation<
   T extends IterableContainer,

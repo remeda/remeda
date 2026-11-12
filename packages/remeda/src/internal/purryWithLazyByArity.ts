@@ -63,6 +63,7 @@ export const purryWithLazy1 = <
  *      );
  *    }
  * @see purry2
+ * @see withLazyImplementation
  */
 export const purryWithLazy2 = <
   T extends IterableContainer,
@@ -104,6 +105,7 @@ export const purryWithLazy2 = <
  *      );
  *    }
  * @see purry3
+ * @see withLazyImplementation
  */
 export const purryWithLazy3 = <
   T extends IterableContainer,
