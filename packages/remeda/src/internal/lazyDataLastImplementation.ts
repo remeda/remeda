@@ -1,5 +1,4 @@
 import {
-  dataLastImplementation0,
   dataLastImplementation1,
   dataLastImplementation2,
   type DataFirst,
@@ -99,15 +98,17 @@ export function lazyDataLastImplementation0<
   dataFirst: DataFirst<T, P, R>,
   lazy: LazyEvaluatorFactory<T, P>,
 ): LazyUnaryFunction<T, P, R> {
-  // @ts-expect-error [ts2559] -- Allows us to build the lazy definition dynamically at runtime.
-  const dataLast: Partial<SimplifiedWritable<LazyDefinition<T, P>>> =
-    dataLastImplementation0(dataFirst);
+  // A closure, not `dataFirst` itself as in `purry1`: the lazy implementation
+  // is written onto the data-last function, and `dataFirst` is shared by every
+  // call of the utility.
+  const dataLast = (data: T): R =>
+    // @ts-expect-error [ts2345] -- The arguments are the elements of `P`, which TypeScript can't match to a generic tuple one by one.
+    dataFirst(data);
 
   dataLast.lazy = lazy;
-  // @ts-expect-error [ts2412] -- `LazyArgument` of a generic tuple stays deferred, so TypeScript can't match the stored value to it.
   dataLast.lazyArgument = undefined;
 
-  // @ts-expect-error [ts2322] -- TypeScript doesn't narrow an object's declared type after its optional props are assigned.
+  // @ts-expect-error [ts2322] -- `LazyArgument` of a generic tuple stays deferred, so TypeScript can't match `undefined` to it.
   return dataLast;
 }
 

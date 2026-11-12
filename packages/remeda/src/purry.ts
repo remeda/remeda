@@ -1,8 +1,13 @@
 import type {
   DataFirst,
-  DataFirstArity,
   UnaryFunction,
 } from "./internal/dataLastImplementation";
+
+// The number of parameters the function takes, counting all optional params.
+type DataFirstArity<T, P extends readonly unknown[]> = Extract<
+  [T, ...Required<P>]["length"],
+  number
+>;
 
 /**
  * Wraps a `dataFirst` implementation and dynamically curries it at runtime
