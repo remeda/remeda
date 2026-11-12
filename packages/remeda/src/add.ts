@@ -32,7 +32,10 @@ export function add(value: number, addend: number): number;
 export function add(addend: bigint): (value: bigint) => bigint;
 export function add(addend: number): (value: number) => number;
 
-export function add(valueOrAddend: unknown, addend?: unknown): unknown {
+export function add(
+  valueOrAddend: bigint | number,
+  addend?: bigint | number,
+): unknown {
   return purry2(addImplementation, arguments.length, valueOrAddend, addend);
 }
 

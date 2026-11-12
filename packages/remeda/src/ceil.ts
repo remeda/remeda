@@ -38,7 +38,7 @@ export function ceil(value: number, precision: number): number;
  */
 export function ceil(precision: number): (value: number) => number;
 
-export function ceil(valueOrPrecision: unknown, precision?: unknown): unknown {
+export function ceil(valueOrPrecision: number, precision?: number): unknown {
   return purry2(
     withPrecision(Math.ceil),
     arguments.length,

@@ -1,5 +1,7 @@
 import { purry2 } from "./internal/purryByArity";
 
+type Callback<T = unknown> = (value: T) => void;
+
 /**
  * Calls the given function with the given value, then returns the given value.
  * The return value of the provided function is ignored.
@@ -16,7 +18,7 @@ import { purry2 } from "./internal/purryByArity";
  * @dataFirst
  * @category Other
  */
-export function tap<T>(data: T, fn: (value: T) => void): T;
+export function tap<T>(data: T, fn: Callback<T>): T;
 
 /**
  * Calls the given function with the given value, then returns the given value.
@@ -41,10 +43,10 @@ export function tap<T>(data: T, fn: (value: T) => void): T;
 export function tap<
   T,
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- TODO [>2]: This is solvable by inlining F and wrapping the T parameter with `NoInfer` (e.g. `(value: NoInfer<T>) => unknown`); to prevent typescript from inferring it as `unknown`. This is only available in TS 5.4, which is above what we currently support (5.1).
-  F extends (value: T) => unknown,
+  F extends Callback<T>,
 >(fn: F): (data: T) => T;
 
-export function tap(dataOrFn: unknown, fn?: unknown): unknown {
+export function tap(dataOrFn: unknown, fn?: Callback): unknown {
   return purry2(tapImplementation, arguments.length, dataOrFn, fn);
 }
 

@@ -225,7 +225,10 @@ export function chunk<N extends number>(
   size: N,
 ): <T extends IterableContainer>(data: T) => Chunk<T, N>;
 
-export function chunk(dataOrSize: unknown, size?: unknown): unknown {
+export function chunk(
+  dataOrSize: IterableContainer | number,
+  size?: number,
+): unknown {
   return purry2(chunkImplementation, arguments.length, dataOrSize, size);
 }
 

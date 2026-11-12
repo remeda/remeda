@@ -38,6 +38,6 @@ export function values<T extends object>(data: T): Values<T>;
  */
 export function values(): <T extends object>(data: T) => Values<T>;
 
-export function values(data?: unknown): unknown {
+export function values(data?: object): unknown {
   return purry1(Object.values, arguments.length, data);
 }

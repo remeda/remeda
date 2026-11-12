@@ -1,8 +1,7 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
 import { purryWithLazy3 } from "./internal/purryWithLazyByArity";
+import type { IsEqualFunction } from "./internal/types/IsEqualFunction";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-
-type IsEqual<T, Other> = (data: T, other: Other) => boolean;
 
 /**
  * Excludes the values from `other` array.
@@ -26,7 +25,7 @@ type IsEqual<T, Other> = (data: T, other: Other) => boolean;
 export function differenceWith<T, Other>(
   data: readonly T[],
   other: readonly Other[],
-  isEqual: IsEqual<T, Other>,
+  isEqual: IsEqualFunction<T, Other>,
 ): T[];
 
 /**
@@ -48,13 +47,13 @@ export function differenceWith<T, Other>(
  */
 export function differenceWith<T, Other>(
   other: readonly Other[],
-  isEqual: IsEqual<T, Other>,
+  isEqual: IsEqualFunction<T, Other>,
 ): (data: readonly T[]) => T[];
 
 export function differenceWith(
-  dataOrOther: unknown,
-  otherOrIsEqual?: unknown,
-  isEqual?: unknown,
+  dataOrOther: readonly unknown[],
+  otherOrIsEqual?: readonly unknown[] | IsEqualFunction,
+  isEqual?: IsEqualFunction,
 ): unknown {
   return purryWithLazy3(
     differenceWithImplementation,
@@ -69,7 +68,7 @@ export function differenceWith(
 function differenceWithImplementation<T, Other>(
   data: readonly T[],
   other: readonly Other[],
-  isEqual: IsEqual<T, Other>,
+  isEqual: IsEqualFunction<T, Other>,
 ): T[] {
   const result: T[] = [];
   for (const value of data) {
@@ -83,7 +82,7 @@ function differenceWithImplementation<T, Other>(
 const lazyImplementation =
   <T, Other>([other, isEqual]: readonly [
     other: readonly Other[],
-    isEqual: IsEqual<T, Other>,
+    isEqual: IsEqualFunction<T, Other>,
   ]): LazyEvaluator<T> =>
   (value) =>
     other.every((otherValue) => !isEqual(value, otherValue))

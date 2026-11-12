@@ -179,7 +179,10 @@ export function groupByProp<
   const Prop extends GroupableProps<T>,
 >(prop: Prop): (data: T) => GroupByProp<T, Prop>;
 
-export function groupByProp(dataOrProp: unknown, prop?: unknown): unknown {
+export function groupByProp(
+  dataOrProp: IterableContainer | PropertyKey,
+  prop?: PropertyKey,
+): unknown {
   return purry2(groupByPropImplementation, arguments.length, dataOrProp, prop);
 }
 

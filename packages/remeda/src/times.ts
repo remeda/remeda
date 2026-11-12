@@ -6,6 +6,8 @@ import { purry2 } from "./internal/purryByArity";
 // See the type tests for more information.
 type MAX_LITERAL_SIZE = 46;
 
+type IndexCallback<T = unknown> = (index: number) => T;
+
 type TimesArray<
   T,
   N extends number,
@@ -50,7 +52,7 @@ type TimesArray<
  */
 export function times<T, N extends number>(
   count: N,
-  fn: (index: number) => T,
+  fn: IndexCallback<T>,
 ): TimesArray<T, N>;
 
 /**
@@ -71,10 +73,13 @@ export function times<T, N extends number>(
  * @category Array
  */
 export function times<T>(
-  fn: (index: number) => T,
+  fn: IndexCallback<T>,
 ): <N extends number>(count: N) => TimesArray<T, N>;
 
-export function times(countOrFn: unknown, fn?: unknown): unknown {
+export function times(
+  countOrFn: number | IndexCallback,
+  fn?: IndexCallback,
+): unknown {
   return purry2(timesImplementation, arguments.length, countOrFn, fn);
 }
 

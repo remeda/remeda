@@ -138,7 +138,7 @@ export function fromEntries(): <Entries extends IterableContainer<Entry>>(
   data: Entries,
 ) => Simplify<FromEntries<Entries>>;
 
-export function fromEntries(data?: unknown): unknown {
+export function fromEntries(data?: IterableContainer<Entry>): unknown {
   return purry1(fromEntriesImplementation, arguments.length, data);
 }
 

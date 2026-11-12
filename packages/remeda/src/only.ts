@@ -40,7 +40,7 @@ export function only<T extends IterableContainer>(data: T): Only<T>;
  */
 export function only<T extends IterableContainer>(): (data: T) => Only<T>;
 
-export function only(data?: unknown): unknown {
+export function only(data?: IterableContainer): unknown {
   return purry1(onlyImplementation, arguments.length, data);
 }
 

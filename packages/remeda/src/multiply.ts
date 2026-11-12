@@ -32,8 +32,8 @@ export function multiply(multiplicand: bigint): (value: bigint) => bigint;
 export function multiply(multiplicand: number): (value: number) => number;
 
 export function multiply(
-  valueOrMultiplicand: unknown,
-  multiplicand?: unknown,
+  valueOrMultiplicand: bigint | number,
+  multiplicand?: bigint | number,
 ): unknown {
   return purry2(
     multiplyImplementation,

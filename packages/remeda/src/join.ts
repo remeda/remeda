@@ -51,7 +51,10 @@ export function join<
   Glue extends string,
 >(glue: Glue): (data: T) => Join<T, Glue>;
 
-export function join(dataOrGlue: unknown, glue?: unknown): unknown {
+export function join(
+  dataOrGlue: readonly JoinableItem[] | string,
+  glue?: string,
+): unknown {
   return purry2(joinImplementation, arguments.length, dataOrGlue, glue);
 }
 

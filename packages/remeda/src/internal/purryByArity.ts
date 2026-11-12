@@ -14,7 +14,7 @@ import {
  *
  * @param argumentsLength - The utility's `arguments.length`.
  * @example
- *    export function reverse(data?: unknown): unknown {
+ *    export function reverse(data?: readonly unknown[]): unknown {
  *      return purry1(reverseImplementation, arguments.length, data);
  *    }
  * @see purryWithLazy1
@@ -50,7 +50,10 @@ export const purry1 = <
  *
  * @param argumentsLength - The utility's `arguments.length`.
  * @example
- *    export function add(valueOrAddend: unknown, addend?: unknown): unknown {
+ *    export function add(
+ *      valueOrAddend: bigint | number,
+ *      addend?: bigint | number,
+ *    ): unknown {
  *      return purry2(addImplementation, arguments.length, valueOrAddend, addend);
  *    }
  * @see purryWithLazy2
@@ -78,9 +81,9 @@ export const purry2 = <T, P extends readonly [unknown], R>(
  * @param argumentsLength - The utility's `arguments.length`.
  * @example
  *    export function swapIndices(
- *      dataOrIndex1: unknown,
- *      index1OrIndex2?: unknown,
- *      index2?: unknown,
+ *      dataOrIndex1: IterableContainer | string | number,
+ *      index1OrIndex2?: number,
+ *      index2?: number,
  *    ): unknown {
  *      return purry3(
  *        swapIndicesImplementation,

@@ -50,7 +50,7 @@ export function median(): <T extends IterableContainer<number>>(
   data: T,
 ) => Median<T>;
 
-export function median(data?: unknown): unknown {
+export function median(data?: IterableContainer<number>): unknown {
   return purry1(medianImplementation, arguments.length, data);
 }
 

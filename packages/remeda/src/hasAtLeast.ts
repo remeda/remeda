@@ -64,7 +64,10 @@ export function hasAtLeast(
   minimum: number,
 ): (data: IterableContainer) => boolean;
 
-export function hasAtLeast(dataOrMinimum: unknown, minimum?: unknown): unknown {
+export function hasAtLeast(
+  dataOrMinimum: IterableContainer | number,
+  minimum?: number,
+): unknown {
   return purry2(
     hasAtLeastImplementation,
     arguments.length,

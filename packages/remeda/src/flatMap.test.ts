@@ -64,9 +64,9 @@ describe("dataLast", () => {
     });
 
     test("provides the items processed so far to the callback", () => {
-      const mapper = vi.fn<LazyCallback<unknown[], unknown>>(
-        (_value, _index, data) => [...data],
-      );
+      const mapper = vi.fn<LazyCallback<unknown[]>>((_value, _index, data) => [
+        ...data,
+      ]);
       pipe([1, 2, 3], forceFusion(), flatMap(mapper));
 
       expect(mapper).toHaveNthReturnedWith(1, [1]);

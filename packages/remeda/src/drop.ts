@@ -137,7 +137,7 @@ export function drop<N extends number>(
   n: N,
 ): <T extends IterableContainer>(data: T) => Drop<T, N>;
 
-export function drop(dataOrN: unknown, n?: unknown): unknown {
+export function drop(dataOrN: IterableContainer | number, n?: number): unknown {
   return purryWithLazy2(
     dropImplementation,
     lazyImplementation,

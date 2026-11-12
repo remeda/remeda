@@ -35,7 +35,7 @@ export function last(): <T extends IterableContainer>(
   data: T,
 ) => LastArrayElement<T>;
 
-export function last(data?: unknown): unknown {
+export function last(data?: IterableContainer): unknown {
   return purry1(lastImplementation, arguments.length, data);
 }
 

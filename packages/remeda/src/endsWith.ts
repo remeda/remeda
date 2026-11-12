@@ -222,7 +222,7 @@ export function endsWith<Suffix extends string>(
 
 export function endsWith(suffix: string): (data: string) => boolean;
 
-export function endsWith(dataOrSuffix: unknown, suffix?: unknown): unknown {
+export function endsWith(dataOrSuffix: string, suffix?: string): unknown {
   return purry2(endsWithImplementation, arguments.length, dataOrSuffix, suffix);
 }
 

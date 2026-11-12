@@ -58,8 +58,8 @@ export function range(
 ): (start: number) => number[];
 
 export function range(
-  startOrEndOrOptions: unknown,
-  endOrOptions?: unknown,
+  startOrEndOrOptions: number | RangeOptions,
+  endOrOptions?: number | RangeOptions,
 ): unknown {
   return purry2(
     rangeImplementation,

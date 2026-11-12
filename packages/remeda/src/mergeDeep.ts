@@ -41,7 +41,7 @@ export function mergeDeep<Source extends object>(
   data: Destination,
 ) => MergeDeep<Destination, Source>;
 
-export function mergeDeep(dataOrSource: unknown, source?: unknown): unknown {
+export function mergeDeep(dataOrSource: object, source?: object): unknown {
   return purry2(
     mergeDeepImplementation,
     arguments.length,

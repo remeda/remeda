@@ -65,7 +65,9 @@ export function sum(): <
   data: T,
 ) => Sum<T>;
 
-export function sum(data?: unknown): unknown {
+export function sum(
+  data?: IterableContainer<bigint> | IterableContainer<number>,
+): unknown {
   return purry1(sumImplementation, arguments.length, data);
 }
 

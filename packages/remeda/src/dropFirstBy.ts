@@ -1,11 +1,14 @@
 import { heapify, heapMaybeInsert } from "./internal/heap";
 import { SKIP_ITEM } from "./internal/lazyControl";
 import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
-import { orderRuleComparer, type OrderRule } from "./internal/purryOrderRules";
+import {
+  orderRuleComparer,
+  type OrderRule,
+  type OrderRules,
+} from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
 /**
  * Drop the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before dropping the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.
@@ -27,7 +30,7 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 export function dropFirstBy<T>(
   data: readonly T[],
   n: number,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
+  ...rules: OrderRules<T>
 ): T[];
 
 /**
@@ -48,7 +51,7 @@ export function dropFirstBy<T>(
  */
 export function dropFirstBy<T>(
   n: number,
-  ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
+  ...rules: OrderRules<NoInfer<T>>
 ): (data: readonly T[]) => T[];
 
 export function dropFirstBy(

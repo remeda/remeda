@@ -43,7 +43,7 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  */
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
-export function first(data?: unknown): unknown {
+export function first(data?: IterableContainer): unknown {
   return purryWithLazy1(
     firstImplementation,
     lazyImplementation,

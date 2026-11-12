@@ -103,8 +103,8 @@ export function hasSubObject<S extends object>(
 ) => data is HasSubObjectGuard<T, S>;
 
 export function hasSubObject(
-  dataOrSubObject: unknown,
-  subObject?: unknown,
+  dataOrSubObject: object,
+  subObject?: object,
 ): unknown {
   return purry2(
     hasSubObjectImplementation,

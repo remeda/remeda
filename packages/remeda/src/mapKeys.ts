@@ -9,6 +9,12 @@ import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableSt
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { IsBounded } from "./internal/types/IsBounded";
 
+type KeyMapper<T = {}, Key = PropertyKey> = (
+  key: EnumerableStringKeyOf<T>,
+  value: EnumerableStringKeyedValueOf<T>,
+  data: T,
+) => Key;
+
 type MappedKeys<T, Key extends PropertyKey> = MaybePartial<
   T,
   Key,
@@ -60,11 +66,7 @@ type CouldBeEmpty<T> = {} extends T ? true : false;
  */
 export function mapKeys<T extends {}, Key extends PropertyKey>(
   data: T,
-  keyMapper: (
-    key: EnumerableStringKeyOf<T>,
-    value: EnumerableStringKeyedValueOf<T>,
-    data: T,
-  ) => Key,
+  keyMapper: KeyMapper<T, Key>,
 ): MappedKeys<T, Key>;
 
 /**
@@ -79,16 +81,12 @@ export function mapKeys<T extends {}, Key extends PropertyKey>(
  * @category Object
  */
 export function mapKeys<T extends {}, Key extends PropertyKey>(
-  keyMapper: (
-    key: EnumerableStringKeyOf<T>,
-    value: EnumerableStringKeyedValueOf<T>,
-    data: T,
-  ) => Key,
+  keyMapper: KeyMapper<T, Key>,
 ): (data: T) => MappedKeys<T, Key>;
 
 export function mapKeys(
-  dataOrKeyMapper: unknown,
-  keyMapper?: unknown,
+  dataOrKeyMapper: KeyMapper | {},
+  keyMapper?: KeyMapper,
 ): unknown {
   return purry2(
     mapKeysImplementation,

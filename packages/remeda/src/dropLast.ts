@@ -47,7 +47,10 @@ export function dropLast(
   n: number,
 ): <T extends IterableContainer>(data: T) => T[number][];
 
-export function dropLast(dataOrN: unknown, n?: unknown): unknown {
+export function dropLast(
+  dataOrN: IterableContainer | number,
+  n?: number,
+): unknown {
   return purryWithLazy2(
     dropLastImplementation,
     lazyImplementation,

@@ -74,9 +74,9 @@ test("pipe with another lazy step that can't stop early", () => {
 });
 
 test("provides the items processed so far to the callback", () => {
-  const callback = vi.fn<LazyCallback<unknown[], unknown>>(
-    (_value, _index, data) => [...data],
-  );
+  const callback = vi.fn<LazyCallback<unknown[]>>((_value, _index, data) => [
+    ...data,
+  ]);
   pipe([1, 2, 3], forceFusion(), forEach(callback));
 
   expect(callback).toHaveNthReturnedWith(1, [1]);

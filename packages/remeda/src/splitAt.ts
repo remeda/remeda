@@ -29,7 +29,10 @@ export function splitAt<T>(data: readonly T[], index: number): [T[], T[]];
  */
 export function splitAt<T>(index: number): (data: readonly T[]) => [T[], T[]];
 
-export function splitAt(dataOrIndex: unknown, index?: unknown): unknown {
+export function splitAt(
+  dataOrIndex: readonly unknown[] | number,
+  index?: number,
+): unknown {
   return purry2(splitAtImplementation, arguments.length, dataOrIndex, index);
 }
 

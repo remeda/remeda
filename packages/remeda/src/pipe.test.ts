@@ -423,9 +423,9 @@ describe("lazy", () => {
     });
 
     test("a later step's callbacks get the previous step's complete output", () => {
-      const mapper = vi.fn<LazyCallback<unknown[], unknown>>(
-        (_value, _index, data) => [...data],
-      );
+      const mapper = vi.fn<LazyCallback<unknown[]>>((_value, _index, data) => [
+        ...data,
+      ]);
       pipe([1, 2, 3], map(multiply(10)), map(mapper));
 
       expect(mapper).toHaveNthReturnedWith(1, [10, 20, 30]);

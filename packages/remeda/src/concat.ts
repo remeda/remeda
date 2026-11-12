@@ -42,7 +42,10 @@ export function concat<T2 extends IterableContainer>(
   other: T2,
 ): <T1 extends IterableContainer>(data: T1) => [...T1, ...T2];
 
-export function concat(dataOrOther: unknown, other?: unknown): unknown {
+export function concat(
+  dataOrOther: IterableContainer,
+  other?: IterableContainer,
+): unknown {
   return purry2(concatImplementation, arguments.length, dataOrOther, other);
 }
 

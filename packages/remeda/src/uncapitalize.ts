@@ -49,7 +49,7 @@ export function uncapitalize<T extends string>(data: T): Uncapitalize<T>;
  */
 export function uncapitalize(): <T extends string>(data: T) => Uncapitalize<T>;
 
-export function uncapitalize(data?: unknown): unknown {
+export function uncapitalize(data?: string): unknown {
   return purry1(uncapitalizeImplementation, arguments.length, data);
 }
 

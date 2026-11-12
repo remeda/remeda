@@ -44,9 +44,9 @@ export function swapProps<
 >(key1: K1, key2: K2): (data: T) => SwappedProps<T, K1, K2>;
 
 export function swapProps(
-  dataOrKey1: unknown,
-  key1OrKey2?: unknown,
-  key2?: unknown,
+  dataOrKey1: object | PropertyKey,
+  key1OrKey2?: PropertyKey,
+  key2?: PropertyKey,
 ): unknown {
   return purry3(
     swapPropsImplementation,

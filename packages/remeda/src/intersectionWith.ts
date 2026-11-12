@@ -1,8 +1,7 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
 import { purryWithLazy3 } from "./internal/purryWithLazyByArity";
+import type { IsEqualFunction } from "./internal/types/IsEqualFunction";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-
-type IsEqual<T, S> = (a: T, b: S) => boolean;
 
 /**
  * Returns a list of intersecting values based on a custom
@@ -29,7 +28,7 @@ type IsEqual<T, S> = (a: T, b: S) => boolean;
 export function intersectionWith<T, S>(
   data: readonly T[],
   other: readonly S[],
-  isEqual: IsEqual<T, S>,
+  isEqual: IsEqualFunction<T, S>,
 ): T[];
 
 /**
@@ -58,13 +57,13 @@ export function intersectionWith<T, S>(
    * Type inference doesn't work properly for the comparator's first parameter
    * in data last variant.
    */
-  isEqual: IsEqual<T, S>,
+  isEqual: IsEqualFunction<T, S>,
 ): (data: readonly T[]) => T[];
 
 export function intersectionWith(
-  dataOrOther: unknown,
-  otherOrIsEqual?: unknown,
-  isEqual?: unknown,
+  dataOrOther: readonly unknown[],
+  otherOrIsEqual?: readonly unknown[] | IsEqualFunction,
+  isEqual?: IsEqualFunction,
 ): unknown {
   return purryWithLazy3(
     intersectionWithImplementation,
@@ -79,7 +78,7 @@ export function intersectionWith(
 function intersectionWithImplementation<T, S>(
   data: readonly T[],
   other: readonly S[],
-  isEqual: IsEqual<T, S>,
+  isEqual: IsEqualFunction<T, S>,
 ): T[] {
   const result: T[] = [];
   for (const value of data) {
@@ -94,7 +93,7 @@ function intersectionWithImplementation<T, S>(
 const lazyImplementation =
   <T, S>([other, isEqual]: readonly [
     other: readonly S[],
-    isEqual: IsEqual<T, S>,
+    isEqual: IsEqualFunction<T, S>,
   ]): LazyEvaluator<T> =>
   (value) =>
     other.some((otherValue) => isEqual(value, otherValue)) ? value : SKIP_ITEM;

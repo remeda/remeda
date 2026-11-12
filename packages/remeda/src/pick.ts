@@ -111,7 +111,10 @@ export function pick<
   const Keys extends readonly KeysOfUnion<T>[],
 >(data: T, keys: Keys): PickFromArray<T, Keys>;
 
-export function pick(dataOrKeys: unknown, keys?: unknown): unknown {
+export function pick(
+  dataOrKeys: object | readonly PropertyKey[],
+  keys?: readonly PropertyKey[],
+): unknown {
   return purry2(pickImplementation, arguments.length, dataOrKeys, keys);
 }
 

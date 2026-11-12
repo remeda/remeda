@@ -67,7 +67,9 @@ export function product(): <
   data: T,
 ) => Product<T>;
 
-export function product(data?: unknown): unknown {
+export function product(
+  data?: IterableContainer<bigint> | IterableContainer<number>,
+): unknown {
   return purry1(productImplementation, arguments.length, data);
 }
 

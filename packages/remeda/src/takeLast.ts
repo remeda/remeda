@@ -43,7 +43,10 @@ export function takeLast<T extends IterableContainer>(
   n: number,
 ): (data: T) => T[number][];
 
-export function takeLast(dataOrN: unknown, n?: unknown): unknown {
+export function takeLast(
+  dataOrN: IterableContainer | number,
+  n?: number,
+): unknown {
   return purry2(takeLastImplementation, arguments.length, dataOrN, n);
 }
 

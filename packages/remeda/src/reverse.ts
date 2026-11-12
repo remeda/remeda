@@ -40,7 +40,7 @@ export function reverse<T extends readonly unknown[]>(): (
   data: T,
 ) => Reverse<T>;
 
-export function reverse(data?: unknown): unknown {
+export function reverse(data?: readonly unknown[]): unknown {
   return purry1(reverseImplementation, arguments.length, data);
 }
 

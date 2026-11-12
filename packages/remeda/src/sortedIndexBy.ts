@@ -6,6 +6,12 @@
 import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
 import { purry3 } from "./internal/purryByArity";
 
+type ValueFunction<T = unknown> = (
+  item: T,
+  index: number | undefined,
+  data: readonly T[],
+) => {};
+
 /**
  * Find the insertion position (index) of an item in an array with items sorted
  * in ascending order using a value function; so that
@@ -42,7 +48,7 @@ import { purry3 } from "./internal/purryByArity";
 export function sortedIndexBy<T>(
   data: readonly T[],
   item: T,
-  valueFunction: (item: T, index: number | undefined, data: readonly T[]) => {},
+  valueFunction: ValueFunction<T>,
 ): number;
 
 /**
@@ -81,27 +87,19 @@ export function sortedIndexBy<T = never>(
   // We first try to infer T through the callback to allow the type to be pulled
   // from the call site it is used in (like `pipe`).
   item: NoInfer<T>,
-  valueFunction: (
-    item: NoInfer<T>,
-    index: number | undefined,
-    data: readonly NoInfer<T>[],
-  ) => {},
+  valueFunction: ValueFunction<NoInfer<T>>,
 ): (data: readonly T[]) => number;
 
 export function sortedIndexBy<T>(
   // Otherwise we allow T to be inferred directly from the operand.
   item: T,
-  valueFunction: (
-    item: NoInfer<T>,
-    index: number | undefined,
-    data: readonly NoInfer<T>[],
-  ) => {},
+  valueFunction: ValueFunction<NoInfer<T>>,
 ): (data: readonly NoInfer<T>[]) => number;
 
 export function sortedIndexBy(
   dataOrItem: unknown,
   itemOrValueFunction?: unknown,
-  valueFunction?: unknown,
+  valueFunction?: ValueFunction,
 ): unknown {
   return purry3(
     sortedIndexByImplementation,

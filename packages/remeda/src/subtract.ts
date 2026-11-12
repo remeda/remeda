@@ -34,8 +34,8 @@ export function subtract(subtrahend: bigint): (value: bigint) => bigint;
 export function subtract(subtrahend: number): (value: number) => number;
 
 export function subtract(
-  valueOrSubtrahend: unknown,
-  subtrahend?: unknown,
+  valueOrSubtrahend: bigint | number,
+  subtrahend?: bigint | number,
 ): unknown {
   return purry2(
     subtractImplementation,

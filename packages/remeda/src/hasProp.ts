@@ -82,7 +82,10 @@ export function hasProp<T extends object>(
   key: KeysOfUnion<T>,
 ): (data: T) => boolean;
 
-export function hasProp(dataOrKey: unknown, key?: unknown): unknown {
+export function hasProp(
+  dataOrKey: object | PropertyKey,
+  key?: PropertyKey,
+): unknown {
   return purry2(hasPropImplementation, arguments.length, dataOrKey, key);
 }
 

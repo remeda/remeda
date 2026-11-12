@@ -31,7 +31,10 @@ export function divide(value: number, divisor: number): number;
 export function divide(divisor: bigint): (value: bigint) => bigint;
 export function divide(divisor: number): (value: number) => number;
 
-export function divide(valueOrDivisor: unknown, divisor?: unknown): unknown {
+export function divide(
+  valueOrDivisor: bigint | number,
+  divisor?: bigint | number,
+): unknown {
   return purry2(
     divideImplementation,
     arguments.length,

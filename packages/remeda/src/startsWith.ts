@@ -222,7 +222,7 @@ export function startsWith<Prefix extends string>(
 
 export function startsWith(prefix: string): (data: string) => boolean;
 
-export function startsWith(dataOrPrefix: unknown, prefix?: unknown): unknown {
+export function startsWith(dataOrPrefix: string, prefix?: string): unknown {
   return purry2(
     startsWithImplementation,
     arguments.length,

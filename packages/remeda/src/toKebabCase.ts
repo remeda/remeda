@@ -61,7 +61,7 @@ export function toKebabCase<S extends string>(data: S): KebabCase<S>;
  */
 export function toKebabCase(): <S extends string>(data: S) => KebabCase<S>;
 
-export function toKebabCase(data?: unknown): unknown {
+export function toKebabCase(data?: string): unknown {
   return purry1(toKebabCaseImplementation, arguments.length, data);
 }
 

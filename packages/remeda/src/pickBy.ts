@@ -3,6 +3,10 @@ import { purry2 } from "./internal/purryByArity";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
+import type {
+  ObjectCallback,
+  ObjectTypePredicate,
+} from "./internal/types/ObjectCallback";
 import type { ToString } from "./internal/types/ToString";
 
 // When the predicate isn't a type-guard we don't know which properties would be
@@ -131,19 +135,11 @@ export function pickBy<
   S extends EnumerableStringKeyedValueOf<T>,
 >(
   data: T,
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => value is S,
+  predicate: ObjectTypePredicate<T, S>,
 ): EnumeratedPartialNarrowed<T, S>;
 export function pickBy<T extends object>(
   data: T,
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => boolean,
+  predicate: ObjectCallback<T, boolean>,
 ): EnumeratedPartial<T>;
 
 /**
@@ -173,21 +169,16 @@ export function pickBy<
   T extends object,
   S extends EnumerableStringKeyedValueOf<T>,
 >(
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => value is S,
+  predicate: ObjectTypePredicate<T, S>,
 ): (data: T) => EnumeratedPartialNarrowed<T, S>;
 export function pickBy<T extends object>(
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => boolean,
+  predicate: ObjectCallback<T, boolean>,
 ): (data: T) => EnumeratedPartial<T>;
 
-export function pickBy(dataOrPredicate: unknown, predicate?: unknown): unknown {
+export function pickBy(
+  dataOrPredicate: object | ObjectCallback<object, boolean>,
+  predicate?: ObjectCallback<object, boolean>,
+): unknown {
   return purry2(
     pickByImplementation,
     arguments.length,

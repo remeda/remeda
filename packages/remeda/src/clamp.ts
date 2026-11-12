@@ -36,7 +36,10 @@ export function clamp(value: number, limits: Limits): number;
  */
 export function clamp(limits: Limits): (value: number) => number;
 
-export function clamp(valueOrLimits: unknown, limits?: unknown): unknown {
+export function clamp(
+  valueOrLimits: number | Limits,
+  limits?: Limits,
+): unknown {
   return purry2(clampImplementation, arguments.length, valueOrLimits, limits);
 }
 

@@ -3,10 +3,9 @@ import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireData } from "./internal/requireData";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { Deduped } from "./internal/types/Deduped";
+import type { IsEqualFunction } from "./internal/types/IsEqualFunction";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-
-type IsEquals<T = unknown> = (a: T, b: T) => boolean;
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -27,7 +26,7 @@ type IsEquals<T = unknown> = (a: T, b: T) => boolean;
  */
 export function uniqueWith<T extends IterableContainer>(
   data: T,
-  isEquals: IsEquals<T[number]>,
+  isEquals: IsEqualFunction<T[number]>,
 ): Deduped<T>;
 
 /**
@@ -50,12 +49,12 @@ export function uniqueWith<T extends IterableContainer>(
  * @category Array
  */
 export function uniqueWith<T extends IterableContainer>(
-  isEquals: IsEquals<T[number]>,
+  isEquals: IsEqualFunction<T[number]>,
 ): (data: T) => Deduped<T>;
 
 export function uniqueWith(
-  dataOrIsEquals: IterableContainer | IsEquals,
-  isEquals?: IsEquals,
+  dataOrIsEquals: IterableContainer | IsEqualFunction,
+  isEquals?: IsEqualFunction,
 ): unknown {
   return typeof dataOrIsEquals === "function"
     ? withLazyImplementation(
@@ -76,7 +75,7 @@ const dataLast: DataLastBuilder<typeof uniqueWithImplementation> =
 
 const uniqueWithImplementation = <T>(
   data: readonly T[],
-  isEquals: IsEquals<T>,
+  isEquals: IsEqualFunction<T>,
 ): T[] =>
   data.filter(
     (value, index) =>
@@ -86,7 +85,9 @@ const uniqueWithImplementation = <T>(
       ) === index,
   );
 
-const lazyImplementation = <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>
+const lazyImplementation = <T>(
+  isEquals: IsEqualFunction<T>,
+): LazyEvaluator<T> =>
   requireData((value, index, data) =>
     data.findIndex(
       (otherValue, otherIndex) =>

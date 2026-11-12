@@ -51,7 +51,7 @@ export function mean(): <T extends IterableContainer<number>>(
   data: T,
 ) => Mean<T>;
 
-export function mean(data?: unknown): unknown {
+export function mean(data?: IterableContainer<number>): unknown {
   return purry1(meanImplementation, arguments.length, data);
 }
 

@@ -27,7 +27,7 @@ export function length<T>(data: Enumerable<T>): number;
  */
 export function length<T>(): (data: Enumerable<T>) => number;
 
-export function length(data?: unknown): unknown {
+export function length(data?: Enumerable<unknown>): unknown {
   return purry1(lengthImplementation, arguments.length, data);
 }
 

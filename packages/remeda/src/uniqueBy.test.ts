@@ -84,7 +84,7 @@ describe(pipe, () => {
   });
 
   test("provides the items processed so far to the key function", () => {
-    const keyFunction = vi.fn<LazyCallback<unknown[], unknown>>(
+    const keyFunction = vi.fn<LazyCallback<unknown[]>>(
       (_item, _index, data) => [...data],
     );
     pipe([1, 2, 2, 3], forceFusion(), uniqueBy(keyFunction));

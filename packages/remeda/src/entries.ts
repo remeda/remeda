@@ -45,6 +45,6 @@ export function entries<T extends {}>(data: T): Entry<T>[];
  */
 export function entries(): <T extends {}>(data: T) => Entry<T>[];
 
-export function entries(data?: unknown): unknown {
+export function entries(data?: {}): unknown {
   return purry1(Object.entries, arguments.length, data);
 }

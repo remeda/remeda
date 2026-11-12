@@ -25,7 +25,7 @@ export function objOf<T, K extends string>(value: T, key: K): Record<K, T>;
  */
 export function objOf<T, K extends string>(key: K): (value: T) => Record<K, T>;
 
-export function objOf(valueOrKey: unknown, key?: unknown): unknown {
+export function objOf(valueOrKey: unknown, key?: string): unknown {
   return purry2(objOfImplementation, arguments.length, valueOrKey, key);
 }
 

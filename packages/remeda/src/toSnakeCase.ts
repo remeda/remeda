@@ -61,7 +61,7 @@ export function toSnakeCase<S extends string>(data: S): SnakeCase<S>;
  */
 export function toSnakeCase(): <S extends string>(data: S) => SnakeCase<S>;
 
-export function toSnakeCase(data?: unknown): unknown {
+export function toSnakeCase(data?: string): unknown {
   return purry1(toSnakeCaseImplementation, arguments.length, data);
 }
 

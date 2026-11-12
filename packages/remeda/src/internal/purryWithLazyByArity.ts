@@ -15,7 +15,7 @@ import type { IterableContainer } from "./types/IterableContainer";
  *
  * @param argumentsLength - The utility's `arguments.length`.
  * @example
- *    export function unique(data?: unknown): unknown {
+ *    export function unique(data?: IterableContainer): unknown {
  *      return purryWithLazy1(
  *        uniqueImplementation,
  *        lazyImplementation,
@@ -50,12 +50,15 @@ export const purryWithLazy1 = <
  *
  * @param argumentsLength - The utility's `arguments.length`.
  * @example
- *    export function take(arrayOrN: unknown, n?: unknown): unknown {
+ *    export function take(
+ *      dataOrN: IterableContainer | number,
+ *      n?: number,
+ *    ): unknown {
  *      return purryWithLazy2(
  *        takeImplementation,
  *        lazyImplementation,
  *        arguments.length,
- *        arrayOrN,
+ *        dataOrN,
  *        n,
  *      );
  *    }
@@ -87,9 +90,9 @@ export const purryWithLazy2 = <
  * @param argumentsLength - The utility's `arguments.length`.
  * @example
  *    export function intersectionWith(
- *      dataOrOther: unknown,
- *      otherOrIsEqual?: unknown,
- *      isEqual?: unknown,
+ *      dataOrOther: readonly unknown[],
+ *      otherOrIsEqual?: readonly unknown[] | IsEqualFunction,
+ *      isEqual?: IsEqualFunction,
  *    ): unknown {
  *      return purryWithLazy3(
  *        intersectionWithImplementation,

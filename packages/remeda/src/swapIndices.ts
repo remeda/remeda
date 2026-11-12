@@ -145,9 +145,9 @@ export function swapIndices<K1 extends number, K2 extends number>(
 ): <T extends IterableContainer | string>(data: T) => SwappedIndices<T, K1, K2>;
 
 export function swapIndices(
-  dataOrIndex1: unknown,
-  index1OrIndex2?: unknown,
-  index2?: unknown,
+  dataOrIndex1: IterableContainer | string | number,
+  index1OrIndex2?: number,
+  index2?: number,
 ): unknown {
   return purry3(
     swapIndicesImplementation,

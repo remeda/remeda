@@ -5,6 +5,8 @@
 
 import { purry2 } from "./internal/purryByArity";
 
+type Predicate<T = unknown> = (data: T) => boolean;
+
 /**
  * Determines whether any predicate returns true for the input data.
  *
@@ -21,10 +23,7 @@ import { purry2 } from "./internal/purryByArity";
  * @dataFirst
  * @category Array
  */
-export function anyPass<T>(
-  data: T,
-  fns: readonly ((data: T) => boolean)[],
-): boolean;
+export function anyPass<T>(data: T, fns: readonly Predicate<T>[]): boolean;
 
 /**
  * Determines whether any predicate returns true for the input data.
@@ -41,11 +40,12 @@ export function anyPass<T>(
  * @dataLast
  * @category Array
  */
-export function anyPass<T>(
-  fns: readonly ((data: T) => boolean)[],
-): (data: T) => boolean;
+export function anyPass<T>(fns: readonly Predicate<T>[]): (data: T) => boolean;
 
-export function anyPass(dataOrFns: unknown, fns?: unknown): unknown {
+export function anyPass(
+  dataOrFns: unknown,
+  fns?: readonly Predicate[],
+): unknown {
   return purry2(anyPassImplementation, arguments.length, dataOrFns, fns);
 }
 

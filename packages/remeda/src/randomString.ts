@@ -36,7 +36,7 @@ export function randomString(length: number): string;
  */
 export function randomString(): (length: number) => string;
 
-export function randomString(length?: unknown): unknown {
+export function randomString(length?: number): unknown {
   return purry1(randomStringImplementation, arguments.length, length);
 }
 

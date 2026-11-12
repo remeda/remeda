@@ -79,6 +79,6 @@ export function keys<T extends object>(data: T): Keys<T>;
  */
 export function keys(): <T extends object>(data: T) => Keys<T>;
 
-export function keys(data?: unknown): unknown {
+export function keys(data?: object): unknown {
   return purry1(Object.keys, arguments.length, data);
 }

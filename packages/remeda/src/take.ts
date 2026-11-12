@@ -51,7 +51,7 @@ export function take(
   n: number,
 ): <T extends IterableContainer>(data: T) => T[number][];
 
-export function take(dataOrN: unknown, n?: unknown): unknown {
+export function take(dataOrN: IterableContainer | number, n?: number): unknown {
   return purryWithLazy2(
     takeImplementation,
     lazyImplementation,

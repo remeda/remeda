@@ -3,6 +3,10 @@ import { purry2 } from "./internal/purryByArity";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
+import type {
+  ObjectCallback,
+  ObjectTypePredicate,
+} from "./internal/types/ObjectCallback";
 
 // Symbols are not passed to the predicate (because they can't be enumerated
 // with the `Object.entries` function) and the enumerable ones are copied to the
@@ -117,19 +121,11 @@ export function omitBy<
   S extends EnumerableStringKeyedValueOf<T>,
 >(
   data: T,
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => value is S,
+  predicate: ObjectTypePredicate<T, S>,
 ): PartialEnumerableKeysNarrowed<T, S>;
 export function omitBy<T extends object>(
   data: T,
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => boolean,
+  predicate: ObjectCallback<T, boolean>,
 ): PartialEnumerableKeys<T>;
 
 /**
@@ -146,21 +142,16 @@ export function omitBy<
   T extends object,
   S extends EnumerableStringKeyedValueOf<T>,
 >(
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => value is S,
+  predicate: ObjectTypePredicate<T, S>,
 ): (data: T) => PartialEnumerableKeysNarrowed<T, S>;
 export function omitBy<T extends object>(
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => boolean,
+  predicate: ObjectCallback<T, boolean>,
 ): (data: T) => PartialEnumerableKeys<T>;
 
-export function omitBy(dataOrPredicate: unknown, predicate?: unknown): unknown {
+export function omitBy(
+  dataOrPredicate: object | ObjectCallback<object, boolean>,
+  predicate?: ObjectCallback<object, boolean>,
+): unknown {
   return purry2(
     omitByImplementation,
     arguments.length,

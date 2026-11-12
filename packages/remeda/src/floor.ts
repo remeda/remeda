@@ -38,7 +38,7 @@ export function floor(value: number, precision: number): number;
  */
 export function floor(precision: number): (value: number) => number;
 
-export function floor(valueOrPrecision: unknown, precision?: unknown): unknown {
+export function floor(valueOrPrecision: number, precision?: number): unknown {
   return purry2(
     withPrecision(Math.floor),
     arguments.length,

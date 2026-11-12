@@ -31,7 +31,7 @@ export function shuffle(): <T extends IterableContainer>(
   data: T,
 ) => ReorderedArray<T>;
 
-export function shuffle(data?: unknown): unknown {
+export function shuffle(data?: IterableContainer): unknown {
   return purry1(shuffleImplementation, arguments.length, data);
 }
 

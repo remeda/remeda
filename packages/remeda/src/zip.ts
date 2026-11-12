@@ -42,10 +42,10 @@ type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
  * @lazy
  * @category Array
  */
-export function zip<F extends IterableContainer, S extends IterableContainer>(
-  data: F,
+export function zip<T extends IterableContainer, S extends IterableContainer>(
+  data: T,
   other: S,
-): Zipped<F, S>;
+): Zipped<T, S>;
 
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned
@@ -63,9 +63,12 @@ export function zip<F extends IterableContainer, S extends IterableContainer>(
  */
 export function zip<S extends IterableContainer>(
   other: S,
-): <F extends IterableContainer>(data: F) => Zipped<F, S>;
+): <T extends IterableContainer>(data: T) => Zipped<T, S>;
 
-export function zip(dataOrOther: unknown, other?: unknown): unknown {
+export function zip(
+  dataOrOther: IterableContainer,
+  other?: IterableContainer,
+): unknown {
   return purryWithLazy2(
     zipImplementation,
     lazyImplementation,
@@ -76,24 +79,24 @@ export function zip(dataOrOther: unknown, other?: unknown): unknown {
 }
 
 const zipImplementation = <
-  F extends IterableContainer,
+  T extends IterableContainer,
   S extends IterableContainer,
 >(
-  data: F,
+  data: T,
   other: S,
-): Zipped<F, S> =>
+): Zipped<T, S> =>
   (data.length < other.length
     ? data.map((item, index) => [item, other[index]])
-    : other.map((item, index) => [data[index], item])) as Zipped<F, S>;
+    : other.map((item, index) => [data[index], item])) as Zipped<T, S>;
 
 const lazyImplementation = makeStoppable(
-  <F extends IterableContainer, S extends IterableContainer>(
+  <T extends IterableContainer, S extends IterableContainer>(
     other: S,
-  ): StoppableLazyEvaluator<F[number], [F[number], S[number]]> =>
+  ): StoppableLazyEvaluator<T[number], [T[number], S[number]]> =>
     other.length === 0
       ? LAZY_EMPTY_EVALUATOR
       : (value, index, _data, slot) => {
-          const pair: [F[number], S[number]] = [value, other[index]];
+          const pair: [T[number], S[number]] = [value, other[index]];
           return index >= other.length - 1 ? lastLazyValue(pair, slot) : pair;
         },
 );
