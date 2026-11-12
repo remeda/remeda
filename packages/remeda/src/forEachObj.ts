@@ -1,6 +1,5 @@
-import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
-import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
+import type { ObjectCallback } from "./internal/types/Callback";
 
 /**
  * Iterate an object using a defined callback function.
@@ -12,7 +11,7 @@ import { purry } from "./purry";
  * @param data - The object who'se entries would be iterated on.
  * @param callbackfn - A function to execute for each element in the array.
  * @signature
- *    forEachObj(object, fn)
+ *    forEachObj(data, callbackfn)
  * @example
  *    forEachObj({a: 1}, (val, key, obj) => {
  *      console.log(`${key}: ${val}`)
@@ -22,11 +21,7 @@ import { purry } from "./purry";
  */
 export function forEachObj<T extends object>(
   data: T,
-  callbackfn: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    obj: T,
-  ) => void,
+  callbackfn: ObjectCallback<T, void>,
 ): void;
 
 /**
@@ -39,7 +34,7 @@ export function forEachObj<T extends object>(
  * @param callbackfn - A function to execute for each element in the array.
  * @returns The original object (the ref itself, not a shallow copy of it).
  * @signature
- *    forEachObj(fn)(object)
+ *    forEachObj(callbackfn)(data)
  * @example
  *    pipe(
  *      {a: 1},
@@ -49,15 +44,19 @@ export function forEachObj<T extends object>(
  * @category Object
  */
 export function forEachObj<T extends object>(
-  callbackfn: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    obj: T,
-  ) => void,
-): (object: T) => T;
+  callbackfn: ObjectCallback<T, void>,
+): (data: T) => T;
 
-export function forEachObj(...args: readonly unknown[]): unknown {
-  return purry(forEachObjImplementation, 2, args);
+export function forEachObj(
+  dataOrCallbackfn: object | ObjectCallback<object, void>,
+  callbackfn?: ObjectCallback<object, void>,
+): unknown {
+  return purry2(
+    forEachObjImplementation,
+    arguments.length,
+    dataOrCallbackfn,
+    callbackfn,
+  );
 }
 
 function forEachObjImplementation<T extends object>(

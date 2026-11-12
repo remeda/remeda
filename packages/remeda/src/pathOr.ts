@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-param, jsdoc/require-example, jsdoc/require-description -- allow us to deprecate all overloads of the function, not just those that have the docblock directly above them. */
 
-import { purry } from "./purry";
+import { purry3 } from "./internal/purryByArity";
 
 /**
  * Given a union of indexable types `T`, we derive an indexable type
@@ -71,43 +71,43 @@ type PathValue3<
 > = StrictlyRequired<Pathable2<T, A, B>>[C];
 
 /**
- * Gets the value at `path` of `object`. If the resolved value is `null` or `undefined`, the `defaultValue` is returned in its place.
+ * Gets the value at `path` of `data`. If the resolved value is `null` or `undefined`, the `defaultValue` is returned in its place.
  *
- * **DEPRECATED**: Use `defaultTo(prop(object, ...path), defaultValue)`
+ * **DEPRECATED**: Use `defaultTo(prop(data, ...path), defaultValue)`
  * instead!
  *
- * @param object - The target object.
+ * @param data - The target object.
  * @param path - The path of the property to get.
  * @param defaultValue - The default value.
- * @signature pathOr(object, array, defaultValue)
+ * @signature pathOr(data, path, defaultValue)
  * @example
  *    pathOr({x: 10}, ['y'], 2) // 2
  *    pathOr({y: 10}, ['y'], 2) // 10
  * @dataFirst
  * @category Object
- * @deprecated Use `defaultTo(prop(object, ...path), defaultValue)` instead.
+ * @deprecated Use `defaultTo(prop(data, ...path), defaultValue)` instead.
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
-  object: T,
+  data: T,
   path: readonly [A],
   defaultValue: PathValue1<T, A>,
 ): PathValue1<T, A>;
 
 /**
- * @deprecated Use `defaultTo(prop(object, ...path), defaultValue)` instead.
+ * @deprecated Use `defaultTo(prop(data, ...path), defaultValue)` instead.
  */
 export function pathOr<
   T,
   A extends keyof Pathable<T>,
   B extends keyof Pathable1<T, A>,
 >(
-  object: T,
+  data: T,
   path: readonly [A, B],
   defaultValue: PathValue2<T, A, B>,
 ): PathValue2<T, A, B>;
 
 /**
- * @deprecated Use `defaultTo(prop(object, ...path), defaultValue)` instead.
+ * @deprecated Use `defaultTo(prop(data, ...path), defaultValue)` instead.
  */
 export function pathOr<
   T,
@@ -115,13 +115,14 @@ export function pathOr<
   B extends keyof Pathable1<T, A>,
   C extends keyof Pathable2<T, A, B>,
 >(
-  object: T,
+  data: T,
   path: readonly [A, B, C],
   defaultValue: PathValue3<T, A, B, C>,
 ): PathValue3<T, A, B, C>;
 
 /**
- * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
+ * Gets the value at `path` of `data`. If the resolved value is `null` or
+ * `undefined`, the `defaultValue` is returned in its place.
  *
  * **DEPRECATED**: Use `($) => defaultTo(prop($, ...path), defaultValue)`
  * instead, or if already inside a `pipe`, replace the call to `pathOr` with:
@@ -129,7 +130,7 @@ export function pathOr<
  *
  * @param path - The path of the property to get.
  * @param defaultValue - The default value.
- * @signature pathOr(array, defaultValue)(object)
+ * @signature pathOr(path, defaultValue)(data)
  * @example
  *    pipe({x: 10}, pathOr(['y'], 2)) // 2
  *    pipe({y: 10}, pathOr(['y'], 2)) // 10
@@ -142,7 +143,7 @@ export function pathOr<
 export function pathOr<T, A extends keyof Pathable<T>>(
   path: readonly [A],
   defaultValue: PathValue1<T, A>,
-): (object: T) => PathValue1<T, A>;
+): (data: T) => PathValue1<T, A>;
 
 /**
  * @deprecated Use `($) => defaultTo(prop($, ...path), defaultValue)` instead,
@@ -156,7 +157,7 @@ export function pathOr<
 >(
   path: readonly [A, B],
   defaultValue: PathValue2<T, A, B>,
-): (object: T) => PathValue2<T, A, B>;
+): (data: T) => PathValue2<T, A, B>;
 
 /**
  * @deprecated Use `($) => defaultTo(prop($, ...path), defaultValue)` instead,
@@ -171,11 +172,21 @@ export function pathOr<
 >(
   path: readonly [A, B, C],
   defaultValue: PathValue3<T, A, B, C>,
-): (object: T) => PathValue3<T, A, B, C>;
+): (data: T) => PathValue3<T, A, B, C>;
 
 // TODO [>2]: Remove this function!
-export function pathOr(...args: readonly unknown[]): unknown {
-  return purry(pathOrImplementation, 3, args);
+export function pathOr(
+  dataOrPath: unknown,
+  pathOrDefaultValue?: unknown,
+  defaultValue?: unknown,
+): unknown {
+  return purry3(
+    pathOrImplementation,
+    arguments.length,
+    dataOrPath,
+    pathOrDefaultValue,
+    defaultValue,
+  );
 }
 
 function pathOrImplementation(

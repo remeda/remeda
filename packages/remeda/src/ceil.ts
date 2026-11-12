@@ -1,5 +1,5 @@
+import { purry2 } from "./internal/purryByArity";
 import { withPrecision } from "./internal/withPrecision";
-import { purry } from "./purry";
 
 /**
  * Rounds up a given number to a specific precision.
@@ -38,6 +38,13 @@ export function ceil(value: number, precision: number): number;
  */
 export function ceil(precision: number): (value: number) => number;
 
-export function ceil(...args: readonly unknown[]): unknown {
-  return purry(withPrecision(Math.ceil), 2, args);
+export function ceil(valueOrPrecision: number, precision?: number): unknown {
+  return purry2(
+    ceilImplementation,
+    arguments.length,
+    valueOrPrecision,
+    precision,
+  );
 }
+
+const ceilImplementation = withPrecision(Math.ceil);

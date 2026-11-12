@@ -1,9 +1,13 @@
 import type { IsNever, Simplify } from "type-fest";
+import { purry2 } from "./internal/purryByArity";
+import type {
+  ObjectCallback,
+  ObjectTypePredicate,
+} from "./internal/types/Callback";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { ToString } from "./internal/types/ToString";
-import { purry } from "./purry";
 
 // When the predicate isn't a type-guard we don't know which properties would be
 // part of the output and which wouldn't so we can only safely downgrade the
@@ -131,19 +135,11 @@ export function pickBy<
   S extends EnumerableStringKeyedValueOf<T>,
 >(
   data: T,
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => value is S,
+  predicate: ObjectTypePredicate<T, S>,
 ): EnumeratedPartialNarrowed<T, S>;
 export function pickBy<T extends object>(
   data: T,
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => boolean,
+  predicate: ObjectCallback<T, boolean>,
 ): EnumeratedPartial<T>;
 
 /**
@@ -173,22 +169,22 @@ export function pickBy<
   T extends object,
   S extends EnumerableStringKeyedValueOf<T>,
 >(
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => value is S,
+  predicate: ObjectTypePredicate<T, S>,
 ): (data: T) => EnumeratedPartialNarrowed<T, S>;
 export function pickBy<T extends object>(
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => boolean,
+  predicate: ObjectCallback<T, boolean>,
 ): (data: T) => EnumeratedPartial<T>;
 
-export function pickBy(...args: readonly unknown[]): unknown {
-  return purry(pickByImplementation, 2, args);
+export function pickBy(
+  dataOrPredicate: object | ObjectCallback<object, boolean>,
+  predicate?: ObjectCallback<object, boolean>,
+): unknown {
+  return purry2(
+    pickByImplementation,
+    arguments.length,
+    dataOrPredicate,
+    predicate,
+  );
 }
 
 function pickByImplementation<T extends object>(

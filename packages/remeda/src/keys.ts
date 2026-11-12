@@ -1,8 +1,8 @@
 import type { IsNever } from "type-fest";
+import { purry1 } from "./internal/purryByArity";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { ToString } from "./internal/types/ToString";
-import { purry } from "./purry";
 
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
 
@@ -79,6 +79,6 @@ export function keys<T extends object>(data: T): Keys<T>;
  */
 export function keys(): <T extends object>(data: T) => Keys<T>;
 
-export function keys(...args: readonly unknown[]): unknown {
-  return purry(Object.keys, 1, args);
+export function keys(data?: object): unknown {
+  return purry1(Object.keys, arguments.length, data);
 }

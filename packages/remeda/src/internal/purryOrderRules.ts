@@ -34,6 +34,8 @@ export type OrderRule<T = unknown> =
   | Projection<T>
   | readonly [projection: Projection<T>, direction: keyof typeof COMPARATORS];
 
+export type OrderRules<T = unknown> = Readonly<NonEmptyArray<OrderRule<T>>>;
+
 type Projection<T> = (x: T) => Comparable;
 
 // We define the Comparable based on how JS coerces values into primitives when
@@ -62,14 +64,11 @@ export function purryOrderRules<T>(
   func: (data: readonly T[], compareFn: CompareFunction<T>) => unknown,
   inputArgs: readonly unknown[],
 ): unknown {
-  // We rely on casting blindly here, but we rely on casting blindly everywhere
-  // else when we call purry so it's fine...
+  // The overloads guarantee one of these two shapes, which the `isOrderRule`
+  // check below tells apart.
   const [dataOrRule, ...rules] = inputArgs as
-    | Readonly<NonEmptyArray<OrderRule<T>>>
-    | [
-        data: OrderRule<T> | readonly T[],
-        ...rules: Readonly<NonEmptyArray<OrderRule<T>>>,
-      ];
+    | OrderRules<T>
+    | [data: OrderRule<T> | readonly T[], ...rules: OrderRules<T>];
 
   if (!isOrderRule<T>(dataOrRule)) {
     // dataFirst!

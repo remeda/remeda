@@ -1,7 +1,8 @@
 import type { Simplify } from "type-fest";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
+import type { ArrayCallback } from "./internal/types/Callback";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 // Takes a union of literals and creates a union of records with the value V for
 // each key **separately**
@@ -43,7 +44,7 @@ type FromKeys<T extends IterableContainer, V> = T extends readonly []
  */
 export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
   data: T,
-  mapper: (item: T[number], index: number, data: T) => V,
+  mapper: ArrayCallback<T, V>,
 ): Simplify<FromKeys<T, V>>;
 
 /**
@@ -69,12 +70,25 @@ export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
  * @category Object
  */
 export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
-  mapper: (item: T[number], index: number, data: T) => V,
+  mapper: ArrayCallback<T, V>,
 ): (data: T) => Simplify<FromKeys<T, V>>;
 
-export function fromKeys(...args: readonly unknown[]): unknown {
-  return purry(fromKeysImplementation, 2, args);
+export function fromKeys(
+  dataOrMapper: IterableContainer<PropertyKey> | ArrayCallback,
+  mapper?: ArrayCallback,
+): unknown {
+  return typeof dataOrMapper === "function"
+    ? dataLast(dataOrMapper)
+    : fromKeysImplementation(
+        dataOrMapper,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        mapper,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof fromKeysImplementation> =
+  (mapper) => (data) =>
+    fromKeysImplementation(data, mapper);
 
 function fromKeysImplementation<K extends PropertyKey, V>(
   data: readonly K[],

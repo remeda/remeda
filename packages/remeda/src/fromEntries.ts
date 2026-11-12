@@ -1,7 +1,7 @@
 import type { IsNever, Simplify } from "type-fest";
+import { purry1 } from "./internal/purryByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
-import { purry } from "./purry";
 
 type FromEntriesError<Message extends string> = RemedaTypeError<
   "fromEntries",
@@ -96,16 +96,16 @@ type ValueForKey<
  * *both* keys and values.
  * Refer to the docs for more details.
  *
- * @param entries - An array of key-value pairs.
+ * @param data - An array of key-value pairs.
  * @signature
- *   fromEntries(tuples)
+ *   fromEntries(data)
  * @example
  *   fromEntries([['a', 'b'], ['c', 'd']]); // => {a: 'b', c: 'd'}
  * @dataFirst
  * @category Object
  */
 export function fromEntries<Entries extends IterableContainer<Entry>>(
-  entries: Entries,
+  data: Entries,
 ): Simplify<FromEntries<Entries>>;
 
 /**
@@ -125,7 +125,7 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
  * Refer to the docs for more details.
  *
  * @signature
- *   fromEntries()(tuples)
+ *   fromEntries()(data)
  * @example
  *   pipe(
  *     [['a', 'b'], ['c', 'd']] as const,
@@ -135,11 +135,11 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
  * @category Object
  */
 export function fromEntries(): <Entries extends IterableContainer<Entry>>(
-  entries: Entries,
+  data: Entries,
 ) => Simplify<FromEntries<Entries>>;
 
-export function fromEntries(...args: readonly unknown[]): unknown {
-  return purry(fromEntriesImplementation, 1, args);
+export function fromEntries(data?: IterableContainer<Entry>): unknown {
+  return purry1(fromEntriesImplementation, arguments.length, data);
 }
 
 function fromEntriesImplementation(

@@ -1,11 +1,10 @@
 import {
   purryOrderRulesWithArgument,
-  type OrderRule,
+  type OrderRules,
 } from "./internal/purryOrderRules";
 import { quickSelect } from "./internal/quickSelect";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
 /**
  * Retrieves the element that would be at the given index if the array were sorted according to specified rules. This function uses the *QuickSelect* algorithm running at an average complexity of *O(n)*. Semantically it is equivalent to `sortBy(data, ...rules).at(index)` which would run at *O(nlogn)*.
@@ -26,7 +25,7 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 export function nthBy<T extends IterableContainer>(
   data: T,
   index: number,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
+  ...rules: OrderRules<T[number]>
 ): T[number] | undefined;
 
 /**
@@ -46,7 +45,7 @@ export function nthBy<T extends IterableContainer>(
  */
 export function nthBy<T extends IterableContainer>(
   index: number,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
+  ...rules: OrderRules<T[number]>
 ): (data: T) => T[number] | undefined;
 
 export function nthBy(...args: readonly unknown[]): unknown {

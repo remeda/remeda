@@ -1,4 +1,5 @@
-import { purry } from "./purry";
+import type { ArrayCallback } from "./internal/types/Callback";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
 /**
  * Returns the index of the first element in an array that satisfies the
@@ -23,7 +24,7 @@ import { purry } from "./purry";
  */
 export function findIndex<T>(
   data: readonly T[],
-  predicate: (value: T, index: number, obj: readonly T[]) => boolean,
+  predicate: ArrayCallback<readonly T[], boolean>,
 ): number;
 
 /**
@@ -50,14 +51,28 @@ export function findIndex<T>(
  * @category Array
  */
 export function findIndex<T>(
-  predicate: (value: T, index: number, obj: readonly T[]) => boolean,
+  predicate: ArrayCallback<readonly T[], boolean>,
 ): (data: readonly T[]) => number;
 
-export function findIndex(...args: readonly unknown[]): unknown {
-  return purry(findIndexImplementation, 2, args);
+export function findIndex(
+  dataOrPredicate:
+    readonly unknown[] | ArrayCallback<readonly unknown[], boolean>,
+  predicate?: ArrayCallback<readonly unknown[], boolean>,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? dataLast(dataOrPredicate)
+    : findIndexImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof findIndexImplementation> =
+  (predicate) => (data) =>
+    findIndexImplementation(data, predicate);
 
 const findIndexImplementation = <T>(
   data: readonly T[],
-  predicate: (value: T, index: number, obj: readonly T[]) => boolean,
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): number => data.findIndex(predicate);

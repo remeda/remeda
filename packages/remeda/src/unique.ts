@@ -1,5 +1,5 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { purryWithLazy1 } from "./internal/purryWithLazyByArity";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -10,7 +10,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  *
  * @param data - The array to filter.
  * @signature
- *    unique(array)
+ *    unique(data)
  * @example
  *    unique([1, 2, 2, 5, 1, 6, 7]) // => [1, 2, 5, 6, 7]
  * @dataFirst
@@ -24,7 +24,7 @@ export function unique<T extends IterableContainer>(data: T): Deduped<T>;
  * list. Elements are compared by reference using Set.
  *
  * @signature
- *    unique()(array)
+ *    unique()(data)
  * @example
  *    pipe(
  *      [1, 2, 2, 5, 1, 6, 7], // only 4 iterations
@@ -37,8 +37,13 @@ export function unique<T extends IterableContainer>(data: T): Deduped<T>;
  */
 export function unique(): <T extends IterableContainer>(data: T) => Deduped<T>;
 
-export function unique(...args: readonly unknown[]): unknown {
-  return purryWithLazy(uniqueImplementation, 1, lazyImplementation, args);
+export function unique(data?: IterableContainer): unknown {
+  return purryWithLazy1(
+    uniqueImplementation,
+    lazyImplementation,
+    arguments.length,
+    data,
+  );
 }
 
 function uniqueImplementation<T>(data: readonly T[]): T[] {

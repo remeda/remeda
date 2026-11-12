@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 /**
  * Adds two numbers.
@@ -32,8 +32,11 @@ export function add(value: number, addend: number): number;
 export function add(addend: bigint): (value: bigint) => bigint;
 export function add(addend: number): (value: number) => number;
 
-export function add(...args: readonly unknown[]): unknown {
-  return purry(addImplementation, 2, args);
+export function add(
+  valueOrAddend: bigint | number,
+  addend?: bigint | number,
+): unknown {
+  return purry2(addImplementation, arguments.length, valueOrAddend, addend);
 }
 
 // The implementation only uses `number` types, but that's just because it's

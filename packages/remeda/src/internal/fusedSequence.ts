@@ -46,7 +46,7 @@ export function buildFusedSequence(
       break;
     }
 
-    const lazyEvaluator = currentFunction.lazy(...currentFunction.lazyArgs);
+    const lazyEvaluator = currentFunction.lazy(currentFunction.lazyArgument);
     fusedSequence.push(
       lazyEvaluator.requiresData
         ? {

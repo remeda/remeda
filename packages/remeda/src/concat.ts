@@ -1,5 +1,5 @@
+import { purry2 } from "./internal/purryByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 /**
  * Merge two or more arrays. This method does not change the existing arrays,
@@ -42,8 +42,11 @@ export function concat<T2 extends IterableContainer>(
   other: T2,
 ): <T1 extends IterableContainer>(data: T1) => [...T1, ...T2];
 
-export function concat(...args: readonly unknown[]): unknown {
-  return purry(concatImplementation, 2, args);
+export function concat(
+  dataOrOther: IterableContainer,
+  other?: IterableContainer,
+): unknown {
+  return purry2(concatImplementation, arguments.length, dataOrOther, other);
 }
 
 const concatImplementation = <

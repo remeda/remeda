@@ -17,13 +17,13 @@ import {
 import { requireData } from "./requireData";
 import type { LazyEvaluator } from "./types/LazyEvaluator";
 
-test("builds the evaluator with the lazy arguments", () => {
-  const lazy = vi.fn<(first: number, second: string) => LazyEvaluator>(
+test("builds the evaluator with the lazy argument", () => {
+  const lazy = vi.fn<(lazyArgument: readonly unknown[]) => LazyEvaluator>(
     () => (value) => value,
   );
   iterableDataFirst([], lazy, [1, "a"]);
 
-  expect(lazy).toHaveBeenCalledExactlyOnceWith(1, "a");
+  expect(lazy).toHaveBeenCalledExactlyOnceWith([1, "a"]);
 });
 
 describe("input", () => {

@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 const DEFAULT_STEP = 1;
 
@@ -57,8 +57,16 @@ export function range(
   endOrOptions: number | RangeOptions,
 ): (start: number) => number[];
 
-export function range(...args: readonly unknown[]): unknown {
-  return purry(rangeImplementation, 2, args);
+export function range(
+  startOrEndOrOptions: number | RangeOptions,
+  endOrOptions?: number | RangeOptions,
+): unknown {
+  return purry2(
+    rangeImplementation,
+    arguments.length,
+    startOrEndOrOptions,
+    endOrOptions,
+  );
 }
 
 function rangeImplementation(

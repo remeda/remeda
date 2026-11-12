@@ -3,8 +3,14 @@
  * which is exactly what `{}` means.
  */
 
-import { purry } from "./purry";
 import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
+import { purry3 } from "./internal/purryByArity";
+
+type ValueFunction<T = unknown> = (
+  item: T,
+  index: number | undefined,
+  data: readonly T[],
+) => {};
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -42,7 +48,7 @@ import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
 export function sortedIndexBy<T>(
   data: readonly T[],
   item: T,
-  valueFunction: (item: T, index: number | undefined, data: readonly T[]) => {},
+  valueFunction: ValueFunction<T>,
 ): number;
 
 /**
@@ -81,25 +87,27 @@ export function sortedIndexBy<T = never>(
   // We first try to infer T through the callback to allow the type to be pulled
   // from the call site it is used in (like `pipe`).
   item: NoInfer<T>,
-  valueFunction: (
-    item: NoInfer<T>,
-    index: number | undefined,
-    data: readonly NoInfer<T>[],
-  ) => {},
+  valueFunction: ValueFunction<NoInfer<T>>,
 ): (data: readonly T[]) => number;
 
 export function sortedIndexBy<T>(
   // Otherwise we allow T to be inferred directly from the operand.
   item: T,
-  valueFunction: (
-    item: NoInfer<T>,
-    index: number | undefined,
-    data: readonly NoInfer<T>[],
-  ) => {},
+  valueFunction: ValueFunction<NoInfer<T>>,
 ): (data: readonly NoInfer<T>[]) => number;
 
-export function sortedIndexBy(...args: readonly unknown[]): unknown {
-  return purry(sortedIndexByImplementation, 3, args);
+export function sortedIndexBy(
+  dataOrItem: unknown,
+  itemOrValueFunction?: unknown,
+  valueFunction?: ValueFunction,
+): unknown {
+  return purry3(
+    sortedIndexByImplementation,
+    arguments.length,
+    dataOrItem,
+    itemOrValueFunction,
+    valueFunction,
+  );
 }
 
 function sortedIndexByImplementation<T>(

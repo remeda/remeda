@@ -1,7 +1,6 @@
-import { purryOrderRules, type OrderRule } from "./internal/purryOrderRules";
+import { purryOrderRules, type OrderRules } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import type { ReorderedArray } from "./internal/types/ReorderedArray";
 
 /**
@@ -35,8 +34,8 @@ import type { ReorderedArray } from "./internal/types/ReorderedArray";
  * @category Array
  */
 export function sortBy<T extends IterableContainer>(
-  ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
-): (array: T) => ReorderedArray<T>;
+  ...sortRules: OrderRules<T[number]>
+): (data: T) => ReorderedArray<T>;
 
 /**
  * Sorts `data` using the provided ordering rules. The `sort` is done via the
@@ -52,7 +51,7 @@ export function sortBy<T extends IterableContainer>(
  * * `rankBy` === `sortedIndex(sortBy(data, ...rules), item)`, O(n).
  * Refer to the docs for more details.
  *
- * @param array - The input array.
+ * @param data - The input array.
  * @param sortRules - A variadic array of order rules defining the sorting
  * criteria. Each order rule is a projection function that extracts a comparable
  * value from the data. Sorting is based on these extracted values using the
@@ -85,8 +84,8 @@ export function sortBy<T extends IterableContainer>(
  * @category Array
  */
 export function sortBy<T extends IterableContainer>(
-  array: T,
-  ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
+  data: T,
+  ...sortRules: OrderRules<T[number]>
 ): ReorderedArray<T>;
 
 export function sortBy(...args: readonly unknown[]): unknown {

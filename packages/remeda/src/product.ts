@@ -1,5 +1,5 @@
+import { purry1 } from "./internal/purryByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 type Product<T extends IterableContainer<bigint> | IterableContainer<number>> =
   // Empty arrays would always result in a product of (a non-bigint) 1
@@ -67,8 +67,10 @@ export function product(): <
   data: T,
 ) => Product<T>;
 
-export function product(...args: readonly unknown[]): unknown {
-  return purry(productImplementation, 1, args);
+export function product(
+  data?: IterableContainer<bigint> | IterableContainer<number>,
+): unknown {
+  return purry1(productImplementation, arguments.length, data);
 }
 
 function productImplementation<

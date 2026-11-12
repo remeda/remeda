@@ -8,9 +8,9 @@ import { flat } from "./flat";
 import { flatMap } from "./flatMap";
 import { identity } from "./identity";
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { lazyDataLastImplementation } from "./internal/lazyDataLastImplementation";
+import { lazyDataLastImplementation0 } from "./internal/lazyDataLastImplementation";
 import { makeReducing } from "./internal/makeReducing";
-import type { LazyCallback } from "./internal/types/LazyCallback";
+import type { LazyCallback } from "./internal/types/Callback";
 import { join } from "./join";
 import { map } from "./map";
 import { multiply } from "./multiply";
@@ -423,9 +423,9 @@ describe("lazy", () => {
     });
 
     test("a later step's callbacks get the previous step's complete output", () => {
-      const mapper = vi.fn<LazyCallback<unknown[], unknown>>(
-        (_value, _index, data) => [...data],
-      );
+      const mapper = vi.fn<LazyCallback<unknown[]>>((_value, _index, data) => [
+        ...data,
+      ]);
       pipe([1, 2, 3], map(multiply(10)), map(mapper));
 
       expect(mapper).toHaveNthReturnedWith(1, [10, 20, 30]);
@@ -502,10 +502,9 @@ describe("lazy", () => {
         }),
         // No utility reduces without being able to stop early, which would
         // fuse the sequence by itself.
-        lazyDataLastImplementation(
+        lazyDataLastImplementation0(
           (data: readonly (readonly number[])[]): readonly number[] =>
             data[0] ?? [],
-          [],
           makeReducing(
             // eslint-disable-next-line unicorn/consistent-function-scoping -- The evaluator captures nothing and could be hoisted; it stays inline so the test's fixture reads in one place.
             () => (value, index) => (index === 0 ? value : SKIP_ITEM),

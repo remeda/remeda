@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 /**
  * Performs a *shallow structural* comparison between two values to determine if
@@ -82,8 +82,13 @@ export function isShallowEqual<T, S extends T>(
 ): (data: T) => data is S;
 export function isShallowEqual<T>(other: T): (data: T) => boolean;
 
-export function isShallowEqual(...args: readonly unknown[]): unknown {
-  return purry(isShallowEqualImplementation, 2, args);
+export function isShallowEqual(dataOrOther: unknown, other?: unknown): unknown {
+  return purry2(
+    isShallowEqualImplementation,
+    arguments.length,
+    dataOrOther,
+    other,
+  );
 }
 
 function isShallowEqualImplementation<T>(a: T, b: T): boolean {

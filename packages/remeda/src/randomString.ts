@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry1 } from "./internal/purryByArity";
 
 const ALPHABET =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -36,8 +36,8 @@ export function randomString(length: number): string;
  */
 export function randomString(): (length: number) => string;
 
-export function randomString(...args: readonly unknown[]): unknown {
-  return purry(randomStringImplementation, 1, args);
+export function randomString(length?: number): unknown {
+  return purry1(randomStringImplementation, arguments.length, length);
 }
 
 function randomStringImplementation(length: number): string {

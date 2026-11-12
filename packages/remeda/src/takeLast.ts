@@ -1,30 +1,30 @@
+import { purry2 } from "./internal/purryByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 /**
- * Takes the last `n` elements from the `array`.
+ * Takes the last `n` elements from `data`.
  *
  * Related operations:
  * - `dropLast` - to skip past the last `n` instead.
  * - `splice` - to remove or insert at an arbitrary index.
  * - `take` - same, but from the start of the array.
  *
- * @param array - The target array.
+ * @param data - The target array.
  * @param n - The number of elements to take.
  * @signature
- *    takeLast(array, n)
+ *    takeLast(data, n)
  * @example
  *    takeLast([1, 2, 3, 4, 5], 2) // => [4, 5]
  * @dataFirst
  * @category Array
  */
 export function takeLast<T extends IterableContainer>(
-  array: T,
+  data: T,
   n: number,
 ): T[number][];
 
 /**
- * Take the last `n` elements from the `array`.
+ * Take the last `n` elements from `data`.
  *
  * Related operations:
  * - `dropLast` - to skip past the last `n` instead.
@@ -33,7 +33,7 @@ export function takeLast<T extends IterableContainer>(
  *
  * @param n - The number of elements to take.
  * @signature
- *    takeLast(n)(array)
+ *    takeLast(n)(data)
  * @example
  *    takeLast(2)([1, 2, 3, 4, 5]) // => [4, 5]
  * @dataLast
@@ -41,13 +41,16 @@ export function takeLast<T extends IterableContainer>(
  */
 export function takeLast<T extends IterableContainer>(
   n: number,
-): (array: T) => T[number][];
+): (data: T) => T[number][];
 
-export function takeLast(...args: readonly unknown[]): unknown {
-  return purry(takeLastImplementation, 2, args);
+export function takeLast(
+  dataOrN: IterableContainer | number,
+  n?: number,
+): unknown {
+  return purry2(takeLastImplementation, arguments.length, dataOrN, n);
 }
 
 const takeLastImplementation = <T extends IterableContainer>(
-  array: T,
+  data: T,
   n: number,
-): T[number][] => (n > 0 ? array.slice(Math.max(0, array.length - n)) : []);
+): T[number][] => (n > 0 ? data.slice(Math.max(0, data.length - n)) : []);

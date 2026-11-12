@@ -1,5 +1,5 @@
 import type { IsEqual } from "type-fest";
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 
 type FallbackOf<T> =
@@ -58,8 +58,16 @@ export function defaultTo<T, const Fallback extends FallbackOf<T>>(
   fallback: Fallback,
 ): (data: T) => NonNullable<T> | Fallback;
 
-export function defaultTo(...args: readonly unknown[]): unknown {
-  return purry(defaultToImplementation, 2, args);
+export function defaultTo(
+  dataOrFallback: unknown,
+  fallback?: unknown,
+): unknown {
+  return purry2(
+    defaultToImplementation,
+    arguments.length,
+    dataOrFallback,
+    fallback,
+  );
 }
 
 const defaultToImplementation = <T, Fallback extends FallbackOf<T>>(

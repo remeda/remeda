@@ -1,5 +1,6 @@
-import { purry } from "./purry";
 import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
+import type { ArrayCallback } from "./internal/types/Callback";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate
@@ -37,7 +38,7 @@ import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
  */
 export function sortedIndexWith<T>(
   data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+  predicate: ArrayCallback<readonly T[], boolean>,
 ): number;
 
 /**
@@ -73,9 +74,23 @@ export function sortedIndexWith<T>(
  * @category Array
  */
 export function sortedIndexWith<T>(
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+  predicate: ArrayCallback<readonly T[], boolean>,
 ): (data: readonly T[]) => number;
 
-export function sortedIndexWith(...args: readonly unknown[]): unknown {
-  return purry(binarySearchCutoffIndex, 2, args);
+export function sortedIndexWith(
+  dataOrPredicate:
+    readonly unknown[] | ArrayCallback<readonly unknown[], boolean>,
+  predicate?: ArrayCallback<readonly unknown[], boolean>,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? dataLast(dataOrPredicate)
+    : binarySearchCutoffIndex(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof binarySearchCutoffIndex> =
+  (predicate) => (data) =>
+    binarySearchCutoffIndex(data, predicate);

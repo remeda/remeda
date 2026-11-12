@@ -1,8 +1,9 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
-import { purryWithLazy } from "./internal/purryWithLazy";
+import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
+import type { ArrayCallback, LazyCallback } from "./internal/types/Callback";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
@@ -22,7 +23,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  */
 export function dropWhile<T extends IterableContainer>(
   data: T,
-  predicate: (item: T[number], index: number, data: T) => boolean,
+  predicate: ArrayCallback<T, boolean>,
 ): T[number][];
 
 /**
@@ -43,9 +44,30 @@ export function dropWhile<T extends IterableContainer>(
   predicate: LazyCallback<T, boolean>,
 ): (data: T) => T[number][];
 
-export function dropWhile(...args: readonly unknown[]): unknown {
-  return purryWithLazy(dropWhileImplementation, 2, lazyImplementation, args);
+export function dropWhile(
+  dataOrPredicate: IterableContainer | LazyCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? withLazyImplementation(
+        dataLast(
+          // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands the callback the complete input, a valid non-empty prefix whenever the callback is invoked (it never is for an empty input); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
+          dataOrPredicate,
+        ),
+        lazyImplementation,
+        // @ts-expect-error [ts2345] -- `lazyImplementation` invokes the callback only once the input has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
+        dataOrPredicate,
+      )
+    : dropWhileImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof dropWhileImplementation> =
+  (predicate) => (data) =>
+    dropWhileImplementation(data, predicate);
 
 function dropWhileImplementation<T>(
   data: readonly T[],

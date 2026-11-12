@@ -1,6 +1,6 @@
 import type { Join, Words } from "type-fest";
+import { purry1 } from "./internal/purryByArity";
 import { words } from "./internal/words";
-import { purry } from "./purry";
 
 type SnakeCase<S extends string> = string extends S
   ? string
@@ -61,8 +61,8 @@ export function toSnakeCase<S extends string>(data: S): SnakeCase<S>;
  */
 export function toSnakeCase(): <S extends string>(data: S) => SnakeCase<S>;
 
-export function toSnakeCase(...args: readonly unknown[]): unknown {
-  return purry(toSnakeCaseImplementation, 1, args);
+export function toSnakeCase(data?: string): unknown {
+  return purry1(toSnakeCaseImplementation, arguments.length, data);
 }
 
 const toSnakeCaseImplementation = <S extends string>(data: S): SnakeCase<S> =>

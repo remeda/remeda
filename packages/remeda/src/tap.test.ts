@@ -18,6 +18,21 @@ describe("data first", () => {
   test("should return input value", () => {
     expect(tap(DATA, (data) => data.length)).toBe(DATA);
   });
+
+  test("undefined data", () => {
+    const fn = vi.fn<() => void>();
+
+    expect(tap(undefined, fn)).toBeUndefined();
+    expect(fn).toHaveBeenCalledExactlyOnceWith(undefined);
+  });
+
+  test("a function as the data", () => {
+    const data = vi.fn<() => number>();
+    const fn = vi.fn<(value: () => number) => void>();
+
+    expect(tap(data, fn)).toBe(data);
+    expect(fn).toHaveBeenCalledExactlyOnceWith(data);
+  });
 });
 
 describe("data last", () => {

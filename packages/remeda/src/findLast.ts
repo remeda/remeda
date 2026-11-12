@@ -1,9 +1,13 @@
 import type { LastArrayElement } from "type-fest";
 import type { Assignability } from "./internal/types/Assignability";
+import type {
+  ArrayCallback,
+  ArrayTypePredicate,
+} from "./internal/types/Callback";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
-import { purry } from "./purry";
 
 type FoundLast<T extends IterableContainer, Condition> =
   // We distribute the array type to support unions of arrays/tuples.
@@ -94,7 +98,7 @@ type FoundLastNonRefined<
  */
 export function findLast<T extends IterableContainer, Condition>(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: ArrayTypePredicate<T, Condition>,
 ): FoundLast<T, Condition>;
 
 export function findLast<
@@ -102,7 +106,7 @@ export function findLast<
   IsItemIncluded extends boolean,
 >(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: ArrayCallback<T, IsItemIncluded>,
 ): FoundLastNonRefined<T, IsItemIncluded>;
 
 /**
@@ -134,24 +138,38 @@ export function findLast<
  * @category Array
  */
 export function findLast<T extends IterableContainer, Condition>(
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: ArrayTypePredicate<T, Condition>,
 ): (data: T) => FoundLast<T, Condition>;
 
 export function findLast<
   T extends IterableContainer,
   IsItemIncluded extends boolean,
 >(
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: ArrayCallback<T, IsItemIncluded>,
 ): (data: T) => FoundLastNonRefined<T, IsItemIncluded>;
 
-export function findLast(...args: readonly unknown[]): unknown {
-  return purry(findLastImplementation, 2, args);
+export function findLast(
+  dataOrPredicate:
+    IterableContainer | ArrayCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
+): unknown {
+  return typeof dataOrPredicate === "function"
+    ? dataLast(dataOrPredicate)
+    : findLastImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
 
-const findLastImplementation = <T, S extends T>(
+const dataLast: DataLastBuilder<typeof findLastImplementation> =
+  (predicate) => (data) =>
+    findLastImplementation(data, predicate);
+
+const findLastImplementation = <T>(
   data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => value is S,
-): S | undefined => {
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+): T | undefined => {
   for (let i = data.length - 1; i >= 0; i--) {
     const item = data[i]!;
     if (predicate(item, i, data)) {

@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry1 } from "./internal/purryByArity";
 
 /**
  * Makes the first character of a string uppercase while leaving the rest
@@ -51,8 +51,8 @@ export function capitalize<T extends string>(data: T): Capitalize<T>;
  */
 export function capitalize(): <T extends string>(data: T) => Capitalize<T>;
 
-export function capitalize(...args: readonly unknown[]): unknown {
-  return purry(capitalizeImplementation, 1, args);
+export function capitalize(data?: string): unknown {
+  return purry1(capitalizeImplementation, arguments.length, data);
 }
 
 const capitalizeImplementation = <T extends string>(data: T): Capitalize<T> =>

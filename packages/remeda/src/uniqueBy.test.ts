@@ -1,8 +1,8 @@
 import { describe, expect, test, vi } from "vitest";
-import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { forceFusion } from "../test/forceFusion";
+import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { identity } from "./identity";
-import type { LazyCallback } from "./internal/types/LazyCallback";
+import type { LazyCallback } from "./internal/types/Callback";
 import { pipe } from "./pipe";
 import { take } from "./take";
 import { uniqueBy } from "./uniqueBy";
@@ -74,8 +74,17 @@ test("provides the whole input to the key function", () => {
 });
 
 describe(pipe, () => {
+  test("on its own", () => {
+    expect(
+      pipe(
+        [1, 2, 3, 4, 5],
+        uniqueBy((item) => item % 3),
+      ),
+    ).toStrictEqual([1, 2, 3]);
+  });
+
   test("provides the items processed so far to the key function", () => {
-    const keyFunction = vi.fn<LazyCallback<unknown[], unknown>>(
+    const keyFunction = vi.fn<LazyCallback<unknown[]>>(
       (_item, _index, data) => [...data],
     );
     pipe([1, 2, 2, 3], forceFusion(), uniqueBy(keyFunction));

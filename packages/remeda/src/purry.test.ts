@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vitest";
+import { describe, expect, test } from "vitest";
 import { purry } from "./purry";
 
 // A regular arrow function would only return these keys when inspected via
@@ -72,6 +72,13 @@ describe("data-last (curried)", () => {
       expect(Reflect.ownKeys(curried)).toStrictEqual(ARROW_FUNCTION_OWN_PROPS);
     });
   });
+
+  test("passes every argument when there are several", () => {
+    const curried = purry(concatenateThreeNumbers, 3, [3, 7]);
+
+    expect(curried).toBeTypeOf("function");
+    expect(typeof curried === "function" && curried(1)).toBe("137");
+  });
 });
 
 test("curries a call that omits a defaulted parameter", () => {
@@ -82,6 +89,12 @@ const purriedFn = (...args: readonly unknown[]): unknown =>
   purry(concatenateNumberArgs, 2, args);
 
 const addWithDefault = (augend: number, addend = 1): number => augend + addend;
+
+const concatenateThreeNumbers = (
+  data: number,
+  first: number,
+  second: number,
+): string => [data, first, second].join("");
 
 function concatenateNumberArgs(_a: number, _b: number): string {
   // eslint-disable-next-line prefer-rest-params -- Intentional, the declared parameters keep the fixture shaped like a real utility (so its arity type is the literal `2` that `purry` checks), while `arguments` exposes the excess arguments it passes through, which the declared parameters would drop.

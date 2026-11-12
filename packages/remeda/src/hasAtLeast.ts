@@ -1,7 +1,7 @@
 import type { IsNumericLiteral } from "type-fest";
-import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 import type { ArrayRequiredPrefix } from "./internal/types/ArrayRequiredPrefix";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Checks if the given array has at least the defined number of elements. When
@@ -64,8 +64,16 @@ export function hasAtLeast(
   minimum: number,
 ): (data: IterableContainer) => boolean;
 
-export function hasAtLeast(...args: readonly unknown[]): unknown {
-  return purry(hasAtLeastImplementation, 2, args);
+export function hasAtLeast(
+  dataOrMinimum: IterableContainer | number,
+  minimum?: number,
+): unknown {
+  return purry2(
+    hasAtLeastImplementation,
+    arguments.length,
+    dataOrMinimum,
+    minimum,
+  );
 }
 
 const hasAtLeastImplementation = (

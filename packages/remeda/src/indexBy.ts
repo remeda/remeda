@@ -1,5 +1,6 @@
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
-import { purry } from "./purry";
+import type { ArrayCallback } from "./internal/types/Callback";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
 /**
  * Converts a list of objects into an object indexing the objects by the given
@@ -15,7 +16,7 @@ import { purry } from "./purry";
  * @param data - The array.
  * @param mapper - The indexing function.
  * @signature
- *    indexBy(array, fn)
+ *    indexBy(data, mapper)
  * @example
  *    indexBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
  * @dataFirst
@@ -23,7 +24,7 @@ import { purry } from "./purry";
  */
 export function indexBy<T, K extends PropertyKey>(
   data: readonly T[],
-  mapper: (item: T, index: number, data: readonly T[]) => K,
+  mapper: ArrayCallback<readonly T[], K>,
 ): BoundedPartial<Record<K, T>>;
 
 /**
@@ -39,7 +40,7 @@ export function indexBy<T, K extends PropertyKey>(
  *
  * @param mapper - The indexing function.
  * @signature
- *    indexBy(fn)(array)
+ *    indexBy(mapper)(data)
  * @example
  *    pipe(
  *      ['one', 'two', 'three'],
@@ -49,12 +50,26 @@ export function indexBy<T, K extends PropertyKey>(
  * @category Array
  */
 export function indexBy<T, K extends PropertyKey>(
-  mapper: (item: T, index: number, data: readonly T[]) => K,
+  mapper: ArrayCallback<readonly T[], K>,
 ): (data: readonly T[]) => BoundedPartial<Record<K, T>>;
 
-export function indexBy(...args: readonly unknown[]): unknown {
-  return purry(indexByImplementation, 2, args);
+export function indexBy(
+  dataOrMapper:
+    readonly unknown[] | ArrayCallback<readonly unknown[], PropertyKey>,
+  mapper?: ArrayCallback<readonly unknown[], PropertyKey>,
+): unknown {
+  return typeof dataOrMapper === "function"
+    ? dataLast(dataOrMapper)
+    : indexByImplementation(
+        dataOrMapper,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        mapper,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof indexByImplementation> =
+  (mapper) => (data) =>
+    indexByImplementation(data, mapper);
 
 function indexByImplementation<T, K extends PropertyKey>(
   data: readonly T[],

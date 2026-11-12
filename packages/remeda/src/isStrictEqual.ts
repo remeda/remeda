@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry2 } from "./internal/purryByArity";
 
 /**
  * Determines whether two values are *functionally identical* in all contexts.
@@ -70,8 +70,13 @@ export function isStrictEqual<T, S extends T>(
 ): (data: T) => data is S;
 export function isStrictEqual<T>(other: T): (data: T) => boolean;
 
-export function isStrictEqual(...args: readonly unknown[]): unknown {
-  return purry(isStrictlyEqualImplementation, 2, args);
+export function isStrictEqual(dataOrOther: unknown, other?: unknown): unknown {
+  return purry2(
+    isStrictlyEqualImplementation,
+    arguments.length,
+    dataOrOther,
+    other,
+  );
 }
 
 const isStrictlyEqualImplementation = <T>(data: unknown, other: T): data is T =>

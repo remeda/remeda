@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry3 } from "./internal/purryByArity";
 
 type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
   [K in keyof T]: T[K1 extends K ? K2 : K2 extends K ? K1 : K];
@@ -43,16 +43,26 @@ export function swapProps<
   K2 extends keyof T,
 >(key1: K1, key2: K2): (data: T) => SwappedProps<T, K1, K2>;
 
-export function swapProps(...args: readonly unknown[]): unknown {
-  return purry(swapPropsImplementation, 3, args);
+export function swapProps(
+  dataOrKey1: object | PropertyKey,
+  key1OrKey2?: PropertyKey,
+  key2?: PropertyKey,
+): unknown {
+  return purry3(
+    swapPropsImplementation,
+    arguments.length,
+    dataOrKey1,
+    key1OrKey2,
+    key2,
+  );
 }
 
 const swapPropsImplementation = <T extends object>(
-  obj: T,
+  data: T,
   key1: keyof T,
   key2: keyof T,
 ): Record<PropertyKey, unknown> => ({
-  ...obj,
-  [key1]: obj[key2],
-  [key2]: obj[key1],
+  ...data,
+  [key1]: data[key2],
+  [key2]: data[key1],
 });
