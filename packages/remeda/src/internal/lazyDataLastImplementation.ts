@@ -41,9 +41,9 @@ export type LazyEvaluatorFactoryOf<
 export type LazyArgument<P extends readonly unknown[]> = P extends readonly []
   ? // Fallback when no parameters are defined...
     undefined
-  : P extends readonly [(infer Argument)?]
+  : P extends readonly [(infer Single)?]
     ? // Unbox a single argument
-      Argument
+      Single
     : // Otherwise return it as-is.
       P;
 
@@ -52,9 +52,9 @@ type LazyDefinition<
   P extends readonly unknown[],
 > = LazyDefinitionOf<T, LazyArgument<P>>;
 
-type LazyDefinitionOf<T extends IterableContainer, Argument> = {
-  readonly lazy: LazyEvaluatorFactoryOf<T, readonly [lazyArgument: Argument]>;
-  readonly lazyArgument: Argument;
+type LazyDefinitionOf<T extends IterableContainer, P> = {
+  readonly lazy: LazyEvaluatorFactoryOf<T, readonly [lazyArgument: P]>;
+  readonly lazyArgument: P;
 };
 
 /**
@@ -77,17 +77,13 @@ type LazyDefinitionOf<T extends IterableContainer, Argument> = {
  *      : uniqueWithImplementation(dataOrIsEquals, isEquals);
  * @see purryWithLazy2
  */
-export function withLazyImplementation<
-  T extends IterableContainer,
-  Argument,
-  R,
->(
+export function withLazyImplementation<T extends IterableContainer, P, R>(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional! Writing `lazy` and `lazyArgument` onto `dataLast` is what this function is for.
   dataLast: UnaryFunction<T, R> &
-    Partial<SimplifiedWritable<LazyDefinitionOf<T, Argument>>>,
-  lazy: LazyEvaluatorFactoryOf<T, readonly [lazyArgument: Argument]>,
-  lazyArgument: NoInfer<Argument>,
-): UnaryFunction<T, R> & LazyDefinitionOf<T, Argument> {
+    Partial<SimplifiedWritable<LazyDefinitionOf<T, P>>>,
+  lazy: LazyEvaluatorFactoryOf<T, readonly [lazyArgument: P]>,
+  lazyArgument: NoInfer<P>,
+): UnaryFunction<T, R> & LazyDefinitionOf<T, P> {
   dataLast.lazy = lazy;
   dataLast.lazyArgument = lazyArgument;
 
