@@ -1,3 +1,4 @@
+import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { ReorderedArray } from "./internal/types/ReorderedArray";
@@ -19,7 +20,7 @@ import type { ReorderedArray } from "./internal/types/ReorderedArray";
  */
 export function sort<T extends IterableContainer>(
   data: T,
-  cmp: (a: T[number], b: T[number]) => number,
+  cmp: CompareFunction<T[number]>,
 ): ReorderedArray<T>;
 
 /**
@@ -37,18 +38,18 @@ export function sort<T extends IterableContainer>(
  * @category Array
  */
 export function sort<T extends IterableContainer>(
-  cmp: (a: T[number], b: T[number]) => number,
+  cmp: CompareFunction<T[number]>,
 ): (data: T) => ReorderedArray<T>;
 
-export function sort(dataOrCmp: unknown, cmp?: unknown): unknown {
+export function sort(
+  dataOrCmp: IterableContainer | CompareFunction,
+  cmp?: CompareFunction,
+): unknown {
   return typeof dataOrCmp === "function"
-    ? dataLast(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-        dataOrCmp,
-      )
+    ? dataLast(dataOrCmp)
     : sortImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrCmp,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         cmp,
       );
 }

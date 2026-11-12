@@ -1,3 +1,4 @@
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
 // TODO [>2]: Once we allow fromEntries to run lazily on iterables we need to remove this utility as it's completely replaceable by `fromEntries(map(...))`.
@@ -33,7 +34,7 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  */
 export function mapToObj<T, K extends PropertyKey, V>(
   data: readonly T[],
-  fn: (value: T, index: number, data: readonly T[]) => [K, V],
+  fn: ArrayCallback<readonly T[], [K, V]>,
 ): Record<K, V>;
 
 // TODO [>2]: Once we allow fromEntries to run lazily on iterables we need to remove this utility as it's completely replaceable by `fromEntries(map(...))`.
@@ -70,18 +71,20 @@ export function mapToObj<T, K extends PropertyKey, V>(
  * @category Array
  */
 export function mapToObj<T, K extends PropertyKey, V>(
-  fn: (value: T, index: number, data: readonly T[]) => [K, V],
+  fn: ArrayCallback<readonly T[], [K, V]>,
 ): (data: readonly T[]) => Record<K, V>;
 
-export function mapToObj(dataOrFn: unknown, fn?: unknown): unknown {
+export function mapToObj(
+  dataOrFn:
+    | readonly unknown[]
+    | ArrayCallback<readonly unknown[], [PropertyKey, unknown]>,
+  fn?: ArrayCallback<readonly unknown[], [PropertyKey, unknown]>,
+): unknown {
   return typeof dataOrFn === "function"
-    ? dataLast(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-        dataOrFn,
-      )
+    ? dataLast(dataOrFn)
     : mapToObjImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrFn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         fn,
       );
 }

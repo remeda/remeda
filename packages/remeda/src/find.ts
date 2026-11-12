@@ -7,6 +7,7 @@ import {
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
 import { requireDataByArity } from "./internal/requireData";
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { Assignability } from "./internal/types/Assignability";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { First } from "./internal/types/First";
@@ -159,20 +160,23 @@ export function find<
   predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => FoundNonRefined<T, IsItemIncluded>;
 
-export function find(dataOrPredicate: unknown, predicate?: unknown): unknown {
+export function find(
+  dataOrPredicate: IterableContainer | LazyCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
+): unknown {
   return typeof dataOrPredicate === "function"
     ? withLazyImplementation(
         dataLast(
-          // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
+          // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands the callback the complete input, a valid non-empty prefix whenever the callback is invoked (it never is for an empty input); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
           dataOrPredicate,
         ),
         lazyImplementation,
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
+        // @ts-expect-error [ts2345] -- `lazyImplementation` invokes the callback only once the input has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
         dataOrPredicate,
       )
     : findImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         predicate,
       );
 }
@@ -181,16 +185,16 @@ const dataLast: DataLastBuilder<typeof findImplementation> =
   (predicate) => (data) =>
     findImplementation(data, predicate);
 
-const findImplementation = <T, S extends T>(
+const findImplementation = <T>(
   data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => value is S,
-): S | undefined => data.find(predicate);
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+): T | undefined => data.find(predicate);
 
 const lazyImplementation = makeReducing(
   makeStoppable(
-    <T, S extends T>(
-      predicate: (value: T, index: number, data: readonly T[]) => value is S,
-    ): StoppableLazyEvaluator<T, S> =>
+    <T>(
+      predicate: (value: T, index: number, data: readonly T[]) => boolean,
+    ): StoppableLazyEvaluator<T> =>
       requireDataByArity(predicate, 2, (value, index, data, slot) =>
         predicate(value, index, data) ? lastLazyValue(value, slot) : SKIP_ITEM,
       ),

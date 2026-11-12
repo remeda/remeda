@@ -1,3 +1,4 @@
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
@@ -38,10 +39,10 @@ type SumBy<
  * @category Array
  */
 export function sumBy<T extends IterableContainer>(
-  callbackfn: (value: T[number], index: number, data: T) => number,
+  callbackfn: ArrayCallback<T, number>,
 ): (data: T) => SumBy<T, number>;
 export function sumBy<T extends IterableContainer>(
-  callbackfn: (value: T[number], index: number, data: T) => bigint,
+  callbackfn: ArrayCallback<T, bigint>,
 ): (data: T) => SumBy<T, bigint>;
 
 /**
@@ -73,25 +74,23 @@ export function sumBy<T extends IterableContainer>(
  */
 export function sumBy<T extends IterableContainer>(
   data: T,
-  callbackfn: (value: T[number], index: number, data: T) => number,
+  callbackfn: ArrayCallback<T, number>,
 ): SumBy<T, number>;
 export function sumBy<T extends IterableContainer>(
   data: T,
-  callbackfn: (value: T[number], index: number, data: T) => bigint,
+  callbackfn: ArrayCallback<T, bigint>,
 ): SumBy<T, bigint>;
 
 export function sumBy(
-  dataOrCallbackfn: unknown,
-  callbackfn?: unknown,
+  dataOrCallbackfn:
+    IterableContainer | ArrayCallback<IterableContainer, bigint | number>,
+  callbackfn?: ArrayCallback<IterableContainer, bigint | number>,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
-    ? dataLast(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-        dataOrCallbackfn,
-      )
+    ? dataLast(dataOrCallbackfn)
     : sumByImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         callbackfn,
       );
 }

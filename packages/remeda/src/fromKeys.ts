@@ -1,4 +1,5 @@
 import type { Simplify } from "type-fest";
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -43,7 +44,7 @@ type FromKeys<T extends IterableContainer, V> = T extends readonly []
  */
 export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
   data: T,
-  mapper: (item: T[number], index: number, data: T) => V,
+  mapper: ArrayCallback<T, V>,
 ): Simplify<FromKeys<T, V>>;
 
 /**
@@ -69,18 +70,18 @@ export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
  * @category Object
  */
 export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
-  mapper: (item: T[number], index: number, data: T) => V,
+  mapper: ArrayCallback<T, V>,
 ): (data: T) => Simplify<FromKeys<T, V>>;
 
-export function fromKeys(dataOrMapper: unknown, mapper?: unknown): unknown {
+export function fromKeys(
+  dataOrMapper: IterableContainer<PropertyKey> | ArrayCallback,
+  mapper?: ArrayCallback,
+): unknown {
   return typeof dataOrMapper === "function"
-    ? dataLast(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-        dataOrMapper,
-      )
+    ? dataLast(dataOrMapper)
     : fromKeysImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrMapper,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         mapper,
       );
 }

@@ -1,4 +1,5 @@
 import type { LastArrayElement } from "type-fest";
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { Assignability } from "./internal/types/Assignability";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -145,17 +146,15 @@ export function findLast<
 ): (data: T) => FoundLastNonRefined<T, IsItemIncluded>;
 
 export function findLast(
-  dataOrPredicate: unknown,
-  predicate?: unknown,
+  dataOrPredicate:
+    IterableContainer | ArrayCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
-    ? dataLast(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-        dataOrPredicate,
-      )
+    ? dataLast(dataOrPredicate)
     : findLastImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         predicate,
       );
 }
@@ -164,10 +163,10 @@ const dataLast: DataLastBuilder<typeof findLastImplementation> =
   (predicate) => (data) =>
     findLastImplementation(data, predicate);
 
-const findLastImplementation = <T, S extends T>(
+const findLastImplementation = <T>(
   data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => value is S,
-): S | undefined => {
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+): T | undefined => {
   for (let i = data.length - 1; i >= 0; i--) {
     const item = data[i]!;
     if (predicate(item, i, data)) {

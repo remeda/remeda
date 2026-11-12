@@ -1,6 +1,7 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
 import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { requireDataByArity } from "./internal/requireData";
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -26,7 +27,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  */
 export function uniqueBy<T extends IterableContainer>(
   data: T,
-  keyFunction: (value: T[number], index: number, data: Readonly<T>) => unknown,
+  keyFunction: ArrayCallback<T>,
 ): Deduped<T>;
 
 /**
@@ -47,26 +48,26 @@ export function uniqueBy<T extends IterableContainer>(
  * @category Array
  */
 export function uniqueBy<T extends IterableContainer>(
-  keyFunction: LazyCallback<T, unknown>,
+  keyFunction: LazyCallback<T>,
 ): (data: T) => Deduped<T>;
 
 export function uniqueBy(
-  dataOrKeyFunction: unknown,
-  keyFunction?: unknown,
+  dataOrKeyFunction: IterableContainer | LazyCallback<IterableContainer>,
+  keyFunction?: ArrayCallback,
 ): unknown {
   return typeof dataOrKeyFunction === "function"
     ? withLazyImplementation(
         dataLast(
-          // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
+          // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands the callback the complete input, a valid non-empty prefix whenever the callback is invoked (it never is for an empty input); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
           dataOrKeyFunction,
         ),
         lazyImplementation,
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
+        // @ts-expect-error [ts2345] -- `lazyImplementation` invokes the callback only once the input has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
         dataOrKeyFunction,
       )
     : uniqueByImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrKeyFunction,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         keyFunction,
       );
 }

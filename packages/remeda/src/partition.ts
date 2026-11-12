@@ -1,3 +1,4 @@
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -88,17 +89,15 @@ export function partition<
 ];
 
 export function partition(
-  dataOrPredicate: unknown,
-  predicate?: unknown,
+  dataOrPredicate:
+    IterableContainer | ArrayCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
-    ? dataLast(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-        dataOrPredicate,
-      )
+    ? dataLast(dataOrPredicate)
     : partitionImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         predicate,
       );
 }
@@ -107,11 +106,11 @@ const dataLast: DataLastBuilder<typeof partitionImplementation> =
   (predicate) => (data) =>
     partitionImplementation(data, predicate);
 
-const partitionImplementation = <T, S extends T>(
+const partitionImplementation = <T>(
   data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => value is S,
-): [S[], T[]] => {
-  const ret: [S[], T[]] = [[], []];
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+): [T[], T[]] => {
+  const ret: [T[], T[]] = [[], []];
   data.forEach((item, index) => {
     if (predicate(item, index, data)) {
       ret[0].push(item);

@@ -1,3 +1,4 @@
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
@@ -17,7 +18,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  */
 export function dropLastWhile<T extends IterableContainer>(
   data: T,
-  predicate: (item: T[number], index: number, data: T) => boolean,
+  predicate: ArrayCallback<T, boolean>,
 ): T[number][];
 
 /**
@@ -34,21 +35,19 @@ export function dropLastWhile<T extends IterableContainer>(
  * @category Array
  */
 export function dropLastWhile<T extends IterableContainer>(
-  predicate: (item: T[number], index: number, data: T) => boolean,
+  predicate: ArrayCallback<T, boolean>,
 ): (data: T) => T[number][];
 
 export function dropLastWhile(
-  dataOrPredicate: unknown,
-  predicate?: unknown,
+  dataOrPredicate:
+    IterableContainer | ArrayCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
-    ? dataLast(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-        dataOrPredicate,
-      )
+    ? dataLast(dataOrPredicate)
     : dropLastWhileImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         predicate,
       );
 }

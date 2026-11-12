@@ -1,3 +1,4 @@
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
@@ -31,7 +32,7 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
   data: readonly T[],
-  callbackfn: (value: T, index: number, data: readonly T[]) => Key | undefined,
+  callbackfn: ArrayCallback<readonly T[], Key | undefined>,
 ): BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
 /**
@@ -67,21 +68,20 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  * @category Array
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
-  callbackfn: (value: T, index: number, data: readonly T[]) => Key | undefined,
+  callbackfn: ArrayCallback<readonly T[], Key | undefined>,
 ): (data: readonly T[]) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
 export function groupBy(
-  dataOrCallbackfn: unknown,
-  callbackfn?: unknown,
+  dataOrCallbackfn:
+    | readonly unknown[]
+    | ArrayCallback<readonly unknown[], PropertyKey | undefined>,
+  callbackfn?: ArrayCallback<readonly unknown[], PropertyKey | undefined>,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
-    ? dataLast(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-        dataOrCallbackfn,
-      )
+    ? dataLast(dataOrCallbackfn)
     : groupByImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         callbackfn,
       );
 }

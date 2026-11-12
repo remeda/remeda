@@ -1,3 +1,4 @@
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -38,8 +39,8 @@ export function pullObject<
   V,
 >(
   data: T,
-  keyExtractor: (item: T[number], index: number, data: T) => K,
-  valueExtractor: (item: T[number], index: number, data: T) => V,
+  keyExtractor: ArrayCallback<T, K>,
+  valueExtractor: ArrayCallback<T, V>,
 ): BoundedPartial<Record<K, V>>;
 
 /**
@@ -75,24 +76,21 @@ export function pullObject<
   K extends PropertyKey,
   V,
 >(
-  keyExtractor: (item: T[number], index: number, data: T) => K,
-  valueExtractor: (item: T[number], index: number, data: T) => V,
+  keyExtractor: ArrayCallback<T, K>,
+  valueExtractor: ArrayCallback<T, V>,
 ): (data: T) => BoundedPartial<Record<K, V>>;
 
 export function pullObject(
-  dataOrKeyExtractor: unknown,
-  keyExtractorOrValueExtractor: unknown,
-  valueExtractor?: unknown,
+  dataOrKeyExtractor:
+    IterableContainer | ArrayCallback<IterableContainer, PropertyKey>,
+  keyExtractorOrValueExtractor: ArrayCallback,
+  valueExtractor?: ArrayCallback,
 ): unknown {
   return typeof dataOrKeyExtractor === "function"
-    ? dataLast(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-        dataOrKeyExtractor,
-        keyExtractorOrValueExtractor,
-      )
+    ? dataLast(dataOrKeyExtractor, keyExtractorOrValueExtractor)
     : pullObjectImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrKeyExtractor,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         keyExtractorOrValueExtractor,
         valueExtractor,
       );

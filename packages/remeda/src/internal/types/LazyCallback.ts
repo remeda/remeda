@@ -6,7 +6,7 @@ import type { NonEmptyPrefix } from "./NonEmptyPrefix";
  *
  * @see NonEmptyPrefix
  */
-export type LazyCallback<T extends IterableContainer, R> = (
+export type LazyCallback<T extends IterableContainer, R = unknown> = (
   value: T[number],
   index: number,
   data: Readonly<NonEmptyPrefix<T>>,

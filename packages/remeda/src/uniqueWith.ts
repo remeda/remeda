@@ -6,7 +6,7 @@ import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
-type IsEquals<T> = (a: T, b: T) => boolean;
+type IsEquals<T = unknown> = (a: T, b: T) => boolean;
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -54,22 +54,18 @@ export function uniqueWith<T extends IterableContainer>(
 ): (data: T) => Deduped<T>;
 
 export function uniqueWith(
-  dataOrIsEquals: unknown,
-  isEquals?: unknown,
+  dataOrIsEquals: IterableContainer | IsEquals,
+  isEquals?: IsEquals,
 ): unknown {
   return typeof dataOrIsEquals === "function"
     ? withLazyImplementation(
-        dataLast(
-          // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-          dataOrIsEquals,
-        ),
+        dataLast(dataOrIsEquals),
         lazyImplementation,
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrIsEquals,
       )
     : uniqueWithImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrIsEquals,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         isEquals,
       );
 }

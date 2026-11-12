@@ -1,3 +1,4 @@
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
 /**
@@ -16,7 +17,7 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  */
 
 export function meanBy<T>(
-  fn: (value: T, index: number, data: readonly T[]) => number,
+  fn: ArrayCallback<readonly T[], number>,
 ): (data: readonly T[]) => number;
 
 /**
@@ -37,18 +38,18 @@ export function meanBy<T>(
 
 export function meanBy<T>(
   data: readonly T[],
-  fn: (value: T, index: number, data: readonly T[]) => number,
+  fn: ArrayCallback<readonly T[], number>,
 ): number;
 
-export function meanBy(dataOrFn: unknown, fn?: unknown): unknown {
+export function meanBy(
+  dataOrFn: readonly unknown[] | ArrayCallback<readonly unknown[], number>,
+  fn?: ArrayCallback<readonly unknown[], number>,
+): unknown {
   return typeof dataOrFn === "function"
-    ? dataLast(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-        dataOrFn,
-      )
+    ? dataLast(dataOrFn)
     : meanByImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrFn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         fn,
       );
 }

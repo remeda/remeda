@@ -1,5 +1,12 @@
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
+type Reducer<T = unknown, U = unknown> = (
+  previousValue: U,
+  currentValue: T,
+  currentIndex: number,
+  data: readonly T[],
+) => U;
+
 /**
  * Executes a user-supplied "reducer" callback function on each element of the
  * array, in order, passing in the return value from the calculation on the
@@ -26,12 +33,7 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  */
 export function reduce<T, U>(
   data: readonly T[],
-  callbackfn: (
-    previousValue: U,
-    currentValue: T,
-    currentIndex: number,
-    data: readonly T[],
-  ) => U,
+  callbackfn: Reducer<T, U>,
   initialValue: U,
 ): U;
 
@@ -59,29 +61,20 @@ export function reduce<T, U>(
  * @category Array
  */
 export function reduce<T, U>(
-  callbackfn: (
-    previousValue: U,
-    currentValue: T,
-    currentIndex: number,
-    data: readonly T[],
-  ) => U,
+  callbackfn: Reducer<T, U>,
   initialValue: U,
 ): (data: readonly T[]) => U;
 
 export function reduce(
-  dataOrCallbackfn: unknown,
+  dataOrCallbackfn: readonly unknown[] | Reducer,
   callbackfnOrInitialValue: unknown,
   initialValue?: unknown,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
-    ? dataLast(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-        dataOrCallbackfn,
-        callbackfnOrInitialValue,
-      )
+    ? dataLast(dataOrCallbackfn, callbackfnOrInitialValue)
     : reduceImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         callbackfnOrInitialValue,
         initialValue,
       );

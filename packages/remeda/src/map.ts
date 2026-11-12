@@ -1,5 +1,6 @@
 import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import { canReadData, requireData } from "./internal/requireData";
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyCallback } from "./internal/types/LazyCallback";
@@ -27,7 +28,7 @@ import type { Mapped } from "./internal/types/Mapped";
  */
 export function map<T extends IterableContainer, U>(
   data: T,
-  callbackfn: (value: T[number], index: number, data: T) => U,
+  callbackfn: ArrayCallback<T, U>,
 ): Mapped<T, U>;
 
 /**
@@ -52,20 +53,23 @@ export function map<T extends IterableContainer, U>(
   callbackfn: LazyCallback<T, U>,
 ): (data: T) => Mapped<T, U>;
 
-export function map(dataOrCallbackfn: unknown, callbackfn?: unknown): unknown {
+export function map(
+  dataOrCallbackfn: IterableContainer | LazyCallback<IterableContainer>,
+  callbackfn?: ArrayCallback,
+): unknown {
   return typeof dataOrCallbackfn === "function"
     ? withLazyImplementation(
         dataLast(
-          // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
+          // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands the callback the complete input, a valid non-empty prefix whenever the callback is invoked (it never is for an empty input); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
           dataOrCallbackfn,
         ),
         lazyImplementation,
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
+        // @ts-expect-error [ts2345] -- `lazyImplementation` invokes the callback only once the input has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
         dataOrCallbackfn,
       )
     : mapImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         callbackfn,
       );
 }

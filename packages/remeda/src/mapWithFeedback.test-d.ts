@@ -55,11 +55,11 @@ test("data param is complete in data-first", () => {
   );
 });
 
-test("data param is readonly for a mutable array in data-first", () => {
+test("data param is mutable for a mutable array in data-first", () => {
   mapWithFeedback(
     [1, 2, 3] as number[],
     (_previousValue, _currentValue, _currentIndex, data) => {
-      expectTypeOf(data).toEqualTypeOf<readonly number[]>();
+      expectTypeOf(data).toEqualTypeOf<number[]>();
 
       return 0;
     },

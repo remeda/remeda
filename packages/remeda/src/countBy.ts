@@ -1,3 +1,4 @@
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
@@ -20,11 +21,7 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  */
 export function countBy<T, K extends PropertyKey>(
   data: readonly T[],
-  categorizationFn: (
-    value: T,
-    index: number,
-    data: readonly T[],
-  ) => K | undefined,
+  categorizationFn: ArrayCallback<readonly T[], K | undefined>,
 ): BoundedPartial<Record<K, number>>;
 
 /**
@@ -44,25 +41,20 @@ export function countBy<T, K extends PropertyKey>(
  * @category Array
  */
 export function countBy<T, K extends PropertyKey>(
-  categorizationFn: (
-    value: T,
-    index: number,
-    data: readonly T[],
-  ) => K | undefined,
+  categorizationFn: ArrayCallback<readonly T[], K | undefined>,
 ): (data: readonly T[]) => BoundedPartial<Record<K, number>>;
 
 export function countBy(
-  dataOrCategorizationFn: unknown,
-  categorizationFn?: unknown,
+  dataOrCategorizationFn:
+    | readonly unknown[]
+    | ArrayCallback<readonly unknown[], PropertyKey | undefined>,
+  categorizationFn?: ArrayCallback<readonly unknown[], PropertyKey | undefined>,
 ): unknown {
   return typeof dataOrCategorizationFn === "function"
-    ? dataLast(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-        dataOrCategorizationFn,
-      )
+    ? dataLast(dataOrCategorizationFn)
     : countByImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrCategorizationFn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         categorizationFn,
       );
 }

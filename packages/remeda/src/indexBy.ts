@@ -1,3 +1,4 @@
+import type { ArrayCallback } from "./internal/types/ArrayCallback";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
@@ -23,7 +24,7 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  */
 export function indexBy<T, K extends PropertyKey>(
   data: readonly T[],
-  mapper: (item: T, index: number, data: readonly T[]) => K,
+  mapper: ArrayCallback<readonly T[], K>,
 ): BoundedPartial<Record<K, T>>;
 
 /**
@@ -49,18 +50,19 @@ export function indexBy<T, K extends PropertyKey>(
  * @category Array
  */
 export function indexBy<T, K extends PropertyKey>(
-  mapper: (item: T, index: number, data: readonly T[]) => K,
+  mapper: ArrayCallback<readonly T[], K>,
 ): (data: readonly T[]) => BoundedPartial<Record<K, T>>;
 
-export function indexBy(dataOrMapper: unknown, mapper?: unknown): unknown {
+export function indexBy(
+  dataOrMapper:
+    readonly unknown[] | ArrayCallback<readonly unknown[], PropertyKey>,
+  mapper?: ArrayCallback<readonly unknown[], PropertyKey>,
+): unknown {
   return typeof dataOrMapper === "function"
-    ? dataLast(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
-        dataOrMapper,
-      )
+    ? dataLast(dataOrMapper)
     : indexByImplementation(
-        // @ts-expect-error [ts2345] -- `typeof` tells the call styles apart but can't narrow the parameters to the implementation's types; the overloads guarantee them.
         dataOrMapper,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
         mapper,
       );
 }
