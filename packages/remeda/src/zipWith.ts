@@ -104,7 +104,6 @@ export function zipWith(
   }
 
   if (typeof otherOrFn === "function") {
-    // dataLast
     return withLazyImplementation(
       dataLast(
         dataOtherOrFn,
@@ -143,10 +142,10 @@ function zipWithImplementation<
 }
 
 const lazyImplementation = makeStoppable(
-  <T1, T2 extends IterableContainer, Value>([other, fn]: readonly [
-    other: T2,
-    fn: ZippingFunction<readonly T1[], T2, Value>,
-  ]): StoppableLazyEvaluator<T1, Value> =>
+  <T, S extends IterableContainer, Value>([other, fn]: readonly [
+    other: S,
+    fn: ZippingFunction<readonly T[], S, Value>,
+  ]): StoppableLazyEvaluator<T, Value> =>
     other.length === 0
       ? LAZY_EMPTY_EVALUATOR
       : requireDataByArity(fn, 3, (value, index, data, slot) => {
