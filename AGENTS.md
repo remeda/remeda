@@ -67,7 +67,7 @@ Each function in `packages/remeda/src/` is one file, `functionName.ts`, with up 
 
 ### Calling styles & Pipe
 
-Each dual-style function picks its calling style at runtime, from a `typeof` check on an argument or from `arguments.length` (`purry1`-`3` and `purryWithLazy1`-`3` in `src/internal/`), and passes its arguments to the implementation as parameters, so the engine can inline a callback into its loop. The public `purry` applies the same arity rule to users' functions, taking their arguments as an array.
+Each dual-style function picks its calling style at runtime, from a `typeof` check on an argument or from `arguments.length` (`purry1`-`3` and `purryWithLazy1`-`3` in `src/internal/`), and passes its arguments to the implementation as parameters, so the engine can inline a callback into its loop.
 
 `pipe(data, fn1, fn2, fn3)` chains data-last functions. When consecutive functions carry a `lazy` property (attached by the lazy helpers in `src/internal/`) and one can end the iteration early (marked with `makeStoppable`, e.g., `take(3)`), `pipe` fuses them and processes items **one-by-one**, skipping the rest of the input and the intermediate arrays. On arrays, any other lazy function runs its data-first implementation; other iterables always run lazily.
 

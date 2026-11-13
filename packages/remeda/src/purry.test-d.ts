@@ -7,16 +7,6 @@ declare function subtractImplementation(
   subtrahend: number,
 ): number;
 
-declare function subtractOptionalImplementation(
-  minuend: number,
-  subtrahend?: number,
-): number;
-
-declare function subtractAllImplementation(
-  minuend: number,
-  ...subtrahends: readonly number[]
-): number;
-
 declare function firstImplementation<T>(data: readonly T[]): T | undefined;
 
 declare function dataLastDeclaredLast(
@@ -43,36 +33,9 @@ declare function genericDataFirstDeclaredLast<T>(
 ): T | undefined;
 
 test("return type", () => {
-  expectTypeOf(purry(subtractImplementation, 2, [])).toEqualTypeOf<
+  expectTypeOf(purry(subtractImplementation, [])).toEqualTypeOf<
     number | ((data: number) => number)
   >();
-});
-
-describe("arity", () => {
-  test("matches the data-first parameters", () => {
-    purry(
-      subtractImplementation,
-      // @ts-expect-error [ts2345] -- `subtractImplementation` takes 2 parameters, so 1 isn't its arity.
-      1,
-      [],
-    );
-    purry(
-      subtractImplementation,
-      // @ts-expect-error [ts2345] -- `subtractImplementation` takes 2 parameters, so 3 isn't its arity.
-      3,
-      [],
-    );
-  });
-
-  test("counts optional parameters", () => {
-    purry(subtractOptionalImplementation, 2, []);
-    purry(
-      subtractOptionalImplementation,
-      // @ts-expect-error [ts2345] -- The optional `subtrahend` still counts, so 1 isn't the arity.
-      1,
-      [],
-    );
-  });
 });
 
 describe("known issues!", () => {
@@ -123,10 +86,10 @@ describe("known issues!", () => {
     // `purry` returns can't carry them the way a returned function type could,
     // so TypeScript replaces them with their constraints. The resulting
     // `unknown` absorbs the whole union. An instantiation expression binds them.
-    const result = purry(firstImplementation, 1, []);
+    const result = purry(firstImplementation, []);
 
     expectTypeOf(result).not.toEqualTypeOf(
-      purry(firstImplementation<number>, 1, []),
+      purry(firstImplementation<number>, []),
     );
 
     // Actual
@@ -138,25 +101,13 @@ describe("known issues!", () => {
     // reference, which for `Object.fromEntries` is the one returning `any`. An
     // instantiation expression selects the typed overload.
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- The `any` is what this test pins.
-    const result = purry(Object.fromEntries, 1, []);
+    const result = purry(Object.fromEntries, []);
 
     expectTypeOf(result).not.toEqualTypeOf(
-      purry(Object.fromEntries<unknown>, 1, []),
+      purry(Object.fromEntries<unknown>, []),
     );
 
     // Actual
     expectTypeOf(result).toBeAny();
-  });
-
-  test("a rest parameter accepts any arity", () => {
-    // Counting arguments can't tell a data-first call from a data-last one when
-    // the implementation takes any number of them, so no literal is right for
-    // it and these calls should fail. The length of a parameter tuple with a
-    // rest element is `number`, though, which every literal satisfies.
-
-    // Actual
-    purry(subtractAllImplementation, 0, []);
-    purry(subtractAllImplementation, 1, []);
-    purry(subtractAllImplementation, 100, []);
   });
 });
