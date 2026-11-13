@@ -1,4 +1,3 @@
-- Use `expectTypeOf(...).toEqualTypeOf<...>()`, not `assertType`.
 - When a call's inferred return type is a deferred union of a non-primitive type and `undefined`, assign the result to a `const` first: asserting inline on the unresolved type fails even when the types match (suspected expect-type limitation).
 - Before writing, open a similar function's `.test-d.ts` to see which variation axes it covers (literal vs primitive, single vs union vs template-literal, exact-position vs spread vs optional tuple slots, bounded vs unbounded record, readonly vs mutable); the relevant subset varies per function.
 - Cast empty arrays for type data: `[] as Array<{ name: string }>`.
@@ -7,7 +6,7 @@
 - Test only inferred or "magic" types, not trivial signature parts.
 - Use `unknown` in type slots that don't matter: `Record<string, unknown>`, not `Record<string, string>`.
 - Union tests use disjoint value types (`Record<string, number> | Record<string, boolean>`); identical sides don't exercise union logic.
-- `as const` belongs in `.test-d.ts`, where it narrows types; it doesn't affect runtime behavior, so `.test.ts` files don't need it.
+- `as const` belongs only in `.test-d.ts`, where it narrows types; runtime behavior ignores it.
 - When `@typescript-eslint/no-unnecessary-type-assertion` flags an inference-controlling cast, replace `value as T` with `$typed<T>()` from `test/$typed` instead of autofixing:
   - Safe when the rule's reason is "This assertion is unnecessary since the receiver accepts the original type of the expression".
   - Proceed cautiously for other reasons; for `interface` types, suppress per site with a reason comment instead (see `$typed`'s JSDoc).

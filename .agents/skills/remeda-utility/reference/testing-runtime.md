@@ -1,5 +1,3 @@
-- Data-last tests use `pipe`, matching real-world usage.
-- Prefer one `expect` per `test` block, so a failure pinpoints the case; more short tests beat fewer tests that do more.
 - Use Remeda's own utilities in tests when applicable (`prop`, `constant`, etc.).
 - Runtime tests cover supported inputs. Remeda assumes well-typed input and leaves the outcome of anything the types reject unspecified, thrown errors included, so pinning it (in `known issues!` blocks too) would promise behavior we don't stand behind. `@ts-expect-error` on the input under test is for supported inputs the types can't express: a non-array iterable in `pipe`, a consumer with `exactOptionalPropertyTypes` off.
 - Test inputs, property-test generators included, are dense arrays. Holes get whatever the implementation naturally does (skipped, read as `undefined`, or kept), which stays free to change with it.

@@ -33,7 +33,7 @@ npm run test:prop    # property-based tests
 npm run lint         # lint with auto-fix
 ```
 
-Formatting, linting and type-checking also run on commit.
+Formatting, linting and source type-checking also run on commit.
 
 ## What we accept
 
@@ -57,7 +57,7 @@ Use a recent function in [`packages/remeda/src/`](packages/remeda/src/) as a tem
 
 ## Writing tests
 
-- Runtime assertions (`expect`) go in `functionName.test.ts` and type assertions ([`expectTypeOf`](https://vitest.dev/api/expect-typeof), not `assertType`) in `functionName.test-d.ts`. Never mix them.
+- Type assertions ([`expectTypeOf`](https://vitest.dev/api/expect-typeof), not `assertType`) go only in `functionName.test-d.ts`, runtime assertions (`expect`) in the other test files. Never mix them.
 - Cover both calling styles. For data-last, prefer `pipe`; it matches real-world usage.
 - Each `test` block tests one thing; most have a single `expect`.
 - Tests must provide 100% coverage; Codecov comments on the PR.

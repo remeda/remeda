@@ -38,4 +38,4 @@ The [Remeda](https://remedajs.com) docs site, built with Astro and deployed as a
 
 - **Static scripts aren't hot-reloaded**: a Vite plugin in `astro.config.ts` builds `src/scripts/` once at server start, so restart the dev server after changing them. Pages load them with `<script is:inline>` so they run before hydration (`init-theme.ts` prevents the dark-mode flash).
 - **Custom JSDoc block tags** (`@dataFirst`, `@dataLast`, `@lazy`, `@signature`) are registered with TypeDoc in `src/content/functions/content.config.ts`.
-- **Content types**: `check` syncs on its own, but the IDE only sees content config or schema changes after `npm run sync`.
+- **Content types**: the IDE sees content config or schema changes once something syncs (`npm run sync`, `check`, `dev`).

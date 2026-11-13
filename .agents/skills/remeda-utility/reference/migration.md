@@ -29,7 +29,7 @@ One concern per bullet, written **to the migrator at a specific call site**, who
 When a bullet mentions a gap that another Remeda function or a composition fills, link to it instead of describing it:
 
 - `[functionName](/docs#functionName)` for Remeda functions.
-- MDN URLs for native JS features.
+- MDN, or other external docs, for anything outside Remeda.
 
 Never link other migration pages (e.g., the `range.md` mapping must not mention `rangeRight.md`): each page assumes the reader is migrating exactly the function it's named for.
 

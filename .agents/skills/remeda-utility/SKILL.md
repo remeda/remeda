@@ -19,10 +19,8 @@ Each function has up to three test files:
 
 Across all three:
 
-- `expect()` lives only in `.test.ts` and `expectTypeOf()` only in `.test-d.ts`; never mix them in one test or file.
 - Test names are terse, in the function's own vocabulary ("lazy early exit with a many control", not "take and flat"), rely on their parent `describe()` blocks instead of repeating them, and needn't read as prose.
 - Every test calls the function under test directly, so one failing test shows what failed without learning the file's structure. Helpers live in the test file (the only shared ones are the modules in `test/`, such as `forceFusion` and `$typed`) and may build inputs and fixtures (a `naturals()` generator), never wrap the subject (a `run(...)` that calls it).
-- A test for a specific bug references the issue number in its name or a comment.
 - Known issues and limitations (an accepted wrong result, an upstream TypeScript bug, a case the types can't express) are pinned in a `describe("known issues!", ...)` block at the end of the file, in every test kind where the issue is observable. Each test pins the desired outcome negated with `.not.` (`expect(result).not.toBe(0)`, `expectTypeOf(result).not.toEqualTypeOf<number[]>()`), then the **current** one under an `// Actual` comment. A red `.not.` assertion means the limitation lifted; a red `// Actual` alone means a third outcome to examine. `// @ts-expect-error [tsNNNN] -- <why, linking the upstream issue when one exists>` is reserved for desired code that doesn't compile yet. The test name states the limitation; a comment in the body says why it exists, without restating the assertions.
 
 # 3. JSDoc

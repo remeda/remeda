@@ -25,8 +25,8 @@ await handleClaudeCodeHook<"PostToolUse">(async ({ tool_name, tool_input }) => {
 
     const { ignored, inferredParser } = await getFileInfo(filePath, {
       resolveConfig: true,
-      // Unlike the CLI (and lint-staged), the API reads no ignore files by
-      // default; these are the CLI's defaults, so both skip the same files.
+      // The API reads no ignore files by default; these are the ones the CLI
+      // reads when run from the repo root.
       ignorePath: [
         new URL("../../.gitignore", import.meta.url),
         new URL("../../.prettierignore", import.meta.url),

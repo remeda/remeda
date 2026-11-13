@@ -40,7 +40,7 @@ Prefer the language server (LSP) over text search and terminal `check` runs: it 
 ### Hooks (Claude Code)
 
 - **On edit**, prettier formats the touched file; skip `npm run format`.
-- **On turn end**, each workspace with dirty files runs its checks, blocking on the first failure and surfacing lint auto-fixes as a diff to review. Don't run them yourself mid-turn.
+- **On turn end**, `packages/remeda` and `packages/docs`, when dirty, run their checks, blocking on the first failure and surfacing lint auto-fixes as a diff to review. Don't run them yourself mid-turn.
   - `packages/remeda`: `check` -> `lint` -> `test:coverage` (100% thresholds) -> `test:types`.
   - `packages/docs`: requires `packages/remeda/dist` built after the last `src` change -> `sync` -> `check` -> `lint` -> `build`.
 
@@ -55,7 +55,7 @@ npm run test:runtime
 npm run test:types
 npm run test:prop
 npm run build # tsdown (ESM + CJS)
-npm run check # typecheck source files (tests excluded)
+npm run check # typecheck source files (runtime and type tests excluded)
 npm run lint  # eslint with autofix
 ```
 
