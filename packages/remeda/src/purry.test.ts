@@ -74,21 +74,15 @@ describe("data-last (curried)", () => {
   });
 
   test("passes every argument when there are several", () => {
-    const curried = purry(concatenateThreeNumbers, 3, [3, 7]);
+    const curried = purry(concatenateThreeNumbers, [3, 7]);
 
     expect(curried).toBeTypeOf("function");
     expect(typeof curried === "function" && curried(1)).toBe("137");
   });
 });
 
-test("curries a call that omits a defaulted parameter", () => {
-  expect(purry(addWithDefault, 2, [1])).toBeTypeOf("function");
-});
-
 const purriedFn = (...args: readonly unknown[]): unknown =>
-  purry(concatenateNumberArgs, 2, args);
-
-const addWithDefault = (augend: number, addend = 1): number => augend + addend;
+  purry(concatenateNumberArgs, args);
 
 const concatenateThreeNumbers = (
   data: number,
@@ -97,7 +91,7 @@ const concatenateThreeNumbers = (
 ): string => [data, first, second].join("");
 
 function concatenateNumberArgs(_a: number, _b: number): string {
-  // eslint-disable-next-line prefer-rest-params -- Intentional, the declared parameters keep the fixture shaped like a real utility (so its arity type is the literal `2` that `purry` checks), while `arguments` exposes the excess arguments it passes through, which the declared parameters would drop.
+  // eslint-disable-next-line prefer-rest-params -- Intentional, we want to bypass the function shape (which is observable at runtime via `Function.length`) to lock in how excess arguments are passed through.
   return [...arguments]
     .map((x) => (typeof x === "number" ? x.toString() : "<NaN>"))
     .join("");
