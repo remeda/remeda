@@ -1,0 +1,4 @@
+# Vendored skills are kept byte-identical to upstream so skills-lock.json's
+# computedHash matches the folder and updates diff cleanly; Prettier also
+# corrupts some of their markdown (e.g. `space-x-*` -> `space-x-_`).
+.agents/skills/shadcn/

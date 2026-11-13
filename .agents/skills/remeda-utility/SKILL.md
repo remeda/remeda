@@ -1,57 +1,43 @@
 ---
 name: remeda-utility
-description: Conventions for authoring, modifying, testing, and documenting a Remeda utility function — including the migration mapping pages for Lodash/Ramda/Just users. Use this skill whenever editing a file under `packages/remeda/src/` or `packages/docs/src/content/mapping/{lodash,ramda,just}/`, when reviewing a PR or local changes touching those directories, or whenever an issue, PR, or chat refers to a specific Remeda function or to a migration mapping page.
+description: Conventions for authoring, modifying, testing, and documenting a Remeda utility function, including the migration mapping pages for Lodash/Ramda/Just users. Use this skill whenever editing a file under `packages/remeda/src/` or `packages/docs/src/content/mapping/{lodash,ramda,just}/`, when reviewing a PR or local changes touching those directories, or whenever an issue, PR, or chat refers to a specific Remeda function or to a migration mapping page.
 ---
 
-A new or modified Remeda function ships across five surfaces: implementation,
-tests, JSDoc, the public export, and — when there's a Lodash/Ramda equivalent —
-migration mappings on the docs site. Skipping any one of them leaves the
-function half-shipped (e.g., a working implementation that isn't re-exported,
-or a behavior change with no test covering it). Work through the sections in
-order — later sections assume the earlier ones are in place.
+A new or modified Remeda function ships across five surfaces: implementation, tests, JSDoc, the public export, and, when a Lodash/Ramda/Just equivalent exists, migration mappings on the docs site.
 
 # 1. Implementation (`src/functionName.ts`)
 
-When any of the edits involves the runtime implementation of a function, one of
-its overloading function signatures, or any of the type definitions that it uses
-(either directly on the same file, or indirectly via imports) read
-`reference/implementation.md`.
+Read `reference/implementation.md` before editing a function's runtime implementation, its overload signatures, or any type it uses, directly or through imports.
 
 # 2. Tests
 
-Each function has up to three test files, one per kind:
+Each function has up to three test files:
 
-- **Runtime tests** (`functionName.test.ts`) — Vitest. Cover happy path, edge cases, empty inputs, and both calling styles (data-first and data-last inside `pipe`, `map` or `filter`). When editing, read `reference/testing-runtime.md`.
-- **Type tests** (`functionName.test-d.ts`) — `expectTypeOf` from Vitest. Verify inferred return types, narrowing, and that invalid inputs are compile errors. When editing, read `reference/testing-types.md`.
-- **Property-based tests** (`functionName.test-prop.ts`) — `@fast-check/vitest`. Optional but encouraged for functions with well-defined algebraic properties (idempotence, involutions, round-trips). When adding, read `reference/testing-properties.md`.
+- **Runtime tests** (`functionName.test.ts`, Vitest): empty inputs and both calling styles. Read `reference/testing-runtime.md` when editing.
+- **Type tests** (`functionName.test-d.ts`, `expectTypeOf`): inferred return types, narrowing, and compile errors on invalid inputs. Read `reference/testing-types.md` when editing.
+- **Property tests** (`functionName.test-prop.ts`, `test.prop` from `@fast-check/vitest`): optional, encouraged for functions with algebraic properties (idempotence, involutions, round-trips).
 
-Conventions that apply across all three kinds:
+Across all three:
 
-- Runtime and type assertions are **strictly separated** — `expect()` lives in `.test.ts`, `expectTypeOf()` lives in `.test-d.ts`. Never mix them in the same test block, and never put one kind in the other file.
-- Test names describe **what** is being tested in the function's own vocabulary - "lazy early exit with a many control", not "take and flat".
-- Test names should be terse and concise, and should rely on context from parent `describe()` blocks and not repeat them.
-- Test names do not need to read as prose!
-- Tests for a specific bug must reference the issue number, either in the test name or a comment so that the reporting issue can always be traced back.
-- Input data needs enough variation to produce distinct outputs — `[1, 1, 1]` hides bugs that `[1, 2, 3]` catches.
-- Known issues and limitations (an accepted wrong result, an upstream TypeScript bug, a case the types can't express) are pinned in a `describe("known issues!", ...)` block at the end of the file, in every test kind where the issue is observable. Each test pins both outcomes: the desired one negated with `.not.` (`expect(result).not.toBe(0)`, `expectTypeOf(result).not.toEqualTypeOf<number[]>()`), followed by the **current** one under an `// Actual` comment. When the code or TypeScript changes, a red `.not.` assertion means the limitation lifted, and a red `// Actual` assertion alone means a third outcome that needs examining. `// @ts-expect-error [tsNNNN] -- <why, linking the upstream issue when one exists>` is reserved for desired code that doesn't compile yet (e.g., a call the types should accept). The test name states the limitation; why it exists goes in a comment inside the test body, without restating what the assertions show.
+- Test names are terse, in the function's own vocabulary ("lazy early exit with a many control", not "take and flat"), rely on their parent `describe()` blocks instead of repeating them, and needn't read as prose.
+- Every test calls the function under test directly, so one failing test shows what failed without learning the file's structure. Helpers live in the test file (the only shared ones are the modules in `test/`, such as `forceFusion` and `$typed`) and may build inputs and fixtures (a `naturals()` generator), never wrap the subject (a `run(...)` that calls it).
+- Known issues and limitations (an accepted wrong result, an upstream TypeScript bug, a case the types can't express) are pinned in a `describe("known issues!", ...)` block at the end of the file, in every test kind where the issue is observable. Each test pins the desired outcome negated with `.not.` (`expect(result).not.toBe(0)`, `expectTypeOf(result).not.toEqualTypeOf<number[]>()`), then the **current** one under an `// Actual` comment. A red `.not.` assertion means the limitation lifted; a red `// Actual` alone means a third outcome to examine. `// @ts-expect-error [tsNNNN] -- <why, linking the upstream issue when one exists>` is reserved for desired code that doesn't compile yet. The test name states the limitation; a comment in the body says why it exists, without restating the assertions.
 
 # 3. JSDoc
 
-Each overload needs its own JSDoc block. Required tags:
+Each overload gets its own JSDoc block with:
 
-| Tag                        | Notes                                                                                                                           |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Description                | Present tense, precise vocabulary. First sentence is a concise one-line summary; further detail goes after a blank line.        |
-| `@param`                   | One per parameter.                                                                                                              |
-| `@signature`               | The call as it looks at the call site, e.g., `filter(data, predicate)` for data-first, `filter(predicate)(data)` for data-last. |
-| `@example`                 | Simple, almost trivial — show params and output, not a full usage pattern. Data-last examples use `pipe`, `map`, of `filter`.   |
-| `@dataFirst` / `@dataLast` | One per overload, matching the signature style. The docs site uses these to label and group overloads.                          |
-| `@lazy`                    | Only if the function supports lazy evaluation in `pipe`.                                                                        |
-| `@category`                | The function's category (`Array`, `Object`, `String`, etc.) — drives docs-site navigation.                                      |
+- A description: present tense, a one-line summary first and further detail after a blank line.
+- `@param`, one per parameter.
+- `@signature`: the call as written at the call site, `filter(data, predicate)` (data-first) or `filter(predicate)(data)` (data-last).
+- `@example`: simple, almost trivial, showing params and output rather than a usage pattern. Data-last examples use `pipe`, `map` or `filter`.
+- `@dataFirst` or `@dataLast`, matching the signature; the docs site labels and groups overloads by them.
+- `@lazy`, only if the function supports lazy evaluation in `pipe`.
+- `@category` (`Array`, `Object`, `String`, etc.), which drives docs-site navigation.
 
-If the new function is closely related to others where a user might pick the wrong one (e.g., `indexBy` vs. `fromKeys` vs. `pullObject` vs. `fromEntries`), list those alternatives with a one-line "use this when…" gloss in the description body of every overload. Update the related functions' JSDoc to cross-reference back, so the disambiguation is symmetric — a user who lands on either function discovers the others.
+When users might pick the wrong one among closely related functions (e.g., `indexBy` vs. `fromKeys` vs. `pullObject` vs. `fromEntries`), every overload's description lists the alternatives with a one-line "use this when..." gloss, and the related functions' JSDoc cross-references back, so a user landing on any of them discovers the others.
 
-The function description, `@params`, `@returns`, and `@deprecated` should be copied verbatim between the overloads, unless there is a strong reason not to, and then that reason should be made extremely clear in both blocks.
+The description, `@param`, `@returns` and `@deprecated` are identical across overloads, unless there's a strong reason to differ, which both blocks then state clearly.
 
 # 4. Export
 
@@ -59,12 +45,4 @@ Add `export * from "./functionName";` to `src/index.ts` (alphabetical order).
 
 # 5. Migration Mappings
 
-Many Remeda functions are genuinely novel and have no Lodash, Ramda, or Just counterpart — those skip this section entirely. But if the function **has** a matching upstream function (or replaces one), it needs a per-library mapping page on the docs site so migrators landing from a search for the upstream name find a clean answer for their call site.
-
-Read `reference/migration.md` when:
-
-- Authoring a new Remeda function that has a Lodash, Ramda, or Just equivalent.
-- Editing any existing file under `packages/docs/src/content/mapping/{lodash,ramda,just}/`.
-- Reviewing changes that add or modify a mapping page.
-
-`reference/migration.md` covers the file location and frontmatter, the bullets-then-examples body structure, the comment-header convention inside code blocks (`// Lodash` / `// Remeda` / `// Native`), the linking rules, and the `__MISSING.md` cleanup. This is interim guidance — eventually migration work will live behind its own skill, but until then this reference is the source of truth.
+A function that matches or replaces a Lodash, Ramda, or Just function needs a mapping page per library, so migrators searching for the upstream name find a clean answer for their call site; novel functions skip this section. Read `reference/migration.md` when adding such a function, or when editing or reviewing a file under `packages/docs/src/content/mapping/{lodash,ramda,just}/`.
