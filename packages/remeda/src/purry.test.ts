@@ -18,6 +18,10 @@ describe("data-first (delegated)", () => {
   test("as a callback, the extra arguments run it data-first", () => {
     expect([13, 37].map(purriedFn)).toStrictEqual(["130<NaN>", "371<NaN>"]);
   });
+
+  test("a defaulted parameter isn't counted, so omitting it runs data-first", () => {
+    expect(purry(addWithDefault, [1])).toBe(2);
+  });
 });
 
 describe("data-last (curried)", () => {
@@ -83,6 +87,8 @@ describe("data-last (curried)", () => {
 
 const purriedFn = (...args: readonly unknown[]): unknown =>
   purry(concatenateNumberArgs, args);
+
+const addWithDefault = (augend: number, addend = 1): number => augend + addend;
 
 const concatenateThreeNumbers = (
   data: number,
