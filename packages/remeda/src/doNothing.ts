@@ -21,10 +21,10 @@
  * @category Function
  */
 export function doNothing(): typeof doesNothing {
-  // Notice that the exported identity function is just the "factory" for the
-  // function. We do it this way so that all "Function" utilities have a similar
-  // API where the function is called, and not just used "headless". e.g.
-  // `doNothing()` and not `doNothing`, just like the API for `constant(1)`.
+  // The exported `doNothing` returns the do-nothing function instead of being
+  // it, so all "Function" utilities share an API where the function is called,
+  // not passed as a reference: `doNothing()` and not `doNothing`, just like
+  // `constant(1)`.
   return doesNothing;
 }
 

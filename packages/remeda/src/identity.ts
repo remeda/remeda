@@ -18,10 +18,10 @@ type IdentityFunction = <T>(firstParameter: T, ...rest: any) => T;
  * @category Function
  */
 export function identity(): IdentityFunction {
-  // Notice that the exported identity function is just the "factory" for the
-  // identity function. We do it this way so that all "Function" utilities have
-  // a similar API where the function is called, and not just used "headless".
-  // e.g. `identity()` and not `identity`, just like the API for `constant(1)`.
+  // The exported `identity` returns the identity function instead of being it,
+  // so all "Function" utilities share an API where the function is called, not
+  // passed as a reference: `identity()` and not `identity`, just like
+  // `constant(1)`.
   return identityImplementation;
 }
 

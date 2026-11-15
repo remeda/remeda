@@ -7,6 +7,8 @@ A function with a data-first / data-last API has:
 - Two overload signatures, data-first **and** data-last, each with its own JSDoc block.
 - One implementation signature, without JSDoc, returning `unknown`. Each parameter is named for both styles (`dataOrCallbackfn, callbackfn`) and typed as the union of what the overloads accept there, with type parameters widened to their constraints (`chunk(dataOrSize: IterableContainer | number, size?: number)`), or `unknown` when unconstrained.
 
+The data-last overload declares the type parameters its arguments depend on (a callback's parameters, a key) on itself, not on the function it returns: `map<T extends IterableContainer, U>(callbackfn: LazyCallback<T, U>): (data: T) => Mapped<T, U>`. TypeScript infers them from the contextual type (a `pipe` step or a callback parameter), so the arguments are checked against the real data; a partially applied function stored in a variable has no contextual type, so they fall back to their constraints. Overloads and type tests cover only contextually typed calls.
+
 ## Callbacks
 
 Type callbacks with the aliases in `src/internal/types/Callback.ts`, in the overloads and the implementation signature alike, so neither spells out the parameters (`filter`, `sumBy`, `pickBy`):

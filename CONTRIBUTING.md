@@ -58,7 +58,7 @@ Use a recent function in [`packages/remeda/src/`](packages/remeda/src/) as a tem
 ## Writing tests
 
 - Type assertions ([`expectTypeOf`](https://vitest.dev/api/expect-typeof), not `assertType`) go only in `functionName.test-d.ts`, runtime assertions (`expect`) in the other test files. Never mix them.
-- Cover both calling styles. For data-last, prefer `pipe`; it matches real-world usage.
+- Cover both calling styles. Test data-last calls where users write them: in `pipe` or as a callback argument. Partially applied functions stored for later (`const getA = prop("a")`) and function references in place of a call (`pipe(data, entries)`) are unsupported.
 - Each `test` block tests one thing; most have a single `expect`.
 - Tests must provide 100% coverage; Codecov comments on the PR.
 - Prefer `@ts-expect-error` over `@ts-ignore`, with the TS error code and a one-line reason:
