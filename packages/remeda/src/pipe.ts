@@ -31,8 +31,8 @@ import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
  * custom functions that support both data-first and data-last calls, see the
  * `purry` utility.
  *
- * A "headless" variant `piped` is available for creating reusable pipe
- * functions without initial data.
+ * The data-last variant `piped` builds the same pipe without initial data, to
+ * pass as a callback: `map(data, piped(fn1, fn2))`.
  *
  * IMPORTANT: During lazy evaluation, callbacks using the third parameter (the
  * input array) receive only items processed up to that point, not the complete

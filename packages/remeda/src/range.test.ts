@@ -287,9 +287,9 @@ describe("lodash spec", () => {
   });
 
   test("should work as an iteratee for methods like `_.map`", () => {
-    // Lodash supports "headless" invocations via an explicit guard against the
-    // "index" parameter being passed as a second parameter to range (which
-    // would lead to funky ranges). We don't support "headless" invocations in
+    // Lodash guards `range` for use as a function reference
+    // (`_.map(array, _.range)`), ignoring the index `_.map` passes as a second
+    // argument (which would lead to funky ranges). We don't add such guards in
     // general, and `range` doesn't support a single-param (implicit start)
     // invocation anyway, so the index or key becomes `end`.
     expect(map([1, 2, 3], range)).not.toStrictEqual([[0], [0, 1], [0, 1, 2]]);

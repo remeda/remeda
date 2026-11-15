@@ -11,7 +11,7 @@ test("data-last", () => {
   expect(pipe({ foo: "bar" }, prop("foo"))).toBe("bar");
 });
 
-test("factory function", () => {
+test("stored partial application", () => {
   const propA = prop("a");
 
   expect(indexBy([{ a: 1 }, { a: 2 }], propA)).toStrictEqual({

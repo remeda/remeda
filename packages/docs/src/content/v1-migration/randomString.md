@@ -1,11 +1,11 @@
 #### Typing
 
-The "headless" mode of the function is no longer available. For dataLast
+Passing the function as a reference is no longer supported. For dataLast
 invocations use `randomString()`.
 
 ##### Examples
 
-###### No headless version
+###### Function reference
 
 ```ts
 // Was:

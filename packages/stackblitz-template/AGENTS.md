@@ -1,21 +1,18 @@
 # StackBlitz Template
 
-## Purpose
-
-This is a StackBlitz sandbox template that gets created for each Remeda PR, allowing contributors to validate changes in a live environment. It is NOT a development package — it consumes `remeda` as a dependency.
+`pkg-pr-new` publishes this sandbox with each Remeda PR, so its files are user-facing. `remeda` is a regular dependency: locally the workspace package's `dist`, so rebuild `packages/remeda` to try source changes.
 
 ## Commands
 
 ```bash
-npm test  # run runtime + type tests (vitest --typecheck)
-npm start # launch interactive REPL with all Remeda utilities in global scope
+npm test  # runtime + type tests (vitest --typecheck)
+npm start # Node REPL with all Remeda exports as globals
 ```
 
 ## Structure
 
-- `src/runtime.test.ts` — runtime tests using Vitest expect/assert APIs
-- `src/typing.test-d.ts` — type-level tests using `expectTypeOf`
-- `src/playground.ts` — TypeScript playground with relaxed tsconfig (mirrors typescriptlang.org/play settings)
-- `interactive.js` — Node REPL that loads all Remeda exports into global scope
+- `src/runtime.test.ts`, `src/typing.test-d.ts` - runtime and type tests
+- `src/playground.ts` - type playground with the relaxed `tsconfig.playground.json`, mirroring typescriptlang.org/play
+- `interactive.js` - the `npm start` REPL
 
-Two separate tsconfig projects: `tsconfig.project.json` (strict, used for tests and REPL) and `tsconfig.playground.json` (relaxed, playground only).
+Everything else uses the strict `tsconfig.project.json`.

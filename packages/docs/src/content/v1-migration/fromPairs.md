@@ -3,8 +3,8 @@
 Called [`fromEntries`](/docs/#fromEntries) instead. Also see the migration guide
 for [`fromEntries`](/v1/#fromEntries).
 
-The "headless" dataLast form is no longer supported, use the functional style
-instead.
+Passing the function as a reference for dataLast calls is no longer supported,
+call it with no arguments instead.
 
 ##### Examples
 

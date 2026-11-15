@@ -1,12 +1,12 @@
 #### Typing
 
-The "headless" mode of the function is no longer available. The function now
-acts as a factory that creates an identity function. To fix headless cases
-simply add parenthesis to the end: `identity` -> `identity()`.
+Passing the function as a reference is no longer supported. The function now
+returns an identity function instead. To fix these call sites simply add
+parenthesis to the end: `identity` -> `identity()`.
 
 ##### Examples
 
-###### No headless version
+###### Function reference
 
 ```ts
 // Was

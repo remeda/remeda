@@ -3,8 +3,8 @@
 Values for `symbol` keys were never returned by the function in runtime, but the
 typing didn't filter them out. This has been fixed.
 
-The "headless" dataLast form is no longer supported, use the functional style
-instead.
+Passing the function as a reference for dataLast calls is no longer supported,
+call it with no arguments instead.
 
 ##### Examples
 
@@ -16,7 +16,7 @@ const result = values({ [mySymbol]: 123, a: "hello" });
 //    ^? string[], Was: (string | number)[]
 ```
 
-###### No headless version
+###### Function reference
 
 ```ts
 // Was

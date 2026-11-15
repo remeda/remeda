@@ -60,7 +60,7 @@ test("doesn't narrow when comparing objects of the same type", () => {
   }
 });
 
-test("headless usage can infer types", () => {
+test("infers types as a function reference", () => {
   // Tests the issue reported in: https://github.com/remeda/remeda/issues/641
   const result = differenceWith(["a", "b", "c"], ["a", "c", "d"], isDeepEqual);
 

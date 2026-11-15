@@ -7,11 +7,11 @@ import { pipe } from "./pipe";
  * functions like `map` and `filter`, where the data type can be inferred
  * from the call site.
  *
- * IMPORTANT: `piped` does not work as a "function factory" in order to create
- * standalone utility functions; because TypeScript cannot infer the input data
- * type (without requiring to explicitly define all type params for all
- * functions in the pipe). We recommend defining the function explicitly, and
- * then use `pipe` in its implementation.
+ * IMPORTANT: `piped` doesn't work for defining standalone functions stored for
+ * later (`const process = piped(...)`): without a contextual type, TypeScript
+ * can't infer the input data type unless every function in the pipe gets
+ * explicit type params. Instead, define the function explicitly and use `pipe`
+ * in its implementation.
  *
  * @signature
  *    piped(...functions)(data);
