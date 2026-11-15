@@ -44,8 +44,6 @@ Prefer the language server (LSP) over text search and terminal `check` runs: it 
   - `packages/remeda`: `check` -> `lint` -> `test:coverage` (100% thresholds) -> `test:types`.
   - `packages/docs`: requires `packages/remeda/dist` built after the last `src` change -> `sync` -> `check` -> `lint` -> `build`.
 
-Some hooks (e.g., `SessionStart`, `Stop`) are also relayed to a local script defined by the env variable `REMEDA_PERSONAL_HOOK` when it is set. These are for personal, per-contributor tooling and do nothing otherwise.
-
 Agents without these hooks run the same scripts before finishing.
 
 ## Commands

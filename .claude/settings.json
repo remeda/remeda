@@ -28,11 +28,11 @@
     ],
     "SessionStart": [
       {
-        "matcher": "startup|resume",
         "hooks": [
           {
             "type": "command",
-            "command": "[ -z \"$REMEDA_PERSONAL_HOOK\" ] || \"$REMEDA_PERSONAL_HOOK\" SessionStart"
+            "command": "sh \"${CLAUDE_PROJECT_DIR}/.claude/hooks/personal-hook-relay.sh\" SessionStart",
+            "timeout": 60
           }
         ]
       }
@@ -40,10 +40,6 @@
     "Stop": [
       {
         "hooks": [
-          {
-            "type": "command",
-            "command": "[ -z \"$REMEDA_PERSONAL_HOOK\" ] || \"$REMEDA_PERSONAL_HOOK\" Stop"
-          },
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/remeda-local-ci-checks.ts\"",
@@ -55,6 +51,22 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/docs-local-ci-checks.ts\"",
             "timeout": 60,
             "statusMessage": "Running critical CI checks for the docs package locally"
+          },
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PROJECT_DIR}/.claude/hooks/personal-hook-relay.sh\" Stop",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PROJECT_DIR}/.claude/hooks/personal-hook-relay.sh\" SessionEnd",
+            "timeout": 60
           }
         ]
       }
