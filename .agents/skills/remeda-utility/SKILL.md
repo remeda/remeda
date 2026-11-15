@@ -7,7 +7,10 @@ A new or modified Remeda function ships across five surfaces: implementation, te
 
 # 1. Implementation (`src/functionName.ts`)
 
-Read `reference/implementation.md` before editing a function's runtime implementation, its overload signatures, or any type it uses, directly or through imports.
+- Read `reference/implementation-runtime.md` before editing a function's body, its dispatch, its lazy implementation, or a runtime helper in `src/internal/`.
+- Read `reference/implementation-types.md` before editing an overload or implementation signature, or any type it uses, directly or through imports (`src/internal/types/` included), and before resolving a type error in a function's body.
+
+A new function needs both. In every source file, exported items come first, then non-exported ones, as readers scan top to bottom; constants go above the logic that uses them.
 
 # 2. Tests
 
@@ -15,12 +18,15 @@ Each function has up to three test files:
 
 - **Runtime tests** (`functionName.test.ts`, Vitest): empty inputs and both calling styles. Read `reference/testing-runtime.md` when editing.
 - **Type tests** (`functionName.test-d.ts`, `expectTypeOf`): inferred return types, narrowing, and compile errors on invalid inputs. Read `reference/testing-types.md` when editing.
-- **Property tests** (`functionName.test-prop.ts`, `test.prop` from `@fast-check/vitest`): optional, encouraged for functions with algebraic properties (idempotence, involutions, round-trips).
+- **Property tests** (`functionName.test-prop.ts`, `test.prop` from `@fast-check/vitest`): optional. A lazy function in a fused sequence (`pipe(data, forceFusion(), fn(...))`) matches data-first, in its result and its callback calls; the function matches a reference implementation (`Object.fromEntries` for `fromEntries`); or an invariant holds (every input item appears in the output). They are runtime tests: read `reference/testing-runtime.md` when editing.
 
 Across all three:
 
-- Test names are terse, in the function's own vocabulary ("lazy early exit with a many control", not "take and flat"), rely on their parent `describe()` blocks instead of repeating them, and needn't read as prose.
+- Test names are terse, in the function's own vocabulary ("lazy early exit with a many control", not "take and flat"), and needn't read as prose.
+- Tests sit at the top level of the file, grouped in a `describe()` only when every test in it reads better under the group's name. Names sharing a prefix or suffix ("data last ...", "... on a non-array iterable") signal a group: the shared words move into the `describe` name and out of the test names.
+- Each test checks one case. A test asserting on several inputs or behaviors splits into one test per case, and the cases of one scenario group under a `describe` named after it.
 - Every test calls the function under test directly, so one failing test shows what failed without learning the file's structure. Helpers live in the test file (the only shared ones are the modules in `test/`, such as `forceFusion` and `$typed`) and may build inputs and fixtures (a `naturals()` generator), never wrap the subject (a `run(...)` that calls it).
+- A test is one expression where it can be: the call sits inside `expect(...)` or `expectTypeOf(...)` with its inputs inline, `expect(chunk([1, 2, 3], 2)).toStrictEqual([[1, 2], [3]])`, so the reader follows one expression instead of tracing names. A local `const` holds only a value the test uses more than once: a mock, or a result asserted twice.
 - Known issues and limitations (an accepted wrong result, an upstream TypeScript bug, a case the types can't express) are pinned in a `describe("known issues!", ...)` block at the end of the file, in every test kind where the issue is observable. Each test pins the desired outcome negated with `.not.` (`expect(result).not.toBe(0)`, `expectTypeOf(result).not.toEqualTypeOf<number[]>()`), then the **current** one under an `// Actual` comment. A red `.not.` assertion means the limitation lifted; a red `// Actual` alone means a third outcome to examine. `// @ts-expect-error [tsNNNN] -- <why, linking the upstream issue when one exists>` is reserved for desired code that doesn't compile yet. The test name states the limitation; a comment in the body says why it exists, without restating the assertions.
 
 # 3. JSDoc

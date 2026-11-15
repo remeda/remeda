@@ -75,7 +75,7 @@ Each dual-style function picks its calling style at runtime, from a `typeof` che
 
 - `exactOptionalPropertyTypes` is a hard requirement: all types assume it.
 - `interface` and `class` types don't extend `Record<PropertyKey, unknown>` the way same-shaped type literals do (TS keeps them open to declaration merging). Constrain generics with `T extends object`, not `T extends Record<...>`, so they aren't silently rejected; in type tests, an `interface`/`class` case is not a duplicate of a same-shaped type-literal case.
-- Prefer `@ts-expect-error` over `as`: suppressions surface when TS improves, casts hide errors silently. Each one names the TS error code **and** why it's safe (`// @ts-expect-error [ts2345] -- purry infers this correctly at the call site`). Each `eslint-disable` likewise explains why the rule is safe to suppress there.
+- Each `@ts-expect-error` names the TS error code **and** why it's safe (`// @ts-expect-error [ts2345] -- purry infers this correctly at the call site`); each `eslint-disable` likewise explains why the rule is safe to suppress there.
 - For a suspected TS/ESLint false positive (the code is correct, the tool is wrong), suppress it and flag the suspected bug in the reason rather than reshaping the code or casting: suppressions surface when upstream fixes the bug, workarounds silently outlive it.
 - Workarounds for known dependency bugs link the upstream issue or PR, so we know when to remove them.
 - Performance changes need benchmarks: >=15% improvement, no regressions, same readability.

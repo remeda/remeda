@@ -53,7 +53,7 @@ A new function must justify why `fn1(fn2(...))` isn't enough: we don't ship `rej
 - Export it from [`packages/remeda/src/index.ts`](packages/remeda/src/index.ts) (alphabetically).
 - If a Lodash, Ramda, or Just equivalent exists, add a mapping page under [`packages/docs/src/content/mapping/`](packages/docs/src/content/mapping/).
 
-Use a recent function in [`packages/remeda/src/`](packages/remeda/src/) as a template. Implementation conventions (lazy callbacks, `IterableContainer`, `type-fest`, naming) are in [`.agents/skills/remeda-utility/reference/implementation.md`](.agents/skills/remeda-utility/reference/implementation.md).
+Use a recent function in [`packages/remeda/src/`](packages/remeda/src/) as a template. Implementation conventions are in [`.agents/skills/remeda-utility/reference/`](.agents/skills/remeda-utility/reference/): runtime (dispatch, lazy evaluation, loops, naming) in `implementation-runtime.md`, types (`IterableContainer`, lazy callbacks, `type-fest`) in `implementation-types.md`.
 
 ## Writing tests
 
@@ -67,7 +67,7 @@ Use a recent function in [`packages/remeda/src/`](packages/remeda/src/) as a tem
   flat([], 1 as number);
   ```
 - Red-green verify regression tests: revert the fix, confirm the test fails, then restore it. Reference the issue or PR number in the test name or a comment.
-- Add property tests ([fast-check](https://fast-check.dev/), in `functionName.test-prop.ts`) when a function has clear invariants: idempotence (`sort(sort(x))` = `sort(x)`), involution (`reverse(reverse(x))` = `x`), round-trips (`flat(chunk(x, n))` = `x`), or preservation (every input element appears in the output).
+- Add property tests ([fast-check](https://fast-check.dev/), in `functionName.test-prop.ts`) when random inputs check what a few examples can't: a lazy function in a fused `pipe` matches its data-first result and callback calls, the function matches a reference implementation (`fromEntries` and `Object.fromEntries`), or an invariant holds (every input element appears in the output).
 
 ## Commit and PR titles
 

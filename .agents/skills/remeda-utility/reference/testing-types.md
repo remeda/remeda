@@ -1,12 +1,12 @@
 - When a call's inferred return type is a deferred union of a non-primitive type and `undefined`, assign the result to a `const` first: asserting inline on the unresolved type fails even when the types match (suspected expect-type limitation).
 - Before writing, open a similar function's `.test-d.ts` to see which variation axes it covers (literal vs primitive, single vs union vs template-literal, exact-position vs spread vs optional tuple slots, bounded vs unbounded record, readonly vs mutable); the relevant subset varies per function.
-- Cast empty arrays for type data: `[] as Array<{ name: string }>`.
+- Cast empty arrays for type data: `[] as { name: string }[]`.
 - Prefer casting (`as`) over annotating (`: Type`); they don't always behave the same.
 - Define types on the data, never via explicit generics (`<T>`) on the call.
-- Test only inferred or "magic" types, not trivial signature parts.
+- Test type utilities (`src/internal/types/`) through a declared function that infers its argument and returns the type (`declare function tupleParts<T extends IterableContainer>(tuple: T): TupleParts<T>;`), then assert on `tupleParts(data)`; never instantiate the type directly (`expectTypeOf<TupleParts<[]>>()`). Inference is how utilities reach these types, and it enforces the type's constraint the same way.
+- Test what Remeda's types compute (inferred or "magic" types, our own constraints), not that TypeScript works: drop tests that only re-check a trivial signature part, such as a declared return type or a plain parameter type rejecting a wrong argument.
 - Use `unknown` in type slots that don't matter: `Record<string, unknown>`, not `Record<string, string>`.
 - Union tests use disjoint value types (`Record<string, number> | Record<string, boolean>`); identical sides don't exercise union logic.
-- `as const` belongs only in `.test-d.ts`, where it narrows types; runtime behavior ignores it.
 - When `@typescript-eslint/no-unnecessary-type-assertion` flags an inference-controlling cast, replace `value as T` with `$typed<T>()` from `test/$typed` instead of autofixing:
   - Safe when the rule's reason is "This assertion is unnecessary since the receiver accepts the original type of the expression".
   - Proceed cautiously for other reasons; for `interface` types, suppress per site with a reason comment instead (see `$typed`'s JSDoc).
