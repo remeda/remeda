@@ -26,9 +26,37 @@
         ]
       }
     ],
+    "SessionStart": [
+      {
+        // Allows using a private repo that provides extensions to the default
+        // harness in this repo which would be merged into the harness via this
+        // hook (and the `Stop` hook below). By pointing `REMEDA_PERSONAL_HOOK`
+        // at a script available in the local or remote environment that would
+        // sync the private parts into the regular harness. This allows working
+        // on the repo and customizing it (via skills, AGENTS.md, etc...)
+        // without needing to open a PR. This could be wired both locally, or
+        // via a cloud environment, also making it possible to work on committed
+        // branches that are synced with the remote repo without opening a local
+        // public branch in remeda/remeda.
+
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -z \"$REMEDA_PERSONAL_HOOK\" ] || \"$REMEDA_PERSONAL_HOOK\" SessionStart"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
+          {
+            // The `stop` event usually takes care of syncing the public
+            // harness with the private parts...
+            "type": "command",
+            "command": "[ -z \"$REMEDA_PERSONAL_HOOK\" ] || \"$REMEDA_PERSONAL_HOOK\" Stop"
+          },
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/remeda-local-ci-checks.ts\"",
