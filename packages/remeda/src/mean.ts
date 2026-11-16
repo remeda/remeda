@@ -1,6 +1,6 @@
 import { purry1 } from "./internal/purryByArity";
+import { sum as sumImplementation } from "./internal/sum";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { sum } from "./sum";
 
 type Mean<T extends IterableContainer<number>> =
   | (T extends readonly [] ? never : number)
@@ -58,4 +58,4 @@ export function mean(data?: IterableContainer<number>): unknown {
 const meanImplementation = <T extends IterableContainer<number>>(
   data: T,
 ): T[number] | undefined =>
-  data.length === 0 ? undefined : sum(data) / data.length;
+  data.length === 0 ? undefined : sumImplementation(data) / data.length;

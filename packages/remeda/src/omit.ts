@@ -1,5 +1,4 @@
 import type { EmptyObject, IsNever, KeysOfUnion } from "type-fest";
-import { hasAtLeast } from "./hasAtLeast";
 import { purry2 } from "./internal/purryByArity";
 import type { IsBounded } from "./internal/types/IsBounded";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
@@ -135,25 +134,23 @@ function omitImplementation<
   T extends object,
   Keys extends readonly (keyof T)[],
 >(data: T, keys: Keys): OmitFromArray<T, Keys> {
-  if (!hasAtLeast(keys, 1)) {
-    // No props to omit at all!
+  if (keys.length === 0) {
     // @ts-expect-error [ts2322] - TypeScript can't connect the fact that the
     // keys array is empty and infer the expected output, and then infer that we
     // return it correctly here.
     return { ...data };
   }
 
-  if (!hasAtLeast(keys, 2)) {
-    // Only one prop to omit so we can let the runtime engine deal with
-    // removing it efficiently.
-    const { [keys[0]]: _omitted, ...remaining } = data;
+  if (keys.length === 1) {
+    // A rest destructure copies the object without the key in one step, and
+    // its result keeps a fast-mode shape that `delete` would give up.
+    const { [keys[0]!]: _omitted, ...remaining } = data;
 
     // @ts-expect-error [ts2322] - TypeScript can't compute the expected output
     // correctly and then infer that we return it correctly here.
     return remaining;
   }
 
-  // Multiple props to omit so we have to use a loop to omit all of them.
   const out = { ...data };
   for (const key of keys) {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- This is intentional! It is the most effective way to allow the runtime engine to optimize the object without creating excessive copies for every omitted key.
