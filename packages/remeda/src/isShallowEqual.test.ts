@@ -79,6 +79,12 @@ describe("objects", () => {
     ).toBe(false);
   });
 
+  test("maps with different keys holding undefined", () => {
+    expect(
+      isShallowEqual(new Map([["a", undefined]]), new Map([["b", undefined]])),
+    ).toBe(false);
+  });
+
   test("sets", () => {
     const data = new Set([1, 2, 3]);
 

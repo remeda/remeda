@@ -142,8 +142,13 @@ function isMapShallowEqual(
   }
 
   for (const entry of a) {
+    const key = entry[0];
+    if (!b.has(key)) {
+      return false;
+    }
+
     const valueA = entry[1];
-    const valueB = b.get(entry[0]);
+    const valueB = b.get(key);
     if (valueA !== valueB && !Object.is(valueA, valueB)) {
       return false;
     }
