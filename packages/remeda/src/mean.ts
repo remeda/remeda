@@ -1,5 +1,4 @@
 import { purry1 } from "./internal/purryByArity";
-import { sum as sumImplementation } from "./internal/sum";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 type Mean<T extends IterableContainer<number>> =
@@ -57,5 +56,16 @@ export function mean(data?: IterableContainer<number>): unknown {
 
 const meanImplementation = <T extends IterableContainer<number>>(
   data: T,
-): T[number] | undefined =>
-  data.length === 0 ? undefined : sumImplementation(data) / data.length;
+): T[number] | undefined => {
+  if (data.length === 0) {
+    return;
+  }
+
+  let total = 0;
+  // eslint-disable-next-line @typescript-eslint/prefer-for-of, unicorn/no-for-loop -- An index loop measured faster than `for...of` here, both optimized and before the JIT optimizes it.
+  for (let index = 0; index < data.length; index += 1) {
+    total += data[index]!;
+  }
+
+  return total / data.length;
+};

@@ -1,5 +1,4 @@
 import { purry1 } from "./internal/purryByArity";
-import { sum as sumImplementation } from "./internal/sum";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 type Sum<T extends IterableContainer<bigint> | IterableContainer<number>> =
@@ -70,4 +69,20 @@ export function sum(
   data?: IterableContainer<bigint> | IterableContainer<number>,
 ): unknown {
   return purry1(sumImplementation, arguments.length, data);
+}
+
+function sumImplementation<
+  T extends IterableContainer<bigint> | IterableContainer<number>,
+>(data: T): T[number] {
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- The rule differentiates 0 and 0n :(
+  let out = typeof data[0] === "bigint" ? 0n : 0;
+
+  // eslint-disable-next-line @typescript-eslint/prefer-for-of, unicorn/no-for-loop -- An index loop measured faster than `for...of` here, both optimized and before the JIT optimizes it.
+  for (let index = 0; index < data.length; index += 1) {
+    // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+    out += data[index]!;
+  }
+
+  return out;
 }

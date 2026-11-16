@@ -76,15 +76,10 @@ function firstByImplementation<T>(
   data: readonly T[],
   compareFn: CompareFunction<T>,
 ): T | undefined {
-  if (data.length <= 1) {
-    return data[0];
-  }
+  let currentFirst = data[0];
 
-  let [currentFirst] = data;
-
-  // Remove the first item, we won't compare it with itself.
-  const [, ...rest] = data;
-  for (const item of rest) {
+  for (let index = 1; index < data.length; index += 1) {
+    const item = data[index]!;
     if (compareFn(item, currentFirst!) < 0) {
       // item comes before currentFirst in the order.
       currentFirst = item;
