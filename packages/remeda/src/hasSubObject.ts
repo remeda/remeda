@@ -1,5 +1,5 @@
 import type { IsNever, Simplify, Tagged } from "type-fest";
-import { isDeepEqual as isDeepEqualImplementation } from "./internal/isDeepEqual";
+import { isDeepEqual } from "./internal/isDeepEqual";
 import { purry2 } from "./internal/purryByArity";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- We want to confine the typing to a specific symbol
@@ -120,10 +120,7 @@ function hasSubObjectImplementation<
 >(data: T, subObject: S): data is HasSubObjectGuard<T, S> {
   for (const entry of Object.entries(subObject)) {
     const key = entry[0];
-    if (
-      !Object.hasOwn(data, key) ||
-      !isDeepEqualImplementation(entry[1], data[key])
-    ) {
+    if (!Object.hasOwn(data, key) || !isDeepEqual(entry[1], data[key])) {
       return false;
     }
   }
