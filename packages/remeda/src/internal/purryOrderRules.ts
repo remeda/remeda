@@ -118,8 +118,11 @@ export function orderRuleComparer<T>(
   const projector =
     typeof primaryRule === "function" ? primaryRule : primaryRule[0];
 
-  const direction = typeof primaryRule === "function" ? "asc" : primaryRule[1];
-  const sign = direction === "asc" ? 1 : -1;
+  const direction =
+    typeof primaryRule === "function"
+      ? ("asc" satisfies Direction)
+      : primaryRule[1];
+  const sign = direction === ("asc" satisfies Direction) ? 1 : -1;
 
   const nextComparer =
     secondaryRule === undefined
@@ -154,7 +157,11 @@ function isOrderRule<T>(x: unknown): x is OrderRule<T> {
     return false;
   }
 
-  return isProjection(x[0]) && (x[1] === "asc" || x[1] === "desc");
+  return (
+    isProjection(x[0]) &&
+    (x[1] === ("asc" satisfies Direction) ||
+      x[1] === ("desc" satisfies Direction))
+  );
 }
 
 const isProjection = <T>(x: unknown): x is Projection<T> =>
