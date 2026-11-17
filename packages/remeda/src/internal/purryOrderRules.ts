@@ -1,14 +1,6 @@
 import type { CompareFunction } from "./types/CompareFunction";
 import type { NonEmptyArray } from "./types/NonEmptyArray";
 
-// We define the comparators in a global const so that they are only
-// instantiated once, and so we can couple a label (string) for them that could
-// be used in runtime to refer to them (e.g. "asc", "desc").
-const COMPARATORS = {
-  asc: <T>(x: T, y: T) => x > y,
-  desc: <T>(x: T, y: T) => x < y,
-} as const;
-
 /**
  * An order rule defines a projection/extractor that returns a comparable from
  * the data being compared. It would be run on each item being compared, and a
@@ -31,12 +23,12 @@ const COMPARATORS = {
  * once.
  */
 export type OrderRule<T = unknown> =
-  | Projection<T>
-  | readonly [projection: Projection<T>, direction: keyof typeof COMPARATORS];
+  Projection<T> | readonly [projection: Projection<T>, direction: Direction];
 
 export type OrderRules<T = unknown> = Readonly<NonEmptyArray<OrderRule<T>>>;
 
 type Projection<T> = (x: T) => Comparable;
+type Direction = "asc" | "desc";
 
 // We define the Comparable based on how JS coerces values into primitives when
 // used with the `<` and `>` operators.
@@ -53,11 +45,11 @@ type ComparablePrimitive = bigint | boolean | number | string;
 
 /**
  * Allows functions that want to handle a variadic number of order rules a
- * a simplified API that hides most of the implementation details. The only
- * thing users of this function need to do is provide a function that would take
- * the data, and a compare function that can be used to determine the order
- * between the items of the array.
- * This functions takes care of the rest; it will parse rules, built the
+ * simplified API that hides most of the implementation details. The only thing
+ * users of this function need to do is provide a function that would take the
+ * data, and a compare function that can be used to determine the order between
+ * the items of the array.
+ * This functions takes care of the rest; it will parse rules, build the
  * comparer, and manage the purrying of the input arguments.
  */
 export function purryOrderRules<T>(
@@ -73,18 +65,16 @@ export function purryOrderRules<T>(
   if (!isOrderRule<T>(dataOrRule)) {
     // dataFirst!
 
-    // @ts-expect-error [ts2556]: Typescript is failing to infer the type of rules
-    // correctly here after the type refinement above, rules should be non-empty
-    // when we get here.
+    // @ts-expect-error [ts2556] -- Typescript is failing to infer the type of rules correctly here after the type refinement above, rules should be non-empty when we get here.
     const compareFn = orderRuleComparer(...rules);
     return func(dataOrRule, compareFn);
   }
 
   // dataLast!
 
-  // Important: initialize the comparer outside of the returned function so it
-  // it's constructed and shared everywhere (it's stateless so should be safe
-  // if used multiple times).
+  // Important: initialize the comparer outside of the returned function so its
+  // constructed and shared everywhere (it's stateless so should be safe if
+  // used multiple times).
   const compareFn = orderRuleComparer(dataOrRule, ...rules);
   return (data: readonly T[]) => func(data, compareFn);
 }
@@ -125,8 +115,8 @@ export function orderRuleComparer<T>(
   const projector =
     typeof primaryRule === "function" ? primaryRule : primaryRule[0];
 
-  const direction = typeof primaryRule === "function" ? "asc" : primaryRule[1];
-  const isAfter = COMPARATORS[direction];
+  const sign =
+    typeof primaryRule === "function" || primaryRule[1] === "asc" ? 1 : -1;
 
   const nextComparer =
     secondaryRule === undefined
@@ -137,12 +127,12 @@ export function orderRuleComparer<T>(
     const projectedA = projector(a);
     const projectedB = projector(b);
 
-    if (isAfter(projectedA, projectedB)) {
-      return 1;
+    if (projectedA > projectedB) {
+      return sign;
     }
 
-    if (isAfter(projectedB, projectedA)) {
-      return -1;
+    if (projectedA < projectedB) {
+      return -sign;
     }
 
     // The elements are equal based on the projection. So we need to check the
@@ -157,18 +147,14 @@ function isOrderRule<T>(x: unknown): x is OrderRule<T> {
     return true;
   }
 
-  if (typeof x !== "object" || !Array.isArray(x)) {
+  if (!Array.isArray(x) || x.length !== 2) {
     return false;
   }
 
-  const [maybeProjection, maybeDirection, ...rest] = x as readonly unknown[];
-
   return (
-    isProjection(maybeProjection) &&
-    typeof maybeDirection === "string" &&
-    Object.hasOwn(COMPARATORS, maybeDirection) &&
-    // Has to be a 2-tuple
-    rest.length === 0
+    isProjection(x[0]) &&
+    (x[1] === ("asc" satisfies Direction) ||
+      x[1] === ("desc" satisfies Direction))
   );
 }
 
