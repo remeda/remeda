@@ -1,7 +1,7 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryWithLazy3 } from "./internal/purryWithLazyByArity";
 import type { IsEqualFunction } from "./internal/types/IsEqualFunction";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Returns a list of intersecting values based on a custom

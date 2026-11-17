@@ -17,6 +17,7 @@ import {
   type LazyEvaluatorFactory,
   type LazyUnaryFunction,
 } from "./lazyDataLastImplementation";
+import type { LazyEvaluator } from "./lazyEvaluator";
 import { makeReducing } from "./makeReducing";
 import {
   lastLazyValue,
@@ -24,7 +25,6 @@ import {
   type StoppableLazyEvaluator,
 } from "./makeStoppable";
 import { requireData } from "./requireData";
-import type { LazyEvaluator } from "./types/LazyEvaluator";
 import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
 
 describe(buildFusedSequence, () => {

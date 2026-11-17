@@ -1,7 +1,7 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryWithLazy2 } from "./internal/purryWithLazyByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Removes last `n` elements from `data`.

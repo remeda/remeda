@@ -1,6 +1,6 @@
 import type { Tagged, Writable } from "type-fest";
 import type { LazyResult, LazySlot } from "./lazyControl";
-import type { BaseEvaluator } from "./types/LazyEvaluator";
+import type { BaseEvaluator } from "./lazyEvaluator";
 import type { StrictFunction } from "./types/StrictFunction";
 
 /**

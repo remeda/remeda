@@ -1,7 +1,8 @@
-import { hasAtLeast } from "./hasAtLeast";
 import { purryOrderRules, type OrderRules } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+
+const WAITING_FOR_FIRST_ITEM_SENTINEL = Symbol("firstBy/waitingForFirstItem");
 
 type FirstBy<T extends IterableContainer> =
   | T[number]
@@ -77,21 +78,19 @@ function firstByImplementation<T>(
   data: readonly T[],
   compareFn: CompareFunction<T>,
 ): T | undefined {
-  if (!hasAtLeast(data, 2)) {
-    // If we have 0 or 1 item we simply return the trivial result.
-    return data[0];
-  }
+  let currentFirst: T | typeof WAITING_FOR_FIRST_ITEM_SENTINEL =
+    WAITING_FOR_FIRST_ITEM_SENTINEL;
 
-  let [currentFirst] = data;
-
-  // Remove the first item, we won't compare it with itself.
-  const [, ...rest] = data;
-  for (const item of rest) {
-    if (compareFn(item, currentFirst) < 0) {
-      // item comes before currentFirst in the order.
+  for (const item of data) {
+    if (
+      currentFirst === WAITING_FOR_FIRST_ITEM_SENTINEL ||
+      compareFn(item, currentFirst) < 0
+    ) {
       currentFirst = item;
     }
   }
 
-  return currentFirst;
+  return currentFirst === WAITING_FOR_FIRST_ITEM_SENTINEL
+    ? undefined
+    : currentFirst;
 }

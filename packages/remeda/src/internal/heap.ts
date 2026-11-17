@@ -2,7 +2,6 @@
  * Heap related utilities.
  */
 
-import { hasAtLeast } from "../hasAtLeast";
 import { swapInPlace } from "./swapInPlace";
 import type { CompareFunction } from "./types/CompareFunction";
 
@@ -43,11 +42,11 @@ export function heapMaybeInsert<T>(
   compareFn: CompareFunction<T>,
   item: T,
 ): T {
-  if (!hasAtLeast(heap, 1)) {
+  if (heap.length === 0) {
     return item;
   }
 
-  const [head] = heap;
+  const head = heap[0]!;
 
   if (compareFn(item, head) >= 0) {
     // The item shouldn't be inserted into the heap, the heap is unchanged.

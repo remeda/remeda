@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports -- Intentional! `piped` is built *around* `pipe`.
 import { pipe } from "./pipe";
 
 /**

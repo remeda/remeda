@@ -1,12 +1,12 @@
 import { describe, expectTypeOf, test } from "vitest";
 import type { LazyUnaryFunction } from "./lazyDataLastImplementation";
+import type { LazyEvaluator } from "./lazyEvaluator";
 import {
   purryWithLazy1,
   purryWithLazy2,
   purryWithLazy3,
 } from "./purryWithLazyByArity";
 import type { IterableContainer } from "./types/IterableContainer";
-import type { LazyEvaluator } from "./types/LazyEvaluator";
 
 declare function takeImplementation(
   data: readonly number[],
