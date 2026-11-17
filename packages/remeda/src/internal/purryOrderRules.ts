@@ -1,14 +1,6 @@
 import type { CompareFunction } from "./types/CompareFunction";
 import type { NonEmptyArray } from "./types/NonEmptyArray";
 
-// We define the comparators in a global const so that they are only
-// instantiated once, and so we can couple a label (string) for them that could
-// be used in runtime to refer to them (e.g. "asc", "desc").
-const COMPARATORS = {
-  asc: <T>(x: T, y: T) => x > y,
-  desc: <T>(x: T, y: T) => x < y,
-} as const;
-
 /**
  * An order rule defines a projection/extractor that returns a comparable from
  * the data being compared. It would be run on each item being compared, and a
@@ -31,8 +23,9 @@ const COMPARATORS = {
  * once.
  */
 export type OrderRule<T = unknown> =
-  | Projection<T>
-  | readonly [projection: Projection<T>, direction: keyof typeof COMPARATORS];
+  Projection<T> | readonly [projection: Projection<T>, direction: Direction];
+
+type Direction = "asc" | "desc";
 
 export type OrderRules<T = unknown> = Readonly<NonEmptyArray<OrderRule<T>>>;
 
@@ -126,7 +119,7 @@ export function orderRuleComparer<T>(
     typeof primaryRule === "function" ? primaryRule : primaryRule[0];
 
   const direction = typeof primaryRule === "function" ? "asc" : primaryRule[1];
-  const isAfter = COMPARATORS[direction];
+  const sign = direction === "asc" ? 1 : -1;
 
   const nextComparer =
     secondaryRule === undefined
@@ -137,12 +130,12 @@ export function orderRuleComparer<T>(
     const projectedA = projector(a);
     const projectedB = projector(b);
 
-    if (isAfter(projectedA, projectedB)) {
-      return 1;
+    if (projectedA > projectedB) {
+      return sign;
     }
 
-    if (isAfter(projectedB, projectedA)) {
-      return -1;
+    if (projectedA < projectedB) {
+      return -sign;
     }
 
     // The elements are equal based on the projection. So we need to check the
@@ -157,19 +150,11 @@ function isOrderRule<T>(x: unknown): x is OrderRule<T> {
     return true;
   }
 
-  if (typeof x !== "object" || !Array.isArray(x)) {
+  if (typeof x !== "object" || !Array.isArray(x) || x.length !== 2) {
     return false;
   }
 
-  const [maybeProjection, maybeDirection, ...rest] = x as readonly unknown[];
-
-  return (
-    isProjection(maybeProjection) &&
-    typeof maybeDirection === "string" &&
-    Object.hasOwn(COMPARATORS, maybeDirection) &&
-    // Has to be a 2-tuple
-    rest.length === 0
-  );
+  return isProjection(x[0]) && (x[1] === "asc" || x[1] === "desc");
 }
 
 const isProjection = <T>(x: unknown): x is Projection<T> =>
