@@ -52,6 +52,10 @@ describe("objects", () => {
     expect(isShallowEqual(data, { a: 1, c: 3 })).toBe(false);
   });
 
+  test("objects with different keys holding undefined", () => {
+    expect(isShallowEqual({ a: undefined }, { b: undefined })).toBe(false);
+  });
+
   test("uint arrays", () => {
     const data = new Uint8Array([1, 2, 3]);
 
@@ -83,6 +87,12 @@ describe("objects", () => {
     expect(
       isShallowEqual(new Map([["a", undefined]]), new Map([["b", undefined]])),
     ).toBe(false);
+  });
+
+  test("maps with the same key holding undefined", () => {
+    expect(
+      isShallowEqual(new Map([["a", undefined]]), new Map([["a", undefined]])),
+    ).toBe(true);
   });
 
   test("sets", () => {
@@ -186,5 +196,30 @@ describe("data-last", () => {
 
   test("not equal", () => {
     expect(pipe({ a: 1 }, isShallowEqual({ a: 2 }))).toBe(false);
+  });
+});
+
+describe("known issues!", () => {
+  test("a Set equals an empty array typed as the same iterable", () => {
+    const isEqual = isShallowEqual(new Set([1]) as Iterable<number>, []);
+
+    // Entries are compared only between two Maps or two Sets; any other pair
+    // compares own enumerable keys, and a Map or Set has none.
+    expect(isEqual).not.toBe(false);
+
+    // Actual
+    expect(isEqual).toBe(true);
+  });
+
+  test("a non-enumerable own property stands in for a missing key", () => {
+    const isEqual = isShallowEqual({ length: 1 }, ["x"]);
+
+    // Keys are counted with `Object.keys`, which skips non-enumerable
+    // properties, but matched with `Object.hasOwn`, which doesn't, so the
+    // array's hidden `length` matches while its `0` key is never checked.
+    expect(isEqual).not.toBe(false);
+
+    // Actual
+    expect(isEqual).toBe(true);
   });
 });
