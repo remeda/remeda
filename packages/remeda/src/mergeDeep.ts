@@ -1,5 +1,6 @@
 import type { MergeDeep } from "type-fest";
 import { purry2 } from "./internal/purryByArity";
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports -- `isPlainObject` is a plain type guard with no data-first/data-last dispatch, so importing it adds only the check itself.
 import { isPlainObject } from "./isPlainObject";
 
 /**

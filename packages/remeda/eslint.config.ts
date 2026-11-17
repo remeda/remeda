@@ -478,7 +478,7 @@ export default defineConfig(
     },
   },
   {
-    files: ["src/**/*.ts"],
+    files: ["src/*.ts"],
     ignores: [
       "src/index.ts",
       "src/**/*.test.ts",
@@ -494,6 +494,47 @@ export default defineConfig(
               regex: "/purry$",
               message:
                 "Pass the arguments as parameters: purry1-3, purryWithLazy1-3, or a typeof check.",
+            },
+            {
+              regex: String.raw`^(?!\./internal/|type-fest$)`,
+              message:
+                "Utilities import only from src/internal and type-fest: move what this needs into src/internal.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/internal/*.ts"],
+    ignores: ["src/**/*.test.ts", "src/**/*.test-d.ts"],
+    rules: {
+      "@typescript-eslint/no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex: String.raw`^(?!\./|type-fest$)`,
+              message:
+                "src/internal sits below the utilities and imports only itself and type-fest: move what this needs into src/internal.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/internal/types/*.ts"],
+    ignores: ["src/**/*.test-d.ts"],
+    rules: {
+      "@typescript-eslint/no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex: String.raw`^(?!\./[^/]+$|type-fest$)`,
+              message:
+                "Types in src/internal/types import only each other and type-fest: move the type this needs into src/internal/types.",
             },
           ],
         },

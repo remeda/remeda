@@ -1,9 +1,9 @@
 import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { canReadData, requireData } from "./internal/requireData";
 import type { ArrayCallback, LazyCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
 
 /**

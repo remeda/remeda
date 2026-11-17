@@ -1,6 +1,6 @@
 import { describe, test } from "vitest";
 import { MANY, manyLazyValues } from "./lazyControl";
-import type { LazyEvaluator } from "./types/LazyEvaluator";
+import type { LazyEvaluator } from "./lazyEvaluator";
 
 // Stands in for the evaluator type a lazy implementation declares as its return
 // type, which is what checks the evaluator it returns.

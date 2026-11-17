@@ -7,6 +7,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { iterableDataFirst } from "./iterableDataFirst";
 import { manyLazyValues, SKIP_ITEM } from "./lazyControl";
+import type { LazyEvaluator } from "./lazyEvaluator";
 import { makeReducing } from "./makeReducing";
 import {
   lastLazyValue,
@@ -15,7 +16,6 @@ import {
   type StoppableLazyEvaluator,
 } from "./makeStoppable";
 import { requireData } from "./requireData";
-import type { LazyEvaluator } from "./types/LazyEvaluator";
 
 test("builds the evaluator with the lazy argument", () => {
   const lazy = vi.fn<(lazyArgument: readonly unknown[]) => LazyEvaluator>(

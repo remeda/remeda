@@ -5,9 +5,9 @@ import {
   type LazySlot,
 } from "./internal/lazyControl";
 import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 type FlatArray<
   T,

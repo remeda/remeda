@@ -1,6 +1,7 @@
 import { heapify, heapMaybeInsert } from "./internal/heap";
 import { SKIP_ITEM } from "./internal/lazyControl";
 import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import {
   orderRuleComparer,
   type OrderRule,
@@ -8,7 +9,6 @@ import {
 } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Drop the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before dropping the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.

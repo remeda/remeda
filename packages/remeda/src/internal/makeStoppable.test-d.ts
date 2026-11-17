@@ -7,6 +7,7 @@ import { describe, test } from "vitest";
 import { $typed } from "../../test/$typed";
 import type { LazyResult, LazySlot } from "./lazyControl";
 import type { LazyEvaluatorFactory } from "./lazyDataLastImplementation";
+import type { LazyEvaluator } from "./lazyEvaluator";
 import {
   LAST,
   lastLazyValue,
@@ -16,7 +17,6 @@ import {
   type StoppableLazyEvaluator,
   type StoppableResult,
 } from "./makeStoppable";
-import type { LazyEvaluator } from "./types/LazyEvaluator";
 
 declare function acceptLazy(
   lazy: LazyEvaluatorFactory<readonly unknown[], readonly []>,
