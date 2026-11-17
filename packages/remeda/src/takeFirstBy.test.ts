@@ -210,4 +210,10 @@ describe("runtime (dataLast)", () => {
       ),
     ).toStrictEqual(["aa", "b", "a"]);
   });
+
+  test("a desc order rule", () => {
+    expect(
+      pipe([4, 5, 1, 6, 2, 3, 7], takeFirstBy(2, [identity(), "desc"])),
+    ).toStrictEqual([6, 7]);
+  });
 });
