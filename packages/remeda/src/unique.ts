@@ -1,8 +1,8 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryWithLazy1 } from "./internal/purryWithLazyByArity";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Returns a new array containing only one copy of each element in the original

@@ -1,9 +1,9 @@
 import { manyLazyValues, type LazyResult } from "./internal/lazyControl";
 import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { requireDataByArity } from "./internal/requireData";
 import type { ArrayCallback, LazyCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Returns a new array formed by applying a given callback function to each

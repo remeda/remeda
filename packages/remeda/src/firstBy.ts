@@ -2,6 +2,8 @@ import { purryOrderRules, type OrderRules } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
+const WAITING_FOR_FIRST_ITEM_SENTINEL = Symbol("firstBy/waitingForFirstItem");
+
 type FirstBy<T extends IterableContainer> =
   | T[number]
   | (T extends readonly [unknown, ...(readonly unknown[])]
@@ -76,15 +78,19 @@ function firstByImplementation<T>(
   data: readonly T[],
   compareFn: CompareFunction<T>,
 ): T | undefined {
-  let currentFirst = data[0];
+  let currentFirst: T | typeof WAITING_FOR_FIRST_ITEM_SENTINEL =
+    WAITING_FOR_FIRST_ITEM_SENTINEL;
 
-  for (let index = 1; index < data.length; index += 1) {
-    const item = data[index]!;
-    if (compareFn(item, currentFirst!) < 0) {
-      // item comes before currentFirst in the order.
+  for (const item of data) {
+    if (
+      currentFirst === WAITING_FOR_FIRST_ITEM_SENTINEL ||
+      compareFn(item, currentFirst) < 0
+    ) {
       currentFirst = item;
     }
   }
 
-  return currentFirst;
+  return currentFirst === WAITING_FOR_FIRST_ITEM_SENTINEL
+    ? undefined
+    : currentFirst;
 }

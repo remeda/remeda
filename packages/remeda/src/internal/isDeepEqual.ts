@@ -61,7 +61,7 @@ export function isDeepEqual<T>(data: unknown, other: T): data is T {
       !Object.hasOwn(other, key) ||
       !isDeepEqual(
         entry[1],
-        // @ts-expect-error [ts7053] - We already checked that `other` has `key`
+        // @ts-expect-error [ts7053] -- We already checked that `other` has `key`
         other[key],
       )
     ) {

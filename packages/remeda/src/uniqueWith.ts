@@ -1,11 +1,11 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
 import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
+import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { requireData } from "./internal/requireData";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IsEqualFunction } from "./internal/types/IsEqualFunction";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
 /**
  * Returns a new array containing only one copy of each element in the original

@@ -1,4 +1,4 @@
-import type { LazyResult, LazySlot } from "../lazyControl";
+import type { LazyResult, LazySlot } from "./lazyControl";
 
 // Declares the kinds of results an evaluator may return, which its result type
 // alone can't: `LazyResult<unknown>` collapses to `unknown`, so without it an

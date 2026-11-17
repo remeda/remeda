@@ -1,6 +1,6 @@
 import { describe, test } from "vitest";
 import { withLazyImplementation } from "./lazyDataLastImplementation";
-import type { LazyEvaluator } from "./types/LazyEvaluator";
+import type { LazyEvaluator } from "./lazyEvaluator";
 
 declare const dataLast: (data: readonly number[]) => number[];
 

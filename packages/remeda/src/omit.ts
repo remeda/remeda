@@ -153,7 +153,7 @@ function omitImplementation<
 
   const out = { ...data };
   for (const key of keys) {
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- This is intentional! It is the most effective way to allow the runtime engine to optimize the object without creating excessive copies for every omitted key.
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- This is intentional! it allows us to copy the object just once at the start.
     delete out[key];
   }
 

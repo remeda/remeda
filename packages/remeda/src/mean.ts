@@ -62,9 +62,8 @@ const meanImplementation = <T extends IterableContainer<number>>(
   }
 
   let total = 0;
-  // eslint-disable-next-line @typescript-eslint/prefer-for-of, unicorn/no-for-loop -- An index loop measured faster than `for...of` here, both optimized and before the JIT optimizes it.
-  for (let index = 0; index < data.length; index += 1) {
-    total += data[index]!;
+  for (const value of data) {
+    total += value;
   }
 
   return total / data.length;
