@@ -1,6 +1,3 @@
-// The logic for `isDeepEqual` is reused in `hasSubObject`, so to avoid needing
-// to import the exported utility's data-last harness we pull out the common
-// logic as an internal utility.
 export function isDeepEqual<T>(data: unknown, other: T): data is T {
   if (data === other || Object.is(data, other)) {
     // We ignore the slight differences between `===` and `Object.is` as both

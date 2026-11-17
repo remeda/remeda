@@ -15,6 +15,15 @@ test("single removed prop works", () => {
   expect(result).toStrictEqual({});
 });
 
+test("omitting a single prop keeps the rest", () => {
+  const mySymbol = Symbol("mySymbol");
+
+  expect(omit({ a: 1, b: 2, [mySymbol]: 3 }, ["a"])).toStrictEqual({
+    b: 2,
+    [mySymbol]: 3,
+  });
+});
+
 test("dataLast", () => {
   const result = pipe({ a: 1, b: 2, c: 3, d: 4 }, omit(["a", "d"] as const));
 
