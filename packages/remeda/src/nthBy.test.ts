@@ -20,9 +20,18 @@ describe("runtime (dataFirst)", () => {
     expect(nthBy(data, -3, identity())).toBe(1);
   });
 
-  test("handles overflows gracefully", () => {
-    expect(nthBy([1, 2, 3], 100, identity())).toBeUndefined();
-    expect(nthBy([1, 2, 3], -100, identity())).toBeUndefined();
+  test.each([3, 100, -4, -100])(
+    "returns undefined for out-of-range index %i",
+    (index) => {
+      expect(nthBy([1, 2, 3], index, identity())).toBeUndefined();
+    },
+  );
+
+  test("leaves the input unchanged", () => {
+    const data = [3, 1, 2];
+    nthBy(data, 0, identity());
+
+    expect(data).toStrictEqual([3, 1, 2]);
   });
 
   test("works with complex order rules", () => {
@@ -56,9 +65,18 @@ describe("runtime (dataLast)", () => {
     expect(pipe(data, nthBy(-3, identity()))).toBe(1);
   });
 
-  test("handles overflows gracefully", () => {
-    expect(pipe([1, 2, 3], nthBy(100, identity()))).toBeUndefined();
-    expect(pipe([1, 2, 3], nthBy(-100, identity()))).toBeUndefined();
+  test.each([3, 100, -4, -100])(
+    "returns undefined for out-of-range index %i",
+    (index) => {
+      expect(pipe([1, 2, 3], nthBy(index, identity()))).toBeUndefined();
+    },
+  );
+
+  test("leaves the input unchanged", () => {
+    const data = [3, 1, 2];
+    pipe(data, nthBy(0, identity()));
+
+    expect(data).toStrictEqual([3, 1, 2]);
   });
 
   test("works with complex order rules", () => {

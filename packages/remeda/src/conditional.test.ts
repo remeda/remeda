@@ -73,4 +73,13 @@ describe("runtime (dataLast)", () => {
 
     expect(value).toBe("center");
   });
+
+  test("runs the first case when it matches", () => {
+    expect(
+      pipe(
+        "Jokic",
+        conditional([isDeepEqual("Jokic"), () => "center"], constant("bench")),
+      ),
+    ).toBe("center");
+  });
 });

@@ -1,4 +1,4 @@
-import { purryOn } from "./internal/purryOn";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
@@ -63,14 +63,41 @@ export function splice<T extends IterableContainer>(
   replacement?: readonly T[number][],
 ): (data: T) => T[number][];
 
-export function splice(...args: readonly unknown[]): unknown {
-  return purryOn(($) => typeof $ === "number", spliceImplementation, args);
+export function splice(
+  dataOrStart: IterableContainer | number,
+  startOrDeleteCount: number,
+  // eslint-disable-next-line unicorn/no-non-function-verb-prefix -- Starts with `deleteCount`, `Array.prototype.splice`'s name for this parameter.
+  deleteCountOrReplacement?: number | readonly unknown[],
+  replacement?: readonly unknown[],
+): unknown {
+  // The optional `replacement` makes both call styles accept 3 arguments, so
+  // the dispatch checks the type of the first one instead of the argument
+  // count.
+  return typeof dataOrStart === "number"
+    ? dataLast(
+        dataOrStart,
+        startOrDeleteCount,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-last overload guarantees the rest.
+        deleteCountOrReplacement,
+      )
+    : spliceImplementation(
+        dataOrStart,
+        startOrDeleteCount,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overload guarantees the rest.
+        deleteCountOrReplacement,
+        replacement,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof spliceImplementation> =
+  // eslint-disable-next-line unicorn/no-non-function-verb-prefix -- `deleteCount` is `Array.prototype.splice`'s name for this parameter.
+  (start, deleteCount, replacement) => (data) =>
+    spliceImplementation(data, start, deleteCount, replacement);
 
 function spliceImplementation<T extends IterableContainer>(
   data: T,
   start: number,
-  // eslint-disable-next-line unicorn/no-non-function-verb-prefix -- This is the exact term used in the lib itself for this...
+  // eslint-disable-next-line unicorn/no-non-function-verb-prefix -- `deleteCount` is `Array.prototype.splice`'s name for this parameter.
   deleteCount: number,
   replacement: readonly T[number][] = [],
 ): T[number][] {

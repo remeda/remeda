@@ -1,6 +1,5 @@
 import type { KeysOfUnion, OmitIndexSignature } from "type-fest";
 import type { ArrayAt } from "./internal/types/ArrayAt";
-import type { Resolved } from "./internal/types/Resolved";
 
 // Computes all possible keys of `T` at `Path` spread over unions, allowing
 // keys from any of the results, not just those **shared** by all of them.
@@ -44,6 +43,12 @@ type Prop<T, Key> =
 // don't accept `string`. All other types (`boolean` and `bigint`) don't
 // have properties, so are incompatible with our `key` parameters anyway.
 type NonPropertyKey = object | null | undefined;
+
+// An inference point: TypeScript resolves `T` here instead of carrying the
+// unresolved recursive type into the caller. The overloads wrap their `Prop`
+// and `PropDeep` return types in it because deep paths otherwise fail with
+// ts2589 (Type instantiation is excessively deep and possibly infinite).
+type Resolved<T> = T extends infer U ? U : never;
 
 /**
  * Gets the value of the given property from an object. Nested properties can
