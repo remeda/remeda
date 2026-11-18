@@ -44,11 +44,10 @@ type Prop<T, Key> =
 // have properties, so are incompatible with our `key` parameters anyway.
 type NonPropertyKey = object | null | undefined;
 
-// Acts as a "inference" point that forces TypeScript to resolve during a deep
-// recursive type instead of accumulating more complexity through the tree.
-// This can be used to avoid `Type instantiation is excessively deep and
-// possibly infinite (ts2589)` errors by wrapping the (recursive) computed
-// return types of overloaded signatures with this.
+// An inference point: TypeScript resolves `T` here instead of carrying the
+// unresolved recursive type into the caller. The overloads wrap their `Prop`
+// and `PropDeep` return types in it because deep paths otherwise fail with
+// ts2589 (Type instantiation is excessively deep and possibly infinite).
 type Resolved<T> = T extends infer U ? U : never;
 
 /**

@@ -94,7 +94,7 @@ type EmptyishObject<T extends object> = T extends {
             // mutations.
             { readonly [P in keyof T]: never };
 
-// TODO [>2]: type-fest's version of this utility type fails on TypeScript versions before 5.3 on inputs that have a readonly index signature, e.g., `Readonly<Record<string, string>>`. Once our minimal TypeScript version is past that version we can remove this workaround.
+// TODO [>2]: type-fest's `HasWritableKeys` fails on TypeScript versions before 5.3 for inputs with a readonly index signature, e.g., `Readonly<Record<string, string>>`. Once our minimum TypeScript version is 5.3 or later, replace this type with type-fest's.
 type HasWritableKeys<T> =
   // If making all props of the type readonly doesn't change anything about it
   // it means that none of its props are **not** readonly, so it doesn't have

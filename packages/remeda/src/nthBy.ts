@@ -93,8 +93,8 @@ function quickSelect<T>(
   const pivotIndex = partition(data, left, right, compareFn);
 
   return index === pivotIndex
-    ? // Once a pivot is chosen its location is final, so if it matches the
-      // index we found our item!
+    ? // `partition` leaves the pivot at its sorted position, so if that is
+      // `index`, the pivot is the item.
       data[index]!
     : quickSelect(
         data,
@@ -121,7 +121,7 @@ function partition<T>(
       continue;
     }
 
-    // Move items smaller than the pivot to the start of the array.
+    // Items that sort before the pivot go to the front of the range.
     swapInPlace(data, i, j);
     i += 1;
   }

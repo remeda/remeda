@@ -725,17 +725,18 @@ export function conditional(
   dataOrCase: unknown,
   ...cases: readonly unknown[]
 ): unknown {
-  // The cases are variadic, so the argument count can't tell the call styles
-  // apart; only the shape of the first argument can.
+  // The number of cases varies, so the argument count can't tell the call
+  // styles apart; the dispatch checks whether the first argument is shaped
+  // like a case instead.
   return isCase(dataOrCase)
     ? dataLast(
         dataOrCase,
-        // @ts-expect-error [ts2345] -- The overloads guarantee that every case accepts the data, which a single signature can't express.
+        // @ts-expect-error [ts2345] -- The overloads guarantee that every argument after the first is a case or the fallback; the implementation signature types them `unknown` because the optional `fallback` also admits `undefined`.
         ...cases,
       )
     : conditionalImplementation(
         dataOrCase,
-        // @ts-expect-error [ts2345] -- The overloads guarantee that every case accepts the data, which a single signature can't express.
+        // @ts-expect-error [ts2345] -- The overloads guarantee that every argument after the first is a case or the fallback; the implementation signature types them `unknown` because the optional `fallback` also admits `undefined`.
         ...cases,
       );
 }
