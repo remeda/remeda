@@ -8,7 +8,6 @@ import type {
   Tagged,
   ValueOf,
 } from "type-fest";
-import type { HasWritableKeys } from "./internal/types/HasWritableKeys";
 import type { TupleParts } from "./internal/types/TupleParts";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- we use a non-exported unique symbol to prevent users from faking our return type.
@@ -94,6 +93,13 @@ type EmptyishObject<T extends object> = T extends {
           : // But immutable objects could be rewritten to prevent any
             // mutations.
             { readonly [P in keyof T]: never };
+
+// TODO [>2]: type-fest's version of this utility type fails on TypeScript versions before 5.3 on inputs that have a readonly index signature, e.g., `Readonly<Record<string, string>>`. Once our minimal TypeScript version is past that version we can remove this workaround.
+type HasWritableKeys<T> =
+  // If making all props of the type readonly doesn't change anything about it
+  // it means that none of its props are **not** readonly, so it doesn't have
+  // any mutable/writable keys
+  IsEqual<Readonly<T>, T> extends true ? false : true;
 
 // We use certain props to check for emptiness effectively, but that means we
 // will return those values for any object that has them. Because we don't know
