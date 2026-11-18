@@ -3,7 +3,7 @@
  * generally, but these eslint rules can't detect that.
  */
 
-import { purryOn } from "./internal/purryOn";
+import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { GuardType } from "./internal/types/GuardType";
 
 type Case<
@@ -721,9 +721,29 @@ export function conditional<
   | Return9
   | Fallback;
 
-export function conditional(...args: readonly unknown[]): unknown {
-  return purryOn(isCase, conditionalImplementation, args);
+export function conditional(
+  dataOrCase: unknown,
+  ...cases: readonly unknown[]
+): unknown {
+  // The cases are variadic, so the argument count can't tell the call styles
+  // apart; only the shape of the first argument can.
+  return isCase(dataOrCase)
+    ? dataLast(
+        dataOrCase,
+        // @ts-expect-error [ts2345] -- The overloads guarantee that every case accepts the data, which a single signature can't express.
+        ...cases,
+      )
+    : conditionalImplementation(
+        dataOrCase,
+        // @ts-expect-error [ts2345] -- The overloads guarantee that every case accepts the data, which a single signature can't express.
+        ...cases,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof conditionalImplementation> =
+  (...cases) =>
+  (data) =>
+    conditionalImplementation(data, ...cases);
 
 function conditionalImplementation<In, Out>(
   data: In,
