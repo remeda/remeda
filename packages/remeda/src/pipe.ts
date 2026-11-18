@@ -18,9 +18,9 @@ import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
  * iteration early, they process data item-by-item rather than creating
  * intermediate arrays. This enables early termination when only partial
  * results are needed, improving performance for large datasets and expensive
- * operations. On arrays, consecutive lazy functions without one that can end
- * the iteration early run one after the other, each the same as its
- * data-first call.
+ * operations. Consecutive lazy functions without one that can end the
+ * iteration early run one after the other, each the same as its data-first
+ * call.
  *
  * Functions are only evaluated lazily when their data-last form is used
  * directly in the pipe. To disable lazy evaluation, use data-first calls via
@@ -299,7 +299,8 @@ export function pipe(
 
     const nextFunction = functions[functionIndex + 1];
     if (
-      // A sequence of one has nothing to fuse with.
+      // A sequence of one (this is the last function, the next one isn't lazy,
+      // or this one reduces, which ends its sequence) has nothing to fuse with.
       nextFunction === undefined ||
       !("lazy" in nextFunction) ||
       currentFunction.lazy.isReducing ||

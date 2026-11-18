@@ -13,7 +13,7 @@ The dispatch takes one of four forms:
 - When the argument count can't tell the styles apart (an optional parameter in `flat`, a rest parameter in `dropFirstBy`, a third call style in `zipWith`): a `typeof` check on an argument, with the same builder and `withLazyImplementation`.
 - Order-rule functions (`sortBy`, `firstBy`, `nthBy`, `rankBy`, `takeFirstBy`) go through the `purryOrderRules` module, and `splice` and `conditional` through `purryOn`; these, like the variadic `prop` and `when`, take the arguments as an array.
 
-A lazy function still gets a plain eager implementation for its data-first call, even when it mirrors the evaluator (`unique`, `difference`): running the evaluator item by item outside `pipe` costs a call and a result classification per item, and bundles the lazy runner into every data-first import. The two must give the same result for every input. `pipe` picks between them per sequence and per input kind, so a mismatch shows up as a pipe whose result changes when an unrelated step is added or removed.
+A lazy function still gets a plain eager implementation for its data-first call, even when it mirrors the evaluator (`unique`, `difference`): running the evaluator item by item outside `pipe` costs a call and a result classification per item, and bundles the lazy runner into every data-first import. The two must give the same result for every input. `pipe` picks between them per sequence, so a mismatch shows up as a pipe whose result changes when an unrelated step is added or removed.
 
 ## Lazy evaluation
 
@@ -32,7 +32,7 @@ From `src/internal/makeStoppable.ts`, only for evaluators that can end the itera
 - **Emit one value and stop**: return `lastLazyValue(value, slot)`.
 - **Stop without emitting**: return `STOP`; an evaluator that stops on the first item is `LAZY_EMPTY_EVALUATOR`, used as the evaluator itself.
 
-Such evaluators are typed `StoppableLazyEvaluator`, and their lazy implementation is wrapped with `makeStoppable(lazyImplementation)`: `pipe` reads that mark to decide whether to fuse a sequence on an array, and the types reject a `StoppableLazyEvaluator` from an unwrapped implementation.
+Such evaluators are typed `StoppableLazyEvaluator`, and their lazy implementation is wrapped with `makeStoppable(lazyImplementation)`: `pipe` reads that mark to decide whether to fuse a sequence, and the types reject a `StoppableLazyEvaluator` from an unwrapped implementation.
 
 `slot` belongs to the pipe calling the evaluator, which reads the payload as soon as the evaluator returns. Declare it only in evaluators that call one of the two helpers (`(value, _index, _data, slot) => ...`), and pass it only to them.
 

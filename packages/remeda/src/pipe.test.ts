@@ -17,6 +17,7 @@ import { multiply } from "./multiply";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
 import { take } from "./take";
+import { takeWhile } from "./takeWhile";
 
 test("should pass through data with 0 functions", () => {
   const data = { a: "hello", b: 123 };
@@ -118,7 +119,7 @@ describe("lazy", () => {
     });
   });
 
-  describe("a lone lazy function on an array", () => {
+  describe("a lone lazy function", () => {
     test("a callback that doesn't declare `data` gets the array, not the sentinel", () => {
       const data = [1, 2, 3];
       const mapper = vi.fn<
@@ -155,14 +156,70 @@ describe("lazy", () => {
       expect(pipeKeys).toStrictEqual(dataFirstKeys);
     });
 
-    test("a callback gets the whole array a non-lazy function returned", () => {
-      expect(
-        pipe(
-          { inner: [1, 2, 3] },
-          prop("inner"),
-          map((_value, _index, data) => data.length),
-        ),
-      ).toStrictEqual([3, 3, 3]);
+    describe("gets each item's index and the complete array", () => {
+      test("as the only step", () => {
+        expect(
+          pipe(
+            [1, 2, 3],
+            map((x, index, data) => [x, index, [...data]]),
+          ),
+        ).toStrictEqual([
+          [1, 0, [1, 2, 3]],
+          [2, 1, [1, 2, 3]],
+          [3, 2, [1, 2, 3]],
+        ]);
+      });
+
+      test("after a non-lazy step", () => {
+        expect(
+          pipe(
+            [1, 2, 3],
+            identity(),
+            map((x, index, data) => [x, index, [...data]]),
+          ),
+        ).toStrictEqual([
+          [1, 0, [1, 2, 3]],
+          [2, 1, [1, 2, 3]],
+          [3, 2, [1, 2, 3]],
+        ]);
+      });
+
+      test("before a non-lazy step", () => {
+        expect(
+          pipe(
+            [1, 2, 3],
+            map((x, index, data) => [x, index, [...data]]),
+            identity(),
+          ),
+        ).toStrictEqual([
+          [1, 0, [1, 2, 3]],
+          [2, 1, [1, 2, 3]],
+          [3, 2, [1, 2, 3]],
+        ]);
+      });
+    });
+
+    // Fused, the predicate would get only the items read so far and stop on
+    // the first one.
+    describe("that can stop early still gets the complete array", () => {
+      test("as the only step", () => {
+        expect(
+          pipe(
+            [1, 2, 3],
+            takeWhile((_value, _index, data) => data.length === 3),
+          ),
+        ).toStrictEqual([1, 2, 3]);
+      });
+
+      test("before a non-lazy step", () => {
+        expect(
+          pipe(
+            [1, 2, 3],
+            takeWhile((_value, _index, data) => data.length === 3),
+            identity(),
+          ),
+        ).toStrictEqual([1, 2, 3]);
+      });
     });
   });
 
@@ -244,7 +301,7 @@ describe("lazy", () => {
   });
 
   describe("run order", () => {
-    test("a sequence on an array that can't stop early runs step by step", () => {
+    test("a sequence that can't stop early runs step by step", () => {
       const calls: string[] = [];
       pipe(
         [1, 2],
@@ -297,7 +354,7 @@ describe("lazy", () => {
     });
   });
 
-  describe("a sequence on an array that can't stop early", () => {
+  describe("a sequence that can't stop early", () => {
     test("the first step's callbacks get the input array", () => {
       const data = [1, 2, 3];
       const mapper = vi.fn<
@@ -424,49 +481,6 @@ describe("lazy", () => {
       );
 
       expect(calls).toStrictEqual(["map", "map", "filter", "filter"]);
-    });
-  });
-
-  describe("a lone step gets each item's index and the complete array", () => {
-    test("as the only step", () => {
-      expect(
-        pipe(
-          [1, 2, 3],
-          map((x, index, data) => [x, index, [...data]]),
-        ),
-      ).toStrictEqual([
-        [1, 0, [1, 2, 3]],
-        [2, 1, [1, 2, 3]],
-        [3, 2, [1, 2, 3]],
-      ]);
-    });
-
-    test("after a non-lazy step", () => {
-      expect(
-        pipe(
-          [1, 2, 3],
-          identity(),
-          map((x, index, data) => [x, index, [...data]]),
-        ),
-      ).toStrictEqual([
-        [1, 0, [1, 2, 3]],
-        [2, 1, [1, 2, 3]],
-        [3, 2, [1, 2, 3]],
-      ]);
-    });
-
-    test("before a non-lazy step", () => {
-      expect(
-        pipe(
-          [1, 2, 3],
-          map((x, index, data) => [x, index, [...data]]),
-          identity(),
-        ),
-      ).toStrictEqual([
-        [1, 0, [1, 2, 3]],
-        [2, 1, [1, 2, 3]],
-        [3, 2, [1, 2, 3]],
-      ]);
     });
   });
 });

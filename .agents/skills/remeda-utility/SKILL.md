@@ -23,7 +23,7 @@ Each function has up to three test files:
 Across all three:
 
 - Test names are terse, in the function's own vocabulary ("lazy early exit with a many control", not "take and flat"), and needn't read as prose.
-- Tests sit at the top level of the file, grouped in a `describe()` only when every test in it reads better under the group's name. Names sharing a prefix or suffix ("data last ...", "... after a non-lazy step") signal a group: the shared words move into the `describe` name and out of the test names.
+- Tests sit at the top level of the file, grouped in a `describe()` only when every test in it reads better under the group's name. Names sharing a prefix or suffix ("data last ...", "... with a `__proto__` key") signal a group: the shared words move into the `describe` name and out of the test names.
 - Each test checks one case. A test asserting on several inputs or behaviors splits into one test per case, and the cases of one scenario group under a `describe` named after it.
 - Every test calls the function under test directly, so one failing test shows what failed without learning the file's structure. Helpers live in the test file (the only shared ones are the modules in `test/`, such as `forceFusion` and `$typed`) and may build inputs and fixtures (a `withNullPrototype(data)` that rebuilds an object without a prototype), never wrap the subject (a `run(...)` that calls it).
 - A test is one expression where it can be: the call sits inside `expect(...)` or `expectTypeOf(...)` with its inputs inline, `expect(chunk([1, 2, 3], 2)).toStrictEqual([[1, 2], [3]])`, so the reader follows one expression instead of tracing names. A local `const` holds only a value the test uses more than once: a mock, or a result asserted twice.

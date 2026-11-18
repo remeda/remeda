@@ -178,6 +178,15 @@ describe(runFusedSequence, () => {
       ).toStrictEqual([0, 1]);
     });
 
+    test("advances past an item the step skipped", () => {
+      expect(
+        runFusedSequence(
+          ["a", "b", "c", "d", "e"],
+          [step((_value, index) => (index % 2 === 0 ? index : SKIP_ITEM))],
+        ),
+      ).toStrictEqual([0, 2, 4]);
+    });
+
     test("advances once per fan-out for the step that fans out", () => {
       expect(
         runFusedSequence(

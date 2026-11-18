@@ -48,7 +48,7 @@ export type LazyEvaluatorFactoryOf<
 // The empty case comes first, as an empty tuple also matches
 // `[(infer Single)?]`. A single argument is stored as is, which spares every
 // data-last call an array.
-export type LazyArgument<P extends readonly unknown[]> = P extends readonly []
+type LazyArgument<P extends readonly unknown[]> = P extends readonly []
   ? undefined
   : P extends readonly [(infer Single)?]
     ? Single
