@@ -106,17 +106,6 @@ describe("lazy", () => {
       expect(dataLengths).toStrictEqual([2, 2]);
     });
 
-    test("at the start of a sequence on another iterable", () => {
-      expect(
-        pipe(
-          [[1, 2], [3]].values(),
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
-          first(),
-          map(identity()),
-        ),
-      ).toStrictEqual([1, 2]);
-    });
-
     test("ending a fused sequence", () => {
       expect(
         pipe(
@@ -174,78 +163,6 @@ describe("lazy", () => {
           map((_value, _index, data) => data.length),
         ),
       ).toStrictEqual([3, 3, 3]);
-    });
-  });
-
-  describe("a lone lazy function on another iterable", () => {
-    test("skips items", () => {
-      expect(
-        pipe(
-          [0, 1, 2, 3].values(),
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
-          filter((x: number) => x % 2 === 0),
-        ),
-      ).toStrictEqual([0, 2]);
-    });
-
-    test("fans out items", () => {
-      expect(
-        pipe(
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
-          [1, 2].values(),
-          flatMap((x: number) => [x, x * 10]),
-        ),
-      ).toStrictEqual([1, 10, 2, 20]);
-    });
-
-    test("stops pulling when it stops without a value", () => {
-      const input = [1, 2, 3].values();
-      pipe(
-        input,
-        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
-        take(0),
-      );
-
-      // `take(0)` can only stop once it gets an item, and an array iterator
-      // stays open when the loop reading it exits.
-      expect([...input]).toStrictEqual([2, 3]);
-    });
-
-    test("symbol items pass through as items, not control signals", () => {
-      const item = Symbol("item");
-
-      expect(
-        pipe(
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
-          [0].values(),
-          map(() => item),
-        ),
-      ).toStrictEqual([item]);
-    });
-
-    test("items are never probed", () => {
-      // A revoked proxy throws on every trap, so the item survives the pipe only
-      // if nothing but its identity was used.
-      const { proxy: item, revoke } = Proxy.revocable({}, {});
-      revoke();
-      const [result] = pipe(
-        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
-        [item].values(),
-        map(identity()),
-      );
-
-      expect(result).toBe(item);
-    });
-
-    test("reads the iterable a non-lazy function returned", () => {
-      expect(
-        pipe(
-          { inner: [1, 2, 3] },
-          ({ inner }) => inner.values(),
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
-          map(multiply(10)),
-        ),
-      ).toStrictEqual([10, 20, 30]);
     });
   });
 
@@ -319,19 +236,6 @@ describe("lazy", () => {
       ).toBe(item);
     });
 
-    test("pulls from another iterable only until done", () => {
-      const input = [1, 2, 3].values();
-      pipe(
-        input,
-        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
-        map(multiply(10)),
-        take(1),
-      );
-
-      // An array iterator stays open when the loop reading it exits.
-      expect([...input]).toStrictEqual([2, 3]);
-    });
-
     test("the function after it still runs", () => {
       expect(pipe([1, 2, 3], map(multiply(10)), take(2), join(","))).toBe(
         "10,20",
@@ -390,24 +294,6 @@ describe("lazy", () => {
       );
 
       expect(calls).toStrictEqual(["map", "find", "map", "find"]);
-    });
-
-    test("a sequence on another iterable runs item by item", () => {
-      const calls: string[] = [];
-      pipe(
-        [1, 2].values(),
-        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
-        map((x: number) => {
-          calls.push("map");
-          return x;
-        }),
-        filter(() => {
-          calls.push("filter");
-          return true;
-        }),
-      );
-
-      expect(calls).toStrictEqual(["map", "filter", "map", "filter"]);
     });
   });
 
@@ -541,67 +427,46 @@ describe("lazy", () => {
     });
   });
 
-  describe.each([
-    [
-      "an array",
-      "the complete array",
-      (): readonly number[] => [1, 2, 3, 4],
-      [
-        [1, 0, [1, 2, 3, 4]],
-        [2, 1, [1, 2, 3, 4]],
-        [3, 2, [1, 2, 3, 4]],
-        [4, 3, [1, 2, 3, 4]],
-      ],
-    ],
-    [
-      "a generator",
-      "the items so far",
-      // @ts-expect-error [ts2740] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
-      (): readonly number[] => upTo(4),
-      [
-        [1, 0, [1]],
-        [2, 1, [1, 2]],
+  describe("a lone step gets each item's index and the complete array", () => {
+    test("as the only step", () => {
+      expect(
+        pipe(
+          [1, 2, 3],
+          map((x, index, data) => [x, index, [...data]]),
+        ),
+      ).toStrictEqual([
+        [1, 0, [1, 2, 3]],
+        [2, 1, [1, 2, 3]],
         [3, 2, [1, 2, 3]],
-        [4, 3, [1, 2, 3, 4]],
-      ],
-    ],
-  ])(
-    "a lone step on %s gets each item's index and %s",
-    (_name, _data, input, expected) => {
-      test("as the only step", () => {
-        expect(
-          pipe(
-            input(),
-            map((x, index, data) => [x, index, [...data]]),
-          ),
-        ).toStrictEqual(expected);
-      });
+      ]);
+    });
 
-      test("after a non-lazy step", () => {
-        expect(
-          pipe(
-            input(),
-            identity(),
-            map((x, index, data) => [x, index, [...data]]),
-          ),
-        ).toStrictEqual(expected);
-      });
+    test("after a non-lazy step", () => {
+      expect(
+        pipe(
+          [1, 2, 3],
+          identity(),
+          map((x, index, data) => [x, index, [...data]]),
+        ),
+      ).toStrictEqual([
+        [1, 0, [1, 2, 3]],
+        [2, 1, [1, 2, 3]],
+        [3, 2, [1, 2, 3]],
+      ]);
+    });
 
-      test("before a non-lazy step", () => {
-        expect(
-          pipe(
-            input(),
-            map((x, index, data) => [x, index, [...data]]),
-            identity(),
-          ),
-        ).toStrictEqual(expected);
-      });
-    },
-  );
+    test("before a non-lazy step", () => {
+      expect(
+        pipe(
+          [1, 2, 3],
+          map((x, index, data) => [x, index, [...data]]),
+          identity(),
+        ),
+      ).toStrictEqual([
+        [1, 0, [1, 2, 3]],
+        [2, 1, [1, 2, 3]],
+        [3, 2, [1, 2, 3]],
+      ]);
+    });
+  });
 });
-
-function* upTo(last: number): Generator<number> {
-  for (let value = 1; value <= last; value++) {
-    yield value;
-  }
-}

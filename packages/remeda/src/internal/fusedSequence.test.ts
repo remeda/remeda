@@ -140,27 +140,6 @@ describe(runFusedSequence, () => {
 
       expect(keys).toStrictEqual([Symbol.iterator]);
     });
-
-    test("a string is iterated by character", () => {
-      expect(runFusedSequence("abc", [step()])).toStrictEqual(["a", "b", "c"]);
-    });
-
-    test("a generator is pulled only until done", () => {
-      expect(
-        runFusedSequence(naturals(), [
-          step((value, index, _data, slot) =>
-            index === 2 ? lastLazyValue(value, slot) : value,
-          ),
-        ]),
-      ).toStrictEqual([0, 1, 2]);
-    });
-
-    test("a generator is closed when done", () => {
-      const onClose = vi.fn<() => void>();
-      runFusedSequence(closesWith(onClose), [step(() => STOP)]);
-
-      expect(onClose).toHaveBeenCalledTimes(1);
-    });
   });
 
   describe("items", () => {
@@ -554,19 +533,3 @@ const stepWithData = (lazyEvaluator: LazyEvaluator) =>
     requiresData: true,
     data: [],
   }) as const satisfies LazyStep;
-
-// Never finishes on its own, so only a loop that stops pulling can consume it.
-function* naturals(): Generator<number> {
-  for (let value = 0; ; value++) {
-    yield value;
-  }
-}
-
-// A `for...of` that exits early closes the generator, which runs its `finally`.
-function* closesWith(onClose: () => void): Generator<number> {
-  try {
-    yield* [1, 2, 3];
-  } finally {
-    onClose();
-  }
-}

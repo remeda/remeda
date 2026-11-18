@@ -4,7 +4,6 @@
 
 import type { UnaryFunction } from "./internal/dataLastImplementation";
 import { buildFusedSequence, runFusedSequence } from "./internal/fusedSequence";
-import { iterableDataFirst } from "./internal/iterableDataFirst";
 import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
 
 /**
@@ -300,35 +299,28 @@ export function pipe(
 
     const nextFunction = functions[functionIndex + 1];
     if (
+      // A sequence of one has nothing to fuse with.
       nextFunction === undefined ||
       !("lazy" in nextFunction) ||
-      currentFunction.lazy.isReducing
-    ) {
-      // A sequence of one has nothing to fuse with.
-      output = Array.isArray(output)
-        ? currentFunction(output)
-        : iterableDataFirst(
-            // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
-            output,
-            currentFunction.lazy,
-            currentFunction.lazyArgument,
-          );
-      continue;
-    }
-
-    if (Array.isArray(output) && !isStoppableFrom(functions, functionIndex)) {
+      currentFunction.lazy.isReducing ||
       // Fusing a sequence pays off only when one of its steps can end the
-      // iteration early, which skips the work of the remaining items. Without one, every
-      // item goes through every step anyway, so an array goes through each
-      // function's data-first implementation in turn instead, trading the
-      // per-item step bookkeeping for an intermediate array per step. Other
-      // iterables always fuse, as those implementations only accept arrays.
+      // iteration early, which skips the work of the remaining items. Without
+      // one, every item goes through every step anyway, so each function's
+      // data-first implementation runs in turn instead, trading the per-item
+      // step bookkeeping for an intermediate array per step.
+      !isStoppableFrom(functions, functionIndex)
+    ) {
+      // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept arrays.
       output = currentFunction(output);
       continue;
     }
 
     const fusedSequence = buildFusedSequence(functions, functionIndex);
-    const fusedOutput = runFusedSequence(output, fusedSequence);
+    const fusedOutput = runFusedSequence(
+      // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept arrays.
+      output,
+      fusedSequence,
+    );
     functionIndex += fusedSequence.length - 1;
 
     // @ts-expect-error [ts2322] -- TypeScript can't follow the logic that `functionIndex` is pointing to the last function in `fusedSequence`.

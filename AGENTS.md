@@ -71,7 +71,7 @@ Each dual-style function picks its calling style at runtime, from a `typeof` che
 
 Data-last functions rely on contextual typing: TypeScript infers their type parameters from the call they appear in, a step in `pipe` or a callback argument (`map(data, prop("a"))`). A partially applied function stored for later (`const getA = prop("a")`) has no contextual type and is unsupported, and so is passing the function itself as a reference: `pipe(data, entries())`, not `pipe(data, entries)`.
 
-`pipe(data, fn1, fn2, fn3)` chains data-last functions. When consecutive functions carry a `lazy` property (attached by the lazy helpers in `src/internal/`) and one can end the iteration early (marked with `makeStoppable`, e.g., `take(3)`), `pipe` fuses them and processes items **one-by-one**, skipping the rest of the input and the intermediate arrays. On arrays, any other lazy function runs its data-first implementation; other iterables always run lazily.
+`pipe(data, fn1, fn2, fn3)` chains data-last functions. When consecutive functions carry a `lazy` property (attached by the lazy helpers in `src/internal/`) and one can end the iteration early (marked with `makeStoppable`, e.g., `take(3)`), `pipe` fuses them and processes items **one-by-one**, skipping the rest of the input and the intermediate arrays. Any other lazy function runs its data-first implementation.
 
 ## Conventions
 

@@ -76,38 +76,25 @@ export function buildFusedSequence(
  * Runs `input` through the steps one item at a time rather than one function at
  * a time, so a step that stops skips the remaining items in every step.
  *
- * @param input - The iterable to run through the steps.
+ * @param input - The array to run through the steps.
  * @param fusedSequence - The steps from `buildFusedSequence`. Running them
  * advances their state in place, so they serve this one call only.
  * @returns The items that left the last step; the caller unwraps a reducing
  * step's value.
  * @see buildFusedSequence
- * @see iterableDataFirst
  */
 export function runFusedSequence(
-  input: unknown,
+  input: readonly unknown[],
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the data buffer and the item index) to avoid per-item allocations.
   fusedSequence: readonly LazyStep[],
 ): unknown[] {
   const accumulator: unknown[] = [];
   const slot = createLazySlot();
 
-  if (Array.isArray(input)) {
-    for (const item of input) {
-      const isDone = processItem(fusedSequence, accumulator, item, slot, 0);
-      if (isDone) {
-        break;
-      }
-    }
-
-    // eslint-disable-next-line unicorn/no-duplicate-if-branches -- Intentional! Identical on purpose. In V8, a `for...of` that has only ever seen arrays skips the iterator protocol; each loop is its own iteration site, so sets, strings and generators only reach the second, and the compiler can specialize the first for arrays.
-  } else {
-    // @ts-expect-error [ts18046] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
-    for (const item of input) {
-      const isDone = processItem(fusedSequence, accumulator, item, slot, 0);
-      if (isDone) {
-        break;
-      }
+  for (const item of input) {
+    const isDone = processItem(fusedSequence, accumulator, item, slot, 0);
+    if (isDone) {
+      break;
     }
   }
 
