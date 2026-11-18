@@ -2,7 +2,7 @@ import {
   purryOrderRulesWithArgument,
   type OrderRules,
 } from "./internal/purryOrderRules";
-import { quickSelect } from "./internal/quickSelect";
+import { swapInPlace } from "./internal/swapInPlace";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
@@ -52,14 +52,82 @@ export function nthBy(...args: readonly unknown[]): unknown {
   return purryOrderRulesWithArgument(nthByImplementation, args);
 }
 
-const nthByImplementation = <T>(
+function nthByImplementation<T>(
   data: readonly T[],
   compareFn: CompareFunction<T>,
   index: number,
-): T | undefined =>
-  quickSelect(
-    data,
-    // Allow negative indices gracefully
-    index >= 0 ? index : data.length + index,
-    compareFn,
-  );
+): T | undefined {
+  // Negative indices count back from the end, like `Array.prototype.at`.
+  const absoluteIndex = index >= 0 ? index : data.length + index;
+  return absoluteIndex < 0 || absoluteIndex >= data.length
+    ? // QuickSelect only works on indices within the array.
+      undefined
+    : quickSelect(
+        // QuickSelect partitions the array in place, so it runs on a copy.
+        data.concat(),
+        0,
+        data.length - 1,
+        absoluteIndex,
+        compareFn,
+      );
+}
+
+/**
+ * Finds the item that would be at `index` if `data` were sorted, by
+ * partitioning only the range that contains it.
+ *
+ * @see https://en.wikipedia.org/wiki/Quickselect
+ */
+function quickSelect<T>(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The algorithm partitions the array in place.
+  data: T[],
+  left: number,
+  right: number,
+  index: number,
+  compareFn: CompareFunction<T>,
+): T {
+  if (left === right) {
+    return data[left]!;
+  }
+
+  const pivotIndex = partition(data, left, right, compareFn);
+
+  return index === pivotIndex
+    ? // Once a pivot is chosen its location is final, so if it matches the
+      // index we found our item!
+      data[index]!
+    : quickSelect(
+        data,
+        // We continue by recursing into the partition where index would be
+        index < pivotIndex ? left : pivotIndex + 1,
+        index < pivotIndex ? pivotIndex - 1 : right,
+        index,
+        compareFn,
+      );
+}
+
+function partition<T>(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The algorithm partitions the array in place.
+  data: T[],
+  left: number,
+  right: number,
+  compareFn: CompareFunction<T>,
+): number {
+  const pivot = data[right]!;
+
+  let i = left;
+  for (let j = left; j < right; j++) {
+    if (!(compareFn(data[j]!, pivot) < 0)) {
+      continue;
+    }
+
+    // Move items smaller than the pivot to the start of the array.
+    swapInPlace(data, i, j);
+    i += 1;
+  }
+
+  swapInPlace(data, i, right);
+
+  // The location of the pivot by the end of the partition function.
+  return i;
+}
