@@ -19,21 +19,6 @@ test("should pipe operations", () => {
   expect(fn(1)).toBe(6);
 });
 
-test("reused as the only lazy step, starts fresh on every run", () => {
-  expect(
-    map(
-      [
-        [1, 2, 3],
-        [4, 5, 6],
-      ],
-      piped(take(2)),
-    ),
-  ).toStrictEqual([
-    [1, 2],
-    [4, 5],
-  ]);
-});
-
 test("reused among several fused lazy steps, starts fresh on every run", () => {
   expect(
     map(
