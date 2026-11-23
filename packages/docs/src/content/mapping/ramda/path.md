@@ -6,8 +6,9 @@ remeda: prop
 - Remeda's `prop` takes the data first, and the path as variadic arguments
   instead of an array.
 - A path only known at runtime (e.g., a `string[]`) can be spread into `prop`,
-  but it can't be validated against the object's type, so the result is typed
-  `unknown`.
+  but its keys aren't checked against the object's type.
+- The result of a runtime path is typed `unknown`, not the type of the property
+  it reaches; narrow it before use.
 
 #### Literal paths
 

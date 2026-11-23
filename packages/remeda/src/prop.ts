@@ -62,7 +62,8 @@ type Resolved<T> = T extends infer U ? U : never;
  *
  * A path whose length is only known at runtime (e.g., a `string[]`, or the
  * result of `stringToPath` on a non-literal string) can be spread into the
- * data-first form; it isn't validated, and the result is `unknown`.
+ * data-first form. Its keys aren't checked against the object type, and the
+ * result is typed `unknown` instead of the type of the property it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
@@ -267,7 +268,8 @@ export function prop<
  *
  * A path whose length is only known at runtime (e.g., a `string[]`, or the
  * result of `stringToPath` on a non-literal string) can be spread into the
- * data-first form; it isn't validated, and the result is `unknown`.
+ * data-first form. Its keys aren't checked against the object type, and the
+ * result is typed `unknown` instead of the type of the property it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
@@ -300,7 +302,8 @@ export function prop<Path extends readonly PropertyKey[]>(
  *
  * A path whose length is only known at runtime (e.g., a `string[]`, or the
  * result of `stringToPath` on a non-literal string) can be spread into the
- * data-first form; it isn't validated, and the result is `unknown`.
+ * data-first form. Its keys aren't checked against the object type, and the
+ * result is typed `unknown` instead of the type of the property it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *

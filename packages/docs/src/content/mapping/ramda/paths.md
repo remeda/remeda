@@ -5,8 +5,9 @@ category: Object
 _Not provided by Remeda._
 
 - Compose `paths` using [`map`](/docs#map) and [`prop`](/docs#prop).
-- As in Ramda, the paths aren't validated against the object's type, so the
-  results are typed `unknown`. If you passed a type argument to `R.paths` (e.g.,
+- As in Ramda, the keys in each path aren't checked against the object's type.
+- As in Ramda, the results are typed `unknown`, not the types of the properties
+  they reach. If you passed a type argument to `R.paths` (e.g.,
   `R.paths<number>(...)`), narrow the results yourself.
 
 #### Composition
