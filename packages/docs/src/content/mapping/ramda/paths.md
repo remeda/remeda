@@ -1,7 +1,8 @@
 ---
 category: Object
-remeda: prop
 ---
+
+_Not provided by Remeda._
 
 - Compose `paths` using [`map`](/docs#map) and [`prop`](/docs#prop).
 - As in Ramda, the paths aren't validated against the object's type, so the
