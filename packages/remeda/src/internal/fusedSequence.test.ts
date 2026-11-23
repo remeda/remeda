@@ -29,18 +29,20 @@ import { UNEXPECTED_ACCESS_SENTINEL } from "./unexpectedAccessSentinel";
 
 describe(buildFusedSequence, () => {
   test("takes consecutive lazy functions", () => {
-    expect(buildFusedSequence([lazy(), lazy()], 0)).toHaveLength(2);
+    expect(buildFusedSequence([lazy(), lazy()], 0, [])).toHaveLength(2);
   });
 
   test("starts at `startIndex`", () => {
     const skipped = vi.fn<() => LazyEvaluator>(() => (value) => value);
-    buildFusedSequence([lazyFunction(skipped), lazy()], 1);
+    buildFusedSequence([lazyFunction(skipped), lazy()], 1, []);
 
     expect(skipped).not.toHaveBeenCalled();
   });
 
   test("ends before a non-lazy function", () => {
-    expect(buildFusedSequence([lazy(), identity(), lazy()], 0)).toHaveLength(1);
+    expect(
+      buildFusedSequence([lazy(), identity(), lazy()], 0, []),
+    ).toHaveLength(1);
   });
 
   test("ends after a reducing function", () => {
@@ -48,6 +50,7 @@ describe(buildFusedSequence, () => {
       buildFusedSequence(
         [lazy(), lazyFunction(makeReducing(() => (value) => value)), lazy()],
         0,
+        [],
       ),
     ).toHaveLength(2);
   });
@@ -71,6 +74,7 @@ describe(buildFusedSequence, () => {
         ),
       ],
       0,
+      [],
     );
 
     expect(lazyImplementation).toHaveBeenCalledExactlyOnceWith([1, "a"]);
@@ -81,24 +85,50 @@ describe(buildFusedSequence, () => {
       () => (value) => value,
     );
     const lazyFunctions = [lazyFunction(lazyImplementation)];
-    buildFusedSequence(lazyFunctions, 0);
-    buildFusedSequence(lazyFunctions, 0);
+    buildFusedSequence(lazyFunctions, 0, []);
+    buildFusedSequence(lazyFunctions, 0, []);
 
     expect(lazyImplementation).toHaveBeenCalledTimes(2);
   });
 
   describe("data", () => {
-    test("an empty buffer when data is required", () => {
+    test("the input itself for a first step that requires data", () => {
+      const input = [1, 2, 3];
+
       expect(
         buildFusedSequence(
           [lazyFunction((): LazyEvaluator => requireData((value) => value))],
           0,
+          input,
+        )[0]?.data,
+      ).toBe(input);
+    });
+
+    test("an empty buffer for a first step on another iterable", () => {
+      expect(
+        buildFusedSequence(
+          [lazyFunction((): LazyEvaluator => requireData((value) => value))],
+          0,
+          new Set([1, 2, 3]),
         )[0]?.data,
       ).toStrictEqual([]);
     });
 
+    test("an empty buffer for a later step that requires data", () => {
+      expect(
+        buildFusedSequence(
+          [
+            lazy(),
+            lazyFunction((): LazyEvaluator => requireData((value) => value)),
+          ],
+          0,
+          [1, 2, 3],
+        )[1]?.data,
+      ).toStrictEqual([]);
+    });
+
     test("the sentinel when data isn't required", () => {
-      const data = buildFusedSequence([lazy()], 0)[0]?.data;
+      const data = buildFusedSequence([lazy()], 0, [])[0]?.data;
 
       // Asserting identity with `toBe` would make the matcher format the
       // sentinel on failure, which throws and hides the real mismatch.
@@ -241,11 +271,11 @@ describe(runFusedSequence, () => {
   });
 
   describe("data", () => {
-    test("the items so far when required", () => {
+    test("the items so far when the step collects them", () => {
       expect(
         runFusedSequence(
           [1, 2, 3],
-          [stepWithData((_value, _index, data) => [...data])],
+          [collectingStep((_value, _index, data) => [...data])],
         ),
       ).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
     });
@@ -255,7 +285,7 @@ describe(runFusedSequence, () => {
         runFusedSequence(
           [1, 2, 3],
           [
-            stepWithData((value, _index, data) =>
+            collectingStep((value, _index, data) =>
               value === 3 ? [...data] : SKIP_ITEM,
             ),
           ],
@@ -269,7 +299,7 @@ describe(runFusedSequence, () => {
           [1, 2, 3],
           [
             step((value) => (value === 2 ? SKIP_ITEM : value)),
-            stepWithData((_value, _index, data) => [...data]),
+            collectingStep((_value, _index, data) => [...data]),
           ],
         ),
       ).toStrictEqual([[1], [1, 3]]);
@@ -283,7 +313,7 @@ describe(runFusedSequence, () => {
             step((_value, _index, _data, slot) =>
               manyLazyValues([1, 2, 3], slot),
             ),
-            stepWithData((_value, _index, data) => [...data]),
+            collectingStep((_value, _index, data) => [...data]),
           ],
         ),
       ).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
@@ -543,15 +573,14 @@ const step = (lazyEvaluator: StoppableLazyEvaluator = (value) => value) =>
   ({
     lazyEvaluator,
     itemIndex: 0,
-    requiresData: false,
     data: UNEXPECTED_ACCESS_SENTINEL,
   }) as const satisfies LazyStep;
 
-const stepWithData = (lazyEvaluator: LazyEvaluator) =>
+const collectingStep = (lazyEvaluator: LazyEvaluator) =>
   ({
     lazyEvaluator,
     itemIndex: 0,
-    requiresData: true,
+    collectsData: true,
     data: [],
   }) as const satisfies LazyStep;
 

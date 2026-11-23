@@ -52,7 +52,8 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  * values.
  *
  * @param callbackfn - The callback function that receives the previous value,
- * the current element.
+ * the current element. Inside a `pipe`, its `data` argument might hold only the
+ * items processed so far; see `pipe`.
  * @param initialValue - The initial value to start the computation with.
  * @returns An array of successively computed values from the left side of the
  * array.

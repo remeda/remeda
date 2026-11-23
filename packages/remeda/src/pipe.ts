@@ -34,10 +34,12 @@ import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
  * The data-last variant `piped` builds the same pipe without initial data, to
  * pass as a callback: `map(data, piped(fn1, fn2))`.
  *
- * IMPORTANT: During lazy evaluation, callbacks using the third parameter (the
- * input array) receive only items processed up to that point, not the complete
- * array, and each item goes through the rest of the lazy functions before the
- * next one is read.
+ * IMPORTANT: Callbacks using the third parameter (the input array) receive the
+ * complete array wherever it already exists when their function runs. During
+ * lazy evaluation each item goes through all the lazy functions before the
+ * next one is read, so only the first of these functions has its complete
+ * input; the callbacks of the functions after it receive just the items that
+ * reached their function up to that point.
  *
  * @param data - The input data.
  * @param functions - A sequence of functions that take one argument and
@@ -90,15 +92,16 @@ import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
  *    }); //=> "[1, 2, 3, 4]" logged 4 times
  *
  *    // But when evaluated lazily together with a function that can end the
- *    // iteration early, data would only contain the items up to the current
- *    // index.
+ *    // iteration early, a function after the first only gets the items that
+ *    // reached it up to the current index.
  *    pipe(
  *      [1, 2, 3, 4],
+ *      map(multiply(10)),
  *      forEach((_item, _index, data) => {
  *        console.log(data);
  *      }),
  *      take(3),
- *    ); //=> "[1]", "[1, 2]", "[1, 2, 3]"
+ *    ); //=> "[10]", "[10, 20]", "[10, 20, 30]"
  * @dataFirst
  * @category Function
  */
@@ -327,7 +330,7 @@ export function pipe(
       continue;
     }
 
-    const fusedSequence = buildFusedSequence(functions, functionIndex);
+    const fusedSequence = buildFusedSequence(functions, functionIndex, output);
     const fusedOutput = runFusedSequence(output, fusedSequence);
     functionIndex += fusedSequence.length - 1;
 

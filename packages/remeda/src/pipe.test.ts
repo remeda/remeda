@@ -332,6 +332,54 @@ describe("lazy", () => {
       expect([...input]).toStrictEqual([2, 3]);
     });
 
+    test("the first step's callbacks get the input array", () => {
+      const data = [1, 2, 3];
+      const mapper = vi.fn<
+        (value: number, index: number, data: readonly number[]) => number
+      >((value, index, items) => value + index + items.length);
+      pipe(data, map(mapper), forceFusion());
+
+      expect(mapper.mock.calls[0]?.[2]).toBe(data);
+    });
+
+    test("the first step doesn't collect items into the input array", () => {
+      const data = [1, 2, 3];
+
+      expect(
+        pipe(
+          data,
+          map((value, index, items) => value + index + items.length),
+          forceFusion(),
+        ),
+      ).toStrictEqual([4, 6, 8]);
+      expect(data).toStrictEqual([1, 2, 3]);
+    });
+
+    test("the first step's callbacks get the items so far on another iterable", () => {
+      const mapper = vi.fn<LazyCallback<unknown[]>>((_value, _index, data) => [
+        ...data,
+      ]);
+      pipe(
+        // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
+        [1, 2, 3].values(),
+        map(mapper),
+        forceFusion(),
+      );
+
+      expect(mapper).toHaveNthReturnedWith(1, [1]);
+      expect(mapper).toHaveNthReturnedWith(2, [1, 2]);
+    });
+
+    test("a later step's callbacks get the items that reached it so far", () => {
+      const mapper = vi.fn<LazyCallback<unknown[]>>((_value, _index, data) => [
+        ...data,
+      ]);
+      pipe([1, 2, 3], map(multiply(10)), map(mapper), forceFusion());
+
+      expect(mapper).toHaveNthReturnedWith(1, [10]);
+      expect(mapper).toHaveNthReturnedWith(2, [10, 20]);
+    });
+
     test("the function after it still runs", () => {
       expect(pipe([1, 2, 3], map(multiply(10)), take(2), join(","))).toBe(
         "10,20",

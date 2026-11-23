@@ -137,6 +137,8 @@ export function find<
  * @param predicate - A function to execute for each element in the array. It
  * should return `true` to indicate a matching element has been found, and
  * `false` otherwise. A type-predicate can also be used to narrow the result.
+ * Inside a `pipe`, its `data` argument might hold only the items processed so
+ * far; see `pipe`.
  * @returns The first element in the array that satisfies the provided testing
  * function. Otherwise, `undefined` is returned.
  * @signature

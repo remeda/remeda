@@ -40,7 +40,7 @@ For functions that return a single scalar (e.g., `first()`), wrap the lazy imple
 
 ### Opting into the `data` buffer
 
-Buffering `data` costs an array push per item, so `pipe` does it only for evaluators marked `requiresData: true`, set by one of two helpers from `src/internal/requireData.ts`, which mark the evaluator they receive, so pass them a closure created for the call:
+Buffering `data` costs an array push per item, so `pipe` does it only for evaluators marked `requiresData: true` (the first step of a fused sequence on an array gets the input array itself instead of a buffer). The mark is set by one of two helpers from `src/internal/requireData.ts`, which mark the evaluator they receive, so pass them a closure created for the call:
 
 - `requireData(evaluator)`: the evaluator always needs `data`, as `uniqueWith`'s does (comparing each item against every earlier one).
 - `requireDataByArity(callback, dataParameterIndex, evaluator)`: the evaluator only forwards `data` to the user's `callback`. `dataParameterIndex` is where `data` sits in the callback's own parameters: 2 for `filter`, `flatMap`, `forEach`, `find`, `uniqueBy`; 3 for `mapWithFeedback`, `zipWith`.

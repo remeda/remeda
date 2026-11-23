@@ -48,7 +48,8 @@ export function takeWhile<
  *
  * @param predicate - A function to execute for each element in the array. It
  * should return `true` to keep taking elements, and `false` to stop. A
- * type-predicate can also be used to narrow the result.
+ * type-predicate can also be used to narrow the result. Inside a `pipe`, its
+ * `data` argument might hold only the items processed so far; see `pipe`.
  * @signature
  *    takeWhile(predicate)(data)
  * @example

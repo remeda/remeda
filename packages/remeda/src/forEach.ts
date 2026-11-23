@@ -44,6 +44,8 @@ export function forEach<T extends IterableContainer>(
  * the input's type, `readonly` included.
  *
  * @param callbackfn - A function to execute for each element in the array.
+ * Inside a `pipe`, its `data` argument might hold only the items processed so
+ * far; see `pipe`.
  * @returns The original array (the ref itself, not a shallow copy of it).
  * @signature
  *    forEach(callbackfn)(data)

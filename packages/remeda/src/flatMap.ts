@@ -40,7 +40,8 @@ export function flatMap<T, U>(
  *
  * @param callbackfn - A function to execute for each element in the array. It
  * should return an array containing new elements of the new array, or a single
- * non-array value to be added to the new array.
+ * non-array value to be added to the new array. Inside a `pipe`, its `data`
+ * argument might hold only the items processed so far; see `pipe`.
  * @returns A new array with each element being the result of the callback
  * function and flattened by a depth of 1.
  * @signature

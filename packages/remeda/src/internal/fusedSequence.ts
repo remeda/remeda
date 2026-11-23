@@ -10,14 +10,17 @@ export type LazyStep = {
   itemIndex: number;
 } & (
   | {
-      readonly requiresData: true;
+      readonly collectsData: true;
       // Notice the array is mutable, we will be adding items as the pipe is
       // evaluating them. It is shared with every invocation of the evaluator.
       readonly data: unknown[];
     }
   | {
-      readonly requiresData: false;
-      readonly data: typeof UNEXPECTED_ACCESS_SENTINEL;
+      readonly collectsData?: never;
+      // Nothing to collect: the sentinel, for an evaluator that doesn't
+      // require data, or the input itself, for the first step of a sequence
+      // that runs on an array.
+      readonly data: typeof UNEXPECTED_ACCESS_SENTINEL | readonly unknown[];
     }
 );
 
@@ -28,6 +31,8 @@ export type LazyStep = {
  *
  * @param functions - The functions of the pipe.
  * @param startIndex - The index of the first function in the sequence.
+ * @param input - The value the sequence will run on. When it is an array, the
+ * first step reads it as its `data`.
  * @returns One step per function in the sequence, each with its own fresh
  * evaluator, ready for a single `runFusedSequence` call. The length of the
  * result is the number of functions the sequence covers.
@@ -36,6 +41,7 @@ export type LazyStep = {
 export function buildFusedSequence(
   functions: readonly (UnaryFunction | LazyUnaryFunction)[],
   startIndex: number,
+  input: unknown,
 ): readonly LazyStep[] {
   const fusedSequence: LazyStep[] = [];
 
@@ -49,18 +55,14 @@ export function buildFusedSequence(
     const lazyEvaluator = currentFunction.lazy(currentFunction.lazyArgument);
     fusedSequence.push(
       lazyEvaluator.requiresData
-        ? {
-            lazyEvaluator,
-            itemIndex: 0,
-            requiresData: true,
-            data: [],
-          }
-        : {
-            lazyEvaluator,
-            itemIndex: 0,
-            requiresData: false,
-            data: UNEXPECTED_ACCESS_SENTINEL,
-          },
+        ? index === startIndex && Array.isArray(input)
+          ? // Every item of the input reaches the first step, in order, so an
+            // input array already is that step's data, the same as in its
+            // data-first call. Any other iterable is collected item by item,
+            // like the items that reach a later step.
+            { lazyEvaluator, itemIndex: 0, data: input }
+          : { lazyEvaluator, itemIndex: 0, data: [], collectsData: true }
+        : { lazyEvaluator, itemIndex: 0, data: UNEXPECTED_ACCESS_SENTINEL },
     );
 
     if (currentFunction.lazy.isReducing) {
@@ -139,7 +141,7 @@ function processItem(
   ) {
     const step = fusedSequence[stepIndex]!;
 
-    if (step.requiresData) {
+    if (step.collectsData) {
       step.data.push(currentItem);
     }
 
