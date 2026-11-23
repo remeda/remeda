@@ -35,7 +35,8 @@ export function map<T extends IterableContainer, U>(
  * on every element in the calling array. Equivalent to `Array.prototype.map`.
  *
  * @param callbackfn - A function to execute for each element in the array. Its
- * return value is added as a single element in the new array.
+ * return value is added as a single element in the new array. Inside a `pipe`,
+ * its `data` argument might hold only the items processed so far; see `pipe`.
  * @returns A new array with each element being the result of the callback
  * function.
  * @signature

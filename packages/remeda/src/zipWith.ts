@@ -21,9 +21,9 @@ type ZippingFunction<
   data: readonly [first: T, second: S],
 ) => Value;
 
-// Inside `pipe` the first list flows through lazily, so the callback only sees
-// the items processed so far, while the second list is provided upfront and is
-// always complete.
+// Inside `pipe` the first list can flow through lazily, and the callback might
+// then see only the items processed so far, while the second list is provided
+// upfront and is always complete.
 type LazyZippingFunction<
   T extends IterableContainer = IterableContainer,
   S extends IterableContainer = IterableContainer,
@@ -55,7 +55,9 @@ export function zipWith<T, S, Value>(
  * with the same-positioned element from each list.
  *
  * @param other - The second input list.
- * @param fn - The function applied to each position of the list.
+ * @param fn - The function applied to each position of the list. Inside a
+ * `pipe`, the first list in its `data` argument might hold only the items
+ * processed so far; see `pipe`.
  * @signature
  *   zipWith(other, fn)(data)
  * @example

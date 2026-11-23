@@ -31,7 +31,8 @@ export function dropWhile<T extends IterableContainer>(
  *
  * The predicate is applied to each element in the array, until the predicate returns false. The returned array includes the rest of the elements, starting with the element that produced false for the predicate.
  *
- * @param predicate - The predicate.
+ * @param predicate - The predicate. Inside a `pipe`, its `data` argument might
+ * hold only the items processed so far; see `pipe`.
  * @signature
  *    dropWhile(predicate)(data)
  * @example

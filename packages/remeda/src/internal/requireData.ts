@@ -3,7 +3,11 @@ import type { StrictFunction } from "./types/StrictFunction";
 
 /**
  * Marks an evaluator that always needs `data`, because it reads it itself or
- * forwards it to a callback known to read it, so `pipe` must always buffer.
+ * forwards it to a callback known to read it, so `pipe` must always provide it.
+ * `data` holds every item up to the current `index` and might hold more: the
+ * first step of a fused sequence on an array gets the complete input. An
+ * evaluator that reads `data` itself looks no further than `index`, as
+ * `uniqueWith`'s `findIndex` does.
  * The marker is applied by mutating `evaluator`, so callers must pass a freshly
  * created closure, never a shared singleton or the user's callback itself.
  */
@@ -36,7 +40,7 @@ export const requireData = <
  * @param callback - The user's callback, whose signature decides whether
  * `data` is needed.
  * @param dataParameterIndex - Which positional argument in the callback takes
- * the accumulated `data` array. For most functions that would be *2* (after
+ * the `data` array. For most functions that would be *2* (after
  * the `item` argument in position 0, and the `index` argument in position 1).
  * @param evaluator - The evaluator to mark. It is marked the way `requireData`
  * does, by mutating it, so callers must pass a freshly created closure, never a

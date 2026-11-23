@@ -34,6 +34,8 @@ export function uniqueBy<T extends IterableContainer>(
  * list transformed by a function. Elements are compared by reference using Set.
  *
  * @param keyFunction - Extracts a value that would be used to compare elements.
+ * Inside a `pipe`, its `data` argument might hold only the items processed so
+ * far; see `pipe`.
  * @signature
  *    uniqueBy(keyFunction)(data)
  * @example

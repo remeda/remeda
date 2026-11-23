@@ -136,8 +136,8 @@ describe("dataLast", () => {
         forceFusion(),
         map(
           when(
-            // In a lazy step `data` is the items processed so far, so this
-            // matches each new running maximum.
+            // After `forceFusion()`, `data` is the items processed so far, so
+            // this matches each new running maximum.
             (x, _index, data) => x === Math.max(...data),
             (x) => x * 100,
           ),

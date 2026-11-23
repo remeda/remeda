@@ -17,7 +17,8 @@ test.prop([
   fc.func(fc.integer({ min: 0, max: 3 })),
 ])("data-first and data-last produce the same result", (data, keyOf) => {
   // The key ignores `data`, which differs between the calling styles on
-  // purpose: the whole input data-first, the items so far in `pipe`.
+  // purpose: the whole input data-first, the items so far after
+  // `forceFusion()`.
   const keyFunction = (value: unknown, index: number): number =>
     keyOf(value, index);
 
