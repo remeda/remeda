@@ -78,7 +78,8 @@ const packageKb = unpackedSize / 1000;
 const driftKb = packageKb - EXPECTED_PACKAGE_KB;
 const sizeReport = [
   `Package is ${KILOBYTES.format(packageKb)}: ${KILOBYTES_CHANGE.format(driftKb)} (${PERCENT_CHANGE.format(driftKb / EXPECTED_PACKAGE_KB)}) from the ${KILOBYTES.format(EXPECTED_PACKAGE_KB)} baseline (EXPECTED_PACKAGE_KB in test/size.test.ts), past its +-${(PACKAGE_SIZE_TOLERANCE * 100).toString()}% tolerance (+-${KILOBYTES.format(EXPECTED_PACKAGE_KB * PACKAGE_SIZE_TOLERANCE)}).`,
-  `Changes accumulate across PRs until the baseline is updated, so this PR may own only part of the drift; \`git log -G "EXPECTED_PACKAGE_KB =" -- test/size.test.ts\` shows when it was last set.`,
+  "Changes accumulate across PRs until the baseline is updated, so this PR may own only part of the drift. The PRs since the baseline was set:",
+  `  git log --oneline "$(git log -1 --format=%H -G 'EXPECTED_PACKAGE_KB =' -- :/packages/remeda/test/size.test.ts)..HEAD"`,
   "Largest files:",
   ...[...files]
     .sort(({ size: left }, { size: right }) => right - left)
