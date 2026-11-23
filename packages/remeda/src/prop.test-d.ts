@@ -533,6 +533,11 @@ describe("unbounded records (issue #1274)", () => {
   });
 });
 
+test("wide key without an index signature", () => {
+  // @ts-expect-error [ts2769] -- keys passed one by one are always validated, and `string` isn't a key of the data
+  prop({} as { a: number }, $typed<string>());
+});
+
 describe("with stringToPath", () => {
   const DATA = {} as { a: { b: { c: { d: number } }[] } };
 
@@ -583,11 +588,6 @@ describe("path of unknown length", () => {
 
   test("stringToPath on a non-literal string", () => {
     expectTypeOf(prop(DATA, ...stringToPath($typed<string>()))).toBeUnknown();
-  });
-
-  test("wide keys", () => {
-    // @ts-expect-error [ts2769] -- keys passed one by one are always validated, and `string` isn't a key of DATA
-    prop(DATA, $typed<string>(), $typed<string>());
   });
 
   test("data-last", () => {
