@@ -60,10 +60,11 @@ type Resolved<T> = T extends infer U ? U : never;
  * type safety, better compile-time errors, and to enable autocompletion in
  * IDEs.
  *
- * A path whose length is only known at runtime (e.g., a `string[]`, or the
- * result of `stringToPath` on a non-literal string) can be spread into the
- * data-first form. Its keys aren't checked against the object type, and the
- * result is typed `unknown` instead of the type of the property it reaches.
+ * A path typed as a plain array instead of a tuple of literals (e.g., a
+ * `string[]`, or the result of `stringToPath` on a plain `string`) can be
+ * spread into the data-first form. Its keys aren't checked against the object
+ * type, and the result is typed `unknown` instead of the type of the property
+ * it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
@@ -266,16 +267,17 @@ export function prop<
  * type safety, better compile-time errors, and to enable autocompletion in
  * IDEs.
  *
- * A path whose length is only known at runtime (e.g., a `string[]`, or the
- * result of `stringToPath` on a non-literal string) can be spread into the
- * data-first form. Its keys aren't checked against the object type, and the
- * result is typed `unknown` instead of the type of the property it reaches.
+ * A path typed as a plain array instead of a tuple of literals (e.g., a
+ * `string[]`, or the result of `stringToPath` on a plain `string`) can be
+ * spread into the data-first form. Its keys aren't checked against the object
+ * type, and the result is typed `unknown` instead of the type of the property
+ * it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
  * @param data - The object or array to access.
- * @param path - The keys for the property to extract, in an array whose length
- * is only known at runtime.
+ * @param path - The keys for the property to extract, typed as a plain array
+ * instead of a tuple of literals.
  * @signature
  *   prop(data, ...path);
  * @example
@@ -300,10 +302,11 @@ export function prop<Path extends readonly PropertyKey[]>(
  * type safety, better compile-time errors, and to enable autocompletion in
  * IDEs.
  *
- * A path whose length is only known at runtime (e.g., a `string[]`, or the
- * result of `stringToPath` on a non-literal string) can be spread into the
- * data-first form. Its keys aren't checked against the object type, and the
- * result is typed `unknown` instead of the type of the property it reaches.
+ * A path typed as a plain array instead of a tuple of literals (e.g., a
+ * `string[]`, or the result of `stringToPath` on a plain `string`) can be
+ * spread into the data-first form. Its keys aren't checked against the object
+ * type, and the result is typed `unknown` instead of the type of the property
+ * it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *

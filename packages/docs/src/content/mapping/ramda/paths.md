@@ -5,10 +5,8 @@ category: Object
 _Not provided by Remeda._
 
 - Compose `paths` using [`map`](/docs#map) and [`prop`](/docs#prop).
-- As in Ramda, the keys in each path aren't checked against the object's type.
-- As in Ramda, the results are typed `unknown`, not the types of the properties
-  they reach. If you passed a type argument to `R.paths` (e.g.,
-  `R.paths<number>(...)`), narrow the results yourself.
+- Remeda doesn't take a type argument for the results. If you passed one to
+  `R.paths` (e.g., `R.paths<number>(...)`), cast each result instead.
 
 #### Composition
 
@@ -24,4 +22,14 @@ R.paths(PATHS, DATA);
 
 // Remeda
 map(PATHS, (path) => prop(DATA, ...path));
+```
+
+#### Type arguments
+
+```ts
+// Ramda
+R.paths<number>(PATHS, DATA);
+
+// Remeda
+map(PATHS, (path) => prop(DATA, ...path) as number | undefined);
 ```

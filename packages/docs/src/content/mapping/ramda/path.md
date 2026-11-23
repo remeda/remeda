@@ -3,12 +3,10 @@ category: Object
 remeda: prop
 ---
 
-- Remeda's `prop` takes the data first, and the path as variadic arguments
-  instead of an array.
-- A path only known at runtime (e.g., a `string[]`) can be spread into `prop`,
-  but its keys aren't checked against the object's type.
-- The result of a runtime path is typed `unknown`, not the type of the property
-  it reaches; narrow it before use.
+- Remeda's `prop` takes the path as variadic arguments instead of an array;
+  spread a path array into it.
+- Remeda doesn't take a type argument for the result. If you passed one to
+  `R.path` (e.g., `R.path<number>(...)`), cast the result instead.
 
 #### Literal paths
 
@@ -20,7 +18,7 @@ R.path(["a", "b"], DATA);
 prop(DATA, "a", "b");
 ```
 
-#### Runtime paths
+#### Path arrays
 
 ```ts
 const PATH: string[];
@@ -30,4 +28,16 @@ R.path(PATH, DATA);
 
 // Remeda
 prop(DATA, ...PATH);
+```
+
+#### Type arguments
+
+```ts
+const PATH: string[];
+
+// Ramda
+R.path<number>(PATH, DATA);
+
+// Remeda
+prop(DATA, ...PATH) as number | undefined;
 ```

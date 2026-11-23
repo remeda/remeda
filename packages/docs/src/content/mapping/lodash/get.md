@@ -13,11 +13,9 @@ remeda: prop
   property (e.g., `a.b[0].c`). In Remeda this isn't supported directly; instead,
   use the helper function [`stringToPath`](/docs#stringToPath) to convert the
   path string to a path array, which could then be _spread_ into `prop`.
-- Paths only known at runtime (e.g., a `string[]`, or a path string that isn't a
-  literal) can also be spread into `prop`, but their keys aren't checked against
-  the object's type.
-- The result of a runtime path is typed `unknown`, not the type of the property
-  it reaches; narrow it before use.
+- When the path is typed as a plain `string` or `string[]` instead of literals,
+  Lodash types the result as `any`, while Remeda types it as `unknown`; narrow
+  it before use.
 - Lodash supports an optional last argument to `get` which defines a default
   fallback in cases where the prop being accessed does not exist on the input
   object. To achieve this wrap your call to `prop` with a call to
@@ -72,16 +70,16 @@ _.get(DATA, "a[0].b.c");
 prop(DATA, ...stringToPath("a[0].b.c"));
 ```
 
-#### Runtime Paths
+#### Non-literal Paths
 
 ```ts
 const PATH: string;
 
 // Lodash
-_.get(DATA, PATH);
+_.get(DATA, PATH); // any
 
 // Remeda
-prop(DATA, ...stringToPath(PATH));
+prop(DATA, ...stringToPath(PATH)); // unknown
 ```
 
 #### Default Fallback
