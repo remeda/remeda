@@ -8,14 +8,32 @@ import { expect, test } from "vitest";
 // Size changes don't show up in a PR's diff, so these tests pin them. They
 // measure the built package: run `npm run build` first.
 
-// The unpacked size of the published package in bytes, as `npm pack` reports
-// it; users see it when auditing their install size. Every function and doc
-// comment moves it, so it's checked within a tolerance. A new function may need
-// more room: the PR that adds it updates this number. Growth in any other PR,
-// and any drop past the tolerance, is unexpected: find what changed before
-// updating it.
-const EXPECTED_PACKAGE_SIZE = 1_460_789;
+// The unpacked size of the published package in kB (1,000 B), as `npm pack`
+// and npmjs.com report it; users see it when auditing their install size.
+// Every function and doc comment moves it, so it's checked within a tolerance,
+// and the changes accumulate across PRs until this baseline is updated. Update
+// it when the change since it was last set is explained, e.g., by new functions
+// or an intentional shrink; any other drift past the tolerance is a yellow
+// flag: find what changed first.
+const EXPECTED_PACKAGE_KB = 1461;
 const PACKAGE_SIZE_TOLERANCE = 0.03;
+
+const KILOBYTES = new Intl.NumberFormat("en-US", {
+  style: "unit",
+  unit: "kilobyte",
+  maximumFractionDigits: 1,
+});
+const KILOBYTES_CHANGE = new Intl.NumberFormat("en-US", {
+  style: "unit",
+  unit: "kilobyte",
+  maximumFractionDigits: 1,
+  signDisplay: "exceptZero",
+});
+const PERCENT_CHANGE = new Intl.NumberFormat("en-US", {
+  style: "percent",
+  maximumFractionDigits: 1,
+  signDisplay: "exceptZero",
+});
 
 const LARGEST_FILES_REPORTED = 5;
 
@@ -56,28 +74,33 @@ const BUNDLE_ENTRIES = {
 };
 
 const { unpackedSize, files } = await packDryRun();
+const packageKb = unpackedSize / 1000;
+const driftKb = packageKb - EXPECTED_PACKAGE_KB;
 const sizeReport = [
-  `Package size: ${unpackedSize.toString()} B, expected ${EXPECTED_PACKAGE_SIZE.toString()} B +-${(PACKAGE_SIZE_TOLERANCE * 100).toString()}% (EXPECTED_PACKAGE_SIZE in test/size.test.ts). Largest files:`,
+  `Package is ${KILOBYTES.format(packageKb)}: ${KILOBYTES_CHANGE.format(driftKb)} (${PERCENT_CHANGE.format(driftKb / EXPECTED_PACKAGE_KB)}) from the ${KILOBYTES.format(EXPECTED_PACKAGE_KB)} baseline (EXPECTED_PACKAGE_KB in test/size.test.ts), past its +-${(PACKAGE_SIZE_TOLERANCE * 100).toString()}% tolerance (+-${KILOBYTES.format(EXPECTED_PACKAGE_KB * PACKAGE_SIZE_TOLERANCE)}).`,
+  `Changes accumulate across PRs until the baseline is updated, so this PR may own only part of the drift; \`git log -G "EXPECTED_PACKAGE_KB =" -- test/size.test.ts\` shows when it was last set.`,
+  "Largest files:",
   ...[...files]
     .sort(({ size: left }, { size: right }) => right - left)
     .slice(0, LARGEST_FILES_REPORTED)
-    .map(({ path: filePath, size }) => `  ${size.toString()} B  ${filePath}`),
+    .map(
+      ({ path: filePath, size }) =>
+        `  ${KILOBYTES.format(size / 1000)}  ${filePath}`,
+    ),
 ].join("\n");
 
 test("package grows within the tolerance", () => {
   expect(
-    unpackedSize,
-    `${sizeReport}\nA PR that adds a function updates EXPECTED_PACKAGE_SIZE; in any other PR, find what grew first`,
-  ).toBeLessThanOrEqual(EXPECTED_PACKAGE_SIZE * (1 + PACKAGE_SIZE_TOLERANCE));
+    packageKb,
+    `${sizeReport}\nIf the growth since the baseline is expected (e.g., new functions), set EXPECTED_PACKAGE_KB to ${Math.round(packageKb).toString()}; otherwise find what grew first`,
+  ).toBeLessThanOrEqual(EXPECTED_PACKAGE_KB * (1 + PACKAGE_SIZE_TOLERANCE));
 });
 
 test("package shrinks within the tolerance", () => {
   expect(
-    unpackedSize,
-    `${sizeReport}\nIf the PR shrinks the package on purpose, update EXPECTED_PACKAGE_SIZE; otherwise check dist for lost content, such as declarations without their JSDoc`,
-  ).toBeGreaterThanOrEqual(
-    EXPECTED_PACKAGE_SIZE * (1 - PACKAGE_SIZE_TOLERANCE),
-  );
+    packageKb,
+    `${sizeReport}\nIf the package shrank on purpose, set EXPECTED_PACKAGE_KB to ${Math.round(packageKb).toString()}; otherwise check dist for lost content, such as declarations without their JSDoc`,
+  ).toBeGreaterThanOrEqual(EXPECTED_PACKAGE_KB * (1 - PACKAGE_SIZE_TOLERANCE));
 });
 
 // Bundle sizes are exact: a change of a few bytes in a shared helper multiplies
