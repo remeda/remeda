@@ -118,24 +118,22 @@ test("bundle sizes", async () => {
   // Bundle sizes are exact: a change of a few bytes in a shared helper
   // multiplies across every function using it. Regenerate with
   // `npm run test:size -- -u`.
-  expect(
-    Object.fromEntries(
-      await Promise.all(
-        Object.entries(BUNDLE_ENTRIES).map(
-          async ([name, entry]) => [name, await bundleSize(entry)] as const,
-        ),
+  await expect(
+    Promise.all(
+      Object.entries(BUNDLE_ENTRIES).map(
+        async ([name, entry]) => `${name}: ${await bundleSize(entry)}`,
       ),
     ),
-  ).toMatchInlineSnapshot(`
-    {
-      "filter + map": "285 B gzip, 477 B minified",
-      "map": "202 B gzip, 270 B minified",
-      "pipe": "1016 B gzip, 2232 B minified",
-      "pipe + map + filter + take": "1387 B gzip, 3056 B minified",
-      "pipe + top 15": "2516 B gzip, 6850 B minified",
-      "top 15": "1671 B gzip, 4626 B minified",
-      "whole library": "10999 B gzip, 35781 B minified",
-    }
+  ).resolves.toMatchInlineSnapshot(`
+    [
+      "map: 202 B gzip, 270 B minified",
+      "filter + map: 285 B gzip, 477 B minified",
+      "pipe: 1016 B gzip, 2232 B minified",
+      "pipe + map + filter + take: 1387 B gzip, 3056 B minified",
+      "top 15: 1671 B gzip, 4626 B minified",
+      "pipe + top 15: 2516 B gzip, 6850 B minified",
+      "whole library: 10999 B gzip, 35781 B minified",
+    ]
   `);
 });
 
