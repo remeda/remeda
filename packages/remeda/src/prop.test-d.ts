@@ -585,9 +585,9 @@ describe("path of unknown length", () => {
     expectTypeOf(prop(DATA, ...stringToPath($typed<string>()))).toBeUnknown();
   });
 
-  test("fixed-length tuple of wide keys", () => {
-    // @ts-expect-error [ts2769] -- a tuple has a known length, so its keys are validated, and `string` isn't a key of DATA
-    prop(DATA, ...$typed<[string, string]>());
+  test("wide keys", () => {
+    // @ts-expect-error [ts2769] -- keys passed one by one are always validated, and `string` isn't a key of DATA
+    prop(DATA, $typed<string>(), $typed<string>());
   });
 
   test("data-last", () => {
