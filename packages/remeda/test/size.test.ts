@@ -86,6 +86,12 @@ const PERCENT_CHANGE_FORMATTER = new Intl.NumberFormat("en-US", {
   signDisplay: "exceptZero",
 });
 
+// The fields of an `npm pack --json` entry that these tests read.
+type PackResult = {
+  readonly unpackedSize: number;
+  readonly files: readonly { readonly path: string; readonly size: number }[];
+};
+
 test("package grows within the threshold", async () => {
   const pack = await packDryRun();
   const size = pack.unpackedSize / SIZE_UNIT;
@@ -132,12 +138,6 @@ test("bundle sizes", async () => {
     }
   `);
 });
-
-// The fields of an `npm pack --json` entry that these tests read.
-type PackResult = {
-  readonly unpackedSize: number;
-  readonly files: readonly { readonly path: string; readonly size: number }[];
-};
 
 function exportsOf(...names: readonly string[]): string {
   return `export { ${names.join(", ")} } from ${DIST_ENTRY};`;
