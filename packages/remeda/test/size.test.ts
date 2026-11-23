@@ -126,13 +126,13 @@ test("bundle sizes", async () => {
     ),
   ).resolves.toMatchInlineSnapshot(`
     [
-      "map: 202 B gzip, 270 B minified",
-      "filter + map: 285 B gzip, 477 B minified",
-      "pipe: 1016 B gzip, 2232 B minified",
-      "pipe + map + filter + take: 1387 B gzip, 3056 B minified",
-      "top 15: 1671 B gzip, 4626 B minified",
-      "pipe + top 15: 2516 B gzip, 6850 B minified",
-      "whole library: 10999 B gzip, 35781 B minified",
+      "map: 270 B minified, 202 B gzip",
+      "filter + map: 477 B minified, 285 B gzip",
+      "pipe: 2232 B minified, 1016 B gzip",
+      "pipe + map + filter + take: 3056 B minified, 1387 B gzip",
+      "top 15: 4626 B minified, 1671 B gzip",
+      "pipe + top 15: 6850 B minified, 2516 B gzip",
+      "whole library: 35781 B minified, 10999 B gzip",
     ]
   `);
 });
@@ -173,5 +173,5 @@ async function bundleSize(entry: string): Promise<string> {
     stdin: { contents: entry, resolveDir: PACKAGE_DIR },
   });
   const code = Buffer.concat(outputFiles.map(({ contents }) => contents));
-  return `${gzipSync(code, GZIP_OPTIONS).byteLength.toString()} B gzip, ${code.byteLength.toString()} B minified`;
+  return `${code.byteLength.toString()} B minified, ${gzipSync(code, GZIP_OPTIONS).byteLength.toString()} B gzip`;
 }
