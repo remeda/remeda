@@ -1,25 +1,13 @@
 /* eslint-disable no-console -- Allows tracing the build process. */
 
-import { exec } from "node:child_process";
 import { glob, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { promisify } from "node:util";
 import {
   build,
   defineConfig,
   type RolldownChunk,
   type UserConfig,
 } from "tsdown";
-
-// The maximum unpacked size of the published package, in bytes, as reported by
-// `npm pack`. Package growth is invisible in a PR's diff, yet users judge us by
-// it when auditing their install size, so the build fails once it outgrows
-// this budget. A new function needs room of its own: raise the budget in the
-// PR that adds it. A PR that adds no function shouldn't need more room, so find
-// what grew before raising the budget for it.
-const PACKAGE_SIZE_BUDGET = 1_500_000;
-
-const LARGEST_FILES_REPORTED = 5;
 
 const SOURCE_DIR = "src";
 
@@ -134,55 +122,8 @@ export default defineConfig({
       },
       publint: true,
     });
-
-    await assertPackageSizeWithinBudget();
   },
 });
-
-/**
- * Fails the build when the package npm would publish (the `files` in
- * package.json plus the files npm always adds) outgrows `PACKAGE_SIZE_BUDGET`.
- */
-async function assertPackageSizeWithinBudget(): Promise<void> {
-  // `exec` runs the command in a shell so that `npm` also resolves on Windows,
-  // where it's a `.cmd` script that can't be spawned directly.
-  const { stdout } = await promisify(exec)(
-    "npm pack --dry-run --json --ignore-scripts",
-  );
-  // The subset of an `npm pack --json` entry that the size check reads.
-  type PackResult = {
-    readonly unpackedSize: number;
-    readonly files: readonly { readonly path: string; readonly size: number }[];
-  };
-  const [{ unpackedSize, files }] = JSON.parse(stdout) as readonly [PackResult];
-
-  if (unpackedSize <= PACKAGE_SIZE_BUDGET) {
-    console.log(
-      `Package size: ${formatBytes(unpackedSize)} of a ${formatBytes(PACKAGE_SIZE_BUDGET)} budget.`,
-    );
-    return;
-  }
-
-  const largestFiles = [...files]
-    .sort(({ size: left }, { size: right }) => right - left)
-    .slice(0, LARGEST_FILES_REPORTED);
-
-  throw new Error(
-    [
-      `Package size ${formatBytes(unpackedSize)} exceeds the ${formatBytes(PACKAGE_SIZE_BUDGET)} budget (PACKAGE_SIZE_BUDGET in tsdown.config.ts).`,
-      "Largest files:",
-      ...largestFiles.map(
-        ({ path: filePath, size }) => `  ${formatBytes(size)}  ${filePath}`,
-      ),
-      "A new function needs room of its own: raise the budget in the same PR.",
-      "Otherwise, find what grew before raising the budget.",
-    ].join("\n"),
-  );
-}
-
-function formatBytes(bytes: number): string {
-  return `${bytes.toLocaleString("en-US")} B`;
-}
 
 /**
  * To work around some of the limitations of tsdown type declaration build

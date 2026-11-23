@@ -52,7 +52,7 @@ A new function must justify why `fn1(fn2(...))` isn't enough: we don't ship `rej
 - Write a JSDoc block with a description, parameters, signature, an example, and tags; it becomes the website docs.
 - Export it from [`packages/remeda/src/index.ts`](packages/remeda/src/index.ts) (alphabetically).
 - If a Lodash, Ramda, or Just equivalent exists, add a mapping page under [`packages/docs/src/content/mapping/`](packages/docs/src/content/mapping/).
-- The build fails when the published package outgrows its size budget (`PACKAGE_SIZE_BUDGET` in [`packages/remeda/tsdown.config.ts`](packages/remeda/tsdown.config.ts)). The budget leaves little headroom, so a new function may need room of its own: raise the budget in the same PR. A PR that adds no function shouldn't need more room; if it does, find what grew before raising the budget.
+- Update the size checks in [`packages/remeda/test/size.test.ts`](packages/remeda/test/size.test.ts) (`npm run build`, then `npm run test:size`). A new function changes the whole-library bundle size: regenerate the snapshot with `npm run test:size -- -u`. It may also push the published package past its 3% tolerance: set `EXPECTED_PACKAGE_SIZE` to the size the test reports. Growth past the tolerance in a PR that adds no function is a yellow flag: find what grew before updating the number.
 
 Use a recent function in [`packages/remeda/src/`](packages/remeda/src/) as a template. Implementation conventions are in [`.agents/skills/remeda-utility/reference/`](.agents/skills/remeda-utility/reference/): runtime (dispatch, lazy evaluation, loops, naming) in `implementation-runtime.md`, types (`IterableContainer`, lazy callbacks, `type-fest`) in `implementation-types.md`.
 
