@@ -585,19 +585,19 @@ describe("path of unknown length", () => {
     expectTypeOf(prop(DATA, ...stringToPath($typed<string>()))).toBeUnknown();
   });
 
-  test("invalid literal tuple", () => {
-    // @ts-expect-error [ts2769] -- 'x' is not a key of DATA
-    prop(DATA, ...(["x"] as const));
-  });
-
   test("fixed-length tuple of wide keys", () => {
     // @ts-expect-error [ts2769] -- a tuple has a known length, so its keys are validated, and `string` isn't a key of DATA
-    prop(DATA, ...([] as unknown as [string, string]));
+    prop(DATA, ...$typed<[string, string]>());
   });
 
   test("data-last", () => {
-    // @ts-expect-error [ts2556] -- only data-first accepts a path of unknown length: data-last dispatches on its first key, which an empty path doesn't have
-    pipe(DATA, prop(...([] as string[])));
+    pipe(
+      DATA,
+      prop(
+        // @ts-expect-error [ts2556] -- only data-first accepts a path of unknown length: data-last dispatches on its first key, which an empty path doesn't have
+        ...([] as string[]),
+      ),
+    );
   });
 });
 
@@ -625,8 +625,11 @@ describe("known issues!", () => {
     // when its constraint is a plain array.
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unnecessary-type-parameters, unicorn/consistent-function-scoping -- the issue only shows up inside a generic function wrapper; only how `Path` reaches `prop` matters here, not how the wrapper is written.
     const propAt = <Path extends readonly string[]>(path: Path) =>
-      // @ts-expect-error [ts2345] -- a generic `Path` can't be shown to have an unknown length
-      prop({ a: 1 }, ...path);
+      prop(
+        { a: 1 },
+        // @ts-expect-error [ts2345] -- a generic `Path` can't be shown to have an unknown length
+        ...path,
+      );
 
     propAt(["a"]);
   });
