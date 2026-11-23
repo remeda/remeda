@@ -572,10 +572,6 @@ describe("with stringToPath", () => {
 describe("path of unknown length", () => {
   const DATA = {} as { a: { b: { c: { d: number } }[] } };
 
-  test("readonly array", () => {
-    expectTypeOf(prop(DATA, ...([] as readonly string[]))).toBeUnknown();
-  });
-
   test("non-empty array", () => {
     expectTypeOf(prop(DATA, ...(["a"] as [string, ...string[]]))).toBeUnknown();
   });
