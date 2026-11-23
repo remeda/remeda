@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
@@ -563,6 +564,43 @@ describe("with stringToPath", () => {
   });
 });
 
+describe("path of unknown length", () => {
+  const DATA = {} as { a: { b: { c: { d: number } }[] } };
+
+  test("array of strings", () => {
+    expectTypeOf(prop(DATA, ...([] as string[]))).toBeUnknown();
+  });
+
+  test("readonly array of mixed keys", () => {
+    expectTypeOf(
+      prop(DATA, ...([] as readonly (string | number)[])),
+    ).toBeUnknown();
+  });
+
+  test("non-empty array", () => {
+    expectTypeOf(prop(DATA, ...(["a"] as [string, ...string[]]))).toBeUnknown();
+  });
+
+  test("stringToPath on a non-literal string", () => {
+    expectTypeOf(prop(DATA, ...stringToPath($typed<string>()))).toBeUnknown();
+  });
+
+  test("invalid literal tuple", () => {
+    // @ts-expect-error [ts2769] -- 'x' is not a key of DATA
+    prop(DATA, ...(["x"] as const));
+  });
+
+  test("fixed-length tuple of wide keys", () => {
+    // @ts-expect-error [ts2769] -- a tuple has a known length, so its keys are validated, and `string` isn't a key of DATA
+    prop(DATA, ...([] as unknown as [string, string]));
+  });
+
+  test("data-last", () => {
+    // @ts-expect-error [ts2556] -- only data-first accepts a path of unknown length: data-last dispatches on its first key, which an empty path doesn't have
+    pipe(DATA, prop(...([] as string[])));
+  });
+});
+
 describe("prevents unsupported data types", () => {
   test("strings", () => {
     // @ts-expect-error [ts2769] -- strings can't be used as data.
@@ -577,5 +615,19 @@ describe("prevents unsupported data types", () => {
   test("symbol", () => {
     // @ts-expect-error [ts2769] -- symbols can't be used as data.
     prop(SYMBOL, "description");
+  });
+});
+
+describe("known issues!", () => {
+  test("generic path of unknown length", () => {
+    // `number extends Path["length"]` stays deferred while `Path` is a type
+    // parameter, so the overload for paths of unknown length rejects it even
+    // when its constraint is a plain array.
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unnecessary-type-parameters, unicorn/consistent-function-scoping -- the issue only shows up inside a generic function wrapper; only how `Path` reaches `prop` matters here, not how the wrapper is written.
+    const propAt = <Path extends readonly string[]>(path: Path) =>
+      // @ts-expect-error [ts2345] -- a generic `Path` can't be shown to have an unknown length
+      prop({ a: 1 }, ...path);
+
+    propAt(["a"]);
   });
 });

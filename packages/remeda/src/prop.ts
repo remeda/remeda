@@ -60,6 +60,10 @@ type Resolved<T> = T extends infer U ? U : never;
  * type safety, better compile-time errors, and to enable autocompletion in
  * IDEs.
  *
+ * A path whose length is only known at runtime (e.g., a `string[]`, or the
+ * result of `stringToPath` on a non-literal string) can be spread into the
+ * data-first form; it isn't validated, and the result is `unknown`.
+ *
  * To check whether a key exists on the object, use `hasProp`.
  *
  * @param data - The object or array to access.
@@ -260,6 +264,43 @@ export function prop<
  * the path. Paths are validated against the object type to provide stronger
  * type safety, better compile-time errors, and to enable autocompletion in
  * IDEs.
+ *
+ * A path whose length is only known at runtime (e.g., a `string[]`, or the
+ * result of `stringToPath` on a non-literal string) can be spread into the
+ * data-first form; it isn't validated, and the result is `unknown`.
+ *
+ * To check whether a key exists on the object, use `hasProp`.
+ *
+ * @param data - The object or array to access.
+ * @param path - The keys for the property to extract, in an array whose length
+ * is only known at runtime.
+ * @signature
+ *   prop(data, ...path);
+ * @example
+ *   prop({ foo: { bar: 'baz' } }, ...'foo.bar'.split('.')); //=> 'baz'
+ * @dataFirst
+ * @category Object
+ */
+export function prop<Path extends readonly PropertyKey[]>(
+  data: NonPropertyKey,
+  // A tuple has a literal `length`, so literal paths never match this overload
+  // and invalid ones are still reported against the validating overloads.
+  ...path: number extends Path["length"] ? Path : never
+): unknown;
+
+/**
+ * Gets the value of the given property from an object. Nested properties can
+ * be accessed by providing a variadic array of keys that define the path from
+ * the root to the desired property. Arrays can be accessed by using numeric
+ * keys. Unions, optional properties, and index signatures are handled
+ * gracefully by returning `undefined` early for any non-existing property on
+ * the path. Paths are validated against the object type to provide stronger
+ * type safety, better compile-time errors, and to enable autocompletion in
+ * IDEs.
+ *
+ * A path whose length is only known at runtime (e.g., a `string[]`, or the
+ * result of `stringToPath` on a non-literal string) can be spread into the
+ * data-first form; it isn't validated, and the result is `unknown`.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
