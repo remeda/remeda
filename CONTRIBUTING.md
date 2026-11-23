@@ -52,6 +52,7 @@ A new function must justify why `fn1(fn2(...))` isn't enough: we don't ship `rej
 - Write a JSDoc block with a description, parameters, signature, an example, and tags; it becomes the website docs.
 - Export it from [`packages/remeda/src/index.ts`](packages/remeda/src/index.ts) (alphabetically).
 - If a Lodash, Ramda, or Just equivalent exists, add a mapping page under [`packages/docs/src/content/mapping/`](packages/docs/src/content/mapping/).
+- The build fails when the published package outgrows its size budget (`PACKAGE_SIZE_BUDGET` in [`packages/remeda/tsdown.config.ts`](packages/remeda/tsdown.config.ts)). The budget leaves little headroom, so a new function may need room of its own: raise the budget in the same PR. A PR that adds no function shouldn't need more room; if it does, find what grew before raising the budget.
 
 Use a recent function in [`packages/remeda/src/`](packages/remeda/src/) as a template. Implementation conventions are in [`.agents/skills/remeda-utility/reference/`](.agents/skills/remeda-utility/reference/): runtime (dispatch, lazy evaluation, loops, naming) in `implementation-runtime.md`, types (`IterableContainer`, lazy callbacks, `type-fest`) in `implementation-types.md`.
 
