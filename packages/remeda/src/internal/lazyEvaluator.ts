@@ -13,10 +13,14 @@ type LazyEvaluatorMetadata = {
    * Some evaluators provide `data` to their callbacks (e.g., `map`'s 3rd
    * parameter). Collecting it lazily costs a buffer that grows with every
    * item, so the lazy runners (`runFusedSequence`, `iterableDataFirst`) only
-   * provide it to evaluators marked with this flag, collecting it unless an
-   * input array already holds it, and hand every other evaluator
-   * `UNEXPECTED_ACCESS_SENTINEL` instead. Set it via `requireData` or
-   * `requireDataByArity`, never directly.
+   * provide it to evaluators marked with this flag, and hand every other
+   * evaluator `UNEXPECTED_ACCESS_SENTINEL` instead. The first step of a fused
+   * sequence on an array gets the input array itself; every other step gets
+   * the items collected so far. Either way `data` holds every item up to
+   * `index`, and might hold more, so an evaluator reading it can't reliably
+   * access indices beyond the current index.
+   *
+   *! **IMPORTANT**! Prefer enabling this option via `requireData` and `requireDataByArity` and not by manually setting it!
    */
   readonly requiresData?: true;
 };

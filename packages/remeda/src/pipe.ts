@@ -34,12 +34,12 @@ import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
  * The data-last variant `piped` builds the same pipe without initial data, to
  * pass as a callback: `map(data, piped(fn1, fn2))`.
  *
- * IMPORTANT: Callbacks using the third parameter (the input array) receive the
- * complete array wherever it already exists when their function runs. During
- * lazy evaluation each item goes through all the lazy functions before the
- * next one is read, so only the first of these functions has its complete
- * input; the callbacks of the functions after it receive just the items that
- * reached their function up to that point.
+ * IMPORTANT: A callback's `data` parameter (the array its function runs on)
+ * holds the complete array, except during lazy evaluation, where each item
+ * goes through the rest of the lazy functions before the next one is read:
+ * there only the first of these functions gets its complete input, and the
+ * callbacks of the functions after it receive just the items that reached
+ * their function so far.
  *
  * @param data - The input data.
  * @param functions - A sequence of functions that take one argument and
@@ -92,8 +92,8 @@ import type { LazyUnaryFunction } from "./internal/lazyDataLastImplementation";
  *    }); //=> "[1, 2, 3, 4]" logged 4 times
  *
  *    // But when evaluated lazily together with a function that can end the
- *    // iteration early, a function after the first only gets the items that
- *    // reached it up to the current index.
+ *    // iteration early, the lazy functions after the first only get the items
+ *    // that reached them so far.
  *    pipe(
  *      [1, 2, 3, 4],
  *      map(multiply(10)),

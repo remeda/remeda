@@ -4,6 +4,10 @@ import type { StrictFunction } from "./types/StrictFunction";
 /**
  * Marks an evaluator that always needs `data`, because it reads it itself or
  * forwards it to a callback known to read it, so `pipe` must always provide it.
+ * `data` holds every item up to the current `index` and might hold more: the
+ * first step of a fused sequence on an array gets the complete input. An
+ * evaluator that reads `data` itself looks no further than `index`, as
+ * `uniqueWith`'s `findIndex` does.
  * The marker is applied by mutating `evaluator`, so callers must pass a freshly
  * created closure, never a shared singleton or the user's callback itself.
  */

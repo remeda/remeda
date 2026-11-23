@@ -337,9 +337,34 @@ describe("lazy", () => {
       const mapper = vi.fn<
         (value: number, index: number, data: readonly number[]) => number
       >((value, index, items) => value + index + items.length);
-      pipe(data, map(mapper), forceFusion());
+      pipe(
+        data,
+        map(mapper),
+        forceFusion(),
+        // Stops after the input's items, so a step that collects into the
+        // input fails this test instead of looping forever.
+        take(3),
+      );
 
       expect(mapper.mock.calls[0]?.[2]).toBe(data);
+    });
+
+    test("the first step's callbacks get the array an earlier function returned", () => {
+      const inner = [1, 2, 3];
+      const mapper = vi.fn<
+        (value: number, index: number, data: readonly number[]) => number
+      >((value, index, items) => value + index + items.length);
+      pipe(
+        { inner },
+        prop("inner"),
+        map(mapper),
+        forceFusion(),
+        // Stops after the input's items, so a step that collects into the
+        // input fails this test instead of looping forever.
+        take(3),
+      );
+
+      expect(mapper.mock.calls[0]?.[2]).toBe(inner);
     });
 
     test("the first step doesn't collect items into the input array", () => {
@@ -350,6 +375,9 @@ describe("lazy", () => {
           data,
           map((value, index, items) => value + index + items.length),
           forceFusion(),
+          // Stops after the input's items, so collecting into the input fails
+          // the assertions below instead of looping forever.
+          take(3),
         ),
       ).toStrictEqual([4, 6, 8]);
       expect(data).toStrictEqual([1, 2, 3]);

@@ -31,8 +31,8 @@ export type LazyStep = {
  *
  * @param functions - The functions of the pipe.
  * @param startIndex - The index of the first function in the sequence.
- * @param input - The value the sequence will run on. When it is an array, the
- * first step reads it as its `data`.
+ * @param input - The value the sequence will run on. When it is an array, a
+ * first step that requires `data` gets it as its `data`.
  * @returns One step per function in the sequence, each with its own fresh
  * evaluator, ready for a single `runFusedSequence` call. The length of the
  * result is the number of functions the sequence covers.
@@ -56,10 +56,10 @@ export function buildFusedSequence(
     fusedSequence.push(
       lazyEvaluator.requiresData
         ? index === startIndex && Array.isArray(input)
-          ? // Every item of the input reaches the first step, in order, so an
-            // input array already is that step's data, the same as in its
-            // data-first call. Any other iterable is collected item by item,
-            // like the items that reach a later step.
+          ? // Nothing in the sequence runs before its first step, so on an
+            // array that step's complete input already exists: it gets the
+            // array itself, as in its data-first call. Any other iterable is
+            // collected item by item, like the items that reach a later step.
             { lazyEvaluator, itemIndex: 0, data: input }
           : { lazyEvaluator, itemIndex: 0, data: [], collectsData: true }
         : { lazyEvaluator, itemIndex: 0, data: UNEXPECTED_ACCESS_SENTINEL },

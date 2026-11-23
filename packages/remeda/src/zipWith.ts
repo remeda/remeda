@@ -21,8 +21,8 @@ type ZippingFunction<
   data: readonly [first: T, second: S],
 ) => Value;
 
-// Inside `pipe` the first list can flow through lazily, and the callback then
-// only sees the items processed so far, while the second list is provided
+// Inside `pipe` the first list can flow through lazily, and the callback might
+// then see only the items processed so far, while the second list is provided
 // upfront and is always complete.
 type LazyZippingFunction<
   T extends IterableContainer = IterableContainer,

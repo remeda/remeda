@@ -1,6 +1,6 @@
 # Function Implementation: Runtime
 
-A change that alters what a function accepts or returns, or makes it lazy (its data-last callback's `data` becomes a prefix), changes its overloads too: read `implementation-types.md` as well.
+A change that alters what a function accepts or returns, or makes it lazy (its data-last callback's `data` can become a prefix), changes its overloads too: read `implementation-types.md` as well.
 
 ## Dispatch
 
@@ -42,7 +42,7 @@ For functions that return a single scalar (e.g., `first()`), wrap the lazy imple
 
 Buffering `data` costs an array push per item, so `pipe` does it only for evaluators marked `requiresData: true` (the first step of a fused sequence on an array gets the input array itself instead of a buffer). The mark is set by one of two helpers from `src/internal/requireData.ts`, which mark the evaluator they receive, so pass them a closure created for the call:
 
-- `requireData(evaluator)`: the evaluator always needs `data`, as `uniqueWith`'s does (comparing each item against every earlier one).
+- `requireData(evaluator)`: the evaluator always needs `data`, as `uniqueWith`'s does (comparing each item against every earlier one). `data` holds every item up to `index` and might hold more (the first step of a fused sequence on an array gets the complete input), so an evaluator reading it looks no further than `index`, as `uniqueWith`'s `findIndex` does. Test it as that first step too, `pipe(data, uniqueWith(isEquals), forceFusion())`, not only after `forceFusion()`.
 - `requireDataByArity(callback, dataParameterIndex, evaluator)`: the evaluator only forwards `data` to the user's `callback`. `dataParameterIndex` is where `data` sits in the callback's own parameters: 2 for `filter`, `flatMap`, `forEach`, `find`, `uniqueBy`; 3 for `mapWithFeedback`, `zipWith`.
 
 An unmarked evaluator receives `UNEXPECTED_ACCESS_SENTINEL` (`src/internal/unexpectedAccessSentinel.ts`) as `data`, which throws a `Remeda: ...` error when its contents are read or written.

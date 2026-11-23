@@ -15,9 +15,15 @@ const ITEMS = fc.array(
   ),
 );
 
-// A generated comparator is neither symmetric nor transitive, so the result
-// depends on exactly which pairs are compared.
-test.prop([ITEMS, ITEMS, fc.func(fc.boolean())])(
+test.prop([
+  ITEMS,
+  ITEMS,
+  fc.func(
+    // Arbitrary answers make the comparator neither symmetric nor transitive,
+    // so the result depends on exactly which pairs are compared.
+    fc.boolean(),
+  ),
+])(
   "data-first and data-last produce the same result",
   (data, other, isEqual) => {
     const dataFirst = differenceWith(data, other, isEqual);

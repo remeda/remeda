@@ -27,8 +27,8 @@ import type { TupleParts } from "./TupleParts";
  * `LazyTypePredicate` over direct usage.
  *
  * When the type is used for a callback used in `pipe` it should be wrapped in
- * `Readonly` to prevent the callback from mutating it, as it is owned by `pipe`
- * and can corrupt future iterations.
+ * `Readonly` to prevent the callback from mutating it: it is either `pipe`'s
+ * buffer, which later items are added to, or the caller's own input array.
  *
  * @example
  *   // data-first (eager)

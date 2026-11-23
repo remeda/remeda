@@ -104,14 +104,39 @@ describe(buildFusedSequence, () => {
       ).toBe(input);
     });
 
+    test("the input itself for a first step after `startIndex` 0", () => {
+      const input = [1, 2, 3];
+
+      expect(
+        buildFusedSequence(
+          [
+            identity(),
+            lazyFunction((): LazyEvaluator => requireData((value) => value)),
+          ],
+          1,
+          input,
+        )[0]?.data,
+      ).toBe(input);
+    });
+
+    test("no collecting into the input", () => {
+      expect(
+        buildFusedSequence(
+          [lazyFunction((): LazyEvaluator => requireData((value) => value))],
+          0,
+          [1, 2, 3],
+        )[0],
+      ).not.toHaveProperty("collectsData", true);
+    });
+
     test("an empty buffer for a first step on another iterable", () => {
       expect(
         buildFusedSequence(
           [lazyFunction((): LazyEvaluator => requireData((value) => value))],
           0,
           new Set([1, 2, 3]),
-        )[0]?.data,
-      ).toStrictEqual([]);
+        )[0],
+      ).toMatchObject({ collectsData: true, data: [] });
     });
 
     test("an empty buffer for a later step that requires data", () => {
@@ -123,8 +148,8 @@ describe(buildFusedSequence, () => {
           ],
           0,
           [1, 2, 3],
-        )[1]?.data,
-      ).toStrictEqual([]);
+        )[1],
+      ).toMatchObject({ collectsData: true, data: [] });
     });
 
     test("the sentinel when data isn't required", () => {

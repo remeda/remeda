@@ -206,6 +206,9 @@ describe("data last", () => {
     expect(
       pipe(
         [1, 2, 3],
+        map(identity()),
+        // A step after the first, since the first step of a fused sequence
+        // gets the whole input too.
         map((_x, _index, { length }) => length),
         dropWhile((x) => x < 2),
       ),
