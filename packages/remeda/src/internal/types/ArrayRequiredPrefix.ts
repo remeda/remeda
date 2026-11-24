@@ -11,7 +11,9 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
     ? // Distribute T to support union types
       T extends unknown
       ? ClampedIntegerSubtract<
-          N,
+          // An array with at least one of a union of minimums has at least
+          // the smallest of them.
+          Minimum<N>,
           [...TupleParts<T>["required"], ...TupleParts<T>["suffix"]]["length"]
         > extends infer Remainder extends number
         ? Remainder extends 0
@@ -109,3 +111,14 @@ type OptionalTupleRequiredPrefix<
       // items in T, it means that we made all items required and we don't have
       // any remainder that needs to be spread as optional items.
       Prefix;
+
+// The smallest member of a union of non-negative integer literals: the one that
+// no other member is smaller than. A single number is returned as-is, even when
+// it can't be compared (e.g., a negative or fractional minimum).
+type Minimum<N extends number, All extends number = N> = N extends unknown
+  ? [All] extends [N]
+    ? N
+    : [ClampedIntegerSubtract<N, All>] extends [0]
+      ? N
+      : never
+  : never;

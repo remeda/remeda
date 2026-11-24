@@ -1,4 +1,4 @@
-import type { IsNumericLiteral } from "type-fest";
+import type { IsInteger } from "type-fest";
 import { purry2 } from "./internal/purryByArity";
 import type { ArrayRequiredPrefix } from "./internal/types/ArrayRequiredPrefix";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -27,7 +27,9 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  */
 export function hasAtLeast<T extends IterableContainer, N extends number>(
   data: IterableContainer | T,
-  minimum: IsNumericLiteral<N> extends true ? N : never,
+  // Only integer literals narrow: the narrowed type counts whole items, so a
+  // fractional minimum falls through to the boolean overload.
+  minimum: IsInteger<N> extends true ? N : never,
 ): data is ArrayRequiredPrefix<T, N>;
 export function hasAtLeast(data: IterableContainer, minimum: number): boolean;
 
@@ -56,7 +58,9 @@ export function hasAtLeast(data: IterableContainer, minimum: number): boolean;
  * @category Array
  */
 export function hasAtLeast<N extends number>(
-  minimum: IsNumericLiteral<N> extends true ? N : never,
+  // Only integer literals narrow: the narrowed type counts whole items, so a
+  // fractional minimum falls through to the boolean overload.
+  minimum: IsInteger<N> extends true ? N : never,
 ): <T extends IterableContainer>(
   data: IterableContainer | T,
 ) => data is ArrayRequiredPrefix<T, N>;

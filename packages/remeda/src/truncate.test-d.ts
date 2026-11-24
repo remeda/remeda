@@ -237,6 +237,12 @@ describe("data-last", () => {
   });
 });
 
+test("'n' past the recursion limit", () => {
+  expectTypeOf(
+    truncate("Hello, world!", 5000),
+  ).toEqualTypeOf<"Hello, world!">();
+});
+
 describe("skips unsupported 'n' values", () => {
   test("negative numbers", () => {
     expectTypeOf(truncate("Hello, world!", -3)).toEqualTypeOf<string>();
