@@ -80,12 +80,13 @@ type HasValidLeadingKeys<
   Visited extends readonly unknown[] = [],
 > = Path extends readonly [infer Key, ...infer Rest]
   ? IsNever<WidePropertyKey<Key>> extends true
-    ? // An assignability check, not an equality one: the key has to be one of
-      // the data's keys. The brackets check a union of keys as a whole, as the
-      // validating overloads do, instead of once per member.
+    ? // The brackets check a union of keys as a whole, as the validating
+      // overloads do, instead of once per member.
       [Key] extends [KeysDeep<T, Visited>]
       ? HasValidLeadingKeys<T, Rest, [...Visited, Key]>
-      : false
+      : // The only failure: a literal key that isn't one of the data's keys at
+        // its position in the path.
+        false
     : // A wide key (e.g., `string`) can't be checked, and neither can the keys
       // after it, as they depend on which key it is.
       true
