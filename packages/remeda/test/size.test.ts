@@ -15,10 +15,10 @@ import { expect, test } from "vitest";
 const SIZE_UNIT = 1000;
 
 // The unpacked size of the published package in SIZE_UNITs, as `npm pack`
-// reports it; users
-// see it when auditing their install size. Every function and doc comment
-// moves it, so the tests only fail once it drifts past the threshold, and the
-// changes accumulate across PRs until this baseline is updated.
+// reports it; users see it when auditing their install size. Every function
+// and doc comment moves it, so the tests only fail once it drifts past the
+// threshold, and the changes accumulate across PRs until this baseline is
+// updated.
 const EXPECTED_PACKAGE_SIZE = 1461;
 const PACKAGE_SIZE_THRESHOLD = 0.03;
 
