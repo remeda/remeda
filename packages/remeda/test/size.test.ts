@@ -9,7 +9,7 @@ import path from "node:path";
 import { promisify } from "node:util";
 import { gzipSync } from "node:zlib";
 import { build, type BuildOptions } from "esbuild";
-import { expect, test } from "vitest";
+import { beforeAll, expect, test } from "vitest";
 
 // Package sizes are in kB (1,000 B), the unit npm and npmjs.com report them in.
 const SIZE_UNIT = 1000;
@@ -102,9 +102,12 @@ type PackResult = {
 };
 
 // Without dist, `npm pack` would report a shrunken package instead.
-if (!existsSync(path.join(PACKAGE_DIR, DIST_ENTRY))) {
-  throw new Error("dist is missing: run `npm run build` first");
-}
+// eslint-disable-next-line vitest/no-hooks -- Every test measures dist, so a missing dist is one setup failure rather than three misleading ones.
+beforeAll(() => {
+  if (!existsSync(path.join(PACKAGE_DIR, DIST_ENTRY))) {
+    throw new Error("dist is missing: run `npm run build` first");
+  }
+});
 
 test("package grows within the threshold", async () => {
   const pack = await packDryRun();
