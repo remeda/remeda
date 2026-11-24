@@ -60,6 +60,7 @@
     "test:coverage": "vitest run --coverage --project runtime",
     "test:prop": "vitest --project prop",
     "test:runtime": "vitest --project runtime",
+    "test:size": "vitest run --project size",
     "test:types": "vitest --project types"
   },
   "devDependencies": {
@@ -70,6 +71,7 @@
     "@types/node": "^26.6.6",
     "@vitest/coverage-v8": "^5.0.5",
     "@vitest/eslint-plugin": "^1.6.28",
+    "esbuild": "^0.28.2",
     "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsdoc": "^65.4.2",

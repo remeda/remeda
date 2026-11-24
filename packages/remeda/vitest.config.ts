@@ -43,6 +43,13 @@ export default defineConfig({
           isolate: false,
         },
       },
+      {
+        extends: true,
+        test: {
+          name: "size",
+          include: ["test/size.test.ts"],
+        },
+      },
     ],
   },
 });
