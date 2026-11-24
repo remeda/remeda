@@ -1,4 +1,4 @@
-import type { KeysOfUnion, OmitIndexSignature } from "type-fest";
+import type { IsNever, KeysOfUnion, OmitIndexSignature } from "type-fest";
 import type { ArrayAt } from "./internal/types/ArrayAt";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 
@@ -57,18 +57,19 @@ type Resolved<T> = T extends infer U ? U : never;
 // The rest parameter of the overload for paths of unknown length. A path with a
 // literal `length` is a fixed tuple, which is left to the validating overloads
 // so that their errors lead. In any other path, the literal keys before the
-// spread are still checked, and the error names the first invalid one.
+// spread are still checked, and the error's metadata holds the first invalid
+// one.
 type PathOfUnknownLength<
   T,
   Path extends readonly PropertyKey[],
 > = number extends Path["length"]
-  ? [InvalidLeadingKey<T, Path>] extends [never]
+  ? IsNever<InvalidLeadingKey<T, Path>> extends true
     ? Path
     : RemedaTypeError<
         "prop",
-        `${InvalidLeadingKey<T, Path> & (string | number)} is not a valid key at its position in the path`,
+        "A key before the spread is not a valid key at its position in the path",
         // A rest parameter must have an array type.
-        { type: never[] }
+        { type: never[]; metadata: InvalidLeadingKey<T, Path> }
       >
   : never;
 
