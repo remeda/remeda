@@ -56,9 +56,9 @@ type NonPropertyKey = object | null | undefined;
 type Resolved<T> = T extends infer U ? U : never;
 
 // The rest parameter of the overload for paths of unknown length. A path with a
-// literal `length` is a fixed tuple, which is left to the validating overloads
-// so that their errors lead. In any other path, the literal keys before the
-// spread are still checked.
+// literal `length` is a fixed tuple and is left to the validating overloads:
+// this overload lets through wide keys that aren't keys of the data, which
+// would make `prop(data, key)` with `key: string` compile.
 type PathOfUnknownLength<
   T,
   Path extends readonly PropertyKey[],
@@ -73,23 +73,22 @@ type PathOfUnknownLength<
       >
   : never;
 
-// Whether the literal keys before the spread are keys of the data.
+// Whether the keys before the spread are keys of the data.
 type HasValidLeadingKeys<
   T,
   Path extends readonly unknown[],
-  Visited extends readonly unknown[] = [],
 > = Path extends readonly [infer Key, ...infer Rest]
-  ? IsNever<WidePropertyKey<Key>> extends true
-    ? // The brackets check a union of keys as a whole, as the validating
-      // overloads do, instead of once per member.
-      [Key] extends [KeysDeep<T, Visited>]
-      ? HasValidLeadingKeys<T, Rest, [...Visited, Key]>
-      : // The only failure: a literal key that isn't one of the data's keys at
+  ? // The brackets check a union of keys as a whole, as the validating
+    // overloads do, instead of once per member.
+    [Key] extends [KeysOfUnion<T>]
+    ? HasValidLeadingKeys<Prop<T, Key>, Rest>
+    : IsNever<WidePropertyKey<Key>> extends true
+      ? // The only failure: a literal key that isn't one of the data's keys at
         // its position in the path.
         false
-    : // A wide key (e.g., `string`) can't be checked, and neither can the keys
-      // after it, as they depend on which key it is.
-      true
+      : // Like the spread, a wide key (e.g., `string`) is only known at
+        // runtime, so it isn't rejected, and the keys after it can't be checked.
+        true
   : // We reached the spread.
     true;
 
@@ -105,9 +104,10 @@ type HasValidLeadingKeys<
  *
  * A path whose length isn't known at compile time (e.g., a `string[]`, or the
  * result of `stringToPath` on a plain `string`) can be spread into the
- * data-first form, optionally after literal keys. Only those
- * literal keys are checked against the object type, and the result is typed
- * `unknown` instead of the type of the property it reaches.
+ * data-first form, optionally after other keys. Only the keys before the
+ * spread are checked against the object type, up to a wide key (e.g., a
+ * `string`) that isn't one of its keys, and the result is typed `unknown`
+ * instead of the type of the property it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
@@ -318,9 +318,10 @@ export function prop<
  *
  * A path whose length isn't known at compile time (e.g., a `string[]`, or the
  * result of `stringToPath` on a plain `string`) can be spread into the
- * data-first form, optionally after literal keys. Only those
- * literal keys are checked against the object type, and the result is typed
- * `unknown` instead of the type of the property it reaches.
+ * data-first form, optionally after other keys. Only the keys before the
+ * spread are checked against the object type, up to a wide key (e.g., a
+ * `string`) that isn't one of its keys, and the result is typed `unknown`
+ * instead of the type of the property it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *

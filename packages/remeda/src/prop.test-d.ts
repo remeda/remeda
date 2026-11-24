@@ -606,6 +606,16 @@ describe("path of unknown length", () => {
     );
   });
 
+  test("invalid key after a wide key before the spread", () => {
+    prop(
+      $typed<Record<string, { a: number }>>(),
+      // @ts-expect-error [ts2345] -- 'x' is not a key of the record's values; TypeScript reports it on the first key of the path
+      $typed<string>(),
+      "x",
+      ...$typed<string[]>(),
+    );
+  });
+
   test("ten literal keys before the spread", () => {
     expectTypeOf(
       prop(
@@ -680,6 +690,17 @@ describe("prevents unsupported data types", () => {
 });
 
 describe("known issues!", () => {
+  test("data typed `{}`", () => {
+    // Data typed `{}` (e.g., `unknown` without `null` and `undefined`) is
+    // accepted with a path of unknown length, but when it's a string or a
+    // number at runtime the call returns a function instead of the property.
+    // Narrowing with `typeof data === "object"` avoids it.
+    const data = $typed<unknown>();
+    if (data !== undefined && data !== null) {
+      expectTypeOf(prop(data, ...$typed<string[]>())).toBeUnknown();
+    }
+  });
+
   test("generic data with literal keys before the spread", () => {
     // Inside a generic function, a literal key before a spread is rejected even
     // when the data's constraint has it.
