@@ -6,7 +6,8 @@ remeda: prop
 - Remeda's `prop` takes the path as variadic arguments instead of an array;
   spread a path array into it.
 - Remeda doesn't take a type argument for the result. If you passed one to
-  `R.path` (e.g., `R.path<number>(...)`), cast the result instead.
+  `R.path` (e.g., `R.path<number>(...)`), drop it: a literal path is typed
+  for you, and for a non-literal path, cast the `unknown` result.
 - Ramda counts negative indices from the end of an array; `prop` doesn't
   support them. Read the array with `prop` and use the native
   [`Array.prototype.at`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at)

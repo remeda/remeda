@@ -70,7 +70,19 @@ _.get(DATA, "a[0].b.c");
 prop(DATA, ...stringToPath("a[0].b.c"));
 ```
 
-#### Non-literal Paths
+#### Non-Literal Path Arrays
+
+```ts
+const PATH: string[];
+
+// Lodash
+_.get(DATA, PATH); // any
+
+// Remeda
+prop(DATA, ...PATH); // unknown
+```
+
+#### Non-Literal Path Strings
 
 ```ts
 const PATH: string;
