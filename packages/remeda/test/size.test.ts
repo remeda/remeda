@@ -14,7 +14,8 @@ import { expect, test } from "vitest";
 // Package sizes are in kB (1,000 B), the unit npm and npmjs.com report them in.
 const SIZE_UNIT = 1000;
 
-// The unpacked size of the published package, as `npm pack` reports it; users
+// The unpacked size of the published package in SIZE_UNITs, as `npm pack`
+// reports it; users
 // see it when auditing their install size. Every function and doc comment
 // moves it, so the tests only fail once it drifts past the threshold, and the
 // changes accumulate across PRs until this baseline is updated.
@@ -23,6 +24,10 @@ const PACKAGE_SIZE_THRESHOLD = 0.03;
 
 const NUM_FILES_REPORTED = 5;
 
+// Keeps the `.d` of declaration files so they group apart from the runtime
+// files they describe.
+const FILE_EXTENSION_RE = /(?:\.d)?\.[^./]+$/u;
+
 const PACKAGE_DIR = path.resolve(import.meta.dirname, "..");
 const DIST_INDEX = path.join(PACKAGE_DIR, "dist", "index.js");
 const DIST_ENTRY = JSON.stringify(DIST_INDEX);
@@ -30,7 +35,7 @@ const DIST_ENTRY = JSON.stringify(DIST_INDEX);
 const PACK_COMMAND = "npm pack --dry-run --json --ignore-scripts";
 
 // The 15 most imported functions after `pipe` in a survey of public code
-// (October 2026).
+// (October 2026), ranked by the number of files importing each.
 const TOP_15 = [
   "clone",
   "entries",
@@ -70,6 +75,9 @@ const BUNDLE_OPTIONS = {
   logLevel: "silent",
 } as const satisfies BuildOptions;
 
+// Sizes come from the zlib bundled with official Node builds, the closest to
+// what servers send; a Node linked against the system zlib reports different
+// sizes.
 const GZIP_OPTIONS = { level: 9 } as const;
 
 const SIZE_FORMAT_OPTIONS = {
@@ -122,8 +130,8 @@ test("package shrinks within the threshold", async () => {
 });
 
 test("bundle sizes", async () => {
-  // Bundle sizes are exact: a change of a few bytes in a shared helper
-  // multiplies across every function using it.
+  // Bundle sizes are exact: a change of a few bytes in a shared helper shows
+  // up in every import set that uses it.
   await expect(
     Promise.all(
       Object.entries(BUNDLE_ENTRIES).map(
@@ -165,8 +173,14 @@ function packageSizeReport({ unpackedSize, files }: PackResult): string {
   const drift = size - EXPECTED_PACKAGE_SIZE;
   return [
     `Package is ${SIZE_FORMATTER.format(size)}: ${SIZE_CHANGE_FORMATTER.format(drift)} (${PERCENT_CHANGE_FORMATTER.format(drift / EXPECTED_PACKAGE_SIZE)}) from the ${SIZE_FORMATTER.format(EXPECTED_PACKAGE_SIZE)} baseline (EXPECTED_PACKAGE_SIZE in test/size.test.ts), past the +-${(PACKAGE_SIZE_THRESHOLD * 100).toString()}% threshold (+-${SIZE_FORMATTER.format(EXPECTED_PACKAGE_SIZE * PACKAGE_SIZE_THRESHOLD)}).`,
-    "Changes accumulate across PRs until the baseline is updated, so this PR may own only part of the drift. The PRs since the baseline was set:",
-    `  git log --oneline "$(git log -1 --format=%H -G 'EXPECTED_PACKAGE_SIZE =' -- :/packages/remeda/test/size.test.ts)..HEAD"`,
+    "Changes accumulate across PRs until the baseline is updated, so this PR may own only part of the drift. The commits since the baseline was set:",
+    `  git log --oneline "$(git log -1 --format=%H -G '^const EXPECTED_PACKAGE_SIZE =' -- :/packages/remeda/test/size.test.ts)..HEAD"`,
+    `By extension: ${sizeByExtension(files)
+      .map(
+        ([extension, extensionSize]) =>
+          `${extension} ${SIZE_FORMATTER.format(extensionSize / SIZE_UNIT)}`,
+      )
+      .join(", ")}`,
     "Largest files:",
     ...[...files]
       .sort(({ size: left }, { size: right }) => right - left)
@@ -176,6 +190,17 @@ function packageSizeReport({ unpackedSize, files }: PackResult): string {
           `  ${SIZE_FORMATTER.format(fileSize / SIZE_UNIT)}  ${filePath}`,
       ),
   ].join("\n");
+}
+
+function sizeByExtension(
+  files: PackResult["files"],
+): readonly (readonly [extension: string, size: number])[] {
+  const sizes = new Map<string, number>();
+  for (const { path: filePath, size } of files) {
+    const extension = FILE_EXTENSION_RE.exec(filePath)?.[0] ?? filePath;
+    sizes.set(extension, (sizes.get(extension) ?? 0) + size);
+  }
+  return [...sizes].sort(([, left], [, right]) => right - left);
 }
 
 async function bundleSize(entry: string): Promise<string> {
