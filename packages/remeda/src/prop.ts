@@ -69,25 +69,28 @@ type PathOfUnknownLength<
         "prop",
         "A key before the spread is not a valid key at its position in the path",
         // A rest parameter must have an array type.
-        { type: never[] }
+        { type: readonly never[] }
       >
   : never;
 
-// Whether the literal keys at the start of the path are keys of the data at
-// their positions. A key that isn't a literal ends the check, as the keys after
-// it can't be tied to the data's type. A union of keys is checked as a whole,
-// like the validating overloads do, instead of once per member.
+// Whether the literal keys before the spread are keys of the data.
 type HasValidLeadingKeys<
   T,
   Path extends readonly unknown[],
   Visited extends readonly unknown[] = [],
 > = Path extends readonly [infer Key, ...infer Rest]
   ? IsNever<WidePropertyKey<Key>> extends true
-    ? [Key] extends [KeysDeep<T, Visited>]
+    ? // An assignability check, not an equality one: the key has to be one of
+      // the data's keys. The brackets check a union of keys as a whole, as the
+      // validating overloads do, instead of once per member.
+      [Key] extends [KeysDeep<T, Visited>]
       ? HasValidLeadingKeys<T, Rest, [...Visited, Key]>
       : false
-    : true
-  : true;
+    : // A wide key (e.g., `string`) can't be checked, and neither can the keys
+      // after it, as they depend on which key it is.
+      true
+  : // We reached the spread.
+    true;
 
 /**
  * Gets the value of the given property from an object. Nested properties can
@@ -115,6 +118,7 @@ type HasValidLeadingKeys<
  *   prop({ foo: { bar: 'baz' } }, 'foo'); //=> { bar: 'baz' }
  *   prop({ foo: { bar: 'baz' } }, 'foo', 'bar'); //=> 'baz'
  *   prop(["cat", "dog"], 1); //=> 'dog'
+ *   prop({ foo: { bar: 'baz' } }, ...'foo.bar'.split('.')); //=> 'baz'
  * @dataFirst
  * @category Object
  */
@@ -296,35 +300,6 @@ export function prop<
   >
 >;
 
-/**
- * Gets the value of the given property from an object. Nested properties can
- * be accessed by providing a variadic array of keys that define the path from
- * the root to the desired property. Arrays can be accessed by using numeric
- * keys. Unions, optional properties, and index signatures are handled
- * gracefully by returning `undefined` early for any non-existing property on
- * the path. Paths are validated against the object type to provide stronger
- * type safety, better compile-time errors, and to enable autocompletion in
- * IDEs.
- *
- * A path whose length isn't known at compile time (e.g., a `string[]`, or the
- * result of `stringToPath` on a plain `string`) can be spread into the
- * data-first form, optionally after literal keys. Only those
- * literal keys are checked against the object type, and the result is typed
- * `unknown` instead of the type of the property it reaches.
- *
- * To check whether a key exists on the object, use `hasProp`.
- *
- * @param data - The object or array to access.
- * @param path - The keys for the property to extract, including a spread of a
- * path whose length isn't known at compile time.
- * @signature
- *   prop(data, ...path);
- * @example
- *   prop({ foo: { bar: 'baz' } }, ...'foo.bar'.split('.')); //=> 'baz'
- *   prop({ foo: { bar: 'baz' } }, 'foo', ...'bar'.split('.')); //=> 'baz'
- * @dataFirst
- * @category Object
- */
 export function prop<
   T extends NonPropertyKey,
   Path extends readonly PropertyKey[],

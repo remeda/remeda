@@ -7,6 +7,7 @@ import { sortBy } from "./sortBy";
 import { stringToPath } from "./stringToPath";
 
 declare const SYMBOL: unique symbol;
+declare const NESTED: { a: { b: { c: { d: number } }[] } };
 
 interface InterfaceWithIndexSignature {
   [key: string]: number;
@@ -539,55 +540,55 @@ test("wide key without an index signature", () => {
 });
 
 describe("with stringToPath", () => {
-  const DATA = {} as { a: { b: { c: { d: number } }[] } };
-
   test("with valid paths", () => {
-    expectTypeOf(prop(DATA, ...stringToPath("a"))).toEqualTypeOf<{
+    expectTypeOf(prop(NESTED, ...stringToPath("a"))).toEqualTypeOf<{
       b: { c: { d: number } }[];
     }>();
-    expectTypeOf(prop(DATA, ...stringToPath("a.b"))).toEqualTypeOf<
+    expectTypeOf(prop(NESTED, ...stringToPath("a.b"))).toEqualTypeOf<
       { c: { d: number } }[]
     >();
-    expectTypeOf(prop(DATA, ...stringToPath("a.b[0]"))).toExtend<
+    expectTypeOf(prop(NESTED, ...stringToPath("a.b[0]"))).toExtend<
       { c: { d: number } } | undefined
     >();
-    expectTypeOf(prop(DATA, ...stringToPath("a.b[0].c"))).toExtend<
+    expectTypeOf(prop(NESTED, ...stringToPath("a.b[0].c"))).toExtend<
       { d: number } | undefined
     >();
-    expectTypeOf(prop(DATA, ...stringToPath("a.b[0].c.d"))).toEqualTypeOf<
+    expectTypeOf(prop(NESTED, ...stringToPath("a.b[0].c.d"))).toEqualTypeOf<
       number | undefined
     >();
   });
 
   test("with invalid paths", () => {
-    // @ts-expect-error [ts2769] -- 'x' is not a key of DATA
-    prop(DATA, ...stringToPath("x.y"));
-    // @ts-expect-error [ts2769] -- 'e' is not a key of DATA.a.b[0].c.d
-    prop(DATA, ...stringToPath("a.b[0].c.d.e"));
-    // @ts-expect-error [ts2769] -- 1 is not a key of DATA.a.b[0].c.d
-    prop(DATA, ...stringToPath("a.b[0].c.d[1]"));
+    // @ts-expect-error [ts2769] -- 'x' is not a key of NESTED
+    prop(NESTED, ...stringToPath("x.y"));
+    // @ts-expect-error [ts2769] -- 'e' is not a key of NESTED.a.b[0].c.d
+    prop(NESTED, ...stringToPath("a.b[0].c.d.e"));
+    // @ts-expect-error [ts2769] -- 1 is not a key of NESTED.a.b[0].c.d
+    prop(NESTED, ...stringToPath("a.b[0].c.d[1]"));
   });
 });
 
 describe("path of unknown length", () => {
-  const DATA = {} as { a: { b: { c: { d: number } }[] } };
-
   test("non-empty array", () => {
-    expectTypeOf(prop(DATA, ...(["a"] as [string, ...string[]]))).toBeUnknown();
+    expectTypeOf(
+      prop(NESTED, ...(["a"] as [string, ...string[]])),
+    ).toBeUnknown();
   });
 
   test("stringToPath on a non-literal string", () => {
-    expectTypeOf(prop(DATA, ...stringToPath($typed<string>()))).toBeUnknown();
+    expectTypeOf(prop(NESTED, ...stringToPath($typed<string>()))).toBeUnknown();
   });
 
   test("valid literal keys before the spread", () => {
-    expectTypeOf(prop(DATA, "a", "b", 0, ...$typed<string[]>())).toBeUnknown();
+    expectTypeOf(
+      prop(NESTED, "a", "b", 0, ...$typed<string[]>()),
+    ).toBeUnknown();
   });
 
   test("invalid first key before the spread", () => {
     prop(
-      DATA,
-      // @ts-expect-error [ts2345] -- 'x' is not a key of DATA
+      NESTED,
+      // @ts-expect-error [ts2345] -- 'x' is not a key of NESTED
       "x",
       ...$typed<string[]>(),
     );
@@ -595,8 +596,8 @@ describe("path of unknown length", () => {
 
   test("invalid deep key before the spread", () => {
     prop(
-      DATA,
-      // @ts-expect-error [ts2345] -- 'x' is not a key of DATA.a.b[0]; TypeScript reports it on the first key of the path
+      NESTED,
+      // @ts-expect-error [ts2345] -- 'x' is not a key of NESTED.a.b[0]; TypeScript reports it on the first key of the path
       "a",
       "b",
       0,
@@ -630,12 +631,10 @@ describe("path of unknown length", () => {
     ).toBeUnknown();
   });
 
-  // Data-last has no overload for a path of unknown length: it dispatches on
-  // its first key at runtime, which an empty path doesn't have.
   describe("data-last", () => {
     test("possibly empty path", () => {
       pipe(
-        DATA,
+        NESTED,
         prop(
           // @ts-expect-error [ts2556] -- no data-last overload takes a spread that might be empty
           ...([] as string[]),
@@ -645,7 +644,7 @@ describe("path of unknown length", () => {
 
     test("non-empty path", () => {
       pipe(
-        DATA,
+        NESTED,
         prop(
           // @ts-expect-error [ts2345] -- the call resolves against the data-first overload, which reads the first key as the data
           ...$typed<[string, ...string[]]>(),
@@ -682,13 +681,13 @@ describe("prevents unsupported data types", () => {
 
 describe("known issues!", () => {
   test("generic data with literal keys before the spread", () => {
-    // The literal keys before the spread are checked against the data's keys,
-    // which stay unresolved while the data is a type parameter.
+    // Inside a generic function, a literal key before a spread is rejected even
+    // when the data's constraint has it.
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping -- the issue only shows up inside a generic function wrapper; only how `Data` reaches `prop` matters here, not how the wrapper is written.
     const propA = <Data extends { a: unknown }>(data: Data) =>
       prop(
         data,
-        // @ts-expect-error [ts2345] -- the keys of a generic `Data` can't be resolved
+        // @ts-expect-error [ts2345] -- every `Data` has `a`, but the key is rejected
         "a",
         ...$typed<string[]>(),
       );
@@ -697,27 +696,25 @@ describe("known issues!", () => {
   });
 
   test("union of literal paths", () => {
-    // Each member has a literal `length`, so the overload for paths of unknown
-    // length rejects the union, and the validating overloads can't take a
-    // spread of a union of tuples. Spelling out one call per path avoids it.
+    // A union of paths is rejected even when each of them is a valid path.
+    // Calling `prop` once per path works.
     prop(
       $typed<{ a: { b: number } }>(),
-      // @ts-expect-error [ts2345] -- a union of literal paths matches no overload
+      // @ts-expect-error [ts2345] -- both paths are valid, but the union is rejected
       ...$typed<["a"] | ["a", "b"]>(),
     );
   });
 
   test("generic path of unknown length", () => {
-    // `number extends Path["length"]` stays deferred while `Path` is a type
-    // parameter (which includes `stringToPath` on a generic string), so the
-    // overload for paths of unknown length rejects it even when its constraint
-    // is a plain array. Casting the path to its constraint (e.g.,
-    // `path as readonly string[]`) avoids it.
+    // Inside a generic function, a path typed by a type parameter is rejected
+    // even when its constraint is a plain array, and so is `stringToPath` on a
+    // generic string. Casting the path to its constraint (e.g.,
+    // `path as readonly string[]`) works.
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unnecessary-type-parameters, unicorn/consistent-function-scoping -- the issue only shows up inside a generic function wrapper; only how `Path` reaches `prop` matters here, not how the wrapper is written.
     const propAt = <Path extends readonly string[]>(path: Path) =>
       prop(
         { a: 1 },
-        // @ts-expect-error [ts2345] -- a generic `Path` can't be shown to have an unknown length
+        // @ts-expect-error [ts2345] -- `Path` is always a plain array, but it's rejected
         ...path,
       );
 

@@ -18,7 +18,11 @@ test("symbol", () => {
   expectTypeOf(widePropertyKey($typed<symbol>())).toEqualTypeOf<symbol>();
 });
 
-test("literals", () => {
+test("literal", () => {
+  expectTypeOf(widePropertyKey("a")).toBeNever();
+});
+
+test("union of literals", () => {
   expectTypeOf(widePropertyKey($typed<"a" | 1>())).toBeNever();
 });
 
