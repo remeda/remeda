@@ -534,7 +534,7 @@ describe("unbounded records (issue #1274)", () => {
 });
 
 test("wide key without an index signature", () => {
-  // @ts-expect-error [ts2769] -- keys passed one by one are always validated, and `string` isn't a key of the data
+  // @ts-expect-error [ts2769] -- without a spread every key is validated, and `string` isn't a key of the data
   prop({} as { a: number }, $typed<string>());
 });
 
@@ -580,6 +580,31 @@ describe("path of unknown length", () => {
     expectTypeOf(prop(DATA, ...stringToPath($typed<string>()))).toBeUnknown();
   });
 
+  test("valid literal keys before the spread", () => {
+    expectTypeOf(prop(DATA, "a", "b", 0, ...$typed<string[]>())).toBeUnknown();
+  });
+
+  test("invalid first key before the spread", () => {
+    prop(
+      DATA,
+      // @ts-expect-error [ts2345] -- 'x' is not a key of DATA
+      "x",
+      ...$typed<string[]>(),
+    );
+  });
+
+  test("invalid deep key before the spread", () => {
+    prop(
+      DATA,
+      // @ts-expect-error [ts2345] -- 'x' is not a key of DATA.a.b[0]; TypeScript reports it on the first key of the path
+      "a",
+      "b",
+      0,
+      "x",
+      ...$typed<string[]>(),
+    );
+  });
+
   test("data-last", () => {
     pipe(
       DATA,
@@ -609,6 +634,21 @@ describe("prevents unsupported data types", () => {
 });
 
 describe("known issues!", () => {
+  test("generic data with literal keys before the spread", () => {
+    // The literal keys before the spread are checked against the data's keys,
+    // which stay unresolved while the data is a type parameter.
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping -- the issue only shows up inside a generic function wrapper; only how `Data` reaches `prop` matters here, not how the wrapper is written.
+    const propA = <Data extends { a: unknown }>(data: Data) =>
+      prop(
+        data,
+        // @ts-expect-error [ts2345] -- the keys of a generic `Data` can't be resolved
+        "a",
+        ...$typed<string[]>(),
+      );
+
+    propA({ a: 1 });
+  });
+
   test("generic path of unknown length", () => {
     // `number extends Path["length"]` stays deferred while `Path` is a type
     // parameter, so the overload for paths of unknown length rejects it even

@@ -1,5 +1,6 @@
 import type { KeysOfUnion, OmitIndexSignature } from "type-fest";
 import type { ArrayAt } from "./internal/types/ArrayAt";
+import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 
 // Computes all possible keys of `T` at `Path` spread over unions, allowing
 // keys from any of the results, not just those **shared** by all of them.
@@ -50,6 +51,47 @@ type NonPropertyKey = object | null | undefined;
 // ts2589 (Type instantiation is excessively deep and possibly infinite).
 type Resolved<T> = T extends infer U ? U : never;
 
+// The rest parameter of the overload for paths of unknown length. A path with a
+// literal `length` is a fixed tuple, which is left to the validating overloads
+// so that their errors lead. In any other path, the literal keys before the
+// spread are still checked, and the error names the first invalid one.
+type PathOfUnknownLength<
+  T,
+  Path extends readonly PropertyKey[],
+> = number extends Path["length"]
+  ? [InvalidLeadingKey<T, Path>] extends [never]
+    ? Path
+    : RemedaTypeError<
+        "prop",
+        `${InvalidLeadingKey<T, Path> & (string | number)} is not a valid key at its position in the path`,
+        // A rest parameter must have an array type.
+        { type: never[] }
+      >
+  : never;
+
+// The first literal key at the start of the path that isn't a key of the data
+// at its position, or `never` when there is none. A key that isn't a literal
+// ends the check, as the keys after it can't be tied to the data's type.
+type InvalidLeadingKey<
+  T,
+  Path extends readonly unknown[],
+  Visited extends readonly unknown[] = [],
+> = Path extends readonly [infer Key, ...infer Rest]
+  ? IsWideKey<Key> extends true
+    ? never
+    : Key extends KeysDeep<T, Visited>
+      ? InvalidLeadingKey<T, Rest, [...Visited, Key]>
+      : Key
+  : never;
+
+type IsWideKey<Key> = string extends Key
+  ? true
+  : number extends Key
+    ? true
+    : symbol extends Key
+      ? true
+      : false;
+
 /**
  * Gets the value of the given property from an object. Nested properties can
  * be accessed by providing a variadic array of keys that define the path from
@@ -62,9 +104,9 @@ type Resolved<T> = T extends infer U ? U : never;
  *
  * A path typed as a plain array instead of a tuple of literals (e.g., a
  * `string[]`, or the result of `stringToPath` on a plain `string`) can be
- * spread into the data-first form. Its keys aren't checked against the object
- * type, and the result is typed `unknown` instead of the type of the property
- * it reaches.
+ * spread into the data-first form, optionally after literal keys. Only those
+ * literal keys are checked against the object type, and the result is typed
+ * `unknown` instead of the type of the property it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
@@ -269,28 +311,27 @@ export function prop<
  *
  * A path typed as a plain array instead of a tuple of literals (e.g., a
  * `string[]`, or the result of `stringToPath` on a plain `string`) can be
- * spread into the data-first form. Its keys aren't checked against the object
- * type, and the result is typed `unknown` instead of the type of the property
- * it reaches.
+ * spread into the data-first form, optionally after literal keys. Only those
+ * literal keys are checked against the object type, and the result is typed
+ * `unknown` instead of the type of the property it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
  * @param data - The object or array to access.
- * @param path - The keys for the property to extract, typed as a plain array
- * instead of a tuple of literals.
+ * @param path - The keys for the property to extract, including a spread of a
+ * plain array instead of a tuple of literals.
  * @signature
  *   prop(data, ...path);
  * @example
  *   prop({ foo: { bar: 'baz' } }, ...'foo.bar'.split('.')); //=> 'baz'
+ *   prop({ foo: { bar: 'baz' } }, 'foo', ...'bar'.split('.')); //=> 'baz'
  * @dataFirst
  * @category Object
  */
-export function prop<Path extends readonly PropertyKey[]>(
-  data: NonPropertyKey,
-  // A tuple has a literal `length`, so literal paths never match this overload
-  // and invalid ones are still reported against the validating overloads.
-  ...path: number extends Path["length"] ? Path : never
-): unknown;
+export function prop<
+  T extends NonPropertyKey,
+  Path extends readonly PropertyKey[],
+>(data: T, ...path: PathOfUnknownLength<T, Path>): unknown;
 
 /**
  * Gets the value of the given property from an object. Nested properties can
@@ -304,9 +345,9 @@ export function prop<Path extends readonly PropertyKey[]>(
  *
  * A path typed as a plain array instead of a tuple of literals (e.g., a
  * `string[]`, or the result of `stringToPath` on a plain `string`) can be
- * spread into the data-first form. Its keys aren't checked against the object
- * type, and the result is typed `unknown` instead of the type of the property
- * it reaches.
+ * spread into the data-first form, optionally after literal keys. Only those
+ * literal keys are checked against the object type, and the result is typed
+ * `unknown` instead of the type of the property it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
