@@ -1,5 +1,7 @@
-import type { KeysOfUnion, OmitIndexSignature } from "type-fest";
+import type { IsNever, KeysOfUnion, OmitIndexSignature } from "type-fest";
 import type { ArrayAt } from "./internal/types/ArrayAt";
+import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
+import type { WidePropertyKey } from "./internal/types/WidePropertyKey";
 
 // Computes all possible keys of `T` at `Path` spread over unions, allowing
 // keys from any of the results, not just those **shared** by all of them.
@@ -13,9 +15,12 @@ type PropDeep<T, Path extends readonly unknown[]> = Path extends readonly [
   ...infer Rest,
 ]
   ? PropDeep<Prop<T, Key>, Rest>
-  : // Keys is a fixed tuple so we know we reach here only when we've reached
-    // the output object.
-    T;
+  : Path extends readonly []
+    ? // All the keys were consumed, we've reached the output object.
+      T
+    : // The rest of the path is an array of unknown length (a spread after
+      // literal keys), so the value it reaches is unknown.
+      unknown;
 
 // Expanding on the built-in `T[Key]` operator to support arrays and unions.
 type Prop<T, Key> =
@@ -50,6 +55,45 @@ type NonPropertyKey = object | null | undefined;
 // ts2589 (Type instantiation is excessively deep and possibly infinite).
 type Resolved<T> = T extends infer U ? U : never;
 
+// The rest parameter of the overload for paths of unknown length. A path with a
+// literal `length` is a fixed tuple and is left to the validating overloads:
+// this overload lets through wide keys that aren't keys of the data, which
+// would make `prop(data, key)` with `key: string` compile.
+type PathOfUnknownLength<
+  T,
+  Path extends readonly PropertyKey[],
+> = number extends Path["length"]
+  ? HasValidLeadingKeys<T, Path> extends true
+    ? Path
+    : RemedaTypeError<
+        "prop",
+        "A key before the spread is not a valid key at its position in the path",
+        // A rest parameter must have an array type. Its items are `never`, not
+        // `unknown`, which would widen the inferred literal keys to `string`
+        // and let invalid ones through.
+        { type: readonly never[] }
+      >
+  : never;
+
+// Whether the keys before the spread are keys of the data.
+type HasValidLeadingKeys<
+  T,
+  Path extends readonly unknown[],
+> = Path extends readonly [infer Key, ...infer Rest]
+  ? // The brackets check a union of keys as a whole, as the validating
+    // overloads do, instead of once per member.
+    [Key] extends [KeysOfUnion<T>]
+    ? HasValidLeadingKeys<Prop<T, Key>, Rest>
+    : IsNever<WidePropertyKey<Key>> extends true
+      ? // The only failure: a literal key that isn't one of the data's keys at
+        // its position in the path.
+        false
+      : // Like the spread, a wide key (e.g., `string`) is only known at
+        // runtime, so it isn't rejected, and the keys after it can't be checked.
+        true
+  : // We reached the spread.
+    true;
+
 /**
  * Gets the value of the given property from an object. Nested properties can
  * be accessed by providing a variadic array of keys that define the path from
@@ -59,6 +103,13 @@ type Resolved<T> = T extends infer U ? U : never;
  * the path. Paths are validated against the object type to provide stronger
  * type safety, better compile-time errors, and to enable autocompletion in
  * IDEs.
+ *
+ * A path whose length isn't known at compile time (e.g., a `string[]`, or the
+ * result of `stringToPath` on a plain `string`) can be spread into the
+ * data-first form, optionally after other keys. Only the keys before the spread
+ * are checked against the object type, up to a wide key (e.g., a `string`)
+ * that isn't one of its keys, and the result is typed `unknown` instead of the
+ * type of the property it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
@@ -70,6 +121,7 @@ type Resolved<T> = T extends infer U ? U : never;
  *   prop({ foo: { bar: 'baz' } }, 'foo'); //=> { bar: 'baz' }
  *   prop({ foo: { bar: 'baz' } }, 'foo', 'bar'); //=> 'baz'
  *   prop(["cat", "dog"], 1); //=> 'dog'
+ *   prop({ foo: { bar: 'baz' } }, ...'foo.bar'.split('.')); //=> 'baz'
  * @dataFirst
  * @category Object
  */
@@ -251,6 +303,11 @@ export function prop<
   >
 >;
 
+export function prop<
+  T extends NonPropertyKey,
+  Path extends readonly PropertyKey[],
+>(data: T, ...path: PathOfUnknownLength<T, Path>): unknown;
+
 /**
  * Gets the value of the given property from an object. Nested properties can
  * be accessed by providing a variadic array of keys that define the path from
@@ -260,6 +317,13 @@ export function prop<
  * the path. Paths are validated against the object type to provide stronger
  * type safety, better compile-time errors, and to enable autocompletion in
  * IDEs.
+ *
+ * A path whose length isn't known at compile time (e.g., a `string[]`, or the
+ * result of `stringToPath` on a plain `string`) can be spread into the
+ * data-first form, optionally after other keys. Only the keys before the spread
+ * are checked against the object type, up to a wide key (e.g., a `string`)
+ * that isn't one of its keys, and the result is typed `unknown` instead of the
+ * type of the property it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
