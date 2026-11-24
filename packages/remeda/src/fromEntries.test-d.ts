@@ -181,14 +181,14 @@ describe("non-readonly inputs", () => {
   });
 
   test("symbol keys", () => {
-    const result = fromEntries([[Symbol("a"), 123]] as [symbol, 123][]);
-
-    expectTypeOf(result).toEqualTypeOf<Record<symbol, 123>>();
+    expectTypeOf(
+      fromEntries([[Symbol("a"), 123]] as [symbol, 123][]),
+    ).toEqualTypeOf<Record<symbol, 123>>();
   });
 
   test("string and number keys", () => {
-    const result = fromEntries([["a", 123]] as [string | number, 123][]);
-
-    expectTypeOf(result).toEqualTypeOf<Record<string, 123>>();
+    expectTypeOf(
+      fromEntries([["a", 123]] as [string | number, 123][]),
+    ).toEqualTypeOf<Record<string, 123>>();
   });
 });
