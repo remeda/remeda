@@ -68,7 +68,9 @@ type PathOfUnknownLength<
     : RemedaTypeError<
         "prop",
         "A key before the spread is not a valid key at its position in the path",
-        // A rest parameter must have an array type.
+        // A rest parameter must have an array type. Its items are `never`, not
+        // `unknown`, which would widen the inferred literal keys to `string`
+        // and let invalid ones through.
         { type: readonly never[] }
       >
   : never;
@@ -104,10 +106,10 @@ type HasValidLeadingKeys<
  *
  * A path whose length isn't known at compile time (e.g., a `string[]`, or the
  * result of `stringToPath` on a plain `string`) can be spread into the
- * data-first form, optionally after other keys. Only the keys before the
- * spread are checked against the object type, up to a wide key (e.g., a
- * `string`) that isn't one of its keys, and the result is typed `unknown`
- * instead of the type of the property it reaches.
+ * data-first form, optionally after other keys. Only the keys before the spread
+ * are checked against the object type, up to a wide key (e.g., a `string`)
+ * that isn't one of its keys, and the result is typed `unknown` instead of the
+ * type of the property it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
@@ -318,10 +320,10 @@ export function prop<
  *
  * A path whose length isn't known at compile time (e.g., a `string[]`, or the
  * result of `stringToPath` on a plain `string`) can be spread into the
- * data-first form, optionally after other keys. Only the keys before the
- * spread are checked against the object type, up to a wide key (e.g., a
- * `string`) that isn't one of its keys, and the result is typed `unknown`
- * instead of the type of the property it reaches.
+ * data-first form, optionally after other keys. Only the keys before the spread
+ * are checked against the object type, up to a wide key (e.g., a `string`)
+ * that isn't one of its keys, and the result is typed `unknown` instead of the
+ * type of the property it reaches.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *

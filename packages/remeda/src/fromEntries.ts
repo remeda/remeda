@@ -40,11 +40,11 @@ type FromEntriesTuple<E, Rest> = E extends Entry
   : FromEntriesError<"Array-like contains a non-entry element">;
 
 // For the array case we also need to handle what kind of keys it defines:
-// 1. If it defines a *broad* key (one that has an infinite set of values, like
-// number or string) then the result is a simple record.
-// 2. If the keys are *literals* then we need to make the record partial
+// 1. If the keys are *literals* then we need to make the record partial
 // (because those props are explicit), and we need to match each key its
 // specific possible value, as defined by the entries.
+// 2. If it defines a *wide* key (`string`, `number`, or `symbol`) then the
+// result is a simple record.
 //
 // Note that this distinction between keys is the result of how typescript
 // considers Record<string, unknown> to be **implicitly** partial, whereas

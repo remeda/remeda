@@ -179,4 +179,16 @@ describe("non-readonly inputs", () => {
 
     expectTypeOf(result).toEqualTypeOf<Record<string, 123>>();
   });
+
+  test("symbol keys", () => {
+    const result = fromEntries([[Symbol("a"), 123]] as [symbol, 123][]);
+
+    expectTypeOf(result).toEqualTypeOf<Record<symbol, 123>>();
+  });
+
+  test("string and number keys", () => {
+    const result = fromEntries([["a", 123]] as [string | number, 123][]);
+
+    expectTypeOf(result).toEqualTypeOf<Record<string, 123>>();
+  });
 });
