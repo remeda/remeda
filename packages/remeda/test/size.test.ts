@@ -29,8 +29,7 @@ const NUM_FILES_REPORTED = 5;
 const FILE_EXTENSION_RE = /(?:\.d)?\.[^./]+$/u;
 
 const PACKAGE_DIR = path.resolve(import.meta.dirname, "..");
-const DIST_INDEX = path.join(PACKAGE_DIR, "dist", "index.js");
-const DIST_ENTRY = JSON.stringify(DIST_INDEX);
+const DIST_ENTRY = "./dist/index.js";
 
 const PACK_COMMAND = "npm pack --dry-run --json --ignore-scripts";
 
@@ -63,7 +62,7 @@ const BUNDLE_ENTRIES = {
   "pipe + map + filter + take": exportsOf("pipe", "map", "filter", "take"),
   "top 15": exportsOf(...TOP_15),
   "pipe + top 15": exportsOf("pipe", ...TOP_15),
-  "whole library": `export * from ${DIST_ENTRY};`,
+  "whole library": `export * from "${DIST_ENTRY}";`,
 };
 
 const BUNDLE_OPTIONS = {
@@ -103,7 +102,7 @@ type PackResult = {
 };
 
 // Without dist, `npm pack` would report a shrunken package instead.
-if (!existsSync(DIST_INDEX)) {
+if (!existsSync(path.join(PACKAGE_DIR, DIST_ENTRY))) {
   throw new Error("dist is missing: run `npm run build` first");
 }
 
@@ -153,7 +152,7 @@ test("bundle sizes", async () => {
 });
 
 function exportsOf(...names: readonly string[]): string {
-  return `export { ${names.join(", ")} } from ${DIST_ENTRY};`;
+  return `export { ${names.join(", ")} } from "${DIST_ENTRY}";`;
 }
 
 async function packDryRun(): Promise<PackResult> {
