@@ -60,7 +60,7 @@
     "test:coverage": "vitest run --coverage --project runtime",
     "test:prop": "vitest --project prop",
     "test:runtime": "vitest --project runtime",
-    "test:size": "vitest --project size",
+    "test:size": "vitest run --project size",
     "test:types": "vitest --project types"
   },
   "devDependencies": {

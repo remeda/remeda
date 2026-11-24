@@ -4,6 +4,7 @@
  */
 
 import { exec } from "node:child_process";
+import { existsSync } from "node:fs";
 import path from "node:path";
 import { promisify } from "node:util";
 import { gzipSync } from "node:zlib";
@@ -23,7 +24,8 @@ const PACKAGE_SIZE_THRESHOLD = 0.03;
 const NUM_FILES_REPORTED = 5;
 
 const PACKAGE_DIR = path.resolve(import.meta.dirname, "..");
-const DIST_ENTRY = JSON.stringify(path.join(PACKAGE_DIR, "dist", "index.js"));
+const DIST_INDEX = path.join(PACKAGE_DIR, "dist", "index.js");
+const DIST_ENTRY = JSON.stringify(DIST_INDEX);
 
 const PACK_COMMAND = "npm pack --dry-run --json --ignore-scripts";
 
@@ -92,6 +94,11 @@ type PackResult = {
   readonly files: readonly { readonly path: string; readonly size: number }[];
 };
 
+// Without dist, `npm pack` would report a shrunken package instead.
+if (!existsSync(DIST_INDEX)) {
+  throw new Error("dist is missing: run `npm run build` first");
+}
+
 test("package grows within the threshold", async () => {
   const pack = await packDryRun();
   const size = pack.unpackedSize / SIZE_UNIT;
@@ -116,14 +123,14 @@ test("package shrinks within the threshold", async () => {
 
 test("bundle sizes", async () => {
   // Bundle sizes are exact: a change of a few bytes in a shared helper
-  // multiplies across every function using it. Regenerate with
-  // `npm run test:size -- -u`.
+  // multiplies across every function using it.
   await expect(
     Promise.all(
       Object.entries(BUNDLE_ENTRIES).map(
         async ([name, entry]) => `${name}: ${await bundleSize(entry)}`,
       ),
     ),
+    "Bundle sizes changed: run `npm run build`, then `npm run test:size -- -u` to update the snapshot",
   ).resolves.toMatchInlineSnapshot(`
     [
       "map: 270 B minified, 202 B gzip",

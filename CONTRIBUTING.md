@@ -52,7 +52,7 @@ A new function must justify why `fn1(fn2(...))` isn't enough: we don't ship `rej
 - Write a JSDoc block with a description, parameters, signature, an example, and tags; it becomes the website docs.
 - Export it from [`packages/remeda/src/index.ts`](packages/remeda/src/index.ts) (alphabetically).
 - If a Lodash, Ramda, or Just equivalent exists, add a mapping page under [`packages/docs/src/content/mapping/`](packages/docs/src/content/mapping/).
-- Update the size checks in [`packages/remeda/test/size.test.ts`](packages/remeda/test/size.test.ts) (`npm run build`, then `npm run test:size`). A new function changes the whole-library bundle size: regenerate the snapshot with `npm run test:size -- -u`. The published package's size is checked within 3% of a baseline, `EXPECTED_PACKAGE_SIZE`, and changes accumulate across PRs until someone updates it, so the PR that crosses the threshold may own only part of the drift. Update the baseline when new functions since it was last set explain the growth; otherwise treat it as a yellow flag and find what grew first.
+- Update the size checks (see [Writing tests](#writing-tests)).
 
 Use a recent function in [`packages/remeda/src/`](packages/remeda/src/) as a template. Implementation conventions are in [`.agents/skills/remeda-utility/reference/`](.agents/skills/remeda-utility/reference/): runtime (dispatch, lazy evaluation, loops, naming) in `implementation-runtime.md`, types (`IterableContainer`, lazy callbacks, `type-fest`) in `implementation-types.md`.
 
@@ -69,6 +69,7 @@ Use a recent function in [`packages/remeda/src/`](packages/remeda/src/) as a tem
   ```
 - Red-green verify regression tests: revert the fix, confirm the test fails, then restore it. Reference the issue or PR number in the test name or a comment.
 - Add property tests ([fast-check](https://fast-check.dev/), in `functionName.test-prop.ts`) when random inputs check what a few examples can't: a lazy function in a fused `pipe` matches its data-first result and callback calls, the function matches a reference implementation (`fromEntries` and `Object.fromEntries`), or an invariant holds (every input element appears in the output).
+- Size checks in [`packages/remeda/test/size.test.ts`](packages/remeda/test/size.test.ts) measure the built package: run `npm run build`, then `npm run test:size`. Bundle sizes are pinned exactly, so any change to runtime code in `src` may need the snapshot regenerated with `npm run test:size -- -u`. The published package's size is checked within 3% of a baseline, `EXPECTED_PACKAGE_SIZE`, and changes accumulate across PRs until someone updates it, so the PR that crosses the threshold may own only part of the drift. Update the baseline when new functions since it was last set explain the growth; otherwise treat it as a yellow flag and find what grew first.
 
 ## Commit and PR titles
 

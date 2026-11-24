@@ -44,5 +44,16 @@ await handleClaudeCodeHook(
       cmd: "npm",
       args: ["--workspace=remeda", "run", "test:types"],
     }),
+
+    // The size tests measure the built package, so they need a fresh build.
+    readonlyCommandStopHandler({
+      cmd: "npm",
+      args: ["--workspace=remeda", "run", "build"],
+    }),
+
+    readonlyCommandStopHandler({
+      cmd: "npm",
+      args: ["--workspace=remeda", "run", "test:size"],
+    }),
   ]),
 );
