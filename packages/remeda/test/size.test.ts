@@ -98,10 +98,10 @@ type PackResult = {
   readonly files: readonly { readonly path: string; readonly size: number }[];
 };
 
-// Without dist, `npm pack` would report a shrunken package instead.
 // eslint-disable-next-line vitest/no-hooks -- Every test measures dist, so a missing dist is one setup failure rather than three misleading ones.
 beforeAll(() => {
   if (!existsSync(path.join(PACKAGE_DIR, DIST_ENTRY))) {
+    // Without dist, `npm pack` would report a shrunken package instead.
     throw new Error("dist is missing: run `npm run build` first");
   }
 });
