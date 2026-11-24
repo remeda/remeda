@@ -614,6 +614,14 @@ describe("path of unknown length", () => {
       ),
     );
   });
+
+  test("string data", () => {
+    prop(
+      // @ts-expect-error [ts2345] -- strings can't be used as data: a string first argument dispatches to data-last at runtime
+      "hello",
+      ...$typed<string[]>(),
+    );
+  });
 });
 
 describe("prevents unsupported data types", () => {
