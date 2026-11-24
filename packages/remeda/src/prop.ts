@@ -1,6 +1,7 @@
 import type { IsNever, KeysOfUnion, OmitIndexSignature } from "type-fest";
 import type { ArrayAt } from "./internal/types/ArrayAt";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
+import type { WidePropertyKey } from "./internal/types/WidePropertyKey";
 
 // Computes all possible keys of `T` at `Path` spread over unions, allowing
 // keys from any of the results, not just those **shared** by all of them.
@@ -81,20 +82,12 @@ type InvalidLeadingKey<
   Path extends readonly unknown[],
   Visited extends readonly unknown[] = [],
 > = Path extends readonly [infer Key, ...infer Rest]
-  ? IsWideKey<Key> extends true
-    ? never
-    : Key extends KeysDeep<T, Visited>
+  ? IsNever<WidePropertyKey<Key>> extends true
+    ? Key extends KeysDeep<T, Visited>
       ? InvalidLeadingKey<T, Rest, [...Visited, Key]>
       : Key
+    : never
   : never;
-
-type IsWideKey<Key> = string extends Key
-  ? true
-  : number extends Key
-    ? true
-    : symbol extends Key
-      ? true
-      : false;
 
 /**
  * Gets the value of the given property from an object. Nested properties can

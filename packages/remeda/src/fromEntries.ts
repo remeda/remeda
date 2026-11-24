@@ -2,6 +2,7 @@ import type { IsNever, Simplify } from "type-fest";
 import { purry1 } from "./internal/purryByArity";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
+import type { WidePropertyKey } from "./internal/types/WidePropertyKey";
 
 type FromEntriesError<Message extends string> = RemedaTypeError<
   "fromEntries",
@@ -49,18 +50,13 @@ type FromEntriesTuple<E, Rest> = E extends Entry
 // considers Record<string, unknown> to be **implicitly** partial, whereas
 // Record<"a", unknown> is not.
 type FromEntriesArray<Entries extends IterableContainer<Entry>> =
-  string extends AllKeys<Entries>
-    ? Record<string, Entries[number][1]>
-    : number extends AllKeys<Entries>
-      ? Record<number, Entries[number][1]>
-      : symbol extends AllKeys<Entries>
-        ? Record<symbol, Entries[number][1]>
-        : {
-            // All properties of the output are optional because we can't ensure
-            // that an entry will exist for every possible prop/key of the
-            // input.
-            [P in AllKeys<Entries>]?: ValueForKey<Entries, P>;
-          };
+  IsNever<WidePropertyKey<AllKeys<Entries>>> extends true
+    ? {
+        // All properties of the output are optional because we can't ensure
+        // that an entry will exist for every possible prop/key of the input.
+        [P in AllKeys<Entries>]?: ValueForKey<Entries, P>;
+      }
+    : Record<WidePropertyKey<AllKeys<Entries>>, Entries[number][1]>;
 
 type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
   Entries[number],
