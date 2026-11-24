@@ -58,36 +58,36 @@ type Resolved<T> = T extends infer U ? U : never;
 // The rest parameter of the overload for paths of unknown length. A path with a
 // literal `length` is a fixed tuple, which is left to the validating overloads
 // so that their errors lead. In any other path, the literal keys before the
-// spread are still checked, and the error's metadata holds the first invalid
-// one.
+// spread are still checked.
 type PathOfUnknownLength<
   T,
   Path extends readonly PropertyKey[],
 > = number extends Path["length"]
-  ? IsNever<InvalidLeadingKey<T, Path>> extends true
+  ? HasValidLeadingKeys<T, Path> extends true
     ? Path
     : RemedaTypeError<
         "prop",
         "A key before the spread is not a valid key at its position in the path",
         // A rest parameter must have an array type.
-        { type: never[]; metadata: InvalidLeadingKey<T, Path> }
+        { type: never[] }
       >
   : never;
 
-// The first literal key at the start of the path that isn't a key of the data
-// at its position, or `never` when there is none. A key that isn't a literal
-// ends the check, as the keys after it can't be tied to the data's type.
-type InvalidLeadingKey<
+// Whether the literal keys at the start of the path are keys of the data at
+// their positions. A key that isn't a literal ends the check, as the keys after
+// it can't be tied to the data's type. A union of keys is checked as a whole,
+// like the validating overloads do, instead of once per member.
+type HasValidLeadingKeys<
   T,
   Path extends readonly unknown[],
   Visited extends readonly unknown[] = [],
 > = Path extends readonly [infer Key, ...infer Rest]
   ? IsNever<WidePropertyKey<Key>> extends true
-    ? Key extends KeysDeep<T, Visited>
-      ? InvalidLeadingKey<T, Rest, [...Visited, Key]>
-      : Key
-    : never
-  : never;
+    ? [Key] extends [KeysDeep<T, Visited>]
+      ? HasValidLeadingKeys<T, Rest, [...Visited, Key]>
+      : false
+    : true
+  : true;
 
 /**
  * Gets the value of the given property from an object. Nested properties can
