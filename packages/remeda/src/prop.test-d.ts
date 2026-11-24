@@ -609,14 +609,53 @@ describe("path of unknown length", () => {
     );
   });
 
-  test("data-last", () => {
-    pipe(
-      DATA,
+  test("ten literal keys before the spread", () => {
+    expectTypeOf(
       prop(
-        // @ts-expect-error [ts2556] -- only data-first accepts a path of unknown length: data-last dispatches on its first key, which an empty path doesn't have
-        ...([] as string[]),
+        $typed<{
+          a: {
+            b: {
+              c: { d: { e: { f: { g: { h: { i: { j: { k: 11 } } } } } } } };
+            };
+          };
+        }>(),
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        ...$typed<string[]>(),
       ),
-    );
+    ).toBeUnknown();
+  });
+
+  // Data-last has no overload for a path of unknown length: it dispatches on
+  // its first key at runtime, which an empty path doesn't have.
+  describe("data-last", () => {
+    test("possibly empty path", () => {
+      pipe(
+        DATA,
+        prop(
+          // @ts-expect-error [ts2556] -- no data-last overload takes a spread that might be empty
+          ...([] as string[]),
+        ),
+      );
+    });
+
+    test("non-empty path", () => {
+      pipe(
+        DATA,
+        prop(
+          // @ts-expect-error [ts2345] -- the call resolves against the data-first overload, which reads the first key as the data
+          ...$typed<[string, ...string[]]>(),
+        ),
+      );
+    });
   });
 
   test("string data", () => {
@@ -661,10 +700,23 @@ describe("known issues!", () => {
     propA({ a: 1 });
   });
 
+  test("union of literal paths", () => {
+    // Each member has a literal `length`, so the overload for paths of unknown
+    // length rejects the union, and the validating overloads can't take a
+    // spread of a union of tuples. Spelling out one call per path avoids it.
+    prop(
+      $typed<{ a: { b: number } }>(),
+      // @ts-expect-error [ts2345] -- a union of literal paths matches no overload
+      ...$typed<["a"] | ["a", "b"]>(),
+    );
+  });
+
   test("generic path of unknown length", () => {
     // `number extends Path["length"]` stays deferred while `Path` is a type
-    // parameter, so the overload for paths of unknown length rejects it even
-    // when its constraint is a plain array.
+    // parameter (which includes `stringToPath` on a generic string), so the
+    // overload for paths of unknown length rejects it even when its constraint
+    // is a plain array. Casting the path to its constraint (e.g.,
+    // `path as readonly string[]`) avoids it.
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unnecessary-type-parameters, unicorn/consistent-function-scoping -- the issue only shows up inside a generic function wrapper; only how `Path` reaches `prop` matters here, not how the wrapper is written.
     const propAt = <Path extends readonly string[]>(path: Path) =>
       prop(

@@ -14,9 +14,12 @@ type PropDeep<T, Path extends readonly unknown[]> = Path extends readonly [
   ...infer Rest,
 ]
   ? PropDeep<Prop<T, Key>, Rest>
-  : // Keys is a fixed tuple so we know we reach here only when we've reached
-    // the output object.
-    T;
+  : Path extends readonly []
+    ? // All the keys were consumed, we've reached the output object.
+      T
+    : // The rest of the path is an array of unknown length (a spread after
+      // literal keys), so the value it reaches is unknown.
+      unknown;
 
 // Expanding on the built-in `T[Key]` operator to support arrays and unions.
 type Prop<T, Key> =
@@ -102,9 +105,9 @@ type IsWideKey<Key> = string extends Key
  * type safety, better compile-time errors, and to enable autocompletion in
  * IDEs.
  *
- * A path typed as a plain array instead of a tuple of literals (e.g., a
- * `string[]`, or the result of `stringToPath` on a plain `string`) can be
- * spread into the data-first form, optionally after literal keys. Only those
+ * A path whose length isn't known at compile time (e.g., a `string[]`, or the
+ * result of `stringToPath` on a plain `string`) can be spread into the
+ * data-first form, optionally after literal keys. Only those
  * literal keys are checked against the object type, and the result is typed
  * `unknown` instead of the type of the property it reaches.
  *
@@ -309,9 +312,9 @@ export function prop<
  * type safety, better compile-time errors, and to enable autocompletion in
  * IDEs.
  *
- * A path typed as a plain array instead of a tuple of literals (e.g., a
- * `string[]`, or the result of `stringToPath` on a plain `string`) can be
- * spread into the data-first form, optionally after literal keys. Only those
+ * A path whose length isn't known at compile time (e.g., a `string[]`, or the
+ * result of `stringToPath` on a plain `string`) can be spread into the
+ * data-first form, optionally after literal keys. Only those
  * literal keys are checked against the object type, and the result is typed
  * `unknown` instead of the type of the property it reaches.
  *
@@ -319,7 +322,7 @@ export function prop<
  *
  * @param data - The object or array to access.
  * @param path - The keys for the property to extract, including a spread of a
- * plain array instead of a tuple of literals.
+ * path whose length isn't known at compile time.
  * @signature
  *   prop(data, ...path);
  * @example
@@ -343,9 +346,9 @@ export function prop<
  * type safety, better compile-time errors, and to enable autocompletion in
  * IDEs.
  *
- * A path typed as a plain array instead of a tuple of literals (e.g., a
- * `string[]`, or the result of `stringToPath` on a plain `string`) can be
- * spread into the data-first form, optionally after literal keys. Only those
+ * A path whose length isn't known at compile time (e.g., a `string[]`, or the
+ * result of `stringToPath` on a plain `string`) can be spread into the
+ * data-first form, optionally after literal keys. Only those
  * literal keys are checked against the object type, and the result is typed
  * `unknown` instead of the type of the property it reaches.
  *
