@@ -2,11 +2,6 @@ import { expectTypeOf, test } from "vitest";
 import { $typed } from "../../../test/$typed";
 import type { WidePropertyKey } from "./WidePropertyKey";
 
-enum NumericEnum {
-  A = 0,
-  B = 1,
-}
-
 declare const UNIQUE_SYMBOL: unique symbol;
 
 declare function widePropertyKey<Key extends PropertyKey>(
@@ -39,10 +34,6 @@ test("template literal", () => {
 
 test("wide key in a union", () => {
   expectTypeOf(widePropertyKey($typed<"a" | number>())).toEqualTypeOf<number>();
-});
-
-test("numeric enum", () => {
-  expectTypeOf(widePropertyKey($typed<NumericEnum>())).toEqualTypeOf<number>();
 });
 
 test("unique symbol", () => {

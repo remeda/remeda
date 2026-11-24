@@ -1,8 +1,7 @@
 /**
  * The wide key (`string`, `number`, or `symbol`) that is assignable to `Key`,
  * or `never` when none is. Unlike `IsBounded`, it checks assignability, not
- * whether `Key` is literal: template literals and branded strings give `never`,
- * while numeric enums give `number`.
+ * whether `Key` is literal: template literals and branded strings give `never`.
  *
  * @see IsBounded
  */
