@@ -17,8 +17,8 @@ remeda: prop
   Lodash types the result as `any`, while Remeda types it as `unknown`; narrow
   it before use.
 - With an empty path, Remeda returns the data itself, while Lodash returns
-  `undefined` (or the default fallback). This includes `stringToPath("")`,
-  which returns an empty path, while Lodash reads the path `""` as a key.
+  `undefined` (or the default fallback). A path string that's empty at runtime
+  does the same through `stringToPath`, while Lodash reads `""` as a key.
 - Lodash supports an optional last argument to `get` which defines a default
   fallback in cases where the prop being accessed does not exist on the input
   object. To achieve this wrap your call to `prop` with a call to
@@ -95,6 +95,19 @@ _.get(DATA, PATH); // any
 
 // Remeda
 prop(DATA, ...stringToPath(PATH)); // unknown
+```
+
+#### Empty Paths
+
+```ts
+const DATA = { a: 1 };
+const PATH: string[] = [];
+
+// Lodash
+_.get(DATA, PATH); //=> undefined
+
+// Remeda
+prop(DATA, ...PATH); //=> { a: 1 }
 ```
 
 #### Default Fallback
