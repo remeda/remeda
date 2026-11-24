@@ -75,7 +75,6 @@ jobs:
           path: packages/remeda/dist
           key: ${{ steps.hash-dist.outputs.distCacheKey }}
 
-  # Its own job so that a size change doesn't hide the jobs that need `build`.
   size:
     name: ⚖️ Size
     needs:
