@@ -695,10 +695,10 @@ describe("known issues!", () => {
     // accepted with a path of unknown length, but when it's a string or a
     // number at runtime the call returns a function instead of the property.
     // Narrowing with `typeof data === "object"` avoids it.
-    const data = $typed<unknown>();
-    if (data !== undefined && data !== null) {
-      expectTypeOf(prop(data, ...$typed<string[]>())).toBeUnknown();
-    }
+    expectTypeOf(
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- `{}` is what `unknown` narrows to without `null` and `undefined`, the type this pins.
+      prop($typed<{}>(), ...$typed<string[]>()),
+    ).toBeUnknown();
   });
 
   test("generic data with literal keys before the spread", () => {
