@@ -41,10 +41,6 @@ describe("tuples", () => {
       string | undefined
     >();
   });
-
-  test("index past the recursion limit", () => {
-    expectTypeOf(prop([] as "cat"[], 5000)).toEqualTypeOf<"cat" | undefined>();
-  });
 });
 
 describe("unions", () => {

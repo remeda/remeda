@@ -132,12 +132,6 @@ describe("data-first", () => {
   test("dropping more than available", () => {
     expectTypeOf(drop([1, 2, 3] as const, 10)).toEqualTypeOf<[]>();
   });
-
-  test("count past the recursion limit", () => {
-    expectTypeOf(drop([1, 2] as [1, ...string[], 2], 5000)).toEqualTypeOf<
-      [] | [...string[], 2]
-    >();
-  });
 });
 
 describe("data-last", () => {

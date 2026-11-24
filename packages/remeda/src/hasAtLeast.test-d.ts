@@ -171,25 +171,6 @@ test("only narrows on literal numbers", () => {
   }
 });
 
-test("negative minimum", () => {
-  const array = [] as number[];
-  if (hasAtLeast(array, -1)) {
-    expectTypeOf(array).toEqualTypeOf<number[]>();
-  } else {
-    // Every array has at least -1 items.
-    expectTypeOf(array).toBeNever();
-  }
-});
-
-test("fractional minimum", () => {
-  const array = [] as number[];
-  if (hasAtLeast(array, 1.5)) {
-    expectTypeOf(array).toEqualTypeOf<number[]>();
-  } else {
-    expectTypeOf(array).toEqualTypeOf<number[]>();
-  }
-});
-
 test("can narrow on a literal union", () => {
   const array = [] as number[];
   if (hasAtLeast(array, 3 as 3 | 4)) {

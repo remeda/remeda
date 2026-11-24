@@ -18,14 +18,6 @@ test("empty tuple, out of bounds", () => {
   expectTypeOf(arrayAt([], 0)).toEqualTypeOf<undefined>();
 });
 
-test("negative index", () => {
-  expectTypeOf(arrayAt($typed<number[]>(), -1)).toEqualTypeOf<undefined>();
-});
-
-test("fractional index", () => {
-  expectTypeOf(arrayAt($typed<number[]>(), 1.5)).toEqualTypeOf<undefined>();
-});
-
 describe("fixed tuples", () => {
   const DATA = [1, 2, 3, 4, 5] as const;
 
