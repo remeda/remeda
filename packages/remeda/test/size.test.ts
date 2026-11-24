@@ -74,9 +74,6 @@ const BUNDLE_OPTIONS = {
   logLevel: "silent",
 } as const satisfies BuildOptions;
 
-// Sizes come from the zlib bundled with official Node builds, the closest to
-// what servers send; a Node linked against the system zlib reports different
-// sizes.
 const GZIP_OPTIONS = { level: 9 } as const;
 
 const SIZE_FORMAT_OPTIONS = {
