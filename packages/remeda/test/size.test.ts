@@ -145,8 +145,12 @@ async function packDryRun(): Promise<PackResult> {
   // `exec` runs the command in a shell so that `npm` also resolves on Windows,
   // where it's a `.cmd` script that can't be spawned directly.
   const { stdout } = await promisify(exec)(PACK_COMMAND, { cwd: PACKAGE_DIR });
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access -- `npm pack --json` prints an array with an entry per packed package, and we pack exactly one.
-  return JSON.parse(stdout)[0];
+  // `npm pack --json` prints one entry per packed package, and we pack exactly
+  // one: npm 12 keys the entries by package name, earlier versions list them in
+  // an array.
+  // @ts-expect-error [ts2322] -- The entry is `unknown` to TypeScript, but every npm version prints PackResult's fields in it.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- `JSON.parse` returns `any`, and `Object.values` reads both output shapes.
+  return Object.values(JSON.parse(stdout))[0];
 }
 
 function packageSizeReport({ unpackedSize, files }: PackResult): string {
