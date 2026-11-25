@@ -6,9 +6,9 @@ import {
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
 import { requireDataByArity } from "./internal/requireData";
+import type { LazyData } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
 
 type ZippingFunction<
   T extends IterableContainer = IterableContainer,
@@ -32,7 +32,7 @@ type LazyZippingFunction<
   first: T[number],
   second: S[number],
   index: number,
-  data: readonly [first: Readonly<NonEmptyPrefix<T>>, second: S],
+  data: readonly [first: LazyData<T>, second: S],
 ) => Value;
 
 /**

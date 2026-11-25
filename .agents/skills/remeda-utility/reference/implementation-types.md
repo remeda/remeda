@@ -26,7 +26,7 @@ In a lazily run step, a callback's `data` can hold only the items processed so f
 
 Only the data-last overload is lazy, so it takes `LazyCallback` or `LazyTypePredicate`; the data-first overload runs eagerly on the complete input and takes `ArrayCallback` or `ArrayTypePredicate`. Beyond that:
 
-- A local alias for a lazy callback (`mapWithFeedback`'s, or `zipWith`'s with `data` nested in a tuple) sits next to the eager one and types the slot as `Readonly<NonEmptyPrefix<T>>`. Keep the `Readonly`: `pipe` hands the same array to every invocation, so a callback mutating it changes what later invocations see.
+- A local alias for a lazy callback (`mapWithFeedback`'s, or `zipWith`'s with `data` nested in a tuple) sits next to the eager one and types the slot as `LazyData<T>`, the `data` type of `LazyCallback`: a readonly `NonEmptyPrefix<T>` that TypeScript doesn't infer `T` from.
 - Only the array flowing through the pipe is a prefix; arrays passed as arguments (`zipWith`'s `other`) are complete and keep their type.
 - If the implementation signature unions the eager and lazy callback types (as `filter`'s and `zipWith`'s do), include the lazy one in the union; otherwise the data-last overload fails with `ts2394`, as a callback accepting the full `T` isn't assignable to one accepting only its prefix.
 

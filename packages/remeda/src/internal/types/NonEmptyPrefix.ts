@@ -24,11 +24,12 @@ import type { TupleParts } from "./TupleParts";
  * Use this type for any callback that is invoked lazily, which is the
  * data-last overload; the data-first overload runs eagerly over the complete
  * input. This is a low-level type, prefer `LazyCallback` and
- * `LazyTypePredicate` over direct usage.
+ * `LazyTypePredicate` over direct usage, or `LazyData` for a lazy callback of
+ * another shape.
  *
- * When the type is used for a callback used in `pipe` it should be wrapped in
- * `Readonly` to prevent the callback from mutating it: it is either `pipe`'s
- * buffer, which later items are added to, or the caller's own input array.
+ * `LazyData` wraps the type in `Readonly` to prevent the callback from mutating
+ * it: it is either `pipe`'s buffer, which later items are added to, or the
+ * caller's own input array.
  *
  * @example
  *   // data-first (eager)

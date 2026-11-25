@@ -1,10 +1,10 @@
 import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { requireDataByArity } from "./internal/requireData";
+import type { LazyData } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { Mapped } from "./internal/types/Mapped";
-import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
 
 type FeedbackCallback<
   T extends IterableContainer = IterableContainer,
@@ -69,18 +69,14 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  * @category Array
  */
 export function mapWithFeedback<T extends IterableContainer, U>(
-  callbackfn: FeedbackCallback<T, U, Readonly<NonEmptyPrefix<T>>>,
+  callbackfn: FeedbackCallback<T, U, LazyData<T>>,
   initialValue: U,
 ): (data: T) => Mapped<T, U>;
 
 export function mapWithFeedback(
   dataOrCallbackfn:
     | IterableContainer
-    | FeedbackCallback<
-        IterableContainer,
-        unknown,
-        Readonly<NonEmptyPrefix<IterableContainer>>
-      >,
+    | FeedbackCallback<IterableContainer, unknown, LazyData<IterableContainer>>,
   callbackfnOrInitialValue: unknown,
   initialValue?: unknown,
 ): unknown {
