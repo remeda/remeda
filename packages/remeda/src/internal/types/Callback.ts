@@ -55,11 +55,7 @@ export type LazyData<T extends IterableContainer> =
   // can infer `T` from it instead of from the input, failing the call. The
   // indexed access is deferred while `T` is still being inferred, so nothing is
   // inferred through it, and it resolves to `NonEmptyPrefix<T>` once `T` is
-  // fixed. Indexing around `NonEmptyPrefix<T>`, rather than passing a deferred
-  // `T` into it, halves the extra type-checking work. `NoInfer` doesn't fit:
-  // the native one leaves a `NoInfer<...>` wrapper in `data`'s type for union
-  // inputs, and the polyfill our build ships (for TypeScript before 5.4) either
-  // doesn't block this inference or breaks `data`'s type.
+  // fixed.
   // TODO [>2]: Once the minimum supported TypeScript version is 5.4 or later, move `Readonly` inside the indexed access (`{ 0: Readonly<NonEmptyPrefix<T>> }[T extends unknown ? 0 : never]`): it's cheaper still, but doesn't block the inference before 5.4.
   Readonly<{ 0: NonEmptyPrefix<T> }[T extends unknown ? 0 : never]>;
 
