@@ -56,8 +56,8 @@ export type LazyData<T extends IterableContainer> =
   // indexed access is deferred while `T` is still being inferred, so nothing is
   // inferred through it, and it resolves to `NonEmptyPrefix<T>` once `T` is
   // fixed.
-  // TODO [>2]: Once the minimum supported TypeScript version is 5.4 or later, move `Readonly` inside the indexed access (`{ 0: Readonly<NonEmptyPrefix<T>> }[T extends unknown ? 0 : never]`): it's cheaper still, but doesn't block the inference before 5.4.
-  Readonly<{ 0: NonEmptyPrefix<T> }[T extends unknown ? 0 : never]>;
+  // TODO [>2]: Once the minimum supported TypeScript version is 5.4 or later, move `Readonly` inside the indexed access (`{ data: Readonly<NonEmptyPrefix<T>> }[T extends unknown ? "data" : never]`): it's cheaper still, but doesn't block the inference before 5.4.
+  Readonly<{ data: NonEmptyPrefix<T> }[T extends unknown ? "data" : never]>;
 
 /**
  * The callback for each enumerable string-keyed entry of an object, the ones
