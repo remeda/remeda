@@ -30,7 +30,7 @@ export type ArrayTypePredicate<T extends IterableContainer, S> = (
 export type LazyCallback<T extends IterableContainer, R = unknown> = (
   value: T[number],
   index: number,
-  data: Readonly<NonEmptyPrefix<T>>,
+  data: LazyData<T>,
 ) => R;
 
 /**
@@ -39,8 +39,19 @@ export type LazyCallback<T extends IterableContainer, R = unknown> = (
 export type LazyTypePredicate<T extends IterableContainer, S> = (
   value: T[number],
   index: number,
-  data: Readonly<NonEmptyPrefix<T>>,
+  data: LazyData<T>,
 ) => value is S;
+
+// `data` must not be an inference site for `T`: when the piped input is generic
+// (e.g. `readonly T[]`) and the callback declares `data`, TypeScript can infer
+// `T` from it instead of from the input, failing the call. The indexed access is
+// deferred while `T` is still being inferred, so nothing is inferred through it,
+// and it resolves back to `T` once `T` is fixed. `NoInfer` doesn't fit: the
+// native one leaves a `NoInfer<...>` wrapper in `data`'s type for union inputs,
+// and our polyfill for TypeScript versions before 5.4 breaks `data`'s type.
+type LazyData<T extends IterableContainer> = Readonly<
+  NonEmptyPrefix<[T][T extends unknown ? 0 : never]>
+>;
 
 /**
  * The callback for each enumerable string-keyed entry of an object, the ones

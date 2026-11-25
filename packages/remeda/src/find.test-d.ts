@@ -404,4 +404,15 @@ describe("callback data param", () => {
       }),
     );
   });
+
+  test("doesn't override a generic input's type", () => {
+    // eslint-disable-next-line unicorn/consistent-function-scoping -- the issue only shows up inside a generic function wrapper, which stays inline so the test reads in one place.
+    const findSecond = <T>(data: readonly T[]): T | undefined =>
+      pipe(
+        data,
+        find((_value, index, _data) => index === 1),
+      );
+
+    expectTypeOf(findSecond([1, 2, 3])).toEqualTypeOf<number | undefined>();
+  });
 });
