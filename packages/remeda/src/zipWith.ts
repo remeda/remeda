@@ -6,9 +6,9 @@ import {
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
 import { requireDataByArity } from "./internal/requireData";
-import type { LazyData } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { LazyData } from "./internal/types/LazyData";
 
 type ZippingFunction<
   T extends IterableContainer = IterableContainer,

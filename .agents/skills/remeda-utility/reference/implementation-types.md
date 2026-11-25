@@ -22,7 +22,7 @@ A callback of another shape (`mapKeys`'s `(key, value, data)`, `mapWithFeedback`
 
 ### Lazy callbacks
 
-In a lazily run step, a callback's `data` can hold only the items processed so far, so its type describes that growing prefix. `NonEmptyPrefix<T>` (`src/internal/types/NonEmptyPrefix.ts`) computes it: the first element is required (the callback never runs on an empty accumulator), every later one optional, and the tuple shape preserved as far as TypeScript allows.
+In a lazily run step, a callback's `data` can hold only the items processed so far, so its type describes that growing prefix. `LazyData<T>` (`src/internal/types/LazyData.ts`) computes it: readonly, the first element is required (the callback never runs on an empty accumulator), every later one optional, and the tuple shape preserved as far as TypeScript allows.
 
 Only the data-last overload is lazy, so it takes `LazyCallback` or `LazyTypePredicate`; the data-first overload runs eagerly on the complete input and takes `ArrayCallback` or `ArrayTypePredicate`. Beyond that:
 

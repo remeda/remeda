@@ -1,7 +1,7 @@
 import type { EnumerableStringKeyOf } from "./EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./EnumerableStringKeyedValueOf";
 import type { IterableContainer } from "./IterableContainer";
-import type { NonEmptyPrefix } from "./NonEmptyPrefix";
+import type { LazyData } from "./LazyData";
 
 /**
  * The callback the native array methods take.
@@ -25,7 +25,7 @@ export type ArrayTypePredicate<T extends IterableContainer, S> = (
  * `ArrayCallback` for the data-last overloads of lazy utilities: `pipe` might
  * hand them only a prefix of the input.
  *
- * @see NonEmptyPrefix
+ * @see LazyData
  */
 export type LazyCallback<T extends IterableContainer, R = unknown> = (
   value: T[number],
@@ -41,22 +41,6 @@ export type LazyTypePredicate<T extends IterableContainer, S> = (
   index: number,
   data: LazyData<T>,
 ) => value is S;
-
-/**
- * The `data` param of a lazy callback: `pipe` might hand it only a prefix of
- * the input.
- *
- * @see NonEmptyPrefix
- */
-export type LazyData<T extends IterableContainer> =
-  // `data` must not be an inference site for `T`: when the piped input is
-  // generic (e.g. `readonly T[]`) and the callback declares `data`, TypeScript
-  // can infer `T` from it instead of from the input, failing the call. The
-  // indexed access is deferred while `T` is still being inferred, so nothing is
-  // inferred through it, and it resolves to `NonEmptyPrefix<T>` once `T` is
-  // fixed.
-  // TODO [>2]: Once the minimum supported TypeScript version is 5.4 or later, move `Readonly` inside the indexed access (`{ data: Readonly<NonEmptyPrefix<T>> }[T extends unknown ? "data" : never]`): it's cheaper still, but doesn't block the inference before 5.4.
-  Readonly<{ data: NonEmptyPrefix<T> }[T extends unknown ? "data" : never]>;
 
 /**
  * The callback for each enumerable string-keyed entry of an object, the ones
