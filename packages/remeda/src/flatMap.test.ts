@@ -23,17 +23,21 @@ describe("dataFirst", () => {
 
 describe("dataLast", () => {
   test("flatMap", () => {
-    const result = flatMap((x: number) => [x * 2, x * 3])([1, 2]);
-
-    expect(result).toStrictEqual([2, 3, 4, 6]);
+    expect(
+      pipe(
+        [1, 2],
+        flatMap((x) => [x * 2, x * 3]),
+      ),
+    ).toStrictEqual([2, 3, 4, 6]);
   });
 
   test("should accept fn returning a readonly array", () => {
-    const result = flatMap((x: number) => [x * 2, x * 3] as const)([
-      1, 2,
-    ] as const);
-
-    expect(result).toStrictEqual([2, 3, 4, 6]);
+    expect(
+      pipe(
+        [1, 2] as const,
+        flatMap((x) => [x * 2, x * 3] as const),
+      ),
+    ).toStrictEqual([2, 3, 4, 6]);
   });
 
   test("works with non array outputs", () => {

@@ -191,8 +191,8 @@ describe("lazy", () => {
     test("fans out items", () => {
       expect(
         pipe(
-          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
           [1, 2].values(),
+          // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
           flatMap((x: number) => [x, x * 10]),
         ),
       ).toStrictEqual([1, 10, 2, 20]);
