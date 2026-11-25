@@ -27,9 +27,9 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @lazy
  * @category Array
  */
-export function flatMap<T, U>(
-  data: readonly T[],
-  callbackfn: ArrayCallback<readonly T[], readonly U[] | U>,
+export function flatMap<T extends IterableContainer, U>(
+  data: T,
+  callbackfn: ArrayCallback<T, readonly U[] | U>,
 ): U[];
 
 /**
@@ -58,8 +58,8 @@ export function flatMap<T extends IterableContainer, U>(
 ): (data: T) => U[];
 
 export function flatMap(
-  dataOrCallbackfn: readonly unknown[] | LazyCallback<IterableContainer>,
-  callbackfn?: ArrayCallback<readonly unknown[]>,
+  dataOrCallbackfn: IterableContainer | LazyCallback<IterableContainer>,
+  callbackfn?: ArrayCallback,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
     ? withLazyImplementation(
