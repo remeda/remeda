@@ -9,9 +9,7 @@ import { pipe } from "./pipe";
 
 describe("dataFirst", () => {
   test("flatMap", () => {
-    const result = flatMap([1, 2], (x) => [x * 2, x * 3]);
-
-    expect(result).toStrictEqual([2, 3, 4, 6]);
+    expect(flatMap([1, 2], (x) => [x * 2, x * 3])).toStrictEqual([2, 3, 4, 6]);
   });
 });
 

@@ -96,7 +96,11 @@ describe("known issues!", () => {
 
     // Actual
     expectTypeOf(result).toEqualTypeOf<
-      Record<number, { dir: string; code: number }>
+      Record<
+        number,
+        // eslint-disable-next-line @typescript-eslint/no-duplicate-type-constituents -- TypeScript keeps separately written object types as distinct union members, as it does for the tuple's elements; merging them changes the asserted type.
+        { dir: string; code: number } | { dir: string; code: number }
+      >
     >();
   });
 });
