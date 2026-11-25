@@ -44,8 +44,7 @@ export type LazyTypePredicate<T extends IterableContainer, S> = (
 
 /**
  * The `data` param of a lazy callback: `pipe` might hand it only a prefix of
- * the input. `LazyCallback` and `LazyTypePredicate` use it, and so do lazy
- * callbacks of other shapes (`mapWithFeedback`'s, `zipWith`'s).
+ * the input.
  *
  * @see NonEmptyPrefix
  */
