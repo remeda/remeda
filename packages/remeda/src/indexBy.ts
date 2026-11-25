@@ -1,6 +1,7 @@
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Converts a list of objects into an object indexing the objects by the given
@@ -22,10 +23,10 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * @dataFirst
  * @category Array
  */
-export function indexBy<T, K extends PropertyKey>(
-  data: readonly T[],
-  mapper: ArrayCallback<readonly T[], K>,
-): BoundedPartial<Record<K, T>>;
+export function indexBy<T extends IterableContainer, K extends PropertyKey>(
+  data: T,
+  mapper: ArrayCallback<T, K>,
+): BoundedPartial<Record<K, T[number]>>;
 
 /**
  * Converts a list of objects into an object indexing the objects by the given
@@ -49,14 +50,14 @@ export function indexBy<T, K extends PropertyKey>(
  * @dataLast
  * @category Array
  */
-export function indexBy<T, K extends PropertyKey>(
-  mapper: ArrayCallback<readonly T[], K>,
-): (data: readonly T[]) => BoundedPartial<Record<K, T>>;
+export function indexBy<T extends IterableContainer, K extends PropertyKey>(
+  mapper: ArrayCallback<T, K>,
+): (data: T) => BoundedPartial<Record<K, T[number]>>;
 
 export function indexBy(
   dataOrMapper:
-    readonly unknown[] | ArrayCallback<readonly unknown[], PropertyKey>,
-  mapper?: ArrayCallback<readonly unknown[], PropertyKey>,
+    IterableContainer | ArrayCallback<IterableContainer, PropertyKey>,
+  mapper?: ArrayCallback<IterableContainer, PropertyKey>,
 ): unknown {
   return typeof dataOrMapper === "function"
     ? dataLast(dataOrMapper)

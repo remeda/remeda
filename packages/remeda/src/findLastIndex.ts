@@ -1,5 +1,6 @@
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Iterates the array in reverse order and returns the index of the first
@@ -22,9 +23,9 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * @dataFirst
  * @category Array
  */
-export function findLastIndex<T>(
-  data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+export function findLastIndex<T extends IterableContainer>(
+  data: T,
+  predicate: ArrayCallback<T, boolean>,
 ): number;
 
 /**
@@ -50,14 +51,14 @@ export function findLastIndex<T>(
  * @dataLast
  * @category Array
  */
-export function findLastIndex<T>(
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
-): (data: readonly T[]) => number;
+export function findLastIndex<T extends IterableContainer>(
+  predicate: ArrayCallback<T, boolean>,
+): (data: T) => number;
 
 export function findLastIndex(
   dataOrPredicate:
-    readonly unknown[] | ArrayCallback<readonly unknown[], boolean>,
-  predicate?: ArrayCallback<readonly unknown[], boolean>,
+    IterableContainer | ArrayCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
     ? dataLast(dataOrPredicate)

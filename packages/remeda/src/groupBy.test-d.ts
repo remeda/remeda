@@ -1,6 +1,7 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { groupBy } from "./groupBy";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
+import { pipe } from "./pipe";
 import { prop } from "./prop";
 
 test("union of string literals", () => {
@@ -123,5 +124,22 @@ describe("filtering on undefined grouper result", () => {
     );
 
     expectTypeOf(rest).toEqualTypeOf({} as const);
+  });
+});
+
+describe("union of arrays", () => {
+  test("data-first", () => {
+    expectTypeOf(
+      groupBy([] as number[] | string[], (value) => value),
+    ).toEqualTypeOf<Record<number | string, NonEmptyArray<number | string>>>();
+  });
+
+  test("data-last", () => {
+    expectTypeOf(
+      pipe(
+        [] as number[] | string[],
+        groupBy((value) => value),
+      ),
+    ).toEqualTypeOf<Record<number | string, NonEmptyArray<number | string>>>();
   });
 });

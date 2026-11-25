@@ -38,3 +38,20 @@ test("literal unions", () => {
 
   expectTypeOf(result).toEqualTypeOf<Partial<Record<"cat" | "dog", number>>>();
 });
+
+describe("union of arrays", () => {
+  test("data-first", () => {
+    expectTypeOf(
+      countBy([] as number[] | string[], (value) => value),
+    ).toEqualTypeOf<Record<number | string, number>>();
+  });
+
+  test("data-last", () => {
+    expectTypeOf(
+      pipe(
+        [] as number[] | string[],
+        countBy((value) => value),
+      ),
+    ).toEqualTypeOf<Record<number | string, number>>();
+  });
+});

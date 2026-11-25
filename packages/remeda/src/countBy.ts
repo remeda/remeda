@@ -1,6 +1,7 @@
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Categorize and count elements in an array using a defined callback function.
@@ -19,9 +20,9 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * @dataFirst
  * @category Array
  */
-export function countBy<T, K extends PropertyKey>(
-  data: readonly T[],
-  categorizationFn: ArrayCallback<readonly T[], K | undefined>,
+export function countBy<T extends IterableContainer, K extends PropertyKey>(
+  data: T,
+  categorizationFn: ArrayCallback<T, K | undefined>,
 ): BoundedPartial<Record<K, number>>;
 
 /**
@@ -40,15 +41,15 @@ export function countBy<T, K extends PropertyKey>(
  * @dataLast
  * @category Array
  */
-export function countBy<T, K extends PropertyKey>(
-  categorizationFn: ArrayCallback<readonly T[], K | undefined>,
-): (data: readonly T[]) => BoundedPartial<Record<K, number>>;
+export function countBy<T extends IterableContainer, K extends PropertyKey>(
+  categorizationFn: ArrayCallback<T, K | undefined>,
+): (data: T) => BoundedPartial<Record<K, number>>;
 
 export function countBy(
   dataOrCategorizationFn:
-    | readonly unknown[]
-    | ArrayCallback<readonly unknown[], PropertyKey | undefined>,
-  categorizationFn?: ArrayCallback<readonly unknown[], PropertyKey | undefined>,
+    | IterableContainer
+    | ArrayCallback<IterableContainer, PropertyKey | undefined>,
+  categorizationFn?: ArrayCallback<IterableContainer, PropertyKey | undefined>,
 ): unknown {
   return typeof dataOrCategorizationFn === "function"
     ? dataLast(dataOrCategorizationFn)

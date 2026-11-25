@@ -1,6 +1,7 @@
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
 /**
@@ -30,10 +31,13 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
  * @dataFirst
  * @category Array
  */
-export function groupBy<T, Key extends PropertyKey = PropertyKey>(
-  data: readonly T[],
-  callbackfn: ArrayCallback<readonly T[], Key | undefined>,
-): BoundedPartial<Record<Key, NonEmptyArray<T>>>;
+export function groupBy<
+  T extends IterableContainer,
+  Key extends PropertyKey = PropertyKey,
+>(
+  data: T,
+  callbackfn: ArrayCallback<T, Key | undefined>,
+): BoundedPartial<Record<Key, NonEmptyArray<T[number]>>>;
 
 /**
  * Groups the elements of a given iterable according to the string values
@@ -67,15 +71,18 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  * @dataLast
  * @category Array
  */
-export function groupBy<T, Key extends PropertyKey = PropertyKey>(
-  callbackfn: ArrayCallback<readonly T[], Key | undefined>,
-): (data: readonly T[]) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
+export function groupBy<
+  T extends IterableContainer,
+  Key extends PropertyKey = PropertyKey,
+>(
+  callbackfn: ArrayCallback<T, Key | undefined>,
+): (data: T) => BoundedPartial<Record<Key, NonEmptyArray<T[number]>>>;
 
 export function groupBy(
   dataOrCallbackfn:
-    | readonly unknown[]
-    | ArrayCallback<readonly unknown[], PropertyKey | undefined>,
-  callbackfn?: ArrayCallback<readonly unknown[], PropertyKey | undefined>,
+    | IterableContainer
+    | ArrayCallback<IterableContainer, PropertyKey | undefined>,
+  callbackfn?: ArrayCallback<IterableContainer, PropertyKey | undefined>,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
     ? dataLast(dataOrCallbackfn)

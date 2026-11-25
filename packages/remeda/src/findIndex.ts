@@ -1,5 +1,6 @@
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Returns the index of the first element in an array that satisfies the
@@ -22,9 +23,9 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * @dataFirst
  * @category Array
  */
-export function findIndex<T>(
-  data: readonly T[],
-  predicate: ArrayCallback<readonly T[], boolean>,
+export function findIndex<T extends IterableContainer>(
+  data: T,
+  predicate: ArrayCallback<T, boolean>,
 ): number;
 
 /**
@@ -50,14 +51,14 @@ export function findIndex<T>(
  * @dataLast
  * @category Array
  */
-export function findIndex<T>(
-  predicate: ArrayCallback<readonly T[], boolean>,
-): (data: readonly T[]) => number;
+export function findIndex<T extends IterableContainer>(
+  predicate: ArrayCallback<T, boolean>,
+): (data: T) => number;
 
 export function findIndex(
   dataOrPredicate:
-    readonly unknown[] | ArrayCallback<readonly unknown[], boolean>,
-  predicate?: ArrayCallback<readonly unknown[], boolean>,
+    IterableContainer | ArrayCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
     ? dataLast(dataOrPredicate)

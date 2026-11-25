@@ -4,20 +4,6 @@ import { pipe } from "./pipe";
 import { prop } from "./prop";
 
 describe("data-first", () => {
-  test("simple array of objects", () => {
-    const result = indexBy(
-      [
-        { dir: "left", code: 97 },
-        { dir: "right", code: 100 },
-      ],
-      prop("code"),
-    );
-
-    expectTypeOf(result).toEqualTypeOf<
-      Record<number, { dir: string; code: number }>
-    >();
-  });
-
   test("tuple of readonly objects", () => {
     const result = indexBy(
       [
@@ -71,6 +57,46 @@ describe("data-last", () => {
           | { readonly dir: "right"; readonly code: 100 }
         >
       >
+    >();
+  });
+});
+
+describe("union of arrays", () => {
+  test("data-first", () => {
+    expectTypeOf(
+      indexBy([] as number[] | string[], (value) => value),
+    ).toEqualTypeOf<Record<number | string, number | string>>();
+  });
+
+  test("data-last", () => {
+    expectTypeOf(
+      pipe(
+        [] as number[] | string[],
+        indexBy((value) => value),
+      ),
+    ).toEqualTypeOf<Record<number | string, number | string>>();
+  });
+});
+
+describe("known issues!", () => {
+  test("data-first repeats the item type of an inline array of objects", () => {
+    // The inline array infers as a tuple, which gives each object its own type,
+    // and `T[number]` doesn't merge structurally identical members.
+    const result = indexBy(
+      [
+        { dir: "left", code: 97 },
+        { dir: "right", code: 100 },
+      ],
+      prop("code"),
+    );
+
+    expectTypeOf(result).not.toEqualTypeOf<
+      Record<number, { dir: string; code: number }>
+    >();
+
+    // Actual
+    expectTypeOf(result).toEqualTypeOf<
+      Record<number, { dir: string; code: number }>
     >();
   });
 });

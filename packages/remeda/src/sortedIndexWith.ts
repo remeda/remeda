@@ -1,6 +1,7 @@
 import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate
@@ -36,9 +37,9 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * @category Array
  * @see findIndex, sortedIndex, sortedIndexBy, sortedLastIndex, sortedLastIndexBy
  */
-export function sortedIndexWith<T>(
-  data: readonly T[],
-  predicate: ArrayCallback<readonly T[], boolean>,
+export function sortedIndexWith<T extends IterableContainer>(
+  data: T,
+  predicate: ArrayCallback<T, boolean>,
 ): number;
 
 /**
@@ -73,14 +74,14 @@ export function sortedIndexWith<T>(
  * @dataLast
  * @category Array
  */
-export function sortedIndexWith<T>(
-  predicate: ArrayCallback<readonly T[], boolean>,
-): (data: readonly T[]) => number;
+export function sortedIndexWith<T extends IterableContainer>(
+  predicate: ArrayCallback<T, boolean>,
+): (data: T) => number;
 
 export function sortedIndexWith(
   dataOrPredicate:
-    readonly unknown[] | ArrayCallback<readonly unknown[], boolean>,
-  predicate?: ArrayCallback<readonly unknown[], boolean>,
+    IterableContainer | ArrayCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
     ? dataLast(dataOrPredicate)
