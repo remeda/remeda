@@ -30,3 +30,9 @@ describe("callback data param", () => {
     );
   });
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(uniqueBy([1, 2], (item) => item)).toEqualTypeOf<
+    [number, ...number[]]
+  >();
+});

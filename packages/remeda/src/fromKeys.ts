@@ -2,7 +2,6 @@ import type { Simplify } from "type-fest";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 // Takes a union of literals and creates a union of records with the value V for
 // each key **separately**
@@ -42,7 +41,7 @@ type FromKeys<T extends readonly unknown[], V> = T extends readonly []
  * @dataFirst
  * @category Object
  */
-export function fromKeys<T extends TupleInferringArray<PropertyKey>, V>(
+export function fromKeys<T extends readonly PropertyKey[], V>(
   data: T,
   mapper: ArrayCallback<T, V>,
 ): Simplify<FromKeys<T, V>>;
@@ -69,7 +68,7 @@ export function fromKeys<T extends TupleInferringArray<PropertyKey>, V>(
  * @dataLast
  * @category Object
  */
-export function fromKeys<T extends TupleInferringArray<PropertyKey>, V>(
+export function fromKeys<T extends readonly PropertyKey[], V>(
   mapper: ArrayCallback<T, V>,
 ): (data: T) => Simplify<FromKeys<T, V>>;
 

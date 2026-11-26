@@ -174,3 +174,7 @@ describe("tuples", () => {
     });
   });
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(mergeAll([])).toEqualTypeOf<EmptyObject>();
+});

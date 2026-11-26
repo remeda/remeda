@@ -121,6 +121,10 @@ describe("fixed tuple", () => {
   });
 });
 
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(filter([1, "hello", true], isString)).toEqualTypeOf<[string]>();
+});
+
 describe("special tuple shapes", () => {
   test("optional elements", () => {
     const data = ["hello"] as [string, number?];

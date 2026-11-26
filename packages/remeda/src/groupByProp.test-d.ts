@@ -191,3 +191,9 @@ test("grouping on a prop with literal union values (issue #1231)", () => {
     dog?: [{ a: "dog"; b: string }, ...{ a: "dog"; b: string }[]];
   }>();
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(
+    groupByProp([{ a: "x" as const }, { a: "y" as const }], "a"),
+  ).toEqualTypeOf<{ x: [{ a: "x" }]; y: [{ a: "y" }] }>();
+});

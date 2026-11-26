@@ -1,8 +1,8 @@
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { NarrowedArray } from "./internal/types/NarrowedArray";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Returns elements from the end of the array until the predicate returns false.

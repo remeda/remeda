@@ -1,8 +1,8 @@
 /**
- * A readonly array of `T` for constraining a type parameter inferred from array
- * data, when the result's type depends on the data's tuple shape. Its
- * `readonly []` member makes TypeScript infer an array literal argument as a
- * tuple (`[number, number]`, not `number[]`), keeping its length and the type
+ * A readonly array of `T` for constraining a type parameter inferred from an
+ * array argument, when the result's type depends on the argument's tuple shape.
+ * Its `readonly []` member makes TypeScript infer an array literal argument as
+ * a tuple (`[number, number]`, not `number[]`), keeping its length and the type
  * at each position; arguments that aren't literals keep their declared type.
  *
  * Constrain with `readonly unknown[]` when the result only depends on the item

@@ -5,8 +5,8 @@ import type {
   ArrayTypePredicate,
 } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { Narrowed } from "./internal/types/Narrowed";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 
 type FoundLast<T extends readonly unknown[], Condition> =

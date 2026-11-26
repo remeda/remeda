@@ -1,7 +1,6 @@
 import type { IsNever, NonNegativeInteger, Writable } from "type-fest";
 import { purry2 } from "./internal/purryByArity";
 import type { CoercedArray } from "./internal/types/CoercedArray";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { NTuple } from "./internal/types/NTuple";
 import type { PartialArray } from "./internal/types/PartialArray";
 import type { TupleParts } from "./internal/types/TupleParts";
@@ -135,7 +134,7 @@ type Combinations<
  * @dataFirst
  * @category Array
  */
-export function sample<const T extends TupleInferringArray, N extends number>(
+export function sample<const T extends readonly unknown[], N extends number>(
   data: T,
   sampleSize: N,
 ): Sampled<T, N>;
@@ -160,7 +159,7 @@ export function sample<const T extends TupleInferringArray, N extends number>(
  * @dataLast
  * @category Array
  */
-export function sample<const T extends TupleInferringArray, N extends number>(
+export function sample<const T extends readonly unknown[], N extends number>(
   sampleSize: N,
 ): (data: T) => Sampled<T, N>;
 

@@ -1,6 +1,5 @@
 import type { IsNever, Simplify } from "type-fest";
 import { purry1 } from "./internal/purryByArity";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import type { WidePropertyKey } from "./internal/types/WidePropertyKey";
 
@@ -100,9 +99,12 @@ type ValueForKey<
  * @dataFirst
  * @category Object
  */
-export function fromEntries<Entries extends TupleInferringArray<Entry>>(
-  data: Entries,
-): Simplify<FromEntries<Entries>>;
+export function fromEntries<
+  // Inline literals infer as arrays: their keys widen to `string` either way,
+  // and `FromEntries` intersects the entries of a tuple, so a tuple of
+  // `["a", 1]` and `["b", "x"]` would have `never` (`number & string`) values.
+  Entries extends readonly Entry[],
+>(data: Entries): Simplify<FromEntries<Entries>>;
 
 /**
  * Creates a new object from an array of tuples by pairing up first and second
@@ -130,7 +132,7 @@ export function fromEntries<Entries extends TupleInferringArray<Entry>>(
  * @dataLast
  * @category Object
  */
-export function fromEntries(): <Entries extends TupleInferringArray<Entry>>(
+export function fromEntries(): <Entries extends readonly Entry[]>(
   data: Entries,
 ) => Simplify<FromEntries<Entries>>;
 

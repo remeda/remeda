@@ -1,7 +1,7 @@
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { ReorderedArray } from "./internal/types/ReorderedArray";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Sorts an array. The comparator function should accept two values at a time

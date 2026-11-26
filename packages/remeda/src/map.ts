@@ -3,8 +3,8 @@ import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { canReadData, requireData } from "./internal/requireData";
 import type { ArrayCallback, LazyCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { Mapped } from "./internal/types/Mapped";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Creates a new array populated with the results of calling a provided function

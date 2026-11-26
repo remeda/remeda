@@ -1,7 +1,6 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../../../test/$typed";
 import type { FilteredArray } from "./FilteredArray";
-import type { TupleInferringArray } from "./TupleInferringArray";
 
 interface ItemInterface {
   readonly type: "cat" | "dog";
@@ -24,13 +23,15 @@ class ConditionClass {
 }
 
 declare function filteredArray<
-  T extends TupleInferringArray,
+  T extends readonly unknown[],
   C,
   IsNegated extends boolean = false,
 >(data: T, condition: C, isNegated?: IsNegated): FilteredArray<T, C, IsNegated>;
 
 test("empty array", () => {
-  expectTypeOf(filteredArray([], $typed<string>())).toEqualTypeOf<[]>();
+  expectTypeOf(filteredArray($typed<[]>(), $typed<string>())).toEqualTypeOf<
+    []
+  >();
 });
 
 test("empty readonly array", () => {

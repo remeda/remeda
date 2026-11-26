@@ -2,9 +2,9 @@ import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { requireDataByArity } from "./internal/requireData";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { Mapped } from "./internal/types/Mapped";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 type FeedbackCallback<
   T extends readonly unknown[] = readonly unknown[],

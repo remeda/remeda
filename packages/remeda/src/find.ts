@@ -16,8 +16,8 @@ import type {
 } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { First } from "./internal/types/First";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { Narrowed } from "./internal/types/Narrowed";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 
 type Found<T extends readonly unknown[], Condition> =

@@ -4,9 +4,9 @@ import type {
 } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { FilteredArray } from "./internal/types/FilteredArray";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
 import type { Not } from "./internal/types/Not";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Splits a collection into two groups, the first of which contains elements the

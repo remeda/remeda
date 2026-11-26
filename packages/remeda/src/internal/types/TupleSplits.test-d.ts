@@ -1,14 +1,17 @@
 import { describe, expectTypeOf, test } from "vitest";
-import type { TupleInferringArray } from "./TupleInferringArray";
+import { $typed } from "../../../test/$typed";
 import type { TupleSplits } from "./TupleSplits";
 
-declare function tupleSplits<T extends TupleInferringArray>(
+declare function tupleSplits<T extends readonly unknown[]>(
   x: T,
 ): TupleSplits<T>;
 
 describe("all tuple shapes", () => {
   test("empty tuple", () => {
-    expectTypeOf(tupleSplits([])).toEqualTypeOf<{ left: []; right: [] }>();
+    expectTypeOf(tupleSplits($typed<[]>())).toEqualTypeOf<{
+      left: [];
+      right: [];
+    }>();
 
     expectTypeOf(tupleSplits([] as const)).toEqualTypeOf<{
       left: [];

@@ -8,10 +8,10 @@ import type {
 } from "type-fest";
 import { purry2 } from "./internal/purryByArity";
 import type { IntRangeInclusive } from "./internal/types/IntRangeInclusive";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { NTuple } from "./internal/types/NTuple";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import type { PartialArray } from "./internal/types/PartialArray";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 
 // This prevents typescript from failing on complex arrays and large chunks. It

@@ -91,6 +91,10 @@ test("doesn't allow mixed arrays", () => {
   sum([1, 2n]);
 });
 
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(sum([1n, 2n])).toEqualTypeOf<bigint>();
+});
+
 describe("known issues!", () => {
   test("returns 0 (`number`) instead of 0n (`bigint`) for empty `bigint` arrays", () => {
     const result = sum([] as bigint[]);

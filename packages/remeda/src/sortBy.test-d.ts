@@ -167,3 +167,9 @@ test("on mixed types tuple", () => {
     ]
   >();
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(sortBy([3, 1, 2], identity())).toEqualTypeOf<
+    [number, number, number]
+  >();
+});

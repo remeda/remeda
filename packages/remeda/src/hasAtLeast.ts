@@ -1,7 +1,6 @@
 import type { IsNumericLiteral } from "type-fest";
 import { purry2 } from "./internal/purryByArity";
 import type { ArrayRequiredPrefix } from "./internal/types/ArrayRequiredPrefix";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Checks if the given array has at least the defined number of elements. When
@@ -25,8 +24,8 @@ import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
  * @dataFirst
  * @category Array
  */
-export function hasAtLeast<T extends TupleInferringArray, N extends number>(
-  data: TupleInferringArray | T,
+export function hasAtLeast<T extends readonly unknown[], N extends number>(
+  data: readonly unknown[] | T,
   minimum: IsNumericLiteral<N> extends true ? N : never,
 ): data is ArrayRequiredPrefix<T, N>;
 export function hasAtLeast(data: readonly unknown[], minimum: number): boolean;
@@ -57,8 +56,8 @@ export function hasAtLeast(data: readonly unknown[], minimum: number): boolean;
  */
 export function hasAtLeast<N extends number>(
   minimum: IsNumericLiteral<N> extends true ? N : never,
-): <T extends TupleInferringArray>(
-  data: TupleInferringArray | T,
+): <T extends readonly unknown[]>(
+  data: readonly unknown[] | T,
 ) => data is ArrayRequiredPrefix<T, N>;
 export function hasAtLeast(
   minimum: number,

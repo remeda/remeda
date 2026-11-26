@@ -1,7 +1,7 @@
 import { purryOrderRules, type OrderRules } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { ReorderedArray } from "./internal/types/ReorderedArray";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Sorts `data` using the provided ordering rules. The `sort` is done via the

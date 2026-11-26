@@ -10,8 +10,8 @@ import type {
 } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { FilteredArray } from "./internal/types/FilteredArray";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just

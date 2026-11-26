@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { filter } from "./filter";
 import { isIncludedIn } from "./isIncludedIn";
 
 test("throws on bad value types", () => {
@@ -120,4 +121,10 @@ describe("narrowing", () => {
       expectTypeOf(data).toEqualTypeOf<1 | 2 | 3>();
     }
   });
+});
+
+test("array literal container is inferred as a tuple in data-last", () => {
+  expectTypeOf(
+    filter([] as ("a" | "b" | "c")[], isIncludedIn(["a", "b"])),
+  ).toEqualTypeOf<("a" | "b")[]>();
 });

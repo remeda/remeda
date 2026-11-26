@@ -1,8 +1,7 @@
 import { describe, expectTypeOf, test } from "vitest";
 import type { Deduped } from "./Deduped";
-import type { TupleInferringArray } from "./TupleInferringArray";
 
-declare function deduped<T extends TupleInferringArray>(data: T): Deduped<T>;
+declare function deduped<T extends readonly unknown[]>(data: T): Deduped<T>;
 
 describe("mutable", () => {
   test("empty array", () => {

@@ -1,15 +1,15 @@
 import { describe, expectTypeOf, test } from "vitest";
-import type { TupleInferringArray } from "./TupleInferringArray";
+import { $typed } from "../../../test/$typed";
 import type { NonEmptyArray } from "./NonEmptyArray";
 import type { NonEmptyPrefix } from "./NonEmptyPrefix";
 
-declare function nonEmptyPrefix<T extends TupleInferringArray>(
+declare function nonEmptyPrefix<T extends readonly unknown[]>(
   data: T,
 ): NonEmptyPrefix<T>;
 
 describe("tuple shapes", () => {
   test("empty tuple", () => {
-    expectTypeOf(nonEmptyPrefix([])).toEqualTypeOf<never>();
+    expectTypeOf(nonEmptyPrefix($typed<[]>())).toEqualTypeOf<never>();
   });
 
   test("fixed tuple", () => {
@@ -96,7 +96,7 @@ test("union of tuples with different shapes", () => {
 
 describe("known issues!", () => {
   test("tuple prefixes aren't assignable to arrays", () => {
-    const result = nonEmptyPrefix(["a", "b", "c"]);
+    const result = nonEmptyPrefix($typed<[string, string, string]>());
 
     expectTypeOf(result).toEqualTypeOf<[string, string?, string?]>();
 

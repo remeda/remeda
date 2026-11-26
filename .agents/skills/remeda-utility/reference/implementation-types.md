@@ -4,8 +4,9 @@
 
 A function with a data-first / data-last API has:
 
-- Two overload signatures, data-first **and** data-last, each with its own JSDoc block.
-- One implementation signature, without JSDoc, returning `unknown`. Each parameter is named for both styles (`dataOrCallbackfn, callbackfn`) and typed as the union of what the overloads accept there, with type parameters widened to their constraints, `TupleInferringArray` to `readonly unknown[]` (`chunk(dataOrSize: readonly unknown[] | number, size?: number)`), or `unknown` when unconstrained.
+- Two overload signatures, data-first **and** data-last, each with its own JSDoc block. They declare the same type parameters with the same constraints and differ only in shape, even where a constraint has no effect in one of them.
+- One implementation signature, without JSDoc, returning `unknown`. Each parameter is named for both styles and typed as the union of what the overloads accept in that position, optional where an overload omits it: `chunk(dataOrSize: readonly unknown[] | number, size?: number)`.
+- Type parameters in the implementation signature widen to their constraints (`chunk`'s `N extends number` to `number`), or to `unknown` when unconstrained. `TupleInferringArray` is the exception: it widens to `readonly unknown[]` (see [Inputs](#inputs)).
 
 The data-last overload declares the type parameters its arguments depend on (a callback's parameters, a key) on itself, not on the function it returns: `map<T extends TupleInferringArray, U>(callbackfn: LazyCallback<T, U>): (data: T) => Mapped<T, U>`. TypeScript infers them from the contextual type (a `pipe` step or a callback parameter), so the arguments are checked against the real data; a partially applied function stored in a variable has no contextual type, so they fall back to their constraints. Overloads and type tests cover only contextually typed calls.
 
@@ -35,7 +36,7 @@ Callbacks that never receive `data` (`uniqueWith`'s comparator, `differenceWith`
 ## Inputs
 
 - Type array data by the whole container (`data: T`), not by its item type (`data: readonly T[]`): TypeScript can't infer an item type from a union of arrays (`number[] | string[]`).
-- Constrain that type parameter with `TupleInferringArray` when the result's type depends on the data's tuple shape (`map`, `filter`, `sortBy`), so inline array literals infer as tuples. Otherwise (`groupBy`, `findIndex`, `take`), and for every other array type (implementation signatures, type-alias constraints, non-generic parameters), use `readonly unknown[]`: tuple inference skips the normalization TypeScript applies to array literals (see `TupleInferringArray`).
+- Constrain a type parameter inferred from an array argument with `TupleInferringArray` when the result's type depends on its tuple shape (`map`, `filter` and `sortBy`'s `data`; `concat`'s and `zip`'s `other`), so inline array literals infer as tuples. Otherwise (`groupBy`, `findIndex`, `take`), and for every other array type (implementation signatures, type-alias constraints, non-generic parameters), use `readonly unknown[]`: tuple inference skips the normalization TypeScript applies to array literals (see `TupleInferringArray`).
 - Use `PropertyKey` for keys whose type doesn't matter (not `string` or `number`), matching what TS uses for index signatures.
 - Use `unknown` for type slots that don't matter: `Record<string, unknown>`, not `Record<string, string>`, when the value type is irrelevant to the type logic.
 - Wrap records with bounded keys in `BoundedPartial<T>`: it keeps the result partial for a finite key union and leaves unbounded records (`Record<string, V>`) unchanged.

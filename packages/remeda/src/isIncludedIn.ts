@@ -96,9 +96,10 @@ export function isIncludedIn<T, S extends TupleInferringArray<T>>(
   data: T,
   container: IsNarrowable<T, S> extends true ? S : never,
 ): data is S[number];
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- S keeps the data the only inference site for T, so its constraint rejects container items outside T (typos); the suggested `readonly T[]` makes the container a second inference site. Suspected false positive: the rule treats a constraint on another type parameter as inlinable.
 export function isIncludedIn<T, S extends T>(
   data: T,
-  container: TupleInferringArray<S>,
+  container: readonly S[],
 ): boolean;
 
 /**
@@ -131,8 +132,9 @@ export function isIncludedIn<T, S extends T>(
 export function isIncludedIn<T, S extends TupleInferringArray<T>>(
   container: IsNarrowable<T, S> extends true ? S : never,
 ): (data: T) => data is S[number];
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- S keeps the data the only inference site for T, so its constraint rejects container items outside T (typos); the suggested `readonly T[]` makes the container a second inference site. Suspected false positive: the rule treats a constraint on another type parameter as inlinable.
 export function isIncludedIn<T, S extends T>(
-  container: TupleInferringArray<S>,
+  container: readonly S[],
 ): (data: T) => boolean;
 
 export function isIncludedIn(

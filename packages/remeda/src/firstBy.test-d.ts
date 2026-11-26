@@ -23,3 +23,7 @@ test("only returns null on the empty array", () => {
 
   expectTypeOf(result).toBeUndefined();
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(firstBy([1, 2], identity())).toEqualTypeOf<number>();
+});

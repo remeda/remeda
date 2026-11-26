@@ -4,8 +4,8 @@ import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryWithLazy2 } from "./internal/purryWithLazyByArity";
 import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
 import type { CoercedArray } from "./internal/types/CoercedArray";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { PartialArray } from "./internal/types/PartialArray";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 
 type Drop<T extends readonly unknown[], N extends number> =

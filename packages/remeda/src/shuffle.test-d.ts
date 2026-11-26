@@ -49,3 +49,9 @@ test("infers type via a pipe", () => {
     ]
   >();
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(shuffle([1, "a"])).toEqualTypeOf<
+    [number | string, number | string]
+  >();
+});

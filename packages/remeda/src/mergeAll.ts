@@ -5,8 +5,8 @@ import type {
   Simplify,
 } from "type-fest";
 import type { DisjointUnionFields } from "./internal/types/DisjointUnionFields";
-import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 
 /**
