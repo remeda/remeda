@@ -455,4 +455,15 @@ describe("callback data param", () => {
       ),
     ).toEqualTypeOf<1[]>();
   });
+
+  test("doesn't override a generic input's type in data-last", () => {
+    // eslint-disable-next-line unicorn/consistent-function-scoping -- the issue only shows up inside a generic function wrapper, which stays inline so the test reads in one place.
+    const takeFirstTwo = <T>(data: readonly T[]): T[] =>
+      pipe(
+        data,
+        takeWhile((_item, index, _data) => index < 2),
+      );
+
+    expectTypeOf(takeFirstTwo([1, 2, 3])).toEqualTypeOf<number[]>();
+  });
 });

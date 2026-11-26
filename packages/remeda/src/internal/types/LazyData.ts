@@ -5,6 +5,36 @@ import type { PartialArray } from "./PartialArray";
 import type { TupleParts } from "./TupleParts";
 
 /**
+ * The `data` param of a lazy callback: `pipe` might hand it only a prefix of
+ * the input. Only the data-last overload is lazy; the data-first overload runs
+ * eagerly over the complete input, so its callback gets the input type itself.
+ *
+ * It is readonly so the callback can't mutate it: it is either `pipe`'s
+ * buffer, which later items are added to, or the caller's own input array.
+ *
+ * @example
+ *   // data-first (eager)
+ *   function map<T extends IterableContainer, U>(
+ *     data: T,
+ *     callbackfn: (value: T[number], index: number, data: T) => U,
+ *   ): Mapped<T, U>;
+ *
+ *   // data-last (lazy, via `pipe`)
+ *   function map<T extends IterableContainer, U>(
+ *     callbackfn: (value: T[number], index: number, data: LazyData<T>) => U,
+ *   ): (data: T) => Mapped<T, U>;
+ */
+export type LazyData<T extends IterableContainer> =
+  // `data` must not be an inference site for `T`: when the piped input is
+  // generic (e.g. `readonly T[]`) and the callback declares `data`, TypeScript
+  // can infer `T` from it instead of from the input, failing the call. The
+  // indexed access is deferred while `T` is still being inferred, so nothing is
+  // inferred through it, and it resolves to `NonEmptyPrefix<T>` once `T` is
+  // fixed.
+  // TODO [>2]: Once the minimum supported TypeScript version is 5.4 or later, move `Readonly` inside the indexed access (`{ data: Readonly<NonEmptyPrefix<T>> }[T extends unknown ? "data" : never]`): it's cheaper still, but doesn't block the inference before 5.4.
+  Readonly<{ data: NonEmptyPrefix<T> }[T extends unknown ? "data" : never]>;
+
+/**
  * For utilities that support lazy evaluation (like `map`, `filter`, etc...)
  * `pipe` can build the callback's `data` parameter (which in the standard
  * library is the array reference itself) lazily too, item by item, as the items
@@ -20,29 +50,8 @@ import type { TupleParts } from "./TupleParts";
  * item is already being processed we can further refine our type so that it has
  * a required first item (e.g., the array is not empty), similar to calling
  * `hasAtLeast(1)` on the shape we computed.
- *
- * Use this type for any callback that is invoked lazily, which is the
- * data-last overload; the data-first overload runs eagerly over the complete
- * input. This is a low-level type, prefer `LazyCallback` and
- * `LazyTypePredicate` over direct usage.
- *
- * When the type is used for a callback used in `pipe` it should be wrapped in
- * `Readonly` to prevent the callback from mutating it: it is either `pipe`'s
- * buffer, which later items are added to, or the caller's own input array.
- *
- * @example
- *   // data-first (eager)
- *   function map<T extends IterableContainer, U>(
- *     data: T,
- *     callbackfn: (value: T[number], index: number, data: T) => U,
- *   ): Mapped<T, U>;
- *
- *   // data-last (lazy, via `pipe`)
- *   function map<T extends IterableContainer, U>(
- *     callbackfn: LazyCallback<T, U>,
- *   ): (data: T) => Mapped<T, U>;
  */
-export type NonEmptyPrefix<T extends IterableContainer> =
+type NonEmptyPrefix<T extends IterableContainer> =
   // Distribute over unions so that each member is decomposed on its own.
   T extends unknown
     ? | HeadPrefixes<

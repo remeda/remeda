@@ -454,4 +454,15 @@ describe("callback data param", () => {
       }),
     );
   });
+
+  test("doesn't override a generic input's type in data-last", () => {
+    // eslint-disable-next-line unicorn/consistent-function-scoping -- the issue only shows up inside a generic function wrapper, which stays inline so the test reads in one place.
+    const filterTail = <T>(data: readonly T[]): T[] =>
+      pipe(
+        data,
+        filter((_value, index, _data) => index > 0),
+      );
+
+    expectTypeOf(filterTail([1, 2, 3])).toEqualTypeOf<number[]>();
+  });
 });

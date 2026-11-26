@@ -1,7 +1,7 @@
 import type { EnumerableStringKeyOf } from "./EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./EnumerableStringKeyedValueOf";
 import type { IterableContainer } from "./IterableContainer";
-import type { NonEmptyPrefix } from "./NonEmptyPrefix";
+import type { LazyData } from "./LazyData";
 
 /**
  * The callback the native array methods take.
@@ -25,12 +25,12 @@ export type ArrayTypePredicate<T extends IterableContainer, S> = (
  * `ArrayCallback` for the data-last overloads of lazy utilities: `pipe` might
  * hand them only a prefix of the input.
  *
- * @see NonEmptyPrefix
+ * @see LazyData
  */
 export type LazyCallback<T extends IterableContainer, R = unknown> = (
   value: T[number],
   index: number,
-  data: Readonly<NonEmptyPrefix<T>>,
+  data: LazyData<T>,
 ) => R;
 
 /**
@@ -39,7 +39,7 @@ export type LazyCallback<T extends IterableContainer, R = unknown> = (
 export type LazyTypePredicate<T extends IterableContainer, S> = (
   value: T[number],
   index: number,
-  data: Readonly<NonEmptyPrefix<T>>,
+  data: LazyData<T>,
 ) => value is S;
 
 /**
