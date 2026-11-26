@@ -1,5 +1,6 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { countBy } from "./countBy";
+import { identity } from "./identity";
 import { pipe } from "./pipe";
 
 describe("dataFirst", () => {
@@ -41,17 +42,14 @@ test("literal unions", () => {
 
 describe("union of arrays", () => {
   test("data-first", () => {
-    expectTypeOf(
-      countBy([] as number[] | string[], (value) => value),
-    ).toEqualTypeOf<Record<number | string, number>>();
+    expectTypeOf(countBy([] as number[] | string[], identity())).toEqualTypeOf<
+      Record<number | string, number>
+    >();
   });
 
   test("data-last", () => {
     expectTypeOf(
-      pipe(
-        [] as number[] | string[],
-        countBy((value) => value),
-      ),
+      pipe([] as number[] | string[], countBy(identity())),
     ).toEqualTypeOf<Record<number | string, number>>();
   });
 });

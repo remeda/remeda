@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { identity } from "./identity";
 import { indexBy } from "./indexBy";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
@@ -63,17 +64,14 @@ describe("data-last", () => {
 
 describe("union of arrays", () => {
   test("data-first", () => {
-    expectTypeOf(
-      indexBy([] as number[] | string[], (value) => value),
-    ).toEqualTypeOf<Record<number | string, number | string>>();
+    expectTypeOf(indexBy([] as number[] | string[], identity())).toEqualTypeOf<
+      Record<number | string, number | string>
+    >();
   });
 
   test("data-last", () => {
     expectTypeOf(
-      pipe(
-        [] as number[] | string[],
-        indexBy((value) => value),
-      ),
+      pipe([] as number[] | string[], indexBy(identity())),
     ).toEqualTypeOf<Record<number | string, number | string>>();
   });
 });
