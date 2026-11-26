@@ -1,7 +1,7 @@
 import type { IsNumericLiteral } from "type-fest";
 import { purry2 } from "./internal/purryByArity";
 import type { ArrayRequiredPrefix } from "./internal/types/ArrayRequiredPrefix";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Checks if the given array has at least the defined number of elements. When
@@ -25,11 +25,11 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @dataFirst
  * @category Array
  */
-export function hasAtLeast<T extends IterableContainer, N extends number>(
-  data: IterableContainer | T,
+export function hasAtLeast<T extends TupleInferringArray, N extends number>(
+  data: TupleInferringArray | T,
   minimum: IsNumericLiteral<N> extends true ? N : never,
 ): data is ArrayRequiredPrefix<T, N>;
-export function hasAtLeast(data: IterableContainer, minimum: number): boolean;
+export function hasAtLeast(data: readonly unknown[], minimum: number): boolean;
 
 /**
  * Checks if the given array has at least the defined number of elements. When
@@ -57,15 +57,15 @@ export function hasAtLeast(data: IterableContainer, minimum: number): boolean;
  */
 export function hasAtLeast<N extends number>(
   minimum: IsNumericLiteral<N> extends true ? N : never,
-): <T extends IterableContainer>(
-  data: IterableContainer | T,
+): <T extends TupleInferringArray>(
+  data: TupleInferringArray | T,
 ) => data is ArrayRequiredPrefix<T, N>;
 export function hasAtLeast(
   minimum: number,
-): (data: IterableContainer) => boolean;
+): (data: readonly unknown[]) => boolean;
 
 export function hasAtLeast(
-  dataOrMinimum: IterableContainer | number,
+  dataOrMinimum: readonly unknown[] | number,
   minimum?: number,
 ): unknown {
   return purry2(
@@ -77,6 +77,6 @@ export function hasAtLeast(
 }
 
 const hasAtLeastImplementation = (
-  data: IterableContainer,
+  data: readonly unknown[],
   minimum: number,
 ): boolean => data.length >= minimum;

@@ -1,5 +1,4 @@
 import { purry2 } from "./internal/purryByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Basic structure of `evolver` parameter of the function `evolve`.
@@ -30,7 +29,7 @@ type GenericEvolver = {
  * // };
  */
 type Evolver<T> = T extends object
-  ? T extends IterableContainer
+  ? T extends readonly unknown[]
     ? never
     : {
         readonly [K in keyof T]?: K extends symbol

@@ -1,5 +1,3 @@
-import type { IterableContainer } from "./IterableContainer";
-
-export type ReorderedArray<T extends IterableContainer> = {
+export type ReorderedArray<T extends readonly unknown[]> = {
   -readonly [P in keyof T]: T[number];
 };

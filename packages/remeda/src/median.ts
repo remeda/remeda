@@ -1,7 +1,7 @@
 import { purry1 } from "./internal/purryByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
-type Median<T extends IterableContainer<number>> =
+type Median<T extends readonly number[]> =
   | (T extends readonly [] ? never : number)
   | (T extends readonly [unknown, ...unknown[]] ? never : undefined);
 
@@ -25,7 +25,9 @@ type Median<T extends IterableContainer<number>> =
  * @dataFirst
  * @category Number
  */
-export function median<T extends IterableContainer<number>>(data: T): Median<T>;
+export function median<T extends TupleInferringArray<number>>(
+  data: T,
+): Median<T>;
 
 /**
  * Returns the median of the elements of an array.
@@ -46,17 +48,17 @@ export function median<T extends IterableContainer<number>>(data: T): Median<T>;
  * @dataLast
  * @category Number
  */
-export function median(): <T extends IterableContainer<number>>(
+export function median(): <T extends TupleInferringArray<number>>(
   data: T,
 ) => Median<T>;
 
-export function median(data?: IterableContainer<number>): unknown {
+export function median(data?: readonly number[]): unknown {
   return purry1(medianImplementation, arguments.length, data);
 }
 
 const numberComparator = (a: number, b: number): number => a - b;
 
-function medianImplementation<T extends IterableContainer<number>>(
+function medianImplementation<T extends readonly number[]>(
   data: T,
 ): T[number] | undefined {
   if (data.length === 0) {

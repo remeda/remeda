@@ -58,3 +58,26 @@ describe("dataLast", () => {
     ).toEqualTypeOf<{ a: number; b: string }[]>();
   });
 });
+
+describe("union of arrays", () => {
+  test("data-first", () => {
+    expectTypeOf(
+      dropFirstBy([] as number[] | string[], 1, identity()),
+    ).toEqualTypeOf<(number | string)[]>();
+  });
+
+  test("data-last", () => {
+    expectTypeOf(
+      pipe([] as number[] | string[], dropFirstBy(1, identity())),
+    ).toEqualTypeOf<(number | string)[]>();
+  });
+});
+
+// @see https://github.com/remeda/remeda/pull/1507
+test("inline array of differently-shaped objects", () => {
+  dropFirstBy([{ a: 1 }, { a: 2, b: "x" }], 1, (item) => {
+    expectTypeOf(item.b).toEqualTypeOf<string | undefined>();
+
+    return item.a;
+  });
+});

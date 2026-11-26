@@ -4,7 +4,7 @@ import type {
 } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { FilteredArray } from "./internal/types/FilteredArray";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
 import type { Not } from "./internal/types/Not";
 
@@ -30,7 +30,7 @@ import type { Not } from "./internal/types/Not";
  * @dataFirst
  * @category Array
  */
-export function partition<T extends IterableContainer, Condition>(
+export function partition<T extends TupleInferringArray, Condition>(
   data: T,
   predicate: ArrayTypePredicate<T, Condition>,
 ): [
@@ -39,7 +39,7 @@ export function partition<T extends IterableContainer, Condition>(
 ];
 
 export function partition<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   IsItemIncluded extends boolean,
 >(
   data: T,
@@ -70,7 +70,7 @@ export function partition<
  * @dataLast
  * @category Array
  */
-export function partition<T extends IterableContainer, Condition>(
+export function partition<T extends TupleInferringArray, Condition>(
   predicate: ArrayTypePredicate<T, Condition>,
 ): (
   data: T,
@@ -80,7 +80,7 @@ export function partition<T extends IterableContainer, Condition>(
 ];
 
 export function partition<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   IsItemIncluded extends boolean,
 >(
   predicate: ArrayCallback<T, IsItemIncluded>,
@@ -93,8 +93,8 @@ export function partition<
 
 export function partition(
   dataOrPredicate:
-    IterableContainer | ArrayCallback<IterableContainer, boolean>,
-  predicate?: ArrayCallback<IterableContainer, boolean>,
+    readonly unknown[] | ArrayCallback<readonly unknown[], boolean>,
+  predicate?: ArrayCallback<readonly unknown[], boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
     ? dataLast(dataOrPredicate)

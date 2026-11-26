@@ -202,7 +202,7 @@ describe("limited type inference through `NoInfer` (#1364)", () => {
     ).toEqualTypeOf<number[]>();
   });
 
-  test("result flows into a downstream IterableContainer constraint", () => {
+  test("result flows into a downstream TupleInferringArray constraint", () => {
     const mapped = map([] as NoInfer<number[]>, identity());
 
     expectTypeOf(sortBy(mapped, identity())).toEqualTypeOf<number[]>();

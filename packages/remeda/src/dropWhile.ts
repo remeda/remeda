@@ -4,7 +4,6 @@ import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { requireDataByArity } from "./internal/requireData";
 import type { ArrayCallback, LazyCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Removes elements from the beginning of the array until the predicate returns false.
@@ -21,7 +20,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @lazy
  * @category Array
  */
-export function dropWhile<T extends IterableContainer>(
+export function dropWhile<T extends readonly unknown[]>(
   data: T,
   predicate: ArrayCallback<T, boolean>,
 ): T[number][];
@@ -41,13 +40,14 @@ export function dropWhile<T extends IterableContainer>(
  * @lazy
  * @category Array
  */
-export function dropWhile<T extends IterableContainer>(
+export function dropWhile<T extends readonly unknown[]>(
   predicate: LazyCallback<T, boolean>,
 ): (data: T) => T[number][];
 
 export function dropWhile(
-  dataOrPredicate: IterableContainer | LazyCallback<IterableContainer, boolean>,
-  predicate?: ArrayCallback<IterableContainer, boolean>,
+  dataOrPredicate:
+    readonly unknown[] | LazyCallback<readonly unknown[], boolean>,
+  predicate?: ArrayCallback<readonly unknown[], boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
     ? withLazyImplementation(

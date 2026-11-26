@@ -5,11 +5,11 @@ import type {
   ArrayTypePredicate,
 } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
 
-type FoundLast<T extends IterableContainer, Condition> =
+type FoundLast<T extends readonly unknown[], Condition> =
   // We distribute the array type to support unions of arrays/tuples.
   T extends unknown
     ? FoundLastInFixedTuple<
@@ -61,7 +61,7 @@ type FoundLastInFixedTuple<T, Condition, Fallback> = T extends readonly [
 // For non-type-narrowing predicates, we can only provide more refined type when
 // we know the predicate returns a constant literal boolean value.
 type FoundLastNonRefined<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   IsItemIncluded extends boolean,
 > = boolean extends IsItemIncluded
   ? T[number] | undefined
@@ -96,13 +96,13 @@ type FoundLastNonRefined<
  * @dataFirst
  * @category Array
  */
-export function findLast<T extends IterableContainer, Condition>(
+export function findLast<T extends TupleInferringArray, Condition>(
   data: T,
   predicate: ArrayTypePredicate<T, Condition>,
 ): FoundLast<T, Condition>;
 
 export function findLast<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   IsItemIncluded extends boolean,
 >(
   data: T,
@@ -137,12 +137,12 @@ export function findLast<
  * @dataLast
  * @category Array
  */
-export function findLast<T extends IterableContainer, Condition>(
+export function findLast<T extends TupleInferringArray, Condition>(
   predicate: ArrayTypePredicate<T, Condition>,
 ): (data: T) => FoundLast<T, Condition>;
 
 export function findLast<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   IsItemIncluded extends boolean,
 >(
   predicate: ArrayCallback<T, IsItemIncluded>,
@@ -150,8 +150,8 @@ export function findLast<
 
 export function findLast(
   dataOrPredicate:
-    IterableContainer | ArrayCallback<IterableContainer, boolean>,
-  predicate?: ArrayCallback<IterableContainer, boolean>,
+    readonly unknown[] | ArrayCallback<readonly unknown[], boolean>,
+  predicate?: ArrayCallback<readonly unknown[], boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
     ? dataLast(dataOrPredicate)

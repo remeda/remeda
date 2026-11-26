@@ -1,6 +1,5 @@
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
 // TODO [>2]: Once we allow fromEntries to run lazily on iterables we need to remove this utility as it's completely replaceable by `fromEntries(map(...))`.
 /**
@@ -33,10 +32,11 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @dataFirst
  * @category Array
  */
-export function mapToObj<T extends IterableContainer, K extends PropertyKey, V>(
-  data: T,
-  mapper: ArrayCallback<T, [K, V]>,
-): Record<K, V>;
+export function mapToObj<
+  T extends readonly unknown[],
+  K extends PropertyKey,
+  V,
+>(data: T, mapper: ArrayCallback<T, [K, V]>): Record<K, V>;
 
 // TODO [>2]: Once we allow fromEntries to run lazily on iterables we need to remove this utility as it's completely replaceable by `fromEntries(map(...))`.
 /**
@@ -71,15 +71,17 @@ export function mapToObj<T extends IterableContainer, K extends PropertyKey, V>(
  * @dataLast
  * @category Array
  */
-export function mapToObj<T extends IterableContainer, K extends PropertyKey, V>(
-  mapper: ArrayCallback<T, [K, V]>,
-): (data: T) => Record<K, V>;
+export function mapToObj<
+  T extends readonly unknown[],
+  K extends PropertyKey,
+  V,
+>(mapper: ArrayCallback<T, [K, V]>): (data: T) => Record<K, V>;
 
 export function mapToObj(
   dataOrMapper:
-    | IterableContainer
-    | ArrayCallback<IterableContainer, [PropertyKey, unknown]>,
-  mapper?: ArrayCallback<IterableContainer, [PropertyKey, unknown]>,
+    | readonly unknown[]
+    | ArrayCallback<readonly unknown[], [PropertyKey, unknown]>,
+  mapper?: ArrayCallback<readonly unknown[], [PropertyKey, unknown]>,
 ): unknown {
   return typeof dataOrMapper === "function"
     ? dataLast(dataOrMapper)

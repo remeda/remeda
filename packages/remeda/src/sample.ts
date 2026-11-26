@@ -1,12 +1,12 @@
 import type { IsNever, NonNegativeInteger, Writable } from "type-fest";
 import { purry2 } from "./internal/purryByArity";
 import type { CoercedArray } from "./internal/types/CoercedArray";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { NTuple } from "./internal/types/NTuple";
 import type { PartialArray } from "./internal/types/PartialArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 
-type Sampled<T extends IterableContainer, N extends number> = [N] extends [0]
+type Sampled<T extends readonly unknown[], N extends number> = [N] extends [0]
   ? // Short-circuit on trivial inputs.
     []
   : [T["length"]] extends [0]
@@ -25,7 +25,7 @@ type Sampled<T extends IterableContainer, N extends number> = [N] extends [0]
  * reconstructing logic so we fallback to a simpler definition of the output of
  * sample, which is any sub-tuple shape of T, of **any length**.
  */
-type SampledPrimitive<T extends IterableContainer> = [
+type SampledPrimitive<T extends readonly unknown[]> = [
   ...FixedSubTuples<TupleParts<T>["required"]>,
   // TODO: This might be accurate, but We currently have no tests that check optional elements!
   ...PartialArray<FixedSubTuples<TupleParts<T>["optional"]>>,
@@ -37,7 +37,7 @@ type SampledPrimitive<T extends IterableContainer> = [
  * Knowing N is a non-negative literal integer we can construct all sub-tuples
  * of T that are exactly N elements long.
  */
-type SampledLiteral<T extends IterableContainer, N extends number> =
+type SampledLiteral<T extends readonly unknown[], N extends number> =
   | Combinations<
       [
         ...TupleParts<T>["required"],
@@ -96,7 +96,7 @@ type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]
  * Compute all combinations (sub-tuples) of T of exactly length N.
  */
 type Combinations<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   N extends number,
   // Used an an incrementor that keeps track of the depth of the recursion.
   Counter extends readonly unknown[] = [],
@@ -135,7 +135,7 @@ type Combinations<
  * @dataFirst
  * @category Array
  */
-export function sample<const T extends IterableContainer, N extends number>(
+export function sample<const T extends TupleInferringArray, N extends number>(
   data: T,
   sampleSize: N,
 ): Sampled<T, N>;
@@ -160,12 +160,12 @@ export function sample<const T extends IterableContainer, N extends number>(
  * @dataLast
  * @category Array
  */
-export function sample<const T extends IterableContainer, N extends number>(
+export function sample<const T extends TupleInferringArray, N extends number>(
   sampleSize: N,
 ): (data: T) => Sampled<T, N>;
 
 export function sample(
-  dataOrSampleSize: IterableContainer | number,
+  dataOrSampleSize: readonly unknown[] | number,
   sampleSize?: number,
 ): unknown {
   return purry2(

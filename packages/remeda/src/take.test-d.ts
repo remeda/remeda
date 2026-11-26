@@ -101,3 +101,10 @@ describe("data-last", () => {
     expectTypeOf(result).toEqualTypeOf<(boolean | string)[]>();
   });
 });
+
+// @see https://github.com/remeda/remeda/pull/1507
+test("inline array of differently-shaped objects", () => {
+  expectTypeOf(take([{ a: 1 }, { a: 2, b: "x" }], 1)[0]?.b).toEqualTypeOf<
+    string | undefined
+  >();
+});

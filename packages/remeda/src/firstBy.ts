@@ -1,10 +1,10 @@
 import { purryOrderRules, type OrderRules } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 const WAITING_FOR_FIRST_ITEM_SENTINEL = Symbol("firstBy/waitingForFirstItem");
 
-type FirstBy<T extends IterableContainer> =
+type FirstBy<T extends readonly unknown[]> =
   | T[number]
   | (T extends readonly [unknown, ...(readonly unknown[])]
       ? never
@@ -36,7 +36,7 @@ type FirstBy<T extends IterableContainer> =
  * @dataLast
  * @category Array
  */
-export function firstBy<T extends IterableContainer>(
+export function firstBy<T extends TupleInferringArray>(
   ...rules: OrderRules<T[number]>
 ): (data: T) => FirstBy<T>;
 
@@ -65,7 +65,7 @@ export function firstBy<T extends IterableContainer>(
  * @dataFirst
  * @category Array
  */
-export function firstBy<T extends IterableContainer>(
+export function firstBy<T extends TupleInferringArray>(
   data: T,
   ...rules: OrderRules<T[number]>
 ): FirstBy<T>;

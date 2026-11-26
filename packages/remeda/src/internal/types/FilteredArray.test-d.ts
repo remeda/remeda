@@ -1,7 +1,7 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../../../test/$typed";
 import type { FilteredArray } from "./FilteredArray";
-import type { IterableContainer } from "./IterableContainer";
+import type { TupleInferringArray } from "./TupleInferringArray";
 
 interface ItemInterface {
   readonly type: "cat" | "dog";
@@ -24,7 +24,7 @@ class ConditionClass {
 }
 
 declare function filteredArray<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   C,
   IsNegated extends boolean = false,
 >(data: T, condition: C, isNegated?: IsNegated): FilteredArray<T, C, IsNegated>;

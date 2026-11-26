@@ -6,7 +6,6 @@ import { length } from "./length";
 import { map } from "./map";
 import { omit } from "./omit";
 import { pipe } from "./pipe";
-import { reduce } from "./reduce";
 import { set } from "./set";
 
 declare const SYMBOL: unique symbol;
@@ -340,4 +339,4 @@ describe("data last", () => {
   });
 });
 
-const sum = reduce((a, b: number) => add(a, b), 0);
+declare function sum(data: readonly number[]): number;

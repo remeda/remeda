@@ -8,7 +8,7 @@ import type {
 } from "type-fest";
 import { purry2 } from "./internal/purryByArity";
 import type { IntRangeInclusive } from "./internal/types/IntRangeInclusive";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { NTuple } from "./internal/types/NTuple";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import type { PartialArray } from "./internal/types/PartialArray";
@@ -23,7 +23,7 @@ import type { TupleParts } from "./internal/types/TupleParts";
 type MAX_LITERAL_SIZE = 350;
 
 type Chunk<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   N extends number,
 > = T extends readonly []
   ? []
@@ -37,7 +37,7 @@ type Chunk<
         : GenericChunk<T>
     : GenericChunk<T>;
 
-type LiteralChunk<T extends IterableContainer, N extends number> =
+type LiteralChunk<T extends readonly unknown[], N extends number> =
   | ChunkRestElement<
       // Our result will always have the prefix tuple chunked the same way, so
       // we compute it once here and send it to the main logic below
@@ -180,13 +180,13 @@ type SuffixChunk<
  * This is the legacy type used when we don't know what N is. We can only adjust
  * our output based on if we know for sure that the array is empty or not.
  */
-type GenericChunk<T extends IterableContainer> = T extends
+type GenericChunk<T extends readonly unknown[]> = T extends
   readonly [...unknown[], unknown] | readonly [unknown, ...unknown[]]
   ? NonEmptyArray<NonEmptyArray<T[number]>>
   : NonEmptyArray<T[number]>[];
 
 // TODO: Chunk was built before we handled optional elements correctly. It needs to be fixed to handle these correctly, specifically in regard to optional elements creating whole chunks that themselves need to be optional, but that their items themselves should not be optional, except the last chunk...
-type TuplePrefix<T extends IterableContainer> = [
+type TuplePrefix<T extends readonly unknown[]> = [
   ...TupleParts<T>["required"],
   ...PartialArray<TupleParts<T>["optional"]>,
 ];
@@ -204,7 +204,7 @@ type TuplePrefix<T extends IterableContainer> = [
  * @dataFirst
  * @category Array
  */
-export function chunk<T extends IterableContainer, N extends number>(
+export function chunk<T extends TupleInferringArray, N extends number>(
   data: T,
   size: N,
 ): Chunk<T, N>;
@@ -223,10 +223,10 @@ export function chunk<T extends IterableContainer, N extends number>(
  */
 export function chunk<N extends number>(
   size: N,
-): <T extends IterableContainer>(data: T) => Chunk<T, N>;
+): <T extends TupleInferringArray>(data: T) => Chunk<T, N>;
 
 export function chunk(
-  dataOrSize: IterableContainer | number,
+  dataOrSize: readonly unknown[] | number,
   size?: number,
 ): unknown {
   return purry2(chunkImplementation, arguments.length, dataOrSize, size);

@@ -1,6 +1,5 @@
 import type { IsNever } from "type-fest";
 import type { CoercedArray } from "./CoercedArray";
-import type { IterableContainer } from "./IterableContainer";
 import type { PartialArray } from "./PartialArray";
 import type { TupleParts } from "./TupleParts";
 
@@ -32,17 +31,17 @@ import type { TupleParts } from "./TupleParts";
  *
  * @example
  *   // data-first (eager)
- *   function map<T extends IterableContainer, U>(
+ *   function map<T extends TupleInferringArray, U>(
  *     data: T,
  *     callbackfn: (value: T[number], index: number, data: T) => U,
  *   ): Mapped<T, U>;
  *
  *   // data-last (lazy, via `pipe`)
- *   function map<T extends IterableContainer, U>(
+ *   function map<T extends TupleInferringArray, U>(
  *     callbackfn: LazyCallback<T, U>,
  *   ): (data: T) => Mapped<T, U>;
  */
-export type NonEmptyPrefix<T extends IterableContainer> =
+export type NonEmptyPrefix<T extends readonly unknown[]> =
   // Distribute over unions so that each member is decomposed on its own.
   T extends unknown
     ? | HeadPrefixes<

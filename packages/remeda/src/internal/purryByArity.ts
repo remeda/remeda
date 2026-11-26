@@ -84,7 +84,7 @@ export const purry2 = <T, P extends readonly [unknown], R>(
  * @param argumentsLength - The utility's `arguments.length`.
  * @example
  *    export function swapIndices(
- *      dataOrIndex1: IterableContainer | string | number,
+ *      dataOrIndex1: readonly unknown[] | string | number,
  *      index1OrIndex2?: number,
  *      index2?: number,
  *    ): unknown {

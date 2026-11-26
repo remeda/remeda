@@ -11,7 +11,7 @@ import type {
   LazyTypePredicate,
 } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { NarrowedArray } from "./internal/types/NarrowedArray";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
 
@@ -30,13 +30,13 @@ import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFiltere
  * @lazy
  * @category Array
  */
-export function takeWhile<T extends IterableContainer, Condition>(
+export function takeWhile<T extends TupleInferringArray, Condition>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => item is Condition,
 ): NarrowedArray<T, Condition>;
 
 export function takeWhile<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   IsItemIncluded extends boolean,
 >(
   data: T,
@@ -58,20 +58,21 @@ export function takeWhile<
  * @lazy
  * @category Array
  */
-export function takeWhile<T extends IterableContainer, Condition>(
+export function takeWhile<T extends TupleInferringArray, Condition>(
   predicate: LazyTypePredicate<T, Condition>,
 ): (data: T) => NarrowedArray<T, Condition>;
 
 export function takeWhile<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   IsItemIncluded extends boolean,
 >(
   predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function takeWhile(
-  dataOrPredicate: IterableContainer | LazyCallback<IterableContainer, boolean>,
-  predicate?: ArrayCallback<IterableContainer, boolean>,
+  dataOrPredicate:
+    readonly unknown[] | LazyCallback<readonly unknown[], boolean>,
+  predicate?: ArrayCallback<readonly unknown[], boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
     ? withLazyImplementation(

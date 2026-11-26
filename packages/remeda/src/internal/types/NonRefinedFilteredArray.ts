@@ -1,4 +1,3 @@
-import type { IterableContainer } from "./IterableContainer";
 import type { WritableTuple } from "./WritableTuple";
 
 /**
@@ -8,7 +7,7 @@ import type { WritableTuple } from "./WritableTuple";
  * "short-circuit" mechanics in their project.
  */
 export type NonRefinedFilteredArray<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   IsItemIncluded extends boolean,
 > = boolean extends IsItemIncluded
   ? // We don't know which items of the array the predicate would allow in the

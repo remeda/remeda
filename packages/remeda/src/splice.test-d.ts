@@ -168,3 +168,10 @@ describe("data-last", () => {
     expectTypeOf(pipe([] as number[], splice(0, 0))).toEqualTypeOf<number[]>();
   });
 });
+
+// @see https://github.com/remeda/remeda/pull/1507
+test("inline array of differently-shaped objects", () => {
+  expectTypeOf(splice([{ a: 1 }, { a: 2, b: "x" }], 0, 1)[0]?.b).toEqualTypeOf<
+    string | undefined
+  >();
+});

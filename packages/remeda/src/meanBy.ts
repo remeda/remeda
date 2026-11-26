@@ -1,6 +1,5 @@
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
@@ -17,7 +16,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @category Array
  */
 
-export function meanBy<T extends IterableContainer>(
+export function meanBy<T extends readonly unknown[]>(
   callbackfn: ArrayCallback<T, number>,
 ): (data: T) => number;
 
@@ -37,15 +36,15 @@ export function meanBy<T extends IterableContainer>(
  * @category Array
  */
 
-export function meanBy<T extends IterableContainer>(
+export function meanBy<T extends readonly unknown[]>(
   data: T,
   callbackfn: ArrayCallback<T, number>,
 ): number;
 
 export function meanBy(
   dataOrCallbackfn:
-    IterableContainer | ArrayCallback<IterableContainer, number>,
-  callbackfn?: ArrayCallback<IterableContainer, number>,
+    readonly unknown[] | ArrayCallback<readonly unknown[], number>,
+  callbackfn?: ArrayCallback<readonly unknown[], number>,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
     ? dataLast(dataOrCallbackfn)

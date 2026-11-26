@@ -38,6 +38,14 @@ describe("union of arrays", () => {
 
 describe("callback data param", () => {
   test("complete in data-first", () => {
+    flatMap([1, 2, 3], (_input, _index, data) => {
+      expectTypeOf(data).toEqualTypeOf<number[]>();
+
+      return [0];
+    });
+  });
+
+  test("complete in data-first on a const tuple", () => {
     flatMap([1, 2, 3] as const, (_input, _index, data) => {
       expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
 
@@ -67,5 +75,14 @@ describe("callback data param", () => {
         return [0];
       }),
     );
+  });
+});
+
+// @see https://github.com/remeda/remeda/pull/1507
+test("inline array of differently-shaped objects", () => {
+  flatMap([{ a: 1 }, { a: 2, b: "x" }], (item) => {
+    expectTypeOf(item.b).toEqualTypeOf<string | undefined>();
+
+    return [item];
   });
 });

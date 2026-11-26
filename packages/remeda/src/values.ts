@@ -1,8 +1,7 @@
 import { purry1 } from "./internal/purryByArity";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
-type Values<T extends object> = T extends IterableContainer
+type Values<T extends object> = T extends readonly unknown[]
   ? T[number][]
   : EnumerableStringKeyedValueOf<T>[];
 

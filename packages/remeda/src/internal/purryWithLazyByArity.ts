@@ -7,7 +7,6 @@ import {
   type LazyEvaluatorFactoryOf,
   type LazyUnaryFunction,
 } from "./lazyDataLastImplementation";
-import type { IterableContainer } from "./types/IterableContainer";
 
 /**
  * `purry1` for a data-first implementation that also has a lazy
@@ -15,7 +14,7 @@ import type { IterableContainer } from "./types/IterableContainer";
  *
  * @param argumentsLength - The utility's `arguments.length`.
  * @example
- *    export function unique(data?: IterableContainer): unknown {
+ *    export function unique(data?: readonly unknown[]): unknown {
  *      return purryWithLazy1(
  *        uniqueImplementation,
  *        lazyImplementation,
@@ -26,7 +25,7 @@ import type { IterableContainer } from "./types/IterableContainer";
  * @see purry1
  */
 export const purryWithLazy1 = <
-  T extends IterableContainer,
+  T extends readonly unknown[],
   // Always empty, but it keeps a generic implementation's data type inferred
   // from its constraint, as in `purry1`.
   P extends readonly [],
@@ -51,7 +50,7 @@ export const purryWithLazy1 = <
  * @param argumentsLength - The utility's `arguments.length`.
  * @example
  *    export function take(
- *      dataOrN: IterableContainer | number,
+ *      dataOrN: readonly unknown[] | number,
  *      n?: number,
  *    ): unknown {
  *      return purryWithLazy2(
@@ -66,7 +65,7 @@ export const purryWithLazy1 = <
  * @see withLazyImplementation
  */
 export const purryWithLazy2 = <
-  T extends IterableContainer,
+  T extends readonly unknown[],
   P extends readonly [unknown],
   R,
 >(
@@ -111,7 +110,7 @@ export const purryWithLazy2 = <
  * @see withLazyImplementation
  */
 export const purryWithLazy3 = <
-  T extends IterableContainer,
+  T extends readonly unknown[],
   P extends readonly [unknown, unknown],
   R,
 >(

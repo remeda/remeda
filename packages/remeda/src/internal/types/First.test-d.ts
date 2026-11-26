@@ -1,8 +1,8 @@
 import { describe, expectTypeOf, test } from "vitest";
 import type { First } from "./First";
-import type { IterableContainer } from "./IterableContainer";
+import type { TupleInferringArray } from "./TupleInferringArray";
 
-declare function first<T extends IterableContainer>(data: T): First<T>;
+declare function first<T extends TupleInferringArray>(data: T): First<T>;
 
 describe("tuple shapes", () => {
   test("empty tuple", () => {

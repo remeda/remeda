@@ -1,5 +1,3 @@
-import type { IterableContainer } from "./internal/types/IterableContainer";
-
 /**
  * A function that checks if the passed parameter is empty.
  *
@@ -29,7 +27,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  *    isEmpty(undefined); // Deprecated: use `isEmptyish`
  * @category Guard
  */
-export function isEmpty(data: IterableContainer): data is [];
+export function isEmpty(data: readonly unknown[]): data is [];
 export function isEmpty<T extends object>(
   data: T,
 ): data is Record<keyof T, never>;

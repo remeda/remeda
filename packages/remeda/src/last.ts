@@ -1,6 +1,6 @@
 import type { LastArrayElement } from "type-fest";
 import { purry1 } from "./internal/purryByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Gets the last element of `array`.
@@ -14,7 +14,9 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @dataFirst
  * @category Array
  */
-export function last<T extends IterableContainer>(data: T): LastArrayElement<T>;
+export function last<T extends TupleInferringArray>(
+  data: T,
+): LastArrayElement<T>;
 
 /**
  * Gets the last element of `array`.
@@ -31,11 +33,11 @@ export function last<T extends IterableContainer>(data: T): LastArrayElement<T>;
  * @dataLast
  * @category Array
  */
-export function last(): <T extends IterableContainer>(
+export function last(): <T extends TupleInferringArray>(
   data: T,
 ) => LastArrayElement<T>;
 
-export function last(data?: IterableContainer): unknown {
+export function last(data?: readonly unknown[]): unknown {
   return purry1(lastImplementation, arguments.length, data);
 }
 

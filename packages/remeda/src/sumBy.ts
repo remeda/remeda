@@ -1,9 +1,9 @@
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 type SumBy<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   U extends bigint | number,
 > = T extends readonly []
   ? 0
@@ -38,10 +38,10 @@ type SumBy<
  * @dataLast
  * @category Array
  */
-export function sumBy<T extends IterableContainer>(
+export function sumBy<T extends TupleInferringArray>(
   callbackfn: ArrayCallback<T, number>,
 ): (data: T) => SumBy<T, number>;
-export function sumBy<T extends IterableContainer>(
+export function sumBy<T extends TupleInferringArray>(
   callbackfn: ArrayCallback<T, bigint>,
 ): (data: T) => SumBy<T, bigint>;
 
@@ -72,19 +72,19 @@ export function sumBy<T extends IterableContainer>(
  * @dataFirst
  * @category Array
  */
-export function sumBy<T extends IterableContainer>(
+export function sumBy<T extends TupleInferringArray>(
   data: T,
   callbackfn: ArrayCallback<T, number>,
 ): SumBy<T, number>;
-export function sumBy<T extends IterableContainer>(
+export function sumBy<T extends TupleInferringArray>(
   data: T,
   callbackfn: ArrayCallback<T, bigint>,
 ): SumBy<T, bigint>;
 
 export function sumBy(
   dataOrCallbackfn:
-    IterableContainer | ArrayCallback<IterableContainer, bigint | number>,
-  callbackfn?: ArrayCallback<IterableContainer, bigint | number>,
+    readonly unknown[] | ArrayCallback<readonly unknown[], bigint | number>,
+  callbackfn?: ArrayCallback<readonly unknown[], bigint | number>,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
     ? dataLast(dataOrCallbackfn)

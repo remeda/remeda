@@ -1,6 +1,5 @@
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Removes elements from the end of the array until the predicate returns false.
@@ -16,7 +15,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @dataFirst
  * @category Array
  */
-export function dropLastWhile<T extends IterableContainer>(
+export function dropLastWhile<T extends readonly unknown[]>(
   data: T,
   predicate: ArrayCallback<T, boolean>,
 ): T[number][];
@@ -34,14 +33,14 @@ export function dropLastWhile<T extends IterableContainer>(
  * @dataLast
  * @category Array
  */
-export function dropLastWhile<T extends IterableContainer>(
+export function dropLastWhile<T extends readonly unknown[]>(
   predicate: ArrayCallback<T, boolean>,
 ): (data: T) => T[number][];
 
 export function dropLastWhile(
   dataOrPredicate:
-    IterableContainer | ArrayCallback<IterableContainer, boolean>,
-  predicate?: ArrayCallback<IterableContainer, boolean>,
+    readonly unknown[] | ArrayCallback<readonly unknown[], boolean>,
+  predicate?: ArrayCallback<readonly unknown[], boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
     ? dataLast(dataOrPredicate)
@@ -56,7 +55,7 @@ const dataLast: DataLastBuilder<typeof dropLastWhileImplementation> =
   (predicate) => (data) =>
     dropLastWhileImplementation(data, predicate);
 
-function dropLastWhileImplementation<T extends IterableContainer>(
+function dropLastWhileImplementation<T extends readonly unknown[]>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => boolean,
 ): T[number][] {

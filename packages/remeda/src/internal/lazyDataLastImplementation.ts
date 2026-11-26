@@ -10,11 +10,10 @@ import type {
   StoppableLazyEvaluator,
   StoppableMetadata,
 } from "./makeStoppable";
-import type { IterableContainer } from "./types/IterableContainer";
 import type { SimplifiedWritable } from "./types/SimplifiedWritable";
 
 export type LazyUnaryFunction<
-  T extends IterableContainer = readonly unknown[],
+  T extends readonly unknown[] = readonly unknown[],
   P extends readonly unknown[] = never,
   R = unknown,
 > = UnaryFunction<T, R> & LazyDefinition<T, P>;
@@ -24,7 +23,7 @@ export type LazyUnaryFunction<
  * takes them as one `LazyArgument`.
  */
 export type LazyEvaluatorFactory<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   P extends readonly unknown[],
 > = LazyEvaluatorFactoryOf<T, readonly [lazyArgument: LazyArgument<P>]>;
 
@@ -32,7 +31,7 @@ export type LazyEvaluatorFactory<
  * A lazy implementation by its own parameters `P`.
  */
 export type LazyEvaluatorFactoryOf<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   P extends readonly unknown[],
 > =
   // `pipe` reads both marks off any lazy implementation, so neither is
@@ -55,11 +54,11 @@ export type LazyArgument<P extends readonly unknown[]> = P extends readonly []
     : P;
 
 type LazyDefinition<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   P extends readonly unknown[],
 > = LazyDefinitionOf<T, LazyArgument<P>>;
 
-type LazyDefinitionOf<T extends IterableContainer, P> = {
+type LazyDefinitionOf<T extends readonly unknown[], P> = {
   readonly lazy: LazyEvaluatorFactoryOf<T, readonly [lazyArgument: P]>;
   readonly lazyArgument: P;
 };
@@ -84,7 +83,7 @@ type LazyDefinitionOf<T extends IterableContainer, P> = {
  *      : uniqueWithImplementation(dataOrIsEquals, isEquals);
  * @see purryWithLazy2
  */
-export function withLazyImplementation<T extends IterableContainer, P, R>(
+export function withLazyImplementation<T extends readonly unknown[], P, R>(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional! Writing `lazy` and `lazyArgument` onto `dataLast` is what this function is for.
   dataLast: UnaryFunction<T, R> &
     Partial<SimplifiedWritable<LazyDefinitionOf<T, P>>>,
@@ -103,7 +102,7 @@ export function withLazyImplementation<T extends IterableContainer, P, R>(
  * only the data, with the lazy implementation attached for `pipe`.
  */
 export function lazyDataLastImplementation0<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   P extends readonly [],
   R,
 >(
@@ -130,7 +129,7 @@ export function lazyDataLastImplementation0<
  * `pipe`.
  */
 export function lazyDataLastImplementation1<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   P extends readonly [unknown],
   R,
 >(
@@ -159,7 +158,7 @@ export function lazyDataLastImplementation1<
  * `pipe`.
  */
 export function lazyDataLastImplementation2<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   P extends readonly [unknown, unknown],
   R,
 >(

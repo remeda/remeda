@@ -16,11 +16,11 @@ import type {
 } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { First } from "./internal/types/First";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
 
-type Found<T extends IterableContainer, Condition> =
+type Found<T extends readonly unknown[], Condition> =
   // We distribute the array type to support unions of arrays/tuples.
   T extends unknown
     ? FoundInFixedTuple<
@@ -72,7 +72,7 @@ type FoundInFixedTuple<T, Condition, Fallback> = T extends readonly [
 // For non-type-narrowing predicates, we can only provide more refined type when
 // we know the predicate returns a constant literal boolean value.
 type FoundNonRefined<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   IsItemIncluded extends boolean,
 > = boolean extends IsItemIncluded
   ? T[number] | undefined
@@ -108,13 +108,13 @@ type FoundNonRefined<
  * @lazy
  * @category Array
  */
-export function find<T extends IterableContainer, Condition>(
+export function find<T extends TupleInferringArray, Condition>(
   data: T,
   predicate: ArrayTypePredicate<T, Condition>,
 ): Found<T, Condition>;
 
 export function find<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   IsItemIncluded extends boolean,
 >(
   data: T,
@@ -152,20 +152,21 @@ export function find<
  * @lazy
  * @category Array
  */
-export function find<T extends IterableContainer, Condition>(
+export function find<T extends TupleInferringArray, Condition>(
   predicate: LazyTypePredicate<T, Condition>,
 ): (data: T) => Found<T, Condition>;
 
 export function find<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   IsItemIncluded extends boolean,
 >(
   predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => FoundNonRefined<T, IsItemIncluded>;
 
 export function find(
-  dataOrPredicate: IterableContainer | LazyCallback<IterableContainer, boolean>,
-  predicate?: ArrayCallback<IterableContainer, boolean>,
+  dataOrPredicate:
+    readonly unknown[] | LazyCallback<readonly unknown[], boolean>,
+  predicate?: ArrayCallback<readonly unknown[], boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
     ? withLazyImplementation(

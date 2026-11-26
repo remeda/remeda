@@ -4,7 +4,6 @@ import {
 } from "./internal/purryOrderRules";
 import { swapInPlace } from "./internal/swapInPlace";
 import type { CompareFunction } from "./internal/types/CompareFunction";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Retrieves the element that would be at the given index if the array were sorted according to specified rules. This function uses the *QuickSelect* algorithm running at an average complexity of *O(n)*. Semantically it is equivalent to `sortBy(data, ...rules).at(index)` which would run at *O(nlogn)*.
@@ -22,7 +21,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @dataFirst
  * @category Array
  */
-export function nthBy<T extends IterableContainer>(
+export function nthBy<T extends readonly unknown[]>(
   data: T,
   index: number,
   ...rules: OrderRules<T[number]>
@@ -43,7 +42,7 @@ export function nthBy<T extends IterableContainer>(
  * @dataLast
  * @category Array
  */
-export function nthBy<T extends IterableContainer>(
+export function nthBy<T extends readonly unknown[]>(
   index: number,
   ...rules: OrderRules<T[number]>
 ): (data: T) => T[number] | undefined;

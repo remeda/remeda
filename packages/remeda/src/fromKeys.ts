@@ -2,14 +2,14 @@ import type { Simplify } from "type-fest";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 // Takes a union of literals and creates a union of records with the value V for
 // each key **separately**
 // @example ExactlyOneKey<"cat" | "dog", boolean> // { cat: boolean } | { dog: boolean }
 type ExactlyOneKey<T, V> = T extends PropertyKey ? Record<T, V> : never;
 
-type FromKeys<T extends IterableContainer, V> = T extends readonly []
+type FromKeys<T extends readonly unknown[], V> = T extends readonly []
   ? // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- We want to return an empty object type here, but it's not trivial to build that in Typescript, other fixer suggestions like Record<PropertyKey, never> or Record<PropertyKey, unknown> both break our type tests so they don't do what we need here. Because the result is mutable this might be the correct type after all...
     {}
   : T extends readonly [infer Head, ...infer Rest]
@@ -42,7 +42,7 @@ type FromKeys<T extends IterableContainer, V> = T extends readonly []
  * @dataFirst
  * @category Object
  */
-export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
+export function fromKeys<T extends TupleInferringArray<PropertyKey>, V>(
   data: T,
   mapper: ArrayCallback<T, V>,
 ): Simplify<FromKeys<T, V>>;
@@ -69,12 +69,12 @@ export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
  * @dataLast
  * @category Object
  */
-export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
+export function fromKeys<T extends TupleInferringArray<PropertyKey>, V>(
   mapper: ArrayCallback<T, V>,
 ): (data: T) => Simplify<FromKeys<T, V>>;
 
 export function fromKeys(
-  dataOrMapper: IterableContainer<PropertyKey> | ArrayCallback,
+  dataOrMapper: readonly PropertyKey[] | ArrayCallback,
   mapper?: ArrayCallback,
 ): unknown {
   return typeof dataOrMapper === "function"

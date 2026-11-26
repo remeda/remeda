@@ -1,9 +1,9 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../../../test/$typed";
 import type { ArrayAt } from "./ArrayAt";
-import type { IterableContainer } from "./IterableContainer";
+import type { TupleInferringArray } from "./TupleInferringArray";
 
-declare function arrayAt<const T extends IterableContainer, I extends number>(
+declare function arrayAt<const T extends TupleInferringArray, I extends number>(
   data: T,
   index: I,
 ): ArrayAt<T, I>;

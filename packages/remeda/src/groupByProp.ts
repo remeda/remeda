@@ -9,10 +9,10 @@ import { purry2 } from "./internal/purryByArity";
 import type { ArrayRequiredPrefix } from "./internal/types/ArrayRequiredPrefix";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { FilteredArray } from "./internal/types/FilteredArray";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 
-type GroupByProp<T extends IterableContainer, Prop extends GroupableProps<T>> =
+type GroupByProp<T extends readonly unknown[], Prop extends GroupableProps<T>> =
   // Distribute unions.
   T extends unknown
     ? FixEmptyObject<EnsureValuesAreNonEmpty<GroupByPropRaw<T, Prop>>>
@@ -21,7 +21,7 @@ type GroupByProp<T extends IterableContainer, Prop extends GroupableProps<T>> =
 // For each possible value of the prop we filter the input tuple with the prop
 // assigned to the value, e.g. `{ type: "cat" }`
 type GroupByPropRaw<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Prop extends GroupableProps<T>,
 > = {
   [Value in AllPropValues<T, Prop>]: FilteredArray<T, Record<Prop, Value>>;
@@ -30,14 +30,14 @@ type GroupByPropRaw<
 // We can only group by props that only have values that could be used to key
 // an object (i.e. PropertyKey), or if they are undefined (which would filter
 // them out of the grouping).
-type GroupableProps<T extends IterableContainer> = ConditionalKeys<
+type GroupableProps<T extends readonly unknown[]> = ConditionalKeys<
   ItemsSuperObject<T>,
   PropertyKey | undefined
 >;
 
 // The union of all possible values that the prop could have within the tuple.
 type AllPropValues<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Prop extends GroupableProps<T>,
 > = Extract<ItemsSuperObject<T>[Prop], PropertyKey>;
 
@@ -49,7 +49,7 @@ type AllPropValues<
 // `{ a: number, b: "cat", c: string } | { b: "dog", c: Date }` is groupable
 // by 'a' and 'b', but not 'c', and when selecting by 'b', the output would
 // have a prop for "cat" and a prop for "dog".
-type ItemsSuperObject<T extends IterableContainer> = AllUnionFields<
+type ItemsSuperObject<T extends readonly unknown[]> = AllUnionFields<
   // If the input tuple contains optional elements they would add `undefined` to
   // T[number] (and could technically show up in the array itself). Because
   // undefined breaks AllUnionFields we need to remove it from the union. This
@@ -70,15 +70,16 @@ type FixEmptyObject<T> = IsNever<keyof T> extends true ? EmptyObject : T;
 // Group by can never return an empty tuple but our filtered arrays might not
 // represent that. We need to reshape the tuples so that they always have at
 // least one item in them.
-type EnsureValuesAreNonEmpty<T extends Record<PropertyKey, IterableContainer>> =
-  Simplify<
-    Omit<T, PossiblyEmptyArrayKeys<T>> &
-      BoundedPartial<CoercedNonEmptyValues<Pick<T, PossiblyEmptyArrayKeys<T>>>>
-  >;
+type EnsureValuesAreNonEmpty<
+  T extends Record<PropertyKey, readonly unknown[]>,
+> = Simplify<
+  Omit<T, PossiblyEmptyArrayKeys<T>> &
+    BoundedPartial<CoercedNonEmptyValues<Pick<T, PossiblyEmptyArrayKeys<T>>>>
+>;
 
 // Go over the keys the object and return those that their value can accept an
 // empty array.
-type PossiblyEmptyArrayKeys<T extends Record<PropertyKey, IterableContainer>> =
+type PossiblyEmptyArrayKeys<T extends Record<PropertyKey, readonly unknown[]>> =
   keyof T extends infer Key extends unknown
     ? Key extends keyof T
       ? IsNonEmptyArray<T[Key]> extends true
@@ -88,7 +89,7 @@ type PossiblyEmptyArrayKeys<T extends Record<PropertyKey, IterableContainer>> =
     : never;
 
 // An array is non-empty if any of the fixed parts are non-empty.
-type IsNonEmptyArray<T extends IterableContainer> =
+type IsNonEmptyArray<T extends readonly unknown[]> =
   IsNonEmptyFixedTuple<TupleParts<T>["required"]> extends true
     ? true
     : IsNonEmptyFixedTuple<TupleParts<T>["suffix"]> extends true
@@ -100,9 +101,10 @@ type IsNonEmptyArray<T extends IterableContainer> =
 type IsNonEmptyFixedTuple<T> = IsNever<Extract<T, readonly []>>;
 
 // We coerce the arbitrary array values to have a prefix of at least one item.
-type CoercedNonEmptyValues<T extends Record<PropertyKey, IterableContainer>> = {
-  [P in keyof T]: ArrayRequiredPrefix<T[P], 1>;
-};
+type CoercedNonEmptyValues<T extends Record<PropertyKey, readonly unknown[]>> =
+  {
+    [P in keyof T]: ArrayRequiredPrefix<T[P], 1>;
+  };
 
 /**
  * Groups the elements of an array of objects based on the values of a
@@ -138,7 +140,7 @@ type CoercedNonEmptyValues<T extends Record<PropertyKey, IterableContainer>> = {
  * @category Array
  */
 export function groupByProp<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   const Prop extends GroupableProps<T>,
 >(data: T, prop: Prop): GroupByProp<T, Prop>;
 
@@ -175,19 +177,19 @@ export function groupByProp<
  * @category Array
  */
 export function groupByProp<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   const Prop extends GroupableProps<T>,
 >(prop: Prop): (data: T) => GroupByProp<T, Prop>;
 
 export function groupByProp(
-  dataOrProp: IterableContainer | PropertyKey,
+  dataOrProp: readonly unknown[] | PropertyKey,
   prop?: PropertyKey,
 ): unknown {
   return purry2(groupByPropImplementation, arguments.length, dataOrProp, prop);
 }
 
 function groupByPropImplementation<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Prop extends GroupableProps<T>,
 >(data: T, prop: Prop): GroupByProp<T, Prop> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Using Object.create(null) allows us to remove everything from the prototype chain, leaving it as a pure object that only has the keys *we* add to it. This prevents issues like the one raised in #1046

@@ -1,7 +1,6 @@
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
 /**
@@ -32,7 +31,7 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
  * @category Array
  */
 export function groupBy<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Key extends PropertyKey = PropertyKey,
 >(
   data: T,
@@ -72,7 +71,7 @@ export function groupBy<
  * @category Array
  */
 export function groupBy<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Key extends PropertyKey = PropertyKey,
 >(
   callbackfn: ArrayCallback<T, Key | undefined>,
@@ -80,9 +79,9 @@ export function groupBy<
 
 export function groupBy(
   dataOrCallbackfn:
-    | IterableContainer
-    | ArrayCallback<IterableContainer, PropertyKey | undefined>,
-  callbackfn?: ArrayCallback<IterableContainer, PropertyKey | undefined>,
+    | readonly unknown[]
+    | ArrayCallback<readonly unknown[], PropertyKey | undefined>,
+  callbackfn?: ArrayCallback<readonly unknown[], PropertyKey | undefined>,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
     ? dataLast(dataOrCallbackfn)

@@ -1,7 +1,6 @@
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Creates an object that maps the result of `valueExtractor` with a key
@@ -34,7 +33,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @category Object
  */
 export function pullObject<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   K extends PropertyKey,
   V,
 >(
@@ -72,7 +71,7 @@ export function pullObject<
  * @category Object
  */
 export function pullObject<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   K extends PropertyKey,
   V,
 >(
@@ -82,7 +81,7 @@ export function pullObject<
 
 export function pullObject(
   dataOrKeyExtractor:
-    IterableContainer | ArrayCallback<IterableContainer, PropertyKey>,
+    readonly unknown[] | ArrayCallback<readonly unknown[], PropertyKey>,
   keyExtractorOrValueExtractor: ArrayCallback,
   valueExtractor?: ArrayCallback,
 ): unknown {

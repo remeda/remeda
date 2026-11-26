@@ -1,10 +1,9 @@
-import type { IterableContainer } from "./IterableContainer";
 import type { TupleParts } from "./TupleParts";
 
 /**
  * The first element of `T`, or `undefined` when `T` might be empty.
  */
-export type First<T extends IterableContainer> =
+export type First<T extends readonly unknown[]> =
   // We distribute the array type to support unions of arrays/tuples.
   T extends unknown
     ? TupleParts<T>["required"] extends readonly []

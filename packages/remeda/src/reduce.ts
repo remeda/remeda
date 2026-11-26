@@ -1,10 +1,10 @@
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 
-type Reducer<T = unknown, U = unknown> = (
+type Reducer<T extends readonly unknown[] = readonly unknown[], U = unknown> = (
   previousValue: U,
-  currentValue: T,
+  currentValue: T[number],
   currentIndex: number,
-  data: readonly T[],
+  data: T,
 ) => U;
 
 /**
@@ -31,8 +31,8 @@ type Reducer<T = unknown, U = unknown> = (
  * @dataFirst
  * @category Array
  */
-export function reduce<T, U>(
-  data: readonly T[],
+export function reduce<T extends readonly unknown[], U>(
+  data: T,
   callbackfn: Reducer<T, U>,
   initialValue: U,
 ): U;
@@ -60,10 +60,10 @@ export function reduce<T, U>(
  * @dataLast
  * @category Array
  */
-export function reduce<T, U>(
+export function reduce<T extends readonly unknown[], U>(
   callbackfn: Reducer<T, U>,
   initialValue: U,
-): (data: readonly T[]) => U;
+): (data: T) => U;
 
 export function reduce(
   dataOrCallbackfn: readonly unknown[] | Reducer,

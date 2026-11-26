@@ -2,7 +2,7 @@ import { SKIP_ITEM } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryWithLazy1 } from "./internal/purryWithLazyByArity";
 import type { Deduped } from "./internal/types/Deduped";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -17,7 +17,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @lazy
  * @category Array
  */
-export function unique<T extends IterableContainer>(data: T): Deduped<T>;
+export function unique<T extends TupleInferringArray>(data: T): Deduped<T>;
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -35,9 +35,11 @@ export function unique<T extends IterableContainer>(data: T): Deduped<T>;
  * @lazy
  * @category Array
  */
-export function unique(): <T extends IterableContainer>(data: T) => Deduped<T>;
+export function unique(): <T extends TupleInferringArray>(
+  data: T,
+) => Deduped<T>;
 
-export function unique(data?: IterableContainer): unknown {
+export function unique(data?: readonly unknown[]): unknown {
   return purryWithLazy1(
     uniqueImplementation,
     lazyImplementation,

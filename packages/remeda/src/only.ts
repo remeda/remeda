@@ -1,7 +1,7 @@
 import { purry1 } from "./internal/purryByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
-type Only<T extends IterableContainer> = T extends
+type Only<T extends readonly unknown[]> = T extends
   | readonly [...unknown[], unknown, unknown]
   | readonly []
   | readonly [unknown, ...unknown[], unknown]
@@ -24,7 +24,7 @@ type Only<T extends IterableContainer> = T extends
  * @dataFirst
  * @category Array
  */
-export function only<T extends IterableContainer>(data: T): Only<T>;
+export function only<T extends TupleInferringArray>(data: T): Only<T>;
 
 /**
  * Returns the first and only element of `data`, or undefined otherwise.
@@ -38,9 +38,9 @@ export function only<T extends IterableContainer>(data: T): Only<T>;
  * @dataLast
  * @category Array
  */
-export function only<T extends IterableContainer>(): (data: T) => Only<T>;
+export function only<T extends TupleInferringArray>(): (data: T) => Only<T>;
 
-export function only(data?: IterableContainer): unknown {
+export function only(data?: readonly unknown[]): unknown {
   return purry1(onlyImplementation, arguments.length, data);
 }
 

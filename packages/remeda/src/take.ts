@@ -5,7 +5,6 @@ import {
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
 import { purryWithLazy2 } from "./internal/purryWithLazyByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Returns the first `n` elements of `data`.
@@ -25,7 +24,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @lazy
  * @category Array
  */
-export function take<T extends IterableContainer>(
+export function take<T extends readonly unknown[]>(
   data: T,
   n: number,
 ): T[number][];
@@ -49,9 +48,12 @@ export function take<T extends IterableContainer>(
  */
 export function take(
   n: number,
-): <T extends IterableContainer>(data: T) => T[number][];
+): <T extends readonly unknown[]>(data: T) => T[number][];
 
-export function take(dataOrN: IterableContainer | number, n?: number): unknown {
+export function take(
+  dataOrN: readonly unknown[] | number,
+  n?: number,
+): unknown {
   return purryWithLazy2(
     takeImplementation,
     lazyImplementation,
@@ -61,7 +63,7 @@ export function take(dataOrN: IterableContainer | number, n?: number): unknown {
   );
 }
 
-const takeImplementation = <T extends IterableContainer>(
+const takeImplementation = <T extends readonly unknown[]>(
   data: T,
   n: number,
 ): T[number][] => (n < 0 ? [] : data.slice(0, n));

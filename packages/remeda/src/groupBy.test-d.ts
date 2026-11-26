@@ -141,3 +141,29 @@ describe("union of arrays", () => {
     ).toEqualTypeOf<Record<number | string, NonEmptyArray<number | string>>>();
   });
 });
+
+describe("union of object arrays grouped by a discriminant", () => {
+  type Cat = { type: "cat"; meow: number };
+  type Dog = { type: "dog"; bark: string };
+
+  test("data-first", () => {
+    expectTypeOf(groupBy([] as Cat[] | Dog[], prop("type"))).toEqualTypeOf<
+      Partial<Record<"cat" | "dog", NonEmptyArray<Cat | Dog>>>
+    >();
+  });
+
+  test("data-last", () => {
+    expectTypeOf(
+      pipe([] as Cat[] | Dog[], groupBy(prop("type"))),
+    ).toEqualTypeOf<Partial<Record<"cat" | "dog", NonEmptyArray<Cat | Dog>>>>();
+  });
+});
+
+// @see https://github.com/remeda/remeda/pull/1507
+test("inline array of differently-shaped objects", () => {
+  groupBy([{ a: 1 }, { a: 2, b: "x" }], (item) => {
+    expectTypeOf(item.b).toEqualTypeOf<string | undefined>();
+
+    return item.a;
+  });
+});

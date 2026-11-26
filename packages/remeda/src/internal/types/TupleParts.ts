@@ -1,5 +1,4 @@
 import type { Simplify } from "type-fest";
-import type { IterableContainer } from "./IterableContainer";
 import type { RemedaTypeError } from "./RemedaTypeError";
 
 /**
@@ -30,7 +29,7 @@ import type { RemedaTypeError } from "./RemedaTypeError";
  * ].
  */
 export type TupleParts<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Prefix extends unknown[] = [],
 > = T extends readonly [infer Head, ...infer Tail]
   ? // The first step to building the tuple parts is to remove the extract (and
@@ -53,7 +52,7 @@ export type TupleParts<
 
 // This is an internal type and assumes that the tuple has no required prefix!
 type TuplePartsWithoutRequired<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Suffix extends unknown[] = [],
 > = T extends readonly [...infer Head, infer Tail]
   ? // Our tuple has no required prefix, now we extract (and remove) the
@@ -78,7 +77,7 @@ type TuplePartsWithoutRequired<
 // This is an internal type and assumes that the tuple has no required parts
 // (neither prefix nor suffix).
 type TuplePartsWithoutFixed<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Optional extends unknown[] = [],
 > =
   // Don't infer the head yet: for arrays of TypeScript's internal `missing`
@@ -123,7 +122,7 @@ type TuplePartsWithoutFixed<
 // This is an internal type and assumes that the tuple is either an empty tuple
 // `[]` or a simple array, all other parts of the tuple should be stripped
 // before using it.
-type TuplePartsRest<T extends IterableContainer> = {
+type TuplePartsRest<T extends readonly unknown[]> = {
   /**
    * The type for the rest parameter of the tuple, if any. Unlike the
    * other parts of the tuple, this is a single type and not

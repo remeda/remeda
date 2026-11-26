@@ -6,7 +6,7 @@ import {
 } from "./internal/makeStoppable";
 import { purryWithLazy1 } from "./internal/purryWithLazyByArity";
 import type { First } from "./internal/types/First";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Gets the first element of `array`.
@@ -22,7 +22,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @lazy
  * @category Array
  */
-export function first<T extends IterableContainer>(data: T): First<T>;
+export function first<T extends TupleInferringArray>(data: T): First<T>;
 
 /**
  * Gets the first element of `array`.
@@ -41,9 +41,9 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  * @lazy
  * @category Array
  */
-export function first(): <T extends IterableContainer>(data: T) => First<T>;
+export function first(): <T extends TupleInferringArray>(data: T) => First<T>;
 
-export function first(data?: IterableContainer): unknown {
+export function first(data?: readonly unknown[]): unknown {
   return purryWithLazy1(
     firstImplementation,
     lazyImplementation,

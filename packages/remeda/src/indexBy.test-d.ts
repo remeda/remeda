@@ -5,6 +5,20 @@ import { pipe } from "./pipe";
 import { prop } from "./prop";
 
 describe("data-first", () => {
+  test("simple array of objects", () => {
+    const result = indexBy(
+      [
+        { dir: "left", code: 97 },
+        { dir: "right", code: 100 },
+      ],
+      prop("code"),
+    );
+
+    expectTypeOf(result).toEqualTypeOf<
+      Record<number, { dir: string; code: number }>
+    >();
+  });
+
   test("tuple of readonly objects", () => {
     const result = indexBy(
       [
@@ -76,29 +90,11 @@ describe("union of arrays", () => {
   });
 });
 
-describe("known issues!", () => {
-  test("data-first repeats the item type of an inline array of objects", () => {
-    // The inline array infers as a tuple, which gives each object its own type,
-    // and `T[number]` doesn't merge structurally identical members.
-    const result = indexBy(
-      [
-        { dir: "left", code: 97 },
-        { dir: "right", code: 100 },
-      ],
-      prop("code"),
-    );
+// @see https://github.com/remeda/remeda/pull/1507
+test("inline array of differently-shaped objects", () => {
+  indexBy([{ a: 1 }, { a: 2, b: "x" }], (item) => {
+    expectTypeOf(item.b).toEqualTypeOf<string | undefined>();
 
-    expectTypeOf(result).not.toEqualTypeOf<
-      Record<number, { dir: string; code: number }>
-    >();
-
-    // Actual
-    expectTypeOf(result).toEqualTypeOf<
-      Record<
-        number,
-        // eslint-disable-next-line @typescript-eslint/no-duplicate-type-constituents -- TypeScript keeps separately written object types as distinct union members, as it does for the tuple's elements; merging them changes the asserted type.
-        { dir: string; code: number } | { dir: string; code: number }
-      >
-    >();
+    return item.a;
   });
 });

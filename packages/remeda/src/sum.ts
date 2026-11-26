@@ -1,7 +1,7 @@
 import { purry1 } from "./internal/purryByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
-type Sum<T extends IterableContainer<bigint> | IterableContainer<number>> =
+type Sum<T extends readonly bigint[] | readonly number[]> =
   // Empty arrays would always result in a sum of (a non-bigint) 0.
   T extends readonly []
     ? 0
@@ -36,7 +36,7 @@ type Sum<T extends IterableContainer<bigint> | IterableContainer<number>> =
  * @category Number
  */
 export function sum<
-  T extends IterableContainer<bigint> | IterableContainer<number>,
+  T extends TupleInferringArray<bigint> | TupleInferringArray<number>,
 >(data: T): Sum<T>;
 
 /**
@@ -60,20 +60,18 @@ export function sum<
  * @category Number
  */
 export function sum(): <
-  T extends IterableContainer<bigint> | IterableContainer<number>,
+  T extends TupleInferringArray<bigint> | TupleInferringArray<number>,
 >(
   data: T,
 ) => Sum<T>;
 
-export function sum(
-  data?: IterableContainer<bigint> | IterableContainer<number>,
-): unknown {
+export function sum(data?: readonly bigint[] | readonly number[]): unknown {
   return purry1(sumImplementation, arguments.length, data);
 }
 
-function sumImplementation<
-  T extends IterableContainer<bigint> | IterableContainer<number>,
->(data: T): T[number] {
+function sumImplementation<T extends readonly bigint[] | readonly number[]>(
+  data: T,
+): T[number] {
   // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- The rule differentiates 0 and 0n :(
   let out = typeof data[0] === "bigint" ? 0n : 0;
   for (const value of data) {

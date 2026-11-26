@@ -22,3 +22,12 @@ describe("union of arrays", () => {
     );
   });
 });
+
+// @see https://github.com/remeda/remeda/pull/1507
+test("inline array of differently-shaped objects", () => {
+  findLastIndex([{ a: 1 }, { a: 2, b: "x" }], (item) => {
+    expectTypeOf(item.b).toEqualTypeOf<string | undefined>();
+
+    return true;
+  });
+});

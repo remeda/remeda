@@ -18,3 +18,12 @@ describe("union of arrays", () => {
     ).toEqualTypeOf<Record<number | string, number | string>>();
   });
 });
+
+// @see https://github.com/remeda/remeda/pull/1507
+test("inline array of differently-shaped objects", () => {
+  mapToObj([{ a: 1 }, { a: 2, b: "x" }], (item) => {
+    expectTypeOf(item.b).toEqualTypeOf<string | undefined>();
+
+    return [item.a, item];
+  });
+});

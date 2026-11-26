@@ -1,5 +1,4 @@
 import type { CoercedArray } from "./CoercedArray";
-import type { IterableContainer } from "./IterableContainer";
 import type { PartialArray } from "./PartialArray";
 import type { TupleParts } from "./TupleParts";
 
@@ -8,7 +7,7 @@ import type { TupleParts } from "./TupleParts";
  * Drop-in replacement for type-fest's `Writable` type (for arrays/tuples) that
  * retains the input's shape.
  */
-export type WritableTuple<T extends IterableContainer> =
+export type WritableTuple<T extends readonly unknown[]> =
   // We distribute the array type to support unions of arrays/tuples.
   T extends unknown
     ? // This is exactly the array reconstruction from the TupleParts example.

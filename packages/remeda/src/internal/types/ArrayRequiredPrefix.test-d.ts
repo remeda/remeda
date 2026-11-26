@@ -1,10 +1,10 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../../../test/$typed";
 import type { ArrayRequiredPrefix } from "./ArrayRequiredPrefix";
-import type { IterableContainer } from "./IterableContainer";
+import type { TupleInferringArray } from "./TupleInferringArray";
 
 declare function arrayRequiredPrefix<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   Min extends number,
 >(data: T, min: Min): ArrayRequiredPrefix<T, Min>;
 

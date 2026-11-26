@@ -9,7 +9,7 @@ import { pipe } from "./pipe";
 import { reduce } from "./reduce";
 import { set } from "./set";
 
-const sum = reduce((a, b: number) => add(a, b), 0);
+const sum = (data: readonly number[]): number => reduce(data, add, 0);
 
 describe("data first", () => {
   test("creates a new object by evolving the `data` according to the `transformation` functions", () => {

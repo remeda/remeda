@@ -4,11 +4,11 @@ import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryWithLazy2 } from "./internal/purryWithLazyByArity";
 import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
 import type { CoercedArray } from "./internal/types/CoercedArray";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 import type { PartialArray } from "./internal/types/PartialArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 
-type Drop<T extends IterableContainer, N extends number> =
+type Drop<T extends readonly unknown[], N extends number> =
   IsNegative<N> extends true
     ? // Negative numbers result in nothing being dropped, we return a shallow
       // clone of the array.
@@ -111,7 +111,7 @@ type DropFixedTuple<
  * @lazy
  * @category Array
  */
-export function drop<T extends IterableContainer, N extends number>(
+export function drop<T extends TupleInferringArray, N extends number>(
   data: T,
   n: N,
 ): Drop<T, N>;
@@ -135,9 +135,12 @@ export function drop<T extends IterableContainer, N extends number>(
  */
 export function drop<N extends number>(
   n: N,
-): <T extends IterableContainer>(data: T) => Drop<T, N>;
+): <T extends TupleInferringArray>(data: T) => Drop<T, N>;
 
-export function drop(dataOrN: IterableContainer | number, n?: number): unknown {
+export function drop(
+  dataOrN: readonly unknown[] | number,
+  n?: number,
+): unknown {
   return purryWithLazy2(
     dropImplementation,
     lazyImplementation,
@@ -147,7 +150,7 @@ export function drop(dataOrN: IterableContainer | number, n?: number): unknown {
   );
 }
 
-const dropImplementation = <T extends IterableContainer>(
+const dropImplementation = <T extends readonly unknown[]>(
   data: T,
   n: number,
 ): T[number][] => (n < 0 ? data.concat() : data.slice(n));

@@ -1,12 +1,14 @@
 import type { GreaterThan, IsEqual, IsLiteral, IsNever } from "type-fest";
 import type { ClampedIntegerSubtract } from "./ClampedIntegerSubtract";
 import type { CoercedArray } from "./CoercedArray";
-import type { IterableContainer } from "./IterableContainer";
 import type { NTuple } from "./NTuple";
 import type { RemedaTypeError } from "./RemedaTypeError";
 import type { TupleParts } from "./TupleParts";
 
-export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
+export type ArrayRequiredPrefix<
+  T extends readonly unknown[],
+  N extends number,
+> =
   IsLiteral<N> extends true
     ? // Distribute T to support union types
       T extends unknown
@@ -52,7 +54,7 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
       >;
 
 type ExpandedRequiredPrefix<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Remainder extends number,
 > = WithSameReadonly<
   T,

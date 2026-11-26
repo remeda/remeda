@@ -1,6 +1,5 @@
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Splits a given array at the first index where the given predicate returns true.
@@ -14,7 +13,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @dataFirst
  * @category Array
  */
-export function splitWhen<T extends IterableContainer>(
+export function splitWhen<T extends readonly unknown[]>(
   data: T,
   predicate: ArrayCallback<T, boolean>,
 ): [T[number][], T[number][]];
@@ -30,14 +29,14 @@ export function splitWhen<T extends IterableContainer>(
  * @dataLast
  * @category Array
  */
-export function splitWhen<T extends IterableContainer>(
+export function splitWhen<T extends readonly unknown[]>(
   predicate: ArrayCallback<T, boolean>,
 ): (data: T) => [T[number][], T[number][]];
 
 export function splitWhen(
   dataOrPredicate:
-    IterableContainer | ArrayCallback<IterableContainer, boolean>,
-  predicate?: ArrayCallback<IterableContainer, boolean>,
+    readonly unknown[] | ArrayCallback<readonly unknown[], boolean>,
+  predicate?: ArrayCallback<readonly unknown[], boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
     ? dataLast(dataOrPredicate)

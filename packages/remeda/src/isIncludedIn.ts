@@ -1,5 +1,5 @@
 import type { IsLiteral, IsUnion } from "type-fest";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * A "constant" tuple is a type that has a single runtime value that can fulfil
@@ -14,7 +14,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  *   type T2 = IsConstantTuple<["cat" | "dog"]>; // false;
  *   type T2 = IsConstantTuple<["cat", ..."cat"[]]>; // false;
  */
-type IsConstantTuple<T extends IterableContainer> = T extends readonly []
+type IsConstantTuple<T extends readonly unknown[]> = T extends readonly []
   ? true
   : T extends readonly [infer Head, ...infer Rest]
     ? IsUnion<Head> extends true
@@ -52,7 +52,7 @@ type IsConstantTuple<T extends IterableContainer> = T extends readonly []
  *   }
  * }
  */
-type IsNarrowable<T, S extends IterableContainer<T>> =
+type IsNarrowable<T, S extends readonly T[]> =
   IsLiteral<T> extends true
     ? // When T is literal (i.g. it isn't a primitive type like `string` or
       // `number`) then the criteria for narrowing is that the container is a
@@ -92,13 +92,13 @@ type IsNarrowable<T, S extends IterableContainer<T>> =
  * @dataFirst
  * @category Guard
  */
-export function isIncludedIn<T, S extends IterableContainer<T>>(
+export function isIncludedIn<T, S extends TupleInferringArray<T>>(
   data: T,
   container: IsNarrowable<T, S> extends true ? S : never,
 ): data is S[number];
 export function isIncludedIn<T, S extends T>(
   data: T,
-  container: IterableContainer<S>,
+  container: TupleInferringArray<S>,
 ): boolean;
 
 /**
@@ -128,11 +128,11 @@ export function isIncludedIn<T, S extends T>(
  * @dataLast
  * @category Guard
  */
-export function isIncludedIn<T, S extends IterableContainer<T>>(
+export function isIncludedIn<T, S extends TupleInferringArray<T>>(
   container: IsNarrowable<T, S> extends true ? S : never,
 ): (data: T) => data is S[number];
 export function isIncludedIn<T, S extends T>(
-  container: IterableContainer<S>,
+  container: TupleInferringArray<S>,
 ): (data: T) => boolean;
 
 export function isIncludedIn(

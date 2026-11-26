@@ -13,7 +13,10 @@ import { purry2 } from "./internal/purryByArity";
  * @dataFirst
  * @category Array
  */
-export function splitAt<T>(data: readonly T[], index: number): [T[], T[]];
+export function splitAt<T extends readonly unknown[]>(
+  data: T,
+  index: number,
+): [T[number][], T[number][]];
 
 /**
  * Splits a given array at a given index.
@@ -27,7 +30,9 @@ export function splitAt<T>(data: readonly T[], index: number): [T[], T[]];
  * @dataLast
  * @category Array
  */
-export function splitAt<T>(index: number): (data: readonly T[]) => [T[], T[]];
+export function splitAt(
+  index: number,
+): <T extends readonly unknown[]>(data: T) => [T[number][], T[number][]];
 
 export function splitAt(
   dataOrIndex: readonly unknown[] | number,

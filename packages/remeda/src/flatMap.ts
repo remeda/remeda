@@ -4,7 +4,6 @@ import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { requireDataByArity } from "./internal/requireData";
 import type { ArrayCallback, LazyCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Returns a new array formed by applying a given callback function to each
@@ -27,7 +26,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @lazy
  * @category Array
  */
-export function flatMap<T extends IterableContainer, U>(
+export function flatMap<T extends readonly unknown[], U>(
   data: T,
   callbackfn: ArrayCallback<T, readonly U[] | U>,
 ): U[];
@@ -53,12 +52,12 @@ export function flatMap<T extends IterableContainer, U>(
  * @lazy
  * @category Array
  */
-export function flatMap<T extends IterableContainer, U>(
+export function flatMap<T extends readonly unknown[], U>(
   callbackfn: LazyCallback<T, readonly U[] | U>,
 ): (data: T) => U[];
 
 export function flatMap(
-  dataOrCallbackfn: IterableContainer | LazyCallback<IterableContainer>,
+  dataOrCallbackfn: readonly unknown[] | LazyCallback<readonly unknown[]>,
   callbackfn?: ArrayCallback,
 ): unknown {
   return typeof dataOrCallbackfn === "function"

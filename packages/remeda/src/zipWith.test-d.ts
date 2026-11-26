@@ -58,3 +58,12 @@ describe("callback data param", () => {
     );
   });
 });
+
+// @see https://github.com/remeda/remeda/pull/1507
+test("inline array of differently-shaped objects", () => {
+  zipWith([{ a: 1 }, { a: 2, b: "x" }], [1, 2], (item) => {
+    expectTypeOf(item.b).toEqualTypeOf<string | undefined>();
+
+    return item.a;
+  });
+});

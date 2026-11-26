@@ -1,8 +1,10 @@
 import { describe, expectTypeOf, test } from "vitest";
-import type { IterableContainer } from "./IterableContainer";
+import type { TupleInferringArray } from "./TupleInferringArray";
 import type { TupleSplits } from "./TupleSplits";
 
-declare function tupleSplits<T extends IterableContainer>(x: T): TupleSplits<T>;
+declare function tupleSplits<T extends TupleInferringArray>(
+  x: T,
+): TupleSplits<T>;
 
 describe("all tuple shapes", () => {
   test("empty tuple", () => {

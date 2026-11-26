@@ -1,7 +1,7 @@
 import { purry1 } from "./internal/purryByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
-type Mean<T extends IterableContainer<number>> =
+type Mean<T extends readonly number[]> =
   | (T extends readonly [] ? never : number)
   | (T extends readonly [unknown, ...unknown[]] ? never : undefined);
 
@@ -25,7 +25,7 @@ type Mean<T extends IterableContainer<number>> =
  * @dataFirst
  * @category Number
  */
-export function mean<T extends IterableContainer<number>>(data: T): Mean<T>;
+export function mean<T extends TupleInferringArray<number>>(data: T): Mean<T>;
 
 /**
  * Returns the mean of the elements of an array.
@@ -46,15 +46,15 @@ export function mean<T extends IterableContainer<number>>(data: T): Mean<T>;
  * @dataLast
  * @category Number
  */
-export function mean(): <T extends IterableContainer<number>>(
+export function mean(): <T extends TupleInferringArray<number>>(
   data: T,
 ) => Mean<T>;
 
-export function mean(data?: IterableContainer<number>): unknown {
+export function mean(data?: readonly number[]): unknown {
   return purry1(meanImplementation, arguments.length, data);
 }
 
-const meanImplementation = <T extends IterableContainer<number>>(
+const meanImplementation = <T extends readonly number[]>(
   data: T,
 ): T[number] | undefined => {
   if (data.length === 0) {

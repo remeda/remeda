@@ -1,13 +1,12 @@
 import type { EnumerableStringKeyOf } from "./EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./EnumerableStringKeyedValueOf";
-import type { IterableContainer } from "./IterableContainer";
 import type { NonEmptyPrefix } from "./NonEmptyPrefix";
 
 /**
  * The callback the native array methods take.
  */
 export type ArrayCallback<
-  T extends IterableContainer = IterableContainer,
+  T extends readonly unknown[] = readonly unknown[],
   R = unknown,
 > = (value: T[number], index: number, data: T) => R;
 
@@ -15,7 +14,7 @@ export type ArrayCallback<
  * `ArrayCallback` as a type predicate; TypeScript has no
  * `ArrayCallback<T, is S>` syntax.
  */
-export type ArrayTypePredicate<T extends IterableContainer, S> = (
+export type ArrayTypePredicate<T extends readonly unknown[], S> = (
   value: T[number],
   index: number,
   data: T,
@@ -27,7 +26,7 @@ export type ArrayTypePredicate<T extends IterableContainer, S> = (
  *
  * @see NonEmptyPrefix
  */
-export type LazyCallback<T extends IterableContainer, R = unknown> = (
+export type LazyCallback<T extends readonly unknown[], R = unknown> = (
   value: T[number],
   index: number,
   data: Readonly<NonEmptyPrefix<T>>,
@@ -36,7 +35,7 @@ export type LazyCallback<T extends IterableContainer, R = unknown> = (
 /**
  * `LazyCallback` as a type predicate.
  */
-export type LazyTypePredicate<T extends IterableContainer, S> = (
+export type LazyTypePredicate<T extends readonly unknown[], S> = (
   value: T[number],
   index: number,
   data: Readonly<NonEmptyPrefix<T>>,

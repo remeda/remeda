@@ -1,5 +1,5 @@
 import { purry2 } from "./internal/purryByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Merge two or more arrays. This method does not change the existing arrays,
@@ -19,8 +19,8 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @category Array
  */
 export function concat<
-  T1 extends IterableContainer,
-  T2 extends IterableContainer,
+  T1 extends TupleInferringArray,
+  T2 extends TupleInferringArray,
 >(data: T1, other: T2): [...T1, ...T2];
 
 /**
@@ -38,20 +38,20 @@ export function concat<
  * @dataLast
  * @category Array
  */
-export function concat<T2 extends IterableContainer>(
+export function concat<T2 extends TupleInferringArray>(
   other: T2,
-): <T1 extends IterableContainer>(data: T1) => [...T1, ...T2];
+): <T1 extends TupleInferringArray>(data: T1) => [...T1, ...T2];
 
 export function concat(
-  dataOrOther: IterableContainer,
-  other?: IterableContainer,
+  dataOrOther: readonly unknown[],
+  other?: readonly unknown[],
 ): unknown {
   return purry2(concatImplementation, arguments.length, dataOrOther, other);
 }
 
 const concatImplementation = <
-  T1 extends IterableContainer,
-  T2 extends IterableContainer,
+  T1 extends readonly unknown[],
+  T2 extends readonly unknown[],
 >(
   arr1: T1,
   arr2: T2,

@@ -1,9 +1,9 @@
 import { describe, expectTypeOf, test } from "vitest";
-import type { IterableContainer } from "./IterableContainer";
+import type { TupleInferringArray } from "./TupleInferringArray";
 import type { NonEmptyArray } from "./NonEmptyArray";
 import type { NonEmptyPrefix } from "./NonEmptyPrefix";
 
-declare function nonEmptyPrefix<T extends IterableContainer>(
+declare function nonEmptyPrefix<T extends TupleInferringArray>(
   data: T,
 ): NonEmptyPrefix<T>;
 

@@ -1,5 +1,4 @@
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Removes elements from an array and, optionally, inserts new elements in
@@ -26,7 +25,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @dataFirst
  * @category Array
  */
-export function splice<T extends IterableContainer>(
+export function splice<T extends readonly unknown[]>(
   data: T,
   start: number,
   deleteCount: number,
@@ -57,14 +56,14 @@ export function splice<T extends IterableContainer>(
  * @dataLast
  * @category Array
  */
-export function splice<T extends IterableContainer>(
+export function splice<T extends readonly unknown[]>(
   start: number,
   deleteCount: number,
   replacement?: readonly T[number][],
 ): (data: T) => T[number][];
 
 export function splice(
-  dataOrStart: IterableContainer | number,
+  dataOrStart: readonly unknown[] | number,
   startOrDeleteCount: number,
   // eslint-disable-next-line unicorn/no-non-function-verb-prefix -- Starts with `deleteCount`, `Array.prototype.splice`'s name for this parameter.
   deleteCountOrReplacement?: number | readonly unknown[],
@@ -94,7 +93,7 @@ const dataLast: DataLastBuilder<typeof spliceImplementation> =
   (start, deleteCount, replacement) => (data) =>
     spliceImplementation(data, start, deleteCount, replacement);
 
-function spliceImplementation<T extends IterableContainer>(
+function spliceImplementation<T extends readonly unknown[]>(
   data: T,
   start: number,
   // eslint-disable-next-line unicorn/no-non-function-verb-prefix -- `deleteCount` is `Array.prototype.splice`'s name for this parameter.
