@@ -91,6 +91,10 @@ test("doesn't allow mixed arrays", () => {
   product([1, 2n]);
 });
 
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(product([1n, 2n])).toEqualTypeOf<bigint>();
+});
+
 describe("known issues!", () => {
   test("returns 1 (`number`) instead of 1n (`bigint`) for empty `bigint` arrays", () => {
     const result = product([] as bigint[]);

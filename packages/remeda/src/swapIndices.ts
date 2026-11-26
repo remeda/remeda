@@ -1,6 +1,6 @@
 import type { IsEqual, Join } from "type-fest";
 import { purry3 } from "./internal/purryByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 type Difference<A extends number, B extends number> =
   TupleOfLength<A> extends [...infer U, ...TupleOfLength<B>]
@@ -18,7 +18,7 @@ type isLessThan<A extends number, B extends number> =
 
 type TupleOfLength<
   L extends number,
-  T extends IterableContainer = [],
+  T extends readonly unknown[] = [],
 > = T["length"] extends L ? T : TupleOfLength<L, [...T, unknown]>;
 
 type IsNonNegative<T extends number> = number extends T
@@ -34,11 +34,11 @@ type CharactersTuple<T extends string> = string extends T
     : [];
 
 type SwapArrayInternal<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Index1 extends number,
   Index2 extends number,
   Position extends readonly unknown[] = [],
-  Original extends IterableContainer = T,
+  Original extends readonly unknown[] = T,
 > = T extends readonly [infer AtPosition, ...infer Rest]
   ? [
       Position["length"] extends Index1
@@ -62,7 +62,7 @@ type SwapString<T extends string, K1 extends number, K2 extends number> = Join<
 >;
 
 type SwapArray<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   K1 extends number,
   K2 extends number,
 > =
@@ -80,12 +80,12 @@ type SwapArray<
     : T[number][];
 
 type SwappedIndices<
-  T extends IterableContainer | string,
+  T extends readonly unknown[] | string,
   K1 extends number,
   K2 extends number,
 > = T extends string
   ? SwapString<T, K1, K2>
-  : T extends IterableContainer
+  : T extends readonly unknown[]
     ? SwapArray<T, K1, K2>
     : never;
 
@@ -113,7 +113,7 @@ type SwappedIndices<
  * @category Array
  */
 export function swapIndices<
-  T extends IterableContainer | string,
+  T extends TupleInferringArray | string,
   K1 extends number,
   K2 extends number,
 >(data: T, index1: K1, index2: K2): SwappedIndices<T, K1, K2>;
@@ -142,10 +142,12 @@ export function swapIndices<
 export function swapIndices<K1 extends number, K2 extends number>(
   index1: K1,
   index2: K2,
-): <T extends IterableContainer | string>(data: T) => SwappedIndices<T, K1, K2>;
+): <T extends TupleInferringArray | string>(
+  data: T,
+) => SwappedIndices<T, K1, K2>;
 
 export function swapIndices(
-  dataOrIndex1: IterableContainer | string | number,
+  dataOrIndex1: readonly unknown[] | string | number,
   index1OrIndex2?: number,
   index2?: number,
 ): unknown {
@@ -159,7 +161,7 @@ export function swapIndices(
 }
 
 const swapIndicesImplementation = (
-  data: IterableContainer | string,
+  data: readonly unknown[] | string,
   index1: number,
   index2: number,
 ): unknown =>

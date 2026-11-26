@@ -410,3 +410,9 @@ describe("literal size", () => {
     >();
   });
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(chunk([1, "a", true], 2)).toEqualTypeOf<
+    [[number, string], [boolean]]
+  >();
+});

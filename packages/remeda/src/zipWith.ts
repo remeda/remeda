@@ -7,12 +7,11 @@ import {
 } from "./internal/makeStoppable";
 import { requireDataByArity } from "./internal/requireData";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
 
 type ZippingFunction<
-  T extends IterableContainer = IterableContainer,
-  S extends IterableContainer = IterableContainer,
+  T extends readonly unknown[] = readonly unknown[],
+  S extends readonly unknown[] = readonly unknown[],
   Value = unknown,
 > = (
   first: T[number],
@@ -25,8 +24,8 @@ type ZippingFunction<
 // then see only the items processed so far, while the second list is provided
 // upfront and is always complete.
 type LazyZippingFunction<
-  T extends IterableContainer = IterableContainer,
-  S extends IterableContainer = IterableContainer,
+  T extends readonly unknown[] = readonly unknown[],
+  S extends readonly unknown[] = readonly unknown[],
   Value = unknown,
 > = (
   first: T[number],
@@ -67,8 +66,8 @@ export function zipWith<T, S, Value>(
  * @category Array
  */
 export function zipWith<
-  T extends IterableContainer,
-  S extends IterableContainer,
+  T extends readonly unknown[],
+  S extends readonly unknown[],
   Value,
 >(other: S, fn: LazyZippingFunction<T, S, Value>): (data: T) => Value[];
 
@@ -88,15 +87,15 @@ export function zipWith<
  * @category Array
  */
 export function zipWith<
-  T extends IterableContainer,
-  S extends IterableContainer,
+  T extends readonly unknown[],
+  S extends readonly unknown[],
   Value,
 >(data: T, other: S, fn: ZippingFunction<T, S, Value>): Value[];
 
 // TODO [>2]: Consider removing this function. `map(zip(data, other), ([first, second], index) => fn(first, second, index, [data, other]))` covers it, as does `zip(other)` then `map(...)` inside a `pipe` for a callback that doesn't read its fourth argument, and both keep tuple shapes in the output type; an arrow function over `zip` covers the `zipWith(fn)` form. All it adds is a callback that takes the pair unpacked, with no pair allocated per item.
 export function zipWith(
-  dataOtherOrFn: IterableContainer | ZippingFunction,
-  otherOrFn?: IterableContainer | LazyZippingFunction | ZippingFunction,
+  dataOtherOrFn: readonly unknown[] | ZippingFunction,
+  otherOrFn?: readonly unknown[] | LazyZippingFunction | ZippingFunction,
   fn?: ZippingFunction,
 ): unknown {
   if (typeof dataOtherOrFn === "function") {
@@ -132,12 +131,12 @@ const dataLast: DataLastBuilder<typeof zipWithImplementation> =
 
 const bothListsLast =
   (fn: ZippingFunction) =>
-  (data: IterableContainer, other: IterableContainer) =>
+  (data: readonly unknown[], other: readonly unknown[]) =>
     zipWithImplementation(data, other, fn);
 
 function zipWithImplementation<
-  T extends IterableContainer,
-  S extends IterableContainer,
+  T extends readonly unknown[],
+  S extends readonly unknown[],
   Value,
 >(data: T, other: S, fn: ZippingFunction<T, S, Value>): Value[] {
   const datum = [data, other] as const;
@@ -147,7 +146,7 @@ function zipWithImplementation<
 }
 
 const lazyImplementation = makeStoppable(
-  <T, S extends IterableContainer, Value>([other, fn]: readonly [
+  <T, S extends readonly unknown[], Value>([other, fn]: readonly [
     other: S,
     fn: ZippingFunction<readonly T[], S, Value>,
   ]): StoppableLazyEvaluator<T, Value> =>

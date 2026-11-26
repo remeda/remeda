@@ -54,7 +54,7 @@ A new function must justify why `fn1(fn2(...))` isn't enough: we don't ship `rej
 - If a Lodash, Ramda, or Just equivalent exists, add a mapping page under [`packages/docs/src/content/mapping/`](packages/docs/src/content/mapping/).
 - Update the size checks (see [Writing tests](#writing-tests)).
 
-Use a recent function in [`packages/remeda/src/`](packages/remeda/src/) as a template. Implementation conventions are in [`.agents/skills/remeda-utility/reference/`](.agents/skills/remeda-utility/reference/): runtime (dispatch, lazy evaluation, loops, naming) in `implementation-runtime.md`, types (`IterableContainer`, lazy callbacks, `type-fest`) in `implementation-types.md`.
+Use a recent function in [`packages/remeda/src/`](packages/remeda/src/) as a template. Implementation conventions are in [`.agents/skills/remeda-utility/reference/`](.agents/skills/remeda-utility/reference/): runtime (dispatch, lazy evaluation, loops, naming) in `implementation-runtime.md`, types (`TupleInferringArray`, lazy callbacks, `type-fest`) in `implementation-types.md`.
 
 ## Writing tests
 

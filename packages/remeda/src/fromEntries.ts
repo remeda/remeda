@@ -1,6 +1,5 @@
 import type { IsNever, Simplify } from "type-fest";
 import { purry1 } from "./internal/purryByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import type { WidePropertyKey } from "./internal/types/WidePropertyKey";
 
@@ -28,7 +27,7 @@ type FromEntries<Entries> = Entries extends readonly [
   ? FromEntriesTuple<First, Tail>
   : Entries extends readonly [...infer Head, infer Last]
     ? FromEntriesTuple<Last, Head>
-    : Entries extends IterableContainer<Entry>
+    : Entries extends readonly Entry[]
       ? FromEntriesArray<Entries>
       : FromEntriesError<"Entries array-like could not be inferred">;
 
@@ -49,7 +48,7 @@ type FromEntriesTuple<E, Rest> = E extends Entry
 // Note that this distinction between keys is the result of how typescript
 // considers Record<string, unknown> to be **implicitly** partial, whereas
 // Record<"a", unknown> is not.
-type FromEntriesArray<Entries extends IterableContainer<Entry>> =
+type FromEntriesArray<Entries extends readonly Entry[]> =
   IsNever<WidePropertyKey<AllKeys<Entries>>> extends true
     ? {
         // All properties of the output are optional because we can't ensure
@@ -58,7 +57,7 @@ type FromEntriesArray<Entries extends IterableContainer<Entry>> =
       }
     : Record<WidePropertyKey<AllKeys<Entries>>, Entries[number][1]>;
 
-type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
+type AllKeys<Entries extends readonly Entry[]> = Extract<
   Entries[number],
   Entry
 >[0];
@@ -70,7 +69,7 @@ type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
 // function which would define a separate tuple literal for each key
 // (`['a', number] | ['b', number]`). We need to support both cases!
 type ValueForKey<
-  Entries extends IterableContainer<Entry>,
+  Entries extends readonly Entry[],
   K extends PropertyKey,
 > = (IsNever<Extract<Entries[number], Entry<K>>> extends true
   ? Entries[number]
@@ -100,9 +99,12 @@ type ValueForKey<
  * @dataFirst
  * @category Object
  */
-export function fromEntries<Entries extends IterableContainer<Entry>>(
-  data: Entries,
-): Simplify<FromEntries<Entries>>;
+export function fromEntries<
+  // Inline literals infer as arrays: their keys widen to `string` either way,
+  // and `FromEntries` intersects the entries of a tuple, so a tuple of
+  // `["a", 1]` and `["b", "x"]` would have `never` (`number & string`) values.
+  Entries extends readonly Entry[],
+>(data: Entries): Simplify<FromEntries<Entries>>;
 
 /**
  * Creates a new object from an array of tuples by pairing up first and second
@@ -130,16 +132,16 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
  * @dataLast
  * @category Object
  */
-export function fromEntries(): <Entries extends IterableContainer<Entry>>(
+export function fromEntries(): <Entries extends readonly Entry[]>(
   data: Entries,
 ) => Simplify<FromEntries<Entries>>;
 
-export function fromEntries(data?: IterableContainer<Entry>): unknown {
+export function fromEntries(data?: readonly Entry[]): unknown {
   return purry1(fromEntriesImplementation, arguments.length, data);
 }
 
 function fromEntriesImplementation(
-  entries: IterableContainer<Entry>,
+  entries: readonly Entry[],
 ): Record<PropertyKey, unknown> {
   const result: Record<PropertyKey, unknown> = {};
 

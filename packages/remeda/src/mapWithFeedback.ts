@@ -2,12 +2,12 @@ import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { requireDataByArity } from "./internal/requireData";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { Mapped } from "./internal/types/Mapped";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 type FeedbackCallback<
-  T extends IterableContainer = IterableContainer,
+  T extends readonly unknown[] = readonly unknown[],
   U = unknown,
   Data = T,
 > = (
@@ -40,7 +40,7 @@ type FeedbackCallback<
  * @lazy
  * @category Array
  */
-export function mapWithFeedback<T extends IterableContainer, U>(
+export function mapWithFeedback<T extends TupleInferringArray, U>(
   data: T,
   callbackfn: FeedbackCallback<T, U>,
   initialValue: U,
@@ -68,18 +68,18 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  * @lazy
  * @category Array
  */
-export function mapWithFeedback<T extends IterableContainer, U>(
+export function mapWithFeedback<T extends TupleInferringArray, U>(
   callbackfn: FeedbackCallback<T, U, Readonly<NonEmptyPrefix<T>>>,
   initialValue: U,
 ): (data: T) => Mapped<T, U>;
 
 export function mapWithFeedback(
   dataOrCallbackfn:
-    | IterableContainer
+    | readonly unknown[]
     | FeedbackCallback<
-        IterableContainer,
+        readonly unknown[],
         unknown,
-        Readonly<NonEmptyPrefix<IterableContainer>>
+        Readonly<NonEmptyPrefix<readonly unknown[]>>
       >,
   callbackfnOrInitialValue: unknown,
   initialValue?: unknown,

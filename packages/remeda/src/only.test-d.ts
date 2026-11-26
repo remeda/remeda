@@ -127,3 +127,7 @@ test("union of tuple shapes", () => {
     "a" | "b" | "c"
   >();
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(only([1])).toEqualTypeOf<number>();
+});

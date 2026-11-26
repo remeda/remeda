@@ -22,9 +22,9 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * @dataFirst
  * @category Array
  */
-export function findLastIndex<T>(
-  data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+export function findLastIndex<T extends readonly unknown[]>(
+  data: T,
+  predicate: ArrayCallback<T, boolean>,
 ): number;
 
 /**
@@ -50,9 +50,9 @@ export function findLastIndex<T>(
  * @dataLast
  * @category Array
  */
-export function findLastIndex<T>(
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
-): (data: readonly T[]) => number;
+export function findLastIndex<T extends readonly unknown[]>(
+  predicate: ArrayCallback<T, boolean>,
+): (data: T) => number;
 
 export function findLastIndex(
   dataOrPredicate:

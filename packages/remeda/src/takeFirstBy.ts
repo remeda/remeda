@@ -21,11 +21,11 @@ import type { CompareFunction } from "./internal/types/CompareFunction";
  * @dataFirst
  * @category Array
  */
-export function takeFirstBy<T>(
-  data: readonly T[],
+export function takeFirstBy<T extends readonly unknown[]>(
+  data: T,
   n: number,
-  ...rules: OrderRules<T>
-): T[];
+  ...rules: OrderRules<T[number]>
+): T[number][];
 
 /**
  * Take the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before taking the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.
@@ -42,10 +42,10 @@ export function takeFirstBy<T>(
  * @dataLast
  * @category Array
  */
-export function takeFirstBy<T>(
+export function takeFirstBy<T extends readonly unknown[]>(
   n: number,
-  ...rules: OrderRules<NoInfer<T>>
-): (data: readonly T[]) => T[];
+  ...rules: OrderRules<T[number]>
+): (data: T) => T[number][];
 
 export function takeFirstBy(...args: readonly unknown[]): unknown {
   return purryOrderRulesWithArgument(takeFirstByImplementation, args);

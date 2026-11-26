@@ -1,5 +1,6 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { countBy } from "./countBy";
+import { identity } from "./identity";
 import { pipe } from "./pipe";
 
 describe("dataFirst", () => {
@@ -37,4 +38,27 @@ test("literal unions", () => {
   const result = countBy(data, (x) => x);
 
   expectTypeOf(result).toEqualTypeOf<Partial<Record<"cat" | "dog", number>>>();
+});
+
+describe("union of arrays", () => {
+  test("data-first", () => {
+    expectTypeOf(countBy([] as number[] | string[], identity())).toEqualTypeOf<
+      Record<number | string, number>
+    >();
+  });
+
+  test("data-last", () => {
+    expectTypeOf(
+      pipe([] as number[] | string[], countBy(identity())),
+    ).toEqualTypeOf<Record<number | string, number>>();
+  });
+});
+
+// @see https://github.com/remeda/remeda/pull/1507
+test("inline array of differently-shaped objects", () => {
+  countBy([{ a: 1 }, { a: 2, b: "x" }], (item) => {
+    expectTypeOf(item.b).toEqualTypeOf<string | undefined>();
+
+    return item.a;
+  });
 });

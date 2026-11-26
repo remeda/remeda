@@ -377,3 +377,7 @@ describe("data-last", () => {
     );
   });
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(findLast([1, "a"], isString)).toEqualTypeOf<string>();
+});

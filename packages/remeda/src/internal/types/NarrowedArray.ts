@@ -1,5 +1,4 @@
 import type { Assignability } from "./Assignability";
-import type { IterableContainer } from "./IterableContainer";
 import type { Narrowed } from "./Narrowed";
 import type { WritableTuple } from "./WritableTuple";
 
@@ -14,7 +13,7 @@ import type { WritableTuple } from "./WritableTuple";
  * @see takeWhile
  * @see takeLastWhile
  */
-export type NarrowedArray<T extends IterableContainer, Condition> =
+export type NarrowedArray<T extends readonly unknown[], Condition> =
   // We distribute the array type to support unions of arrays/tuples.
   T extends unknown
     ? Assignability<

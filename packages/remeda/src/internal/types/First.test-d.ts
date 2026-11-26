@@ -1,12 +1,12 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../../../test/$typed";
 import type { First } from "./First";
-import type { IterableContainer } from "./IterableContainer";
 
-declare function first<T extends IterableContainer>(data: T): First<T>;
+declare function first<T extends readonly unknown[]>(data: T): First<T>;
 
 describe("tuple shapes", () => {
   test("empty tuple", () => {
-    expectTypeOf(first([])).toEqualTypeOf<undefined>();
+    expectTypeOf(first($typed<[]>())).toEqualTypeOf<undefined>();
   });
 
   test("fixed tuple", () => {

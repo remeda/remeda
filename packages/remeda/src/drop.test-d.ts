@@ -195,3 +195,7 @@ describe("data-last", () => {
     expectTypeOf(result).toEqualTypeOf<number[]>();
   });
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(drop([1, "a", true], 1)).toEqualTypeOf<[string, boolean]>();
+});

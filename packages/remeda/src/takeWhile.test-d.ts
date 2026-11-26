@@ -456,3 +456,7 @@ describe("callback data param", () => {
     ).toEqualTypeOf<1[]>();
   });
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(takeWhile([1, 2], isNumber)).toEqualTypeOf<[number, number]>();
+});

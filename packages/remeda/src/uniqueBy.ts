@@ -5,7 +5,7 @@ import { requireDataByArity } from "./internal/requireData";
 import type { ArrayCallback, LazyCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { Deduped } from "./internal/types/Deduped";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -24,7 +24,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @lazy
  * @category Array
  */
-export function uniqueBy<T extends IterableContainer>(
+export function uniqueBy<T extends TupleInferringArray>(
   data: T,
   keyFunction: ArrayCallback<T>,
 ): Deduped<T>;
@@ -48,12 +48,12 @@ export function uniqueBy<T extends IterableContainer>(
  * @lazy
  * @category Array
  */
-export function uniqueBy<T extends IterableContainer>(
+export function uniqueBy<T extends TupleInferringArray>(
   keyFunction: LazyCallback<T>,
 ): (data: T) => Deduped<T>;
 
 export function uniqueBy(
-  dataOrKeyFunction: IterableContainer | LazyCallback<IterableContainer>,
+  dataOrKeyFunction: readonly unknown[] | LazyCallback<readonly unknown[]>,
   keyFunction?: ArrayCallback,
 ): unknown {
   return typeof dataOrKeyFunction === "function"

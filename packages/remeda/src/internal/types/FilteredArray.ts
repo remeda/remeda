@@ -1,6 +1,5 @@
 import type { Assignability } from "./Assignability";
 import type { CoercedArray } from "./CoercedArray";
-import type { IterableContainer } from "./IterableContainer";
 import type { Narrowed } from "./Narrowed";
 import type { PartialArray } from "./PartialArray";
 import type { TupleParts } from "./TupleParts";
@@ -14,7 +13,7 @@ import type { TupleParts } from "./TupleParts";
  * @see partition (uses `IsNegated`)
  */
 export type FilteredArray<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Condition,
   IsNegated extends boolean = false,
 > =

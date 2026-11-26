@@ -3,8 +3,8 @@ import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { canReadData, requireData } from "./internal/requireData";
 import type { ArrayCallback, LazyCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { Mapped } from "./internal/types/Mapped";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Creates a new array populated with the results of calling a provided function
@@ -25,7 +25,7 @@ import type { Mapped } from "./internal/types/Mapped";
  * @lazy
  * @category Array
  */
-export function map<T extends IterableContainer, U>(
+export function map<T extends TupleInferringArray, U>(
   data: T,
   callbackfn: ArrayCallback<T, U>,
 ): Mapped<T, U>;
@@ -49,12 +49,12 @@ export function map<T extends IterableContainer, U>(
  * @lazy
  * @category Array
  */
-export function map<T extends IterableContainer, U>(
+export function map<T extends TupleInferringArray, U>(
   callbackfn: LazyCallback<T, U>,
 ): (data: T) => Mapped<T, U>;
 
 export function map(
-  dataOrCallbackfn: IterableContainer | LazyCallback<IterableContainer>,
+  dataOrCallbackfn: readonly unknown[] | LazyCallback<readonly unknown[]>,
   callbackfn?: ArrayCallback,
 ): unknown {
   return typeof dataOrCallbackfn === "function"

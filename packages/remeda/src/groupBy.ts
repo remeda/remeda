@@ -30,10 +30,13 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
  * @dataFirst
  * @category Array
  */
-export function groupBy<T, Key extends PropertyKey = PropertyKey>(
-  data: readonly T[],
-  callbackfn: ArrayCallback<readonly T[], Key | undefined>,
-): BoundedPartial<Record<Key, NonEmptyArray<T>>>;
+export function groupBy<
+  T extends readonly unknown[],
+  Key extends PropertyKey = PropertyKey,
+>(
+  data: T,
+  callbackfn: ArrayCallback<T, Key | undefined>,
+): BoundedPartial<Record<Key, NonEmptyArray<T[number]>>>;
 
 /**
  * Groups the elements of a given iterable according to the string values
@@ -67,9 +70,12 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  * @dataLast
  * @category Array
  */
-export function groupBy<T, Key extends PropertyKey = PropertyKey>(
-  callbackfn: ArrayCallback<readonly T[], Key | undefined>,
-): (data: readonly T[]) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
+export function groupBy<
+  T extends readonly unknown[],
+  Key extends PropertyKey = PropertyKey,
+>(
+  callbackfn: ArrayCallback<T, Key | undefined>,
+): (data: T) => BoundedPartial<Record<Key, NonEmptyArray<T[number]>>>;
 
 export function groupBy(
   dataOrCallbackfn:

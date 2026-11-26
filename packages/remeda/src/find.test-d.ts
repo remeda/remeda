@@ -405,3 +405,7 @@ describe("callback data param", () => {
     );
   });
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(find([1, "a"], isString)).toEqualTypeOf<string>();
+});

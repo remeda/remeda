@@ -1,7 +1,6 @@
 import { SKIP_ITEM } from "./internal/lazyControl";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { purryWithLazy2 } from "./internal/purryWithLazyByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Removes last `n` elements from `data`.
@@ -21,7 +20,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @lazy
  * @category Array
  */
-export function dropLast<T extends IterableContainer>(
+export function dropLast<T extends readonly unknown[]>(
   data: T,
   n: number,
 ): T[number][];
@@ -45,10 +44,10 @@ export function dropLast<T extends IterableContainer>(
  */
 export function dropLast(
   n: number,
-): <T extends IterableContainer>(data: T) => T[number][];
+): <T extends readonly unknown[]>(data: T) => T[number][];
 
 export function dropLast(
-  dataOrN: IterableContainer | number,
+  dataOrN: readonly unknown[] | number,
   n?: number,
 ): unknown {
   return purryWithLazy2(
@@ -60,7 +59,7 @@ export function dropLast(
   );
 }
 
-const dropLastImplementation = <T extends IterableContainer>(
+const dropLastImplementation = <T extends readonly unknown[]>(
   data: T,
   n: number,
 ): T[number][] =>

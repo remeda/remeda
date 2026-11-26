@@ -1,8 +1,8 @@
 import type { ArrayCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NarrowedArray } from "./internal/types/NarrowedArray";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Returns elements from the end of the array until the predicate returns false.
@@ -19,13 +19,13 @@ import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFiltere
  * @dataFirst
  * @category Array
  */
-export function takeLastWhile<T extends IterableContainer, Condition>(
+export function takeLastWhile<T extends TupleInferringArray, Condition>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => item is Condition,
 ): NarrowedArray<T, Condition>;
 
 export function takeLastWhile<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   IsItemIncluded extends boolean,
 >(
   data: T,
@@ -46,12 +46,12 @@ export function takeLastWhile<
  * @dataLast
  * @category Array
  */
-export function takeLastWhile<T extends IterableContainer, Condition>(
+export function takeLastWhile<T extends TupleInferringArray, Condition>(
   predicate: (item: T[number], index: number, data: T) => item is Condition,
 ): (data: T) => NarrowedArray<T, Condition>;
 
 export function takeLastWhile<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   IsItemIncluded extends boolean,
 >(
   predicate: (item: T[number], index: number, data: T) => IsItemIncluded,
@@ -59,8 +59,8 @@ export function takeLastWhile<
 
 export function takeLastWhile(
   dataOrPredicate:
-    IterableContainer | ArrayCallback<IterableContainer, boolean>,
-  predicate?: ArrayCallback<IterableContainer, boolean>,
+    readonly unknown[] | ArrayCallback<readonly unknown[], boolean>,
+  predicate?: ArrayCallback<readonly unknown[], boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
     ? dataLast(dataOrPredicate)
@@ -75,7 +75,7 @@ const dataLast: DataLastBuilder<typeof takeLastWhileImplementation> =
   (predicate) => (data) =>
     takeLastWhileImplementation(data, predicate);
 
-function takeLastWhileImplementation<T extends IterableContainer>(
+function takeLastWhileImplementation<T extends readonly unknown[]>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => boolean,
 ): T[number][] {

@@ -1,9 +1,8 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { $missingPropertyType } from "../../../test/$missingPropertyType";
-import type { IterableContainer } from "./IterableContainer";
 import type { TupleParts } from "./TupleParts";
 
-declare function tupleParts<T extends IterableContainer>(x: T): TupleParts<T>;
+declare function tupleParts<T extends readonly unknown[]>(x: T): TupleParts<T>;
 
 describe("all tuple/array shapes (mutable and readonly)", () => {
   test("empty tuples", () => {

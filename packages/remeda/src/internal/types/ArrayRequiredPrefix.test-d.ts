@@ -1,10 +1,9 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../../../test/$typed";
 import type { ArrayRequiredPrefix } from "./ArrayRequiredPrefix";
-import type { IterableContainer } from "./IterableContainer";
 
 declare function arrayRequiredPrefix<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Min extends number,
 >(data: T, min: Min): ArrayRequiredPrefix<T, Min>;
 
@@ -20,10 +19,10 @@ test("synchronizes the tuple readonly modifier", () => {
 
 describe("works with all array shapes", () => {
   test("empty tuple", () => {
-    expectTypeOf(arrayRequiredPrefix([] as [], 0)).toEqualTypeOf<[]>();
+    expectTypeOf(arrayRequiredPrefix($typed<[]>(), 0)).toEqualTypeOf<[]>();
 
     // Overflow
-    expectTypeOf(arrayRequiredPrefix([] as [], 1)).toBeNever();
+    expectTypeOf(arrayRequiredPrefix($typed<[]>(), 1)).toBeNever();
   });
 
   test("fixed tuples", () => {

@@ -1,4 +1,3 @@
-import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import type { StrictFunction } from "./internal/types/StrictFunction";
 import type { TupleSplits } from "./internal/types/TupleSplits";
@@ -8,10 +7,10 @@ type PartialBindError<
   Metadata = never,
 > = RemedaTypeError<"partialBind", Message, { metadata: Metadata }>;
 
-type TuplePrefix<T extends IterableContainer> = TupleSplits<T>["left"];
+type TuplePrefix<T extends readonly unknown[]> = TupleSplits<T>["left"];
 
 type RemovePrefix<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Prefix extends TuplePrefix<T>,
 > = Prefix extends readonly []
   ? T
@@ -64,7 +63,7 @@ export function partialBind<
   func: F,
   ...partial: PrefixArgs
 ): (
-  ...rest: RemovedPrefix extends IterableContainer ? RemovedPrefix : never
+  ...rest: RemovedPrefix extends readonly unknown[] ? RemovedPrefix : never
 ) => ReturnType<F> {
   // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic sub-
   // types too eagerly, making itself blind to the fact that the types match

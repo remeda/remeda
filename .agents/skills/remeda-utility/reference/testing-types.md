@@ -3,7 +3,7 @@
 - Cast empty arrays for type data: `[] as { name: string }[]`.
 - Prefer casting (`as`) over annotating (`: Type`); they don't always behave the same.
 - Define types on the data, never via explicit generics (`<T>`) on the call.
-- Test type utilities (`src/internal/types/`) through a declared function that infers its argument and returns the type (`declare function tupleParts<T extends IterableContainer>(tuple: T): TupleParts<T>;`), then assert on `tupleParts(data)`; never instantiate the type directly (`expectTypeOf<TupleParts<[]>>()`). Inference is how utilities reach these types, and it enforces the type's constraint the same way.
+- Test type utilities (`src/internal/types/`) through a declared function that infers its argument and returns the type (`declare function tupleParts<T extends readonly unknown[]>(tuple: T): TupleParts<T>;`, constrained like the type itself), then assert on `tupleParts(data)` with typed data (`$typed<[]>()`, not a bare `[]` literal); never instantiate the type directly (`expectTypeOf<TupleParts<[]>>()`). Inference is how utilities reach these types, and it enforces the type's constraint the same way.
 - Test what Remeda's types compute (inferred or "magic" types, our own constraints), not that TypeScript works: drop tests that only re-check a trivial signature part, such as a declared return type or a plain parameter type rejecting a wrong argument.
 - Use `unknown` in type slots that don't matter: `Record<string, unknown>`, not `Record<string, string>`.
 - Union tests use disjoint value types (`Record<string, number> | Record<string, boolean>`); identical sides don't exercise union logic.

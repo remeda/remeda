@@ -27,11 +27,11 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * @lazy
  * @category Array
  */
-export function dropFirstBy<T>(
-  data: readonly T[],
+export function dropFirstBy<T extends readonly unknown[]>(
+  data: T,
   n: number,
-  ...rules: OrderRules<T>
-): T[];
+  ...rules: OrderRules<T[number]>
+): T[number][];
 
 /**
  * Drop the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before dropping the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.
@@ -49,10 +49,10 @@ export function dropFirstBy<T>(
  * @lazy
  * @category Array
  */
-export function dropFirstBy<T>(
+export function dropFirstBy<T extends readonly unknown[]>(
   n: number,
-  ...rules: OrderRules<NoInfer<T>>
-): (data: readonly T[]) => T[];
+  ...rules: OrderRules<T[number]>
+): (data: T) => T[number][];
 
 export function dropFirstBy(
   dataOrN: readonly unknown[] | number,

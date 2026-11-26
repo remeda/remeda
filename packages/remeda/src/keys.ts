@@ -1,15 +1,14 @@
 import type { IsNever } from "type-fest";
 import { purry1 } from "./internal/purryByArity";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { ToString } from "./internal/types/ToString";
 
-type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
+type Keys<T> = T extends readonly unknown[] ? ArrayKeys<T> : ObjectKeys<T>;
 
 // The keys output can mirror the input when it is an array/tuple. We do this by
 // "mapping" each item "key" (which is actually an index) as its own value. This
 // would maintain the shape, even including labels.
-type ArrayKeys<T extends IterableContainer> = {
+type ArrayKeys<T extends readonly unknown[]> = {
   -readonly [Index in keyof T]: Index extends number | string
     ? // Notice that we coalesce the values as strings, this is because in JS,
       // Object.keys always returns strings, even for arrays.
@@ -20,7 +19,7 @@ type ArrayKeys<T extends IterableContainer> = {
 };
 
 type IsIndexAfterSpread<
-  T extends IterableContainer,
+  T extends readonly unknown[],
   Index extends number | string,
 > =
   IsNever<IndicesAfterSpread<T>> extends true

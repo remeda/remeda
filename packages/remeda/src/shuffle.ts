@@ -1,6 +1,6 @@
 import { purry1 } from "./internal/purryByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { ReorderedArray } from "./internal/types/ReorderedArray";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Shuffles the input array, returning a new array with the same elements in a random order.
@@ -13,7 +13,7 @@ import type { ReorderedArray } from "./internal/types/ReorderedArray";
  * @dataFirst
  * @category Array
  */
-export function shuffle<T extends IterableContainer>(
+export function shuffle<T extends TupleInferringArray>(
   data: T,
 ): ReorderedArray<T>;
 
@@ -27,11 +27,11 @@ export function shuffle<T extends IterableContainer>(
  * @dataLast
  * @category Array
  */
-export function shuffle(): <T extends IterableContainer>(
+export function shuffle(): <T extends TupleInferringArray>(
   data: T,
 ) => ReorderedArray<T>;
 
-export function shuffle(data?: IterableContainer): unknown {
+export function shuffle(data?: readonly unknown[]): unknown {
   return purry1(shuffleImplementation, arguments.length, data);
 }
 

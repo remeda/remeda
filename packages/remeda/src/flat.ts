@@ -7,7 +7,7 @@ import {
 import { withLazyImplementation } from "./internal/lazyDataLastImplementation";
 import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 type FlatArray<
   T,
@@ -24,7 +24,7 @@ type FlatArray<
         // separately so that we maintain more information from the input type,
         // instead of putting all values in a union.
         [
-          ...(Item extends IterableContainer
+          ...(Item extends readonly unknown[]
             ? // If the item itself is an array we continue going deeper
               FlatArray<Item, Depth, [...Iteration, unknown]>
             : // But if it isn't we add it to the output tuple
@@ -82,7 +82,7 @@ type FlatSimpleArrayItems<
  * @lazy
  * @category Array
  */
-export function flat<T extends IterableContainer, Depth extends number = 1>(
+export function flat<T extends TupleInferringArray, Depth extends number = 1>(
   data: T,
   depth?: IsInteger<Depth> extends true ? Depth : never,
 ): FlatArray<T, Depth>;
@@ -111,10 +111,10 @@ export function flat<T extends IterableContainer, Depth extends number = 1>(
  */
 export function flat<Depth extends number = 1>(
   depth?: IsInteger<Depth> extends true ? Depth : never,
-): <T extends IterableContainer>(data: T) => FlatArray<T, Depth>;
+): <T extends TupleInferringArray>(data: T) => FlatArray<T, Depth>;
 
 export function flat(
-  dataOrDepth?: IterableContainer | number,
+  dataOrDepth?: readonly unknown[] | number,
   depth?: number,
 ): unknown {
   return typeof dataOrDepth === "object"
@@ -131,9 +131,9 @@ const dataLast: DataLastBuilder<typeof flatImplementation> =
     flatImplementation(data, depth);
 
 const flatImplementation = (
-  data: IterableContainer,
+  data: readonly unknown[],
   depth?: number,
-): IterableContainer => (depth === undefined ? data.flat() : data.flat(depth));
+): readonly unknown[] => (depth === undefined ? data.flat() : data.flat(depth));
 
 const lazyImplementation = (depth?: number): LazyEvaluator =>
   depth === undefined || depth === 1

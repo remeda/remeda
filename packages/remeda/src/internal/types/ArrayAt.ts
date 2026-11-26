@@ -1,7 +1,6 @@
 import type { ArrayIndices, IsNumericLiteral } from "type-fest";
 import type { ClampedIntegerSubtract } from "./ClampedIntegerSubtract";
 import type { IntRangeInclusive } from "./IntRangeInclusive";
-import type { IterableContainer } from "./IterableContainer";
 import type { TupleParts } from "./TupleParts";
 
 /**
@@ -10,7 +9,7 @@ import type { TupleParts } from "./TupleParts";
  * and tuples with fixed suffixes, and for primitive indices where we don't know
  * if the index is out of bounds.
  */
-export type ArrayAt<T extends IterableContainer, I extends keyof T> =
+export type ArrayAt<T extends readonly unknown[], I extends keyof T> =
   // Only literals pose a challenge to the typing system because they refer to a
   // specific element within the array.
   IsNumericLiteral<I> extends true

@@ -3,7 +3,6 @@ import type { LazyEvaluator } from "./internal/lazyEvaluator";
 import { requireDataByArity } from "./internal/requireData";
 import type { ArrayCallback, LazyCallback } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Executes a provided function once for each array element. Equivalent to
@@ -27,7 +26,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @lazy
  * @category Array
  */
-export function forEach<T extends IterableContainer>(
+export function forEach<T extends readonly unknown[]>(
   data: T,
   callbackfn: ArrayCallback<T, void>,
 ): void;
@@ -60,13 +59,13 @@ export function forEach<T extends IterableContainer>(
  * @lazy
  * @category Array
  */
-export function forEach<T extends IterableContainer>(
+export function forEach<T extends readonly unknown[]>(
   callbackfn: LazyCallback<T, void>,
 ): (data: T) => T;
 
 export function forEach(
-  dataOrCallbackfn: IterableContainer | LazyCallback<IterableContainer, void>,
-  callbackfn?: ArrayCallback<IterableContainer, void>,
+  dataOrCallbackfn: readonly unknown[] | LazyCallback<readonly unknown[], void>,
+  callbackfn?: ArrayCallback<readonly unknown[], void>,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
     ? withLazyImplementation(

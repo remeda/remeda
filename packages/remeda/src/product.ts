@@ -1,7 +1,7 @@
 import { purry1 } from "./internal/purryByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
-type Product<T extends IterableContainer<bigint> | IterableContainer<number>> =
+type Product<T extends readonly bigint[] | readonly number[]> =
   // Empty arrays would always result in a product of (a non-bigint) 1
   T extends readonly []
     ? 1
@@ -37,7 +37,7 @@ type Product<T extends IterableContainer<bigint> | IterableContainer<number>> =
  * @category Number
  */
 export function product<
-  T extends IterableContainer<bigint> | IterableContainer<number>,
+  T extends TupleInferringArray<bigint> | TupleInferringArray<number>,
 >(data: T): Product<T>;
 
 /**
@@ -62,20 +62,18 @@ export function product<
  * @category Number
  */
 export function product(): <
-  T extends IterableContainer<bigint> | IterableContainer<number>,
+  T extends TupleInferringArray<bigint> | TupleInferringArray<number>,
 >(
   data: T,
 ) => Product<T>;
 
-export function product(
-  data?: IterableContainer<bigint> | IterableContainer<number>,
-): unknown {
+export function product(data?: readonly bigint[] | readonly number[]): unknown {
   return purry1(productImplementation, arguments.length, data);
 }
 
-function productImplementation<
-  T extends IterableContainer<bigint> | IterableContainer<number>,
->(data: T): T[number] {
+function productImplementation<T extends readonly bigint[] | readonly number[]>(
+  data: T,
+): T[number] {
   // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- The rule differentiates 1 and 1n :(
   let out = typeof data[0] === "bigint" ? 1n : 1;
   for (const value of data) {

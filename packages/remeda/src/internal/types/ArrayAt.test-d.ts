@@ -1,21 +1,20 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../../../test/$typed";
 import type { ArrayAt } from "./ArrayAt";
-import type { IterableContainer } from "./IterableContainer";
 
-declare function arrayAt<const T extends IterableContainer, I extends number>(
+declare function arrayAt<T extends readonly unknown[], I extends number>(
   data: T,
   index: I,
 ): ArrayAt<T, I>;
 
 test("primitive index", () => {
-  expectTypeOf(arrayAt([1, 2, 3], $typed<number>())).toEqualTypeOf<
+  expectTypeOf(arrayAt([1, 2, 3] as const, $typed<number>())).toEqualTypeOf<
     1 | 2 | 3 | undefined
   >();
 });
 
 test("empty tuple, out of bounds", () => {
-  expectTypeOf(arrayAt([], 0)).toEqualTypeOf<undefined>();
+  expectTypeOf(arrayAt($typed<[]>(), 0)).toEqualTypeOf<undefined>();
 });
 
 describe("fixed tuples", () => {
@@ -184,7 +183,9 @@ describe("fixed-elements arrays", () => {
 
 describe("unions", () => {
   test("union of indices, fixed tuples", () => {
-    expectTypeOf(arrayAt([1, 2, 3], $typed<0 | 1>())).toEqualTypeOf<1 | 2>();
+    expectTypeOf(arrayAt([1, 2, 3] as const, $typed<0 | 1>())).toEqualTypeOf<
+      1 | 2
+    >();
   });
 
   test("union of indices, arrays", () => {

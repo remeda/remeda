@@ -16,9 +16,9 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * @category Array
  */
 
-export function meanBy<T>(
-  callbackfn: ArrayCallback<readonly T[], number>,
-): (data: readonly T[]) => number;
+export function meanBy<T extends readonly unknown[]>(
+  callbackfn: ArrayCallback<T, number>,
+): (data: T) => number;
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
@@ -36,9 +36,9 @@ export function meanBy<T>(
  * @category Array
  */
 
-export function meanBy<T>(
-  data: readonly T[],
-  callbackfn: ArrayCallback<readonly T[], number>,
+export function meanBy<T extends readonly unknown[]>(
+  data: T,
+  callbackfn: ArrayCallback<T, number>,
 ): number;
 
 export function meanBy(

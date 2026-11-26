@@ -10,8 +10,8 @@ import type {
 } from "./internal/types/Callback";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { FilteredArray } from "./internal/types/FilteredArray";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just
@@ -35,13 +35,13 @@ import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFiltere
  * @lazy
  * @category Array
  */
-export function filter<T extends IterableContainer, Condition>(
+export function filter<T extends TupleInferringArray, Condition>(
   data: T,
   predicate: ArrayTypePredicate<T, Condition>,
 ): FilteredArray<T, Condition>;
 
 export function filter<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   IsItemIncluded extends boolean,
 >(
   data: T,
@@ -71,20 +71,21 @@ export function filter<
  * @lazy
  * @category Array
  */
-export function filter<T extends IterableContainer, Condition>(
+export function filter<T extends TupleInferringArray, Condition>(
   predicate: LazyTypePredicate<T, Condition>,
 ): (data: T) => FilteredArray<T, Condition>;
 
 export function filter<
-  T extends IterableContainer,
+  T extends TupleInferringArray,
   IsItemIncluded extends boolean,
 >(
   predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function filter(
-  dataOrPredicate: IterableContainer | LazyCallback<IterableContainer, boolean>,
-  predicate?: ArrayCallback<IterableContainer, boolean>,
+  dataOrPredicate:
+    readonly unknown[] | LazyCallback<readonly unknown[], boolean>,
+  predicate?: ArrayCallback<readonly unknown[], boolean>,
 ): unknown {
   return typeof dataOrPredicate === "function"
     ? withLazyImplementation(

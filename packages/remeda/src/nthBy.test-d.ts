@@ -20,3 +20,12 @@ test("works with tuples", () => {
 
   expectTypeOf(result).toEqualTypeOf<boolean | number | string | undefined>();
 });
+
+// @see https://github.com/remeda/remeda/pull/1507
+test("inline array of differently-shaped objects", () => {
+  nthBy([{ a: 1 }, { a: 2, b: "x" }], 0, (item) => {
+    expectTypeOf(item.b).toEqualTypeOf<string | undefined>();
+
+    return item.a;
+  });
+});

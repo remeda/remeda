@@ -13,10 +13,10 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * @dataFirst
  * @category Array
  */
-export function splitWhen<T>(
-  data: readonly T[],
-  predicate: ArrayCallback<readonly T[], boolean>,
-): [T[], T[]];
+export function splitWhen<T extends readonly unknown[]>(
+  data: T,
+  predicate: ArrayCallback<T, boolean>,
+): [T[number][], T[number][]];
 
 /**
  * Splits a given array at an index where the given predicate returns true.
@@ -29,9 +29,9 @@ export function splitWhen<T>(
  * @dataLast
  * @category Array
  */
-export function splitWhen<T>(
-  predicate: ArrayCallback<readonly T[], boolean>,
-): (data: readonly T[]) => [T[], T[]];
+export function splitWhen<T extends readonly unknown[]>(
+  predicate: ArrayCallback<T, boolean>,
+): (data: T) => [T[number][], T[number][]];
 
 export function splitWhen(
   dataOrPredicate:

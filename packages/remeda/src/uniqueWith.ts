@@ -5,7 +5,7 @@ import { requireData } from "./internal/requireData";
 import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IsEqualFunction } from "./internal/types/IsEqualFunction";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -24,7 +24,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @lazy
  * @category Array
  */
-export function uniqueWith<T extends IterableContainer>(
+export function uniqueWith<T extends TupleInferringArray>(
   data: T,
   isEquals: IsEqualFunction<T[number]>,
 ): Deduped<T>;
@@ -48,12 +48,12 @@ export function uniqueWith<T extends IterableContainer>(
  * @lazy
  * @category Array
  */
-export function uniqueWith<T extends IterableContainer>(
+export function uniqueWith<T extends TupleInferringArray>(
   isEquals: IsEqualFunction<T[number]>,
 ): (data: T) => Deduped<T>;
 
 export function uniqueWith(
-  dataOrIsEquals: IterableContainer | IsEqualFunction,
+  dataOrIsEquals: readonly unknown[] | IsEqualFunction,
   isEquals?: IsEqualFunction,
 ): unknown {
   return typeof dataOrIsEquals === "function"

@@ -5,9 +5,9 @@ import {
   type StoppableLazyEvaluator,
 } from "./internal/makeStoppable";
 import { purryWithLazy2 } from "./internal/purryWithLazyByArity";
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
-type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
+type Zipped<Left extends readonly unknown[], Right extends readonly unknown[]> =
   // If the array is empty the output is empty, no surprises
   Left extends readonly []
     ? []
@@ -42,10 +42,10 @@ type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
  * @lazy
  * @category Array
  */
-export function zip<T extends IterableContainer, S extends IterableContainer>(
-  data: T,
-  other: S,
-): Zipped<T, S>;
+export function zip<
+  T extends TupleInferringArray,
+  S extends TupleInferringArray,
+>(data: T, other: S): Zipped<T, S>;
 
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned
@@ -61,13 +61,13 @@ export function zip<T extends IterableContainer, S extends IterableContainer>(
  * @lazy
  * @category Array
  */
-export function zip<S extends IterableContainer>(
+export function zip<S extends TupleInferringArray>(
   other: S,
-): <T extends IterableContainer>(data: T) => Zipped<T, S>;
+): <T extends TupleInferringArray>(data: T) => Zipped<T, S>;
 
 export function zip(
-  dataOrOther: IterableContainer,
-  other?: IterableContainer,
+  dataOrOther: readonly unknown[],
+  other?: readonly unknown[],
 ): unknown {
   return purryWithLazy2(
     zipImplementation,
@@ -79,8 +79,8 @@ export function zip(
 }
 
 const zipImplementation = <
-  T extends IterableContainer,
-  S extends IterableContainer,
+  T extends readonly unknown[],
+  S extends readonly unknown[],
 >(
   data: T,
   other: S,
@@ -90,7 +90,7 @@ const zipImplementation = <
     : other.map((item, index) => [data[index], item])) as Zipped<T, S>;
 
 const lazyImplementation = makeStoppable(
-  <T extends IterableContainer, S extends IterableContainer>(
+  <T extends readonly unknown[], S extends readonly unknown[]>(
     other: S,
   ): StoppableLazyEvaluator<T[number], [T[number], S[number]]> =>
     other.length === 0

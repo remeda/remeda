@@ -59,3 +59,7 @@ describe("dataLast", () => {
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
   });
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(mean([1, 2])).toEqualTypeOf<number>();
+});

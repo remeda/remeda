@@ -19,9 +19,9 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * @dataFirst
  * @category Array
  */
-export function countBy<T, K extends PropertyKey>(
-  data: readonly T[],
-  categorizationFn: ArrayCallback<readonly T[], K | undefined>,
+export function countBy<T extends readonly unknown[], K extends PropertyKey>(
+  data: T,
+  categorizationFn: ArrayCallback<T, K | undefined>,
 ): BoundedPartial<Record<K, number>>;
 
 /**
@@ -40,9 +40,9 @@ export function countBy<T, K extends PropertyKey>(
  * @dataLast
  * @category Array
  */
-export function countBy<T, K extends PropertyKey>(
-  categorizationFn: ArrayCallback<readonly T[], K | undefined>,
-): (data: readonly T[]) => BoundedPartial<Record<K, number>>;
+export function countBy<T extends readonly unknown[], K extends PropertyKey>(
+  categorizationFn: ArrayCallback<T, K | undefined>,
+): (data: T) => BoundedPartial<Record<K, number>>;
 
 export function countBy(
   dataOrCategorizationFn:

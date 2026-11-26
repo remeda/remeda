@@ -6,7 +6,6 @@ import {
   purryWithLazy2,
   purryWithLazy3,
 } from "./purryWithLazyByArity";
-import type { IterableContainer } from "./types/IterableContainer";
 
 declare function takeImplementation(
   data: readonly number[],
@@ -23,7 +22,7 @@ declare function lazyImplementation(_count: number): LazyEvaluator<number>;
 
 declare const passThrough: LazyEvaluator<number>;
 
-declare function genericTakeImplementation<T extends IterableContainer>(
+declare function genericTakeImplementation<T extends readonly unknown[]>(
   data: T,
   count: number,
 ): T[number][];

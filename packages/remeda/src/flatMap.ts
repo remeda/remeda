@@ -26,9 +26,9 @@ import type { DataLastBuilder } from "./internal/types/DataLastBuilder";
  * @lazy
  * @category Array
  */
-export function flatMap<T, U>(
-  data: readonly T[],
-  callbackfn: ArrayCallback<readonly T[], readonly U[] | U>,
+export function flatMap<T extends readonly unknown[], U>(
+  data: T,
+  callbackfn: ArrayCallback<T, readonly U[] | U>,
 ): U[];
 
 /**
@@ -52,13 +52,13 @@ export function flatMap<T, U>(
  * @lazy
  * @category Array
  */
-export function flatMap<T, U>(
-  callbackfn: LazyCallback<readonly T[], readonly U[] | U>,
-): (data: readonly T[]) => U[];
+export function flatMap<T extends readonly unknown[], U>(
+  callbackfn: LazyCallback<T, readonly U[] | U>,
+): (data: T) => U[];
 
 export function flatMap(
   dataOrCallbackfn: readonly unknown[] | LazyCallback<readonly unknown[]>,
-  callbackfn?: ArrayCallback<readonly unknown[]>,
+  callbackfn?: ArrayCallback,
 ): unknown {
   return typeof dataOrCallbackfn === "function"
     ? withLazyImplementation(

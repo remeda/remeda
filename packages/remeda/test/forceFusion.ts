@@ -3,7 +3,6 @@ import {
   makeStoppable,
   type StoppableLazyEvaluator,
 } from "../src/internal/makeStoppable";
-import type { IterableContainer } from "../src/internal/types/IterableContainer";
 
 /**
  * A `pipe` step that makes the sequence of lazy functions it's part of evaluate
@@ -17,7 +16,7 @@ import type { IterableContainer } from "../src/internal/types/IterableContainer"
  * `data`, as a data-first call does, and only the steps after it get the items
  * processed so far.
  */
-export const forceFusion = <T extends IterableContainer>(): ((
+export const forceFusion = <T extends readonly unknown[]>(): ((
   data: T,
 ) => T[number][]) =>
   lazyDataLastImplementation0(() => {

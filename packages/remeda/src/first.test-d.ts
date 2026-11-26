@@ -130,3 +130,7 @@ test("union of non-empty arrays", () => {
     number | string | boolean
   >();
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(first([1, "a"])).toEqualTypeOf<number>();
+});

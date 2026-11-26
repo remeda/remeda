@@ -34,3 +34,7 @@ test("a bit more complex example", () => {
 
   expectTypeOf(result).toEqualTypeOf<{ readonly foo: "bar" }>();
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(last([1, "a"])).toEqualTypeOf<string>();
+});

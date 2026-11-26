@@ -435,3 +435,9 @@ describe("data-last", () => {
     >();
   });
 });
+
+test("array literals are inferred as tuples", () => {
+  expectTypeOf(takeLastWhile([1, 2], isNumber)).toEqualTypeOf<
+    [number, number]
+  >();
+});

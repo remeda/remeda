@@ -1,7 +1,7 @@
 import { purryOrderRules, type OrderRules } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
-import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { ReorderedArray } from "./internal/types/ReorderedArray";
+import type { TupleInferringArray } from "./internal/types/TupleInferringArray";
 
 /**
  * Sorts `data` using the provided ordering rules. The `sort` is done via the
@@ -33,7 +33,7 @@ import type { ReorderedArray } from "./internal/types/ReorderedArray";
  * @dataLast
  * @category Array
  */
-export function sortBy<T extends IterableContainer>(
+export function sortBy<T extends TupleInferringArray>(
   ...sortRules: OrderRules<T[number]>
 ): (data: T) => ReorderedArray<T>;
 
@@ -83,7 +83,7 @@ export function sortBy<T extends IterableContainer>(
  * @dataFirst
  * @category Array
  */
-export function sortBy<T extends IterableContainer>(
+export function sortBy<T extends TupleInferringArray>(
   data: T,
   ...sortRules: OrderRules<T[number]>
 ): ReorderedArray<T>;
